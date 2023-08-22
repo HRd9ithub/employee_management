@@ -1,0 +1,3685 @@
+@media (max-width: 1920px) {
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text p {
+        font-weight: 500;
+        font-size: 19px;
+        margin: 0 !important;
+    }
+
+    .brand-logo img {
+        width: 193px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img {
+        position: relative;
+        width: 40px;
+        height: 40px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
+        font-size: 1.5rem;
+    }
+
+    .sidebar .nav .nav-item .nav-link .menu-title {
+        font-size: 1.2rem;
+        margin-left: 18px;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        height: 68px !important;
+    }
+
+    .kIaWtg {
+        font-size: 18px;
+    }
+
+    .fkmpGg {
+        font-size: 18px;
+    }
+
+    .table thead th {
+        font-size: 18px;
+    }
+
+    .cHdRDB {
+        font-size: 18px !important;
+        font-weight: 600;
+    }
+
+    .gHZEHz {
+        font-size: 19px !important;
+    }
+
+    .fPIktX {
+        font-size: 15px;
+    }
+
+    /* .sidebar,
+    .sidebar-wrap {
+        width: 275px;
+    } */
+
+    /* .sidebar-inner {
+        width: calc(100% - 275px);
+    } */
+
+    .sidebar i {
+        height: 35px;
+        width: 35px;
+        font-size: 15px !important;
+        padding: 9px 0px;
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(to right, #0483c7, #00cec0);
+        border: 0;
+        border-radius: 20px !important;
+        width: 96% !important;
+        margin-left: 5px;
+        padding: 16px 0px !important;
+        -webkit-transition: all 1s !important;
+        -moz-transition: all 1s !important;
+        -o-transition: all 1s !important;
+        transition: all 1s !important;
+    }
+
+    .page-title {
+        font-size: 31px;
+    }
+
+    .path {
+        font-size: 19px;
+    }
+
+    .profile-wrapper img {
+        width: 180px;
+        height: 180px;
+        border: 4px solid white;
+        bottom: 17%;
+        left: 38px !important;
+    }
+
+    .cover-image .back-cover {
+        height: 305px !important;
+    }
+
+    .profile-tab {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+
+    .heading-top h3 {
+        font-size: 25px;
+    }
+
+    .heading-top {
+        padding-left: 16%;
+        padding-top: 10px;
+    }
+
+    .text-muted svg {
+        font-size: 28px;
+    }
+
+    .employee-profile .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        font-size: 19px;
+    }
+
+    .info-left {
+        font-size: 20px;
+    }
+
+    .apexcharts-canvas {
+        width: 400px !important;
+        margin: 0px !important;
+        padding-top: 0px;
+    }
+
+    .apexcharts-svg {
+        width: unset !important;
+    }
+
+    .common-box-dashboard img {
+        width: 150px;
+    }
+
+    .common-box-dashboard {
+        height: 183px;
+    }
+
+    .common-box-dashboard h4 {
+        font-size: 25px;
+    }
+
+    .common-info-dashboard {
+        font-size: 35px;
+    }
+
+    .box-dashboard .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 0.8rem 1rem 0.2rem 1rem;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+        font-size: 18px;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 18px;
+    }
+
+    .apexcharts-legend-text {
+        font-size: 17px !important;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 2rem 1rem;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: -0.5px !important;
+    }
+
+    .common-header th {
+        font-size: 16px !important;
+    }
+
+    .css-1ex1afd-MuiTableCell-root {
+        font-size: 15px !important;
+    }
+}
+
+@media (max-width: 1880px) {}
+
+@media (max-width: 1787px) {
+
+    .profile-wrapper img {
+        width: 170px;
+        height: 170px;
+        border: 4px solid white;
+        bottom: 25%;
+        left: 32px !important;
+    }
+
+    .employee-profile .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        font-size: 18px;
+    }
+
+    .info-left {
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 1600px) {
+
+    .kIaWtg {
+        font-size: 15px;
+    }
+
+    .fkmpGg {
+        font-size: 15px;
+    }
+
+    .table thead th {
+        font-size: 15px;
+    }
+
+    .cHdRDB {
+        font-size: 15px !important;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .path {
+        font-size: 17px;
+    }
+
+    /* .sidebar {
+        width: 270px;
+    } */
+
+    .sidebar .nav .nav-item .nav-link .menu-title {
+        font-size: 1.085rem;
+        margin-left: 13px;
+    }
+
+    .gHZEHz {
+        font-size: 16px !important;
+    }
+
+    .page-title {
+        font-size: 25px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text p {
+        font-size: 17px;
+    }
+
+    .profile-wrapper img {
+        width: 157px;
+        height: 157px;
+        border: 4px solid white;
+        bottom: 30%;
+        left: 32px !important;
+    }
+
+    .heading-top h3 {
+        font-size: 23px;
+    }
+
+    .text-muted svg {
+        font-size: 24px;
+    }
+
+    .employee-profile .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        font-size: 15px;
+    }
+
+    .info-left {
+        font-size: 14px;
+    }
+
+    .common-box-dashboard h4 {
+        font-size: 23px;
+    }
+
+    .common-box-dashboard {
+        height: 160px;
+    }
+
+    .common-info-dashboard {
+        font-size: 30px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+        font-size: 15px;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 15px;
+    }
+
+    .box-dashboard .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 14px;
+    }
+
+    .apexcharts-legend-text {
+        font-size: 15px !important;
+    }
+
+    .css-1yjjitx-MuiSwitch-track {
+        height: 90%;
+    }
+
+    .css-jsexje-MuiSwitch-thumb {
+        width: 17px !important;
+        height: 17px !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        bottom: 1px !important;
+    }
+}
+
+@media (max-width: 1525px) {
+    /* .sidebar .nav .nav-item .nav-link {
+        padding: 0.45rem 0 0.45rem 0;
+    } */
+
+    .navbar .navbar-menu-wrapper {
+        height: 63px !important;
+    }
+
+    .profile-tab {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        padding: 12px 10px !important;
+    }
+
+    .employee-profile .css-1aquho2-MuiTabs-indicator {
+        left: 265px;
+        width: 138px;
+    }
+
+    .heading-top {
+        padding-left: 18%;
+    }
+
+    .apexcharts-canvas {
+        width: 510px !important;
+        padding-top: 25px;
+        margin: auto !important;
+    }
+}
+
+@media (max-width: 1440px) {
+    .page-title {
+        font-size: 23px;
+    }
+
+    .path {
+        font-size: 15px;
+    }
+
+    .kIaWtg {
+        font-size: 17px;
+    }
+
+    .fkmpGg {
+        font-size: 17px;
+    }
+
+    .table thead th {
+        font-size: 17px;
+    }
+
+    .cHdRDB {
+        font-size: 17px !important;
+    }
+
+    .gHZEHz {
+        font-size: 16px !important;
+    }
+
+    #two .form-control-lg {
+        height: 2.5rem;
+    }
+
+    .btn-gradient-primary {
+        padding: 12px 0px !important;
+    }
+
+    .gHZEHz {
+        font-size: 15px !important;
+    }
+
+    .sidebar i {
+        height: 33px;
+        width: 33px;
+        font-size: 15px !important;
+        padding: 9px 0px;
+    }
+
+    .sidebar .nav .nav-item .nav-link .menu-title {
+        font-size: 0.862rem;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text p {
+        font-size: 15px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
+        font-size: 1.2rem;
+    }
+
+    .navbar .navbar-menu-wrapper .count-indicator .count-symbol {
+        top: 23px;
+        right: -5px;
+        width: 8px;
+        height: 8px;
+    }
+
+    .btn .badge,
+    .form-wizard .container>div:not(.content)>button .badge,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled .badge,
+    .swal2-modal .swal2-actions .swal2-styled .badge,
+    .fc button .badge {
+        position: relative;
+        left: -7px;
+        top: -11px;
+        color: white;
+        background-color: red;
+    }
+
+    .brand-logo img {
+        width: 182px;
+    }
+
+    /* .sidebar .nav:not(.sub-menu) {
+        margin-top: 8px;
+    } */
+
+    /* .sidebar {
+        width: 250px;
+    } */
+
+    .common-box-dashboard h4 {
+        font-size: 20px;
+    }
+
+    .common-box-dashboard {
+        height: 149px;
+    }
+
+    .common-info-dashboard h1,
+    .common-info-dashboard svg,
+    .common-info-dashboard i {
+        font-size: 1.5rem;
+    }
+
+    .my-chart-head {
+        padding: 1.28rem 1rem;
+    }
+
+    .apexcharts-canvas {
+        width: 480px !important;
+        padding-top: 60px;
+        margin: auto !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 0 !important;
+    }
+
+    .common-header th {
+        font-size: 13.5px !important;
+    }
+
+    .css-1ex1afd-MuiTableCell-root {
+        font-size: 13px !important;
+    }
+    /* .sidebar, .sidebar-wrap {
+        width: 235px;
+    } */
+    /* .sidebar-inner {
+        width: calc(100% - 235px);
+    } */
+}
+
+@media (max-width: 1366px) {
+    .swal2-icon.swal2-warning.swal2-icon-show {
+        font-size: 12px;
+    }
+
+    .swal2-actions {
+        margin: 1.25em auto 0 !important;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 350px !important;
+        height: 252px !important;
+    }
+
+    .swal2-html-container {
+        margin: 0.6em 1.6em 0.3em;
+    }
+
+    .swal2-actions {
+        margin: 0.7em auto 0 !important;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        font-size: 0.895rem;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link:before {
+        left: 46px;
+        font-size: .55rem;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img {
+        position: relative;
+        width: 30px;
+        height: 30px;
+    }
+
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text p {
+        font-size: 13px;
+    }
+
+    .kIaWtg {
+        font-size: 15px;
+    }
+
+    .fkmpGg {
+        font-size: 15px;
+    }
+
+    .table thead th {
+        font-size: 15px;
+    }
+
+    .cHdRDB {
+        font-size: 15px !important;
+    }
+
+    .gHZEHz {
+        font-size: 14px !important;
+    }
+
+    .page-title {
+        font-size: 21px;
+    }
+
+    .path {
+        font-size: 14px;
+    }
+
+    .apexcharts-canvas {
+        width: 450px !important;
+    }
+}
+
+@media (max-width: 1330px) {
+    .btn-gradient-primary {
+        padding: 11px 0px !important;
+    }
+
+    /* 
+    .sidebar {
+        width: 222px;
+    } */
+
+}
+
+@media (max-width: 1200px) {
+
+    /* employee */
+
+    .page-title {
+        font-size: 21px;
+        margin-bottom: -3px;
+    }
+
+    .path-title a {
+        font-size: 13px;
+    }
+
+    .fkmpGg {
+        font-size: 14px;
+    }
+
+    .table thead th {
+        font-size: 14px;
+    }
+
+    .cHdRDB {
+        font-size: 14px !important;
+    }
+
+    .kIaWtg {
+        font-size: 14px;
+    }
+
+    .gHZEHz {
+        font-size: 13px !important;
+    }
+
+    /* 
+    .wrapper-container {
+        padding: 12px;
+    } */
+
+    .form-control-lg {
+        height: 2.5rem;
+    }
+
+    .nav-profile-text p {
+        font-size: 14px !important;
+        margin: 0px !important;
+    }
+
+    .dropdown-menu-right {
+        padding: 0px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
+        padding: 7px 13px;
+    }
+
+    .dropdown .dropdown-menu .dropdown-item {
+        font-size: .9rem;
+    }
+
+    .btn-gradient-primary {
+        padding: 11px 0px !important;
+    }
+
+    .sidebar i {
+        height: 30px;
+        width: 30px;
+        font-size: 13px !important;
+        padding: 9px 0px;
+    }
+
+    .brand-logo img {
+        width: 169px;
+    }
+
+    .sidebar .nav .nav-item .nav-link .menu-title {
+        font-size: 0.85rem;
+    }
+
+    .sidebar i {
+        height: 29px;
+        width: 29px;
+        font-size: 12px !important;
+        padding: 8px 0px;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.75rem 2rem 0.75rem 2.9rem;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link:before {
+        left: 24px;
+    }
+
+    /* 
+    .navbar {
+        padding-bottom: 11px !important;
+    } */
+
+    /* .sidebar-wrap {
+        padding-right: 11px;
+    } */
+
+    #two .form-control-lg {
+        height: 2.29rem;
+        font-size: 11px;
+    }
+
+    .profile-action-icon {
+        height: 50px !important;
+        width: 50px !important;
+    }
+
+    .employee-content .row-std {
+        padding: 0.8rem 1rem 0.5rem 0rem !important;
+    }
+
+    #two .form-control-lg {
+        height: 2.49rem;
+        font-size: 11px;
+    }
+
+    .preview-subject {
+        margin-bottom: 1px !important;
+        font-size: 13px;
+
+    }
+
+    .preview-list {
+        width: 16rem !important;
+    }
+
+    .preview-list .preview-item .preview-item-content p {
+        font-size: 10px;
+    }
+
+    .new-message {
+        padding: 11px 17px !important;
+    }
+
+    .profile-standard .card .card-title {
+        font-size: 19px !important;
+        font-weight: 600 !important;
+    }
+
+    .common-box-dashboard h4 {
+        font-size: 18px;
+    }
+
+    .common-box-dashboard {
+        height: 126px;
+    }
+
+    .common-info-dashboard h2 {
+        font-size: 1.5rem;
+    }
+
+    .common-info-dashboard i {
+        font-size: 1.3rem;
+    }
+
+    .css-1yjjitx-MuiSwitch-track {
+        height: 85% !important;
+        width: 92% !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        bottom: 3px !important;
+    }
+
+    .css-jsexje-MuiSwitch-thumb {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    /* .css-1yjjitx-MuiSwitch-track {
+                height: 89%;
+                width: 97%;} */
+    /* calender */
+    .calender-wrapper {
+        padding-right: 0px;
+    }
+
+    .calender .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 1152px) {
+    .apexcharts-legend {
+        right: 35px !important;
+    }
+
+    .my-chart-head {
+        font-size: 1.4rem;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 1rem 1rem;
+        font-size: 1.4rem;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__navigation {
+        top: 10px;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 14px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 1067px) {
+    .vPLcQ {
+        min-width: 17%;
+    }
+
+    .dropdown-menu {
+        min-width: 9rem;
+    }
+
+    .common-info-dashboard h2 {
+        font-size: 1.3rem;
+    }
+
+    .common-box-dashboard h4 {
+        font-size: 16px;
+    }
+
+    .common-box-dashboard img {
+        width: 103px;
+    }
+
+    .common-box-dashboard {
+        height: 116px;
+    }
+
+    .common-box-dashboard {
+        padding: 18px;
+    }
+
+    /* calender  */
+    .react-datepicker__header {
+        padding: 0px 0;
+    }
+
+    .profile-view .profile-basic .profile-info-left .staff-msg .btn-custom {
+        width: 70% !important;
+        padding: 8px 0px !important;
+    }
+
+    .profile-standard .nav-pills .nav-item {
+        margin-right: 0rem;
+    }
+
+    .profile-standard .card .card-title {
+        font-size: 19px !important;
+        font-weight: 600 !important;
+    }
+
+    .tab-profile h5 {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .profile-box .card-body {
+        padding: 1rem 2rem !important;
+    }
+
+    .modal-header-none {
+        display: block;
+    }
+
+    .employee-form {
+        display: none;
+    }
+
+    .dropdown-item.active,
+    .dropdown-item:active {
+        color: #00458f;
+        text-decoration: none;
+        background-color: #fff;
+    }
+
+    .modal-header-none .dropdown-menu {
+        padding: 0px 22px;
+    }
+
+    .modal-header-none .dropdown .dropdown-menu .dropdown-item :hover {
+        border-bottom: 1px solid lightgrey !important;
+        background-color: lightblue !important;
+    }
+
+    .calcedar-field .react-date-picker__wrapper {
+        padding: 9px 6px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month {
+        padding: 0rem;
+    }
+
+    .inner-pages .form-control {
+        padding: 0.86rem 0.5rem;
+    }
+}
+
+
+@media (max-width: 1028px) {
+
+
+    .profile-action-icon {
+        height: 60px;
+        width: 60px;
+    }
+
+    .employee_name_style {
+        font-size: 15px !important;
+    }
+
+    .profile-view .profile-basic {
+        padding-right: 0px;
+    }
+
+    .personal-info li .title {
+        margin-right: 9px;
+    }
+
+    .path-title a {
+        font-size: 14px;
+    }
+
+    .profile-standard .nav-pills .nav-link {
+        padding: 0.5rem 0.7rem;
+    }
+
+    .css-i4bv87-MuiSvgIcon-root {
+        width: 0.7em;
+        height: 0.7em;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day.react-datepicker__day--today::before {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    /* employee */
+    .employee-modal .modal-dialog {
+        max-width: 630px !important;
+        margin: 30px auto;
+    }
+
+    .dropdown .dropdown-menu .dropdown-item {
+        font-size: 13px;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        padding-left: 13px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    .common-info-dashboard h1,
+    .common-info-dashboard svg,
+    .common-info-dashboard i {
+        font-size: 1.2rem;
+    }
+
+    .common-box-dashboard {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 1023px) {
+    h3 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 991px) {
+    .personal-info li {
+        width: 100%;
+    }
+    .logo-none {
+        display: block;
+        width: 18%;
+        height: 44px;
+        margin: auto auto auto 0px;
+    }
+}
+
+@media (max-width:980px) {
+
+    /* navbar */
+
+    .navbar .navbar-brand-wrapper .navbar-brand.brand-logo {
+        display: block;
+    }
+
+    .navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini {
+        display: none;
+    }
+
+    .navbar .navbar-brand-wrapper {
+        width: 23%;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+        margin-left: 10px;
+        margin-right: 4px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
+        padding-left: 6px;
+        padding-right: 7px;
+    }
+
+    .preview-list .preview-item .preview-item-content {
+        padding-left: 9px;
+    }
+
+    .preview-subject {
+        font-size: 12px;
+    }
+
+    .preview-list {
+        width: 15rem !important;
+    }
+
+    .navbar-dropdown {
+        transform: translate3d(-6px, 58px, 0px) !important;
+    }
+
+    .sidebar .nav .nav-item {
+        padding: 0 2rem;
+    }
+
+    .sidebar {
+        /* border-radius: 12px;
+        margin-right: 13px;
+        margin-top: 14px; */
+        box-shadow: -4px 1px 7px #00478ca6;
+        border-left: 2px solid #00458f;
+        /* width: 209px; */
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.55rem 2rem 0.55rem 2.9rem;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        justify-content: end;
+    }
+
+    .logo-none {
+        display: block;
+        height: 38px;
+        margin: auto auto auto 0px;
+    }
+
+    /* .brand-logo img {
+        display: none;
+    } */
+
+    /* .navbar-brand-wrapper {
+        display: none !important;
+    } */
+
+    #two .form-control-lg {
+        height: 2.49rem;
+    }
+
+    .user-name {
+        font-size: 20px;
+    }
+
+    /* employee */
+
+    .gHZEHz {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .apexcharts-canvas {
+        padding-top: 10px;
+    }
+
+    .apexcharts-legend-text {
+        font-size: 13px !important;
+    }
+
+    .apexcharts-legend-marker {
+        height: 9px !important;
+        width: 9px !important;
+    }
+
+    .common-info-dashboard h2 {
+        font-size: 1.9rem;
+    }
+
+    .common-info-dashboard h1,
+    .common-info-dashboard svg,
+    .common-info-dashboard i {
+        font-size: 1.9rem;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 323px !important;
+        height: 205px !important;
+    }
+
+    .swal2-icon.swal2-warning.swal2-icon-show {
+        font-size: 9px;
+    }
+
+    .swal2-modal .swal2-title {
+        font-size: 21px;
+    }
+
+    .swal2-html-container {
+        margin: 0.5em 1.6em 0.3em !important;
+    }
+
+    .swal2-actions {
+        margin: 0em auto 0 !important;
+    }
+
+    .swal2-modal .swal2-actions .swal2-styled,
+    .fc button {
+        padding: 0.875rem 2rem;
+    }
+
+    .css-1yjjitx-MuiSwitch-track {
+        height: 78%;
+        width: 78%;
+    }
+
+    .user-modal .modal-dialog {
+        max-width: unset;
+        margin: 30px auto;
+    }
+
+    .wrapper-container {
+        overflow-x: hidden;
+    }
+
+    /* calender */
+    .calender-wrapper {
+        padding-right: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+@media (max-width:800px) {
+
+    /* navbar */
+    .logo-none {
+        height: 38px;
+    }
+
+    .new-message {
+        padding: 7px 17px !important;
+        font-size: 13px;
+    }
+
+    .sidebar {
+        margin-right: 11px;
+        margin-top: -3px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .path-title a {
+        font-size: 13px;
+    }
+
+    .employee-modal .modal-dialog {
+        max-width: 580px !important;
+        margin: 30px auto;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        height: 52px !important;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        font-size: 0.795rem;
+    }
+
+    .fPIktX {
+        min-height: 49px;
+    }
+
+    .hLCCgQ {
+        max-width: 7%;
+    }
+
+    .form-control,
+    .swal2-modal .swal2-content .swal2-input {
+        padding: 0.86rem 1.175rem;
+    }
+
+    /* 
+    .wrapper-container {
+        padding: 10px;
+    } */
+
+    .sidebar-wrap {
+        padding-right: 0px;
+    }
+
+    /* 
+    .navbar {
+        padding-bottom: 8px !important;
+    } */
+
+    .nav-profile-text p {
+        font-size: 12px !important;
+    }
+
+    .profile-action-icon {
+        height: 43px !important;
+        width: 43px !important;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
+        font-size: 1rem;
+    }
+
+    .navbar .navbar-menu-wrapper .count-indicator .count-symbol {
+        top: 26px;
+        right: -3px;
+        width: 6px;
+        height: 6px;
+    }
+
+    .navbar-toggler {
+        font-size: 1rem;
+    }
+
+    .info-main .title {
+        width: 18% !important;
+    }
+
+    .profile-info-left h6 {
+        font-size: 12px
+    }
+
+    .profile-view .profile-basic .profile-info-left .staff-id {
+        font-size: 13px;
+
+    }
+
+    .profile-info-left .small {
+        font-size: 71%;
+        padding-top: 6px;
+    }
+
+    .profile-view .profile-basic .profile-info-left .staff-msg .btn-custom {
+        width: 65% !important;
+        font-size: 12px;
+    }
+
+    .tab-profile a {
+        font-size: 12px;
+    }
+
+    .my-chart-head {
+        padding: 2.3rem 1rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .profile-view .profile-img-wrap {
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        border-right: none;
+        border-bottom: 2px dashed #ccc;
+        padding: 0 0 20px;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .profile-view .profile-basic {
+        margin-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (max-width:767px) {
+    h3 {
+        font-size: 16px;
+    }
+
+    .employee-modal .modal-dialog {
+        max-width: 500px !important;
+        margin: 30px auto;
+    }
+
+    .modal-header {
+        padding: 0.2rem 1rem;
+    }
+
+    .navbar .navbar-brand-wrapper .navbar-brand img {
+        width: 84%;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .navbar-dropdown {
+        width: auto;
+    }
+
+    .department-modal .card-body {
+        padding: 1rem 2.5rem;
+    }
+
+    .profile-view .profile-img-wrap img {
+        height: 100px;
+        width: 100px;
+    }
+
+    .profile-view .profile-img-wrap {
+        height: 100px;
+        width: 100px;
+    }
+
+    .profile-view .profile-basic {
+        margin-left: 34px;
+        padding-right: 21px;
+    }
+
+    .profile-standard .card .card-title {
+        font-size: 18px !important;
+    }
+
+    .personal-info li .title {
+        width: 37%;
+    }
+
+    .profile-standard .nav-pills .nav-item {
+        margin: 0rem;
+    }
+
+    .apexcharts-svg {
+        width: unset !important;
+    }
+
+    .apexcharts-canvas {
+        width: 650px !important;
+    }
+
+    .apexcharts-legend {
+        right: 61px !important;
+    }
+
+    /* 
+    .box-dashboard {
+        margin-bottom: 15px !important;
+    } */
+
+    .tab-view .card-body {
+        padding: 1rem !important;
+    }
+
+    .my-chart {
+        margin-bottom: 15px;
+    }
+
+    .profile-img .profile-edit-icon {
+        transform: translate(70px, -33px);
+    }
+}
+
+@media (max-width:736px) {
+    .profile-view .profile-basic {
+        margin-left: 0px;
+        padding-right: 0px;
+    }
+
+    .info-main {
+        padding-left: 5rem !important;
+    }
+
+    .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        min-width: 69px !important;
+    }
+
+    .react-datepicker__header {
+        padding: 16px 0;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month {
+        padding: 1.6rem 0;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+        font-size: 14px;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 15px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 1rem 1rem 1.5rem 1rem;
+        font-size: 1.6rem;
+    }
+
+    .modal-button .btn {
+        width: 29% !important;
+        height: 35px !important;
+    }
+}
+
+@media (max-width:667px) {
+
+    /* employee */
+
+    .card .card-body {
+        padding: 1rem 2rem;
+    }
+
+    /* navbar */
+
+    .navbar .navbar-brand-wrapper {
+        width: 32%;
+    }
+
+    .navbar .navbar-brand-wrapper .navbar-brand img {
+        width: 84%;
+        height: 47px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
+        padding-left: 0px;
+        padding-right: 8px;
+        border-right: none;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+        margin-left: 10px;
+        margin-right: 0px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img img {
+        width: 25px;
+        height: 25px;
+    }
+
+    /* 
+    .sidebar {
+        width: 222px;
+    } */
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.65rem 2rem 0.55rem 2.9rem;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status {
+        width: 8px;
+        height: 8px;
+        bottom: 5px;
+        right: -2px;
+    }
+
+    .navbar .navbar-menu-wrapper .count-indicator .count-symbol {
+        top: 21px;
+        right: -3px;
+        width: 6px;
+        height: 6px;
+    }
+
+    .navbar-toggler {
+        font-size: 19px;
+    }
+
+    .preview-list {
+        width: 13.5rem !important;
+    }
+
+    .preview-list .preview-item .preview-thumbnail img,
+    .preview-list .preview-item .preview-thumbnail .preview-icon {
+        width: 33px;
+        height: 33px;
+    }
+
+    .preview-list .preview-item .preview-item-content {
+        padding-left: 7px;
+    }
+
+    .preview-subject {
+        font-size: 11px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
+        padding: 3px 12px;
+    }
+
+    .navbar-dropdown {
+        transform: translate3d(-33px, 50px, 0px) !important;
+    }
+
+    .dropdown-menu {
+        min-width: 8rem;
+    }
+
+    /* employee */
+
+    .path-title a {
+        font-size: 13px;
+    }
+
+    /* department model */
+    .modal.show .modal-dialog {
+        justify-content: center;
+    }
+
+
+    .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+        min-width: 78px;
+    }
+
+    .sidebar .nav .nav-item {
+        padding: 0 1.2rem;
+    }
+
+    /* .sidebar {
+        width: 190px;
+    } */
+
+    .sidebar i {
+        height: 27px;
+        width: 27px;
+        font-size: 12px !important;
+        padding: 8px 0px;
+    }
+
+    .sidebar .nav .nav-item .nav-link {
+        padding: 0.35rem 0 0.55rem 0;
+    }
+
+    .btn-gradient-primary {
+        font-size: 12px;
+    }
+
+    .add-employee-btn i {
+        font-size: 12px !important;
+    }
+
+    .user-name {
+        font-size: 17px;
+    }
+
+    .profile-box .card-body {
+        padding: 1rem 2rem 0rem 2rem !important;
+    }
+
+
+    .profile-standard .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        border-bottom: 2px solid white !important;
+    }
+
+    .modal-header {
+        padding: 0rem 1rem !important;
+    }
+
+    .swal2-icon.swal2-warning.swal2-icon-show {
+        font-size: 8px;
+    }
+
+    .swal2-modal .swal2-title {
+        font-size: 19px;
+    }
+
+    .swal2-html-container {
+        font-size: .9rem !important;
+    }
+
+    .swal2-modal .swal2-actions .swal2-styled,
+    .fc button {
+        padding: 0.675rem 1.6rem;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 300px !important;
+        height: 192px !important;
+    }
+
+    .swal2-actions {
+        margin: 0.3em auto 0 !important;
+    }
+
+    .swal2-modal .swal2-actions .swal2-styled.swal2-confirm {
+        font-size: 0.75rem;
+    }
+
+    .swal2-modal .swal2-actions .swal2-styled.swal2-cancel,
+    .swal2-modal .swal2-actions .swal2-styled.swal2-confirm {
+        font-size: 0.75rem;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 277px !important;
+        height: 183px !important;
+    }
+
+    #two .form-control-lg {
+        height: 2.29rem;
+    }
+
+    .submit-section {
+        margin-bottom: 16px;
+    }
+
+    /* calender */
+    /* .react-date-picker__inputGroup__year {
+        width: 32px !important;
+    } */
+    /* 
+    .react-date-picker__inputGroup__month {
+        width: 23px !important;
+    } */
+
+    .personal-info li .title {
+        margin-right: 17px;
+    }
+}
+
+@media (max-width:640px) {
+    /* navbar */
+
+    .navbar .navbar-brand-wrapper .navbar-brand img {
+        width: 78%;
+        height: 50px;
+    }
+
+    /* employee */
+
+    .gHZEHz {
+        font-size: 14px !important;
+    }
+
+    .employee_name_style {
+        font-size: 14px !important;
+    }
+
+    .profile-action-icon {
+        height: 55px;
+        width: 55px;
+    }
+
+    .card .card-body {
+        padding: 1rem 2rem;
+    }
+
+    .card .card-body {
+        padding: 1rem 2rem;
+    }
+
+    .employee-modal .modal-dialog {
+        max-width: 450px !important;
+    }
+
+    .delete {
+        margin-right: 20px;
+    }
+
+    /* department model */
+
+    .modal-dialog {
+        margin: 30px auto;
+        max-width: 425px;
+    }
+
+    .employee-content .row-std {
+        padding: 0.6rem 1rem 0.6rem 0rem !important;
+    }
+
+    .eZQoCD {
+        min-height: 46px;
+    }
+
+    .fPIktX {
+        min-height: 52px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
+        padding-right: 6px;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        padding-left: 19px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+        margin-left: 18px;
+        margin-right: -7px;
+    }
+
+    .profile-basic .col-sm-5 {
+        padding: 0;
+        max-width: 38.66667%;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        padding-left: 13px;
+    }
+
+
+    .tab-content {
+        padding: 12px;
+    }
+
+
+    .delete {
+        margin-right: 12px;
+    }
+
+    .doc-modal i {
+        left: 28%;
+        height: 19px;
+        width: 19px;
+        font-size: 12px;
+    }
+
+    .employee-id {
+        width: 141px;
+        padding: 8px;
+    }
+
+    .employee-id h5 {
+        font-size: 12px;
+        margin: 0px;
+    }
+
+}
+
+@media (max-width:600px) {
+    .employee-modal {
+        padding-left: 0px !important;
+    }
+
+    .card .card-description {
+        margin-bottom: 1rem;
+        color: #76838f;
+    }
+
+    .image-standard {
+        height: 175px;
+    }
+
+    .navbar .navbar-menu-wrapper {
+        height: 30px;
+    }
+
+    .navbar .navbar-brand-wrapper {
+        height: 25%;
+    }
+
+    .modal-dialog {
+        margin: 30px auto;
+        max-width: 390px;
+    }
+
+    .profile-box .card-body {
+        padding: 1rem 1rem 0rem 1rem !important;
+    }
+
+    .tab-profile {
+        padding-top: 15px;
+    }
+
+    .tab-profile .nav-pills {
+        border-bottom: 1px solid #ebedf2;
+        padding: 8px 7px 0px 7px;
+        background: #004691;
+        border-radius: 8px 8px 0px 0px;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        padding-left: 8px;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .common-info-dashboard h2 {
+        font-size: 1.5rem;
+    }
+
+    .common-box-dashboard {
+        height: 101px;
+    }
+
+    .common-info-dashboard h1,
+    .common-info-dashboard svg,
+    .common-info-dashboard i {
+        font-size: 1.4rem;
+    }
+
+    .box-dashboard {
+        margin-bottom: 10px !important;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+        font-size: 13px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+        font-size: 12px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__month {
+        padding: 1rem 0;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 1rem 1rem 1rem 1rem;
+        font-size: 1.3rem;
+    }
+
+    .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day.react-datepicker__day--today::before {
+        width: 32px;
+        height: 32px;
+        top: 48%;
+    }
+
+    .my-chart-head {
+        padding: 2rem 1rem;
+        font-size: 1.3rem;
+    }
+
+    .swal2-icon.swal2-warning.swal2-icon-show {
+        font-size: 7px;
+        font-weight: 500;
+    }
+
+    .swal2-icon {
+        border: 0.35em solid rgba(0, 0, 0, 0) !important;
+    }
+
+    .swal2-modal .swal2-title {
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .swal2-title {
+        padding: 0.6em 1em 0;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 277px !important;
+        height: 169px !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        left: -4px;
+        top: 1px;
+    }
+
+    .css-1yjjitx-MuiSwitch-track {
+        height: 84%;
+        width: 80%;
+    }
+
+    .upload {
+        line-height: 3;
+        font-size: 13px;
+    }
+
+    .upload-btn .btn {
+        padding: 12px 0px !important;
+    }
+
+    .doc-modal i {
+        top: 3%;
+        left: 31%;
+    }
+}
+
+
+@media (max-width:568px) {
+
+    /* employee */
+    .col-none {
+        display: none;
+    }
+
+    .row-std {
+        align-items: center;
+    }
+
+    .add-employee-btn {
+        text-align: end !important;
+        margin-top: 0px;
+    }
+
+    .add-employee-btn i {
+        display: none;
+    }
+
+    .employee-path {
+        text-align: start !important;
+        justify-content: left;
+    }
+
+    #two .form-control-lg {
+        height: 2.09rem;
+        font-size: 11px;
+    }
+
+    div#two {
+        padding-right: 4px !important;
+    }
+
+    div#one {
+        /* order: 1 !important; */
+        text-align: start !important;
+    }
+
+    div#two {
+        /* order: 2 !important; */
+        padding-bottom: 0px !important;
+
+    }
+
+    .btn-gradient-primary {
+        padding: 9px 0px !important;
+    }
+
+    .forms-sample input {
+        font-size: 12px;
+    }
+
+    .forms-sample label {
+        font-size: 14px;
+    }
+
+    .calcedar-field .react-date-picker__wrapper {
+        font-size: 11px;
+    }
+
+    .navbar .navbar-brand-wrapper .navbar-brand img {
+        width: 76%;
+        height: 45px;
+    }
+
+    .logo-none {
+        height: 36px;
+    }
+
+    .card .card-body {
+        padding: 1rem 1.5rem;
+    }
+
+    .profile-basic .col-sm-5 {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        padding-left: 14px;
+    }
+
+    .profile-view .profile-basic .profile-info-left .staff-msg {
+        margin: 12px 0px;
+    }
+
+    .info-main .title {
+        width: 13% !important;
+    }
+
+    .profile-view .profile-basic .profile-info-left .staff-msg .btn-custom {
+        width: 40% !important;
+        font-size: 11px;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        border: none;
+    }
+
+    .swal2-modal .swal2-title {
+        font-size: 15px !important;
+    }
+
+    .swal2-html-container {
+        font-size: .8rem !important;
+    }
+
+    .swal2-modal .swal2-actions .swal2-styled,
+    .fc button {
+        padding: 0.675rem 1.2rem;
+    }
+
+    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+        width: 260px !important;
+        height: 156px !important;
+    }
+
+    .user-modal .form-group {
+        margin-bottom: 0.5rem;
+    }
+
+    .user-modal .form-group label {
+        margin-top: 0px !important;
+    }
+
+    .user-modal .forms-sample {
+        overflow: auto;
+    }
+
+    .doc-modal i {
+        top: 3%;
+        left: 29%;
+    }
+
+    .add-btn-top {
+        padding-top: 17px !important;
+        padding-left: 20px !important;
+    }
+
+    .personal-info li .title {
+        margin-right: 32px;
+    }
+/* 
+    .close-btn {
+        display: none;
+        transition: all 0.5s ease;
+    } */
+
+    .inner-pages .form-control {
+        padding: 0rem 0.5rem;
+    }
+}
+
+@media (max-width:536px) {
+
+    /* Login */
+    .auth .brand-logo img {
+        width: 100px;
+    }
+
+    .brand-txt h4 {
+        font-size: 16px;
+    }
+
+    .brand-txt h6 {
+        font-size: 14px;
+    }
+
+    .auth form .form-group .form-control,
+    .auth form .form-group .swal2-modal .swal2-content .swal2-input,
+    .swal2-modal .swal2-content .auth form .form-group .swal2-input {
+        font-size: 13px;
+    }
+
+    .form-control-lg {
+        padding: 10px 20px;
+    }
+
+    .auth form .form-group {
+        margin-bottom: 14px;
+    }
+
+    .login-btn {
+        margin-top: 10px !important;
+    }
+
+    .auth form .auth-form-btn {
+        padding: 10px 20px;
+        font-size: 13px !important;
+    }
+
+    .auth .auth-form-light {
+        width: 334px;
+    }
+
+    .brand-logo {
+        padding: 6px 0px !important;
+    }
+
+    span.eye-icon {
+        top: 10px;
+    }
+
+    .css-i4bv87-MuiSvgIcon-root {
+        font-size: 18px !important;
+    }
+
+    .auth form .auth-link {
+        font-size: 13px;
+    }
+
+    div#one {
+        padding-bottom: 0px;
+    }
+
+    .row-std-time #two {
+        padding-bottom: 15px !important;
+    }
+
+    .row-std-time #three {
+        padding-bottom: 15px !important;
+    }
+
+    .css-jsexje-MuiSwitch-thumb {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 0px !important;
+    }
+
+    .css-1yjjitx-MuiSwitch-track {
+        height: 84% !important;
+        width: 68% !important;
+    }
+
+    /* forget password */
+    .company-logo h4 {
+        font-size: 16px;
+    }
+
+    .form-label {
+        font-size: 14px;
+    }
+
+    .form-control {
+        margin-top: 4px !important;
+    }
+
+    .form-control {
+        margin-top: 10px !important;
+    }
+
+    .error {
+        font-size: 12px;
+    }
+
+    form label {
+        margin-bottom: 0 !important;
+    }
+
+    .password-btn {
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .form-group {
+        margin-bottom: 10px !important;
+    }
+
+    .check-email-icon i {
+        font-size: 28px;
+        border-radius: 7px;
+        margin-bottom: 9px;
+    }
+
+    .check-email-icon {
+        margin-top: 6px;
+    }
+
+    .form-control,
+    .swal2-modal .swal2-content .swal2-input {
+        height: 37px;
+    }
+
+    .check-email-icon i {
+        font-size: 23px;
+    }
+
+    .employee-modal .modal-dialog {
+        max-width: 418px !important;
+    }
+
+    .calender .form-control {
+        margin: 0px !important;
+    }
+
+    .react-date-picker__inputGroup__year {
+        width: 33px !important;
+    }
+
+    .calender .btn-gradient-primary {
+        width: 34% !important;
+        height: 37.5px !important;
+    }
+
+    .calcedar-field .react-date-picker__wrapper {
+        font-size: 12px;
+        height: unset;
+
+    }
+
+    .form-control,
+    .swal2-modal .swal2-content .swal2-input {
+        padding: 0.76rem 1.175rem;
+    }
+
+    .react-date-picker__inputGroup__month {
+        width: 24px;
+    }
+
+    .fkmpGg {
+        font-size: 13px;
+    }
+
+    .table thead th {
+        font-size: 13px;
+    }
+
+    .cHdRDB {
+        font-size: 13px !important;
+    }
+
+    .gHZEHz {
+        font-size: 12px !important;
+    }
+
+    .kIaWtg {
+        font-size: 13px;
+    }
+
+    .row-std-time .btn-gradient-primary {
+        padding: 7.5px 14px !important;
+    }
+
+    .page-title {
+        font-size: 19px;
+    }
+
+    .fPIktX {
+        min-height: 48px !important;
+    }
+
+    .path {
+        font-size: 12px;
+    }
+
+    .profile-view .profile-basic .profile-info-left {
+        padding-left: 3px;
+    }
+
+    .profile-box .col-md-12 {
+        padding: 0px !important;
+    }
+
+    .modal-header-none .btn,
+    .form-wizard .container>div:not(.content)>button,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-confirm,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-cancel,
+    .swal2-modal .swal2-actions .swal2-styled,
+    .fc button {
+        font-size: 0.875rem;
+        margin-left: 0px;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__navigation {
+        top: 24px;
+    }
+
+    .react-date-picker {
+        margin-top: 10px;
+    }
+
+    .swal2-icon.swal2-warning.swal2-icon-show {
+        font-size: 6px;
+    }
+
+    .col-form-label {
+        padding-bottom: 0px;
+        font-size: 13px;
+    }
+
+    .row-std {
+        align-items: center;
+    }
+
+    /* calender */
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 1rem 1rem;
+        font-size: 1.5rem !important;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+        padding: 0.5rem 1rem 0.7rem 1rem;
+        font-size: 1.4rem !important;
+    }
+
+    .dashboard-custom-date-picker .react-datepicker .react-datepicker__navigation {
+        top: 20px;
+    }
+
+    #two .form-control {
+        margin-top: 1px !important;
+    }
+
+    .add-employee-btn i {
+        display: none;
+    }
+
+    /* .add-employee-btn {
+        margin-top: 0px;
+        position: fixed;
+        right: 14px;
+        top: 15px;
+    } */
+
+    .btn,
+    .form-wizard .container>div:not(.content)>button,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-confirm,
+    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-cancel,
+    .swal2-modal .swal2-actions .swal2-styled,
+    .fc button {
+        font-size: 0.675rem;
+        margin-left: 3px;
+    }
+
+    #two .form-control-lg {
+        padding: 10px 10px;
+    }
+
+    .page-title {
+        margin-bottom: -1px;
+    }
+
+    .employee-content .row-std {
+        padding: 0.5rem 1rem 0.5rem 0rem !important;
+    }
+
+    .eZQoCD {
+        min-height: 44px !important;
+    }
+
+    .sidebar .nav .nav-item .nav-link .menu-title {
+        font-size: 0.75rem;
+    }
+
+    /* .sidebar {
+        width: 170px;
+    } */
+
+    .sidebar .nav .nav-item .nav-link {
+        padding: 0.35rem 0 0.35rem 0;
+    }
+
+    .form-group label {
+        margin-top: 0px !important;
+    }
+
+    .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 2.55px !important;
+    }
+
+    .row-std-time .form-control {
+        padding: 0.6rem 0.5rem;
+        margin: 0px !important;
+    }
+
+    .add-btn-top {
+        padding-top: 6px !important;
+    }
+
+    .row-std-time .path {
+        padding-bottom: 15px;
+    }
+
+    @media (max-width:480px) {
+        .page-title {
+            font-size: 19px;
+            margin-bottom: -4px;
+        }
+
+        .brand-logo-login {
+            padding: 0.5rem 0rem !important;
+        }
+
+        .auth-form-light form {
+            padding-top: 0px !important;
+        }
+
+        .auth-form-light .form-control-lg {
+            padding: 10px 11px 5px 11px;
+        }
+
+        .brand-logo-login img {
+            width: 105px;
+        }
+
+        .auth .auth-form-light {
+            width: 300px;
+        }
+
+        .logo-none {
+            height: 33px;
+        }
+
+        .preview-list {
+            width: 12.5rem !important;
+        }
+
+        .preview-list .preview-item .preview-thumbnail img,
+        .preview-list .preview-item .preview-thumbnail .preview-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
+            padding: 3px 8px;
+        }
+
+        .new-message {
+            font-size: 12px;
+        }
+
+        .dropdown .dropdown-menu .dropdown-item {
+            font-size: 11px;
+        }
+
+        .dropdown-menu {
+            min-width: 7rem;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img {
+            left: 4px;
+            width: 25px;
+            height: 25px;
+            top: -2px;
+        }
+
+        .file-upload-section {
+            height: 88px;
+            font-size: 11px;
+        }
+
+        .small-modal {
+            padding: 5px 20px !important;
+        }
+
+        .user-modal .modal-content {
+            width: 100% !important;
+        }
+
+        .modal-content {
+            width: 85%;
+        }
+
+        .navbar .navbar-menu-wrapper {
+            height: 47px !important;
+        }
+
+        .btn.btn-fw,
+        .form-wizard .container>div:not(.content)>button.btn-fw,
+        .swal2-modal .swal2-buttonswrapper .btn-fw.swal2-styled,
+        .swal2-modal .swal2-actions .btn-fw.swal2-styled,
+        .fc button.btn-fw {
+            min-width: 0px;
+        }
+
+        .epNTxY {
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        .gHZEHz {
+            font-size: 11px !important;
+        }
+
+        .kIaWtg {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .modal-header-none .dropdown-menu {
+            position: absolute;
+            transform: translate3d(0px, 41px, 0px) !important;
+            top: 0px;
+            left: 0px;
+            will-change: transform;
+        }
+
+        .modal-button {
+            justify-content: center !important;
+        }
+
+        .modal-button .btn {
+            margin: 3px !important;
+            height: 25px !important;
+        }
+
+        .modal-body .form-control,
+        .swal2-modal .swal2-content .swal2-input {
+            height: 31px;
+        }
+
+        .submit-section {
+            margin-bottom: 0px;
+        }
+
+        /* navbar */
+
+        .navbar .navbar-brand-wrapper {
+            width: 41%;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+            margin-left: 11px;
+            margin-right: 0px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
+            font-size: 14px;
+        }
+
+        .navbar-toggler {
+            font-size: 14px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+        .navbar .navbar-menu-wrapper .count-indicator .count-symbol {
+            top: 23px;
+            right: -4px;
+            width: 4px;
+            height: 4px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img {
+            left: 8px;
+            position: relative;
+            width: 36px;
+            height: 36px;
+            top: 4px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status {
+            width: 8px;
+            height: 8px;
+            bottom: 10px;
+            right: 2px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img img {
+            width: 25px;
+            height: 25px;
+        }
+
+        /* employee */
+
+        .profile-action-icon {
+            height: 50px;
+            width: 50px;
+        }
+
+        .profile-image {
+            width: 137px;
+            height: 137px;
+        }
+
+        .profile-image img {
+            width: 135px;
+            height: 135px;
+        }
+
+        .image-standard {
+            height: 162px;
+        }
+
+        .modal-content .card-body {
+            overflow: auto;
+        }
+
+        .employee-modal .modal-dialog {
+            max-width: 367px !important;
+        }
+
+        .department-modal .modal-content {
+            height: unset;
+        }
+
+        .modal-header {
+            padding: 0.3rem 1rem;
+        }
+
+        #two .form-control {
+            height: 29px;
+            font-size: 10px;
+        }
+
+        .row-std-time .btn-gradient-primary {
+            font-size: 10px;
+            padding: 5.5px 9px !important;
+        }
+
+        .sidebar .nav .nav-item {
+            padding: 0 1rem;
+        }
+
+        /* .sidebar {
+            width: 165px;
+        } */
+
+        .form-control-lg {
+            padding: 10px 11px;
+        }
+
+        .path-title a {
+            font-size: 12px;
+        }
+
+        .path-title.active::before {
+            padding-right: 0.3rem;
+        }
+
+        .path {
+            gap: 5px;
+        }
+
+        .page-title {
+            font-size: 19px;
+            margin-bottom: -1px;
+        }
+
+        .custom-file .custom-file-label {
+            height: 32px;
+            font-size: 0.675rem;
+            padding: 0.725rem 0.6875rem;
+        }
+
+        .forms-sample label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .modal-content .form-control {
+            margin-top: 5px !important;
+        }
+
+        .hLCCgQ {
+            max-width: 8% !important;
+        }
+
+        .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+            left: -2px !important;
+            top: 1px !important;
+
+        }
+
+        .employee-id {
+            width: 125px;
+            padding: 6px;
+        }
+
+        /* .calender */
+        .calender-wrapper {
+            padding-bottom: 12px;
+        }
+
+        /* 
+        .list-wrapper .edit {
+            width: 1rem;
+            height: 1rem;
+        } */
+
+        .list-wrapper .remove {
+            font-size: 1.238rem;
+        }
+
+        .btn-add {
+            height: 37.5px !important;
+        }
+
+        .calender .form-control {
+            padding: 0.76rem 1.375rem !important;
+        }
+
+        .apexcharts-canvas {
+            padding-top: 0px;
+        }
+
+        .swal2-modal .swal2-actions .swal2-styled,
+        .fc button {
+            padding: 0.575rem 1rem;
+        }
+
+        .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+            width: 240px !important;
+            height: 148px !important;
+        }
+
+        .swal2-title {
+            padding: 0.5em 1em 0;
+            font-size: 14px !important;
+        }
+
+        .doc-modal i {
+            top: 3%;
+            left: 33%;
+        }
+
+        .forms-sample a {
+            font-size: 10px;
+        }
+    }
+
+    @media (max-width:414px) {
+        /* employee */
+
+        .page-title {
+            font-size: 17px;
+            margin-bottom: -4px;
+        }
+
+        .path {
+            gap: 5px;
+        }
+
+        .path-title a {
+            font-size: 11px;
+        }
+
+        .add-employee-btn i {
+            font-size: 10px;
+            padding-right: 5px;
+        }
+
+        div#two {
+            padding-bottom: 0px !important;
+            border-radius: 6px;
+        }
+
+        div#one {
+            padding-left: 15px;
+            padding-bottom: 0px;
+        }
+
+        .navbar .navbar-brand-wrapper .navbar-brand img {
+            width: 86%;
+            height: 43px;
+        }
+
+        .eZQoCD {
+            min-height: 44px !important;
+
+        }
+
+        #two .form-control {
+            height: 28.5px;
+        }
+
+        .department-modal .forms-sample label {
+            margin-top: 0px !important;
+        }
+
+        .profile-image {
+            width: 122px;
+            height: 122px;
+        }
+
+        .profile-image img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .image-standard {
+            height: 140px;
+        }
+
+        .forms-sample label {
+            font-size: 11px;
+        }
+
+        .employee-content .table td {
+            padding: 0.3rem;
+        }
+
+        .card .card-body {
+            padding: 1rem;
+        }
+
+        .employee-modal .modal-dialog {
+            max-width: 310px !important;
+        }
+
+        .modal-dialog {
+            max-width: 310px !important;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        .mail-btn .btn-gradient-primary {
+            padding: unset;
+        }
+
+        div#two {
+            padding-right: 0px !important;
+        }
+
+        #one {
+            padding-left: 6px;
+        }
+
+        .profile-action-icon {
+            height: 30px !important;
+            width: 30px !important;
+        }
+
+        .epNTxY {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        .info-main .title {
+            width: 10% !important;
+        }
+
+        .personal-info li {
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .info-main {
+            padding-left: 26px !important;
+        }
+
+        .profile-box .card-body {
+            padding: 1rem !important;
+        }
+
+        .calcedar-field .react-date-picker__wrapper {
+            padding: 9px 9px;
+        }
+
+        .delete {
+            margin-right: 0px;
+        }
+
+        /* calender */
+
+        .calcedar-field .react-date-picker__wrapper {
+            padding: 7px 5px;
+        }
+
+        .react-calendar__tile {
+            font-size: 12px;
+        }
+
+        .react-calendar__month-view__weekdays__weekday {
+            font-size: 11px !important;
+        }
+
+        .react-calendar__tile {
+            padding: 6px 0px;
+        }
+
+        .react-calendar__navigation button {
+            min-width: 34px;
+        }
+
+        .react-calendar__navigation {
+            margin-bottom: 0em;
+        }
+
+        .calender-wrapper {
+            padding: 0px 12px 10px 12px;
+        }
+
+        .calender-row {
+            padding: 12px 0px;
+        }
+
+        .standard-wrap {
+            padding: 0px 11px;
+        }
+
+        .calender .form-control {
+            padding: 0.62rem 1.375rem !important;
+        }
+
+        .calender .btn-gradient-primary {
+            width: 34% !important;
+            height: 33.5px !important;
+        }
+
+        .react-date-picker__inputGroup__month {
+            width: 9px !important;
+        }
+
+        .react-date-picker__inputGroup__year {
+            width: 30px !important;
+        }
+
+        /* sidebar */
+        .sidebar i {
+            font-size: 12px !important;
+            height: 26px;
+            width: 26px;
+            padding: 7px 0px;
+        }
+
+        .sidebar-offcanvas.active {
+            right: 0;
+            width: 215px;
+        }
+
+        .sidebar .nav .nav-item {
+            padding: 0 2rem;
+        }
+
+        .menu-arrow {
+            margin-right: 0px !important;
+        }
+
+        .sidebar .nav .nav-item .nav-link {
+            padding: 0.65rem 0 0.5rem 0;
+        }
+
+        .sidebar .nav.sub-menu .nav-item .nav-link {
+            padding: 0.5rem 2rem 0.5rem 2.9rem;
+        }
+
+        .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+            top: 0px !important;
+
+        }
+
+        .user-modal .modal-content {
+            width: 100% !important;
+        }
+
+        .user-modal .modal-dialog {
+            max-width: unset !important;
+        }
+
+        .doc-modal i {
+            left: 42%;
+        }
+
+        #content-search-field input {
+            width: 15px;
+            height: 15px;
+            font-size: 12px;
+        }
+
+        #content-search-field {
+            height: 40px;
+            width: 300px;
+            top: 82%;
+            left: 71%;
+        }
+
+        #content-search-field .close:before {
+            margin-top: -1px !important;
+            margin-left: -10px !important;
+        }
+
+        #content-search-field .close:after {
+            margin-top: -1px;
+            margin-left: -10px;
+        }
+
+        .submit-btn {
+            padding: 0.6rem 2rem;
+        }
+    }
+
+    @media (max-width:375px) {
+
+        /* Login */
+        .auth .brand-logo img {
+            width: 90px;
+        }
+
+        .auth .auth-form-light {
+            width: 293px;
+        }
+
+        div#one {
+            padding-bottom: 0px;
+            padding-left: 21px;
+            padding-right: 0px;
+        }
+
+
+        #two .form-control-lg {
+            padding: 10px 5px;
+        }
+
+        .page-title {
+            font-size: 17px;
+            margin-bottom: 0px;
+        }
+
+        .navbar .navbar-menu-wrapper {
+            padding-left: 15px;
+        }
+
+        .path {
+            gap: 1px;
+        }
+
+        .fkmpGg {
+            min-width: 73px;
+        }
+
+        .gHZEHz {
+            padding-right: 7px;
+        }
+
+        .form-control,
+        .swal2-modal .swal2-content .swal2-input {
+            height: 37px;
+        }
+
+        .image-standard {
+            height: 134px;
+        }
+
+        .file-upload-section {
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .h4 {
+            font-size: 13px;
+        }
+
+        #two,
+        .modal-body .form-control {
+            font-size: 0.6125rem;
+        }
+
+        div#one {
+            padding-left: 15px;
+        }
+
+        .sidebar-offcanvas.active {
+            width: 166px;
+        }
+
+        .sidebar .nav .nav-item {
+            padding: 0 1rem;
+        }
+
+        .info-main {
+            padding-left: 35px !important;
+            margin-bottom: 0px;
+        }
+
+        .profile-standard .nav-pills .nav-link {
+            padding: 0.3rem 0.5rem;
+        }
+
+        .profile-standard .card .card-title {
+            font-size: 17px !important;
+            padding: 0px 0 12px 0 !important;
+        }
+
+        .css-1ujnqem-MuiTabs-root.css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+            min-height: 37px !important;
+        }
+
+        .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+            padding: 0px 0px !important;
+            min-width: 70px;
+        }
+
+        .css-1ujnqem-MuiTabs-root {
+            min-height: 38px;
+        }
+
+        .modal-header {
+            padding: 0.3rem 1rem 0rem 1rem;
+        }
+
+        .common-info-dashboard h2 {
+            font-size: 1.4rem;
+        }
+
+        .swal2-actions {
+            margin: 0em auto 0 !important;
+        }
+
+        .css-jsexje-MuiSwitch-thumb {
+            width: 10px !important;
+            height: 10px !important;
+        }
+
+        .css-1yjjitx-MuiSwitch-track {
+            height: 57% !important;
+            width: 57% !important;
+        }
+
+        .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+            top: -2.5px !important;
+            left: -3px !important;
+        }
+
+        /* .calender  */
+        .react-date-picker__inputGroup__input {
+            font-size: 10px !important;
+        }
+
+        .react-date-picker__inputGroup__year {
+            width: 26px !important;
+        }
+
+        .react-date-picker__inputGroup__day {
+            width: 14px
+        }
+
+        .react-date-picker__inputGroup__month {
+            width: 19px !important;
+        }
+
+        .react-date-picker__inputGroup__year {
+            width: 22px !important;
+        }
+
+        .css-i4bv87-MuiSvgIcon-root {
+            font-size: 13px !important;
+        }
+
+        .calender .form-control {
+            padding: 0.5rem 0.4rem !important;
+        }
+
+        .form-check .form-check-label {
+            margin-left: 0.5rem;
+
+        }
+
+        .react-date-picker__inputGroup__divider {
+            padding: 0px 3px;
+            white-space: pre;
+        }
+
+
+        .delete {
+            margin-right: 0px;
+        }
+
+        .edit {
+            margin: 0px 6px;
+        }
+
+        #content-search-field {
+            left: 75% !important;
+        }
+
+        .row-std-time #content-search-field {
+            left: 71% !important;
+        }
+
+        .personal-info li .title {
+            margin-right: 45px;
+        }
+
+        .personal-info li .text {
+            width: 200px;
+        }
+    }
+
+    @media (max-width:360px) {
+        /* .modal-content {
+        height: 386px;
+    } */
+
+        .path-title.active::before {
+            padding-right: 0.3rem;
+        }
+
+        div#one {
+            padding-bottom: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+        #two .form-control {
+            height: 29px;
+            font-size: 10px;
+        }
+
+        div#one {
+            padding-bottom: 0px;
+            padding-left: 13px;
+            padding-right: 0px;
+        }
+
+        .navbar .navbar-menu-wrapper {
+            padding-right: 11px;
+        }
+
+        .nav-standard {
+            height: 20px;
+        }
+
+        .navbar .navbar-brand-wrapper {
+            border-right: none;
+        }
+
+        #two .form-control {
+            height: 29px;
+            font-size: 10px;
+            position: absolute;
+            top: 23px;
+            z-index: 8;
+            right: -39px;
+            width: 91px;
+        }
+
+        .navbar .navbar-brand-wrapper {
+            width: 50%;
+            height: 30%;
+        }
+
+        .col-3,
+        .tab-vertical-custom .nav-tabs {
+            flex: 0 0 25%;
+            max-width: 14%;
+        }
+
+        .btn.btn-fw,
+        .form-wizard .container>div:not(.content)>button.btn-fw,
+        .swal2-modal .swal2-buttonswrapper .btn-fw.swal2-styled,
+        .swal2-modal .swal2-actions .btn-fw.swal2-styled,
+        .fc button.btn-fw {
+            min-width: 62px;
+        }
+
+        .profile-view .profile-img-wrap img {
+            height: 90px;
+            width: 90px;
+        }
+
+        .profile-standard .nav-pills .nav-link {
+            padding: 0.3rem 0.4rem;
+        }
+
+        .tab-content {
+            padding: 0px;
+        }
+
+        .profile-box .card-body {
+            padding: 0.5rem !important;
+        }
+
+        .personal-info {
+            padding-left: 0.2rem;
+        }
+
+        .profile-standard .card .card-title {
+            font-size: 15px !important;
+            padding: 0px 0 5px 0 !important;
+        }
+
+        .profile-view .profile-img-wrap {
+            left: 2%;
+        }
+
+        /* calender  */
+        .calcedar-field .react-date-picker__wrapper {
+            padding: 9px 7px;
+        }
+
+        .magnifierContainer {
+            display: block;
+            font-size: 13px;
+            padding: 0px 7px;
+            color: #00458f;
+        }
+
+
+
+        .calender-row .card-body {
+            padding: 1rem 0.5rem;
+        }
+
+        .calender .btn-gradient-primary {
+            width: 34% !important;
+            height: 32.5px !important;
+        }
+
+        .calender .form-control {
+            padding: 0.63rem 0.4rem !important;
+        }
+
+        .calender .add-items .btn {
+            margin-left: 0.3rem;
+        }
+
+        .calender .edit {
+            margin: 0px 0px 6px 0px;
+        }
+
+        .calender .list-wrapper .edit {
+            font-size: 0.9rem;
+        }
+
+        .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
+            top: 1px !important;
+        }
+
+        #content-search-field {
+            left: 67% !important;
+        }
+
+        .row-std-time #content-search-field {
+            left: 67% !important;
+        }
+
+        .employee-id {
+            width: 106px;
+            padding: 6px;
+        }
+
+        .employee-id h5 {
+            font-size: 10px;
+        }
+
+        .row-std-time #one {
+            margin-right: 22px;
+        }
+
+    }
+
+    @media (max-width:320px) {
+
+        /* Login */
+        .auth .auth-form-light {
+            width: 265px;
+        }
+
+        .auth form .form-group .form-control,
+        .auth form .form-group .swal2-modal .swal2-content .swal2-input,
+        .swal2-modal .swal2-content .auth form .form-group .swal2-input {
+            font-size: 12px;
+        }
+
+        .auth form .auth-link {
+            font-size: 12px;
+        }
+
+        .auth form .form-group {
+            margin-bottom: 8px;
+        }
+
+        .login-btn {
+            margin-top: 8px !important;
+        }
+
+        /* forget password */
+        .form-label {
+            font-size: 12px;
+        }
+
+        .auth form .auth-form-btn {
+            padding: 8px 20px;
+        }
+
+        .error {
+            font-size: 11px;
+        }
+
+        .h4 {
+            font-size: 0.8rem;
+        }
+
+        .modal-button .btn {
+            font-size: 10px;
+            width: 43% !important;
+        }
+
+        .file-upload-section {
+            font-size: 12px;
+            margin-bottom: 15px;
+            font-size: 10px;
+        }
+
+        .file-upload-section {
+            height: 94px;
+        }
+
+        .form-control {
+            margin-top: 5px !important;
+        }
+
+        .forms-sample input {
+            font-size: 11px;
+        }
+
+        .page-title {
+            font-size: 16px;
+        }
+
+        .profile-action-icon {
+            height: 45px;
+            width: 45px;
+        }
+
+        .form-control {
+            margin-top: 7px !important;
+        }
+
+        .profile-view .profile-basic .profile-info-left .staff-msg .btn-custom {
+            width: 60% !important;
+            font-size: 10px;
+        }
+
+        .user-name {
+            font-size: 15px;
+        }
+
+        .profile-info-left h6 {
+            margin-bottom: 0px;
+        }
+
+        /* .edit-icon {
+        float: none;
+        font-size: 10px;
+        padding: 4px;
+    } */
+
+        .tab-view .card-body {
+            padding: 1rem !important;
+        }
+
+        .info-main {
+            padding-left: 15px !important;
+        }
+
+        .info-main .title {
+            width: 12% !important;
+        }
+
+        .profile-standard .profile-view .profile-img-wrap img {
+            height: 85px;
+            width: 85px;
+        }
+
+        .profile-standard .profile-view .profile-img-wrap {
+            height: 85px;
+            width: 85px;
+        }
+
+        .profile-box .card-body {
+            padding: 0.9rem !important;
+        }
+
+        .profile-standard {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .profile-standard .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .path-title a {
+            font-size: 9px;
+        }
+
+        .preview-list .preview-item .preview-thumbnail img,
+        .preview-list .preview-item .preview-thumbnail .preview-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item .ellipsis {
+            margin: 0px !important;
+        }
+
+        .preview-list .preview-item .preview-thumbnail img,
+        .preview-list .preview-item .preview-thumbnail .preview-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item i {
+            font-size: 15px;
+        }
+
+        #two {
+            max-width: 11%;
+        }
+
+        .common-box-dashboard {
+            height: 88px;
+        }
+
+        .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+            width: 230px !important;
+            height: 148px !important;
+        }
+
+        .swal2-modal .swal2-actions .swal2-styled,
+        .fc button {
+            padding: 0.575rem 0.6rem;
+        }
+
+        /* calender */
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__month {
+            padding: 0rem 0;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+            padding: 0.7rem 1rem;
+            font-size: 1.2rem !important;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__navigation {
+            top: 7px;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day.react-datepicker__day--today::before {
+            background: #32aff3;
+            left: 59%;
+            top: 44%;
+            width: 30px;
+            height: 30px;
+        }
+
+        .react-datepicker .react-datepicker__month-container .react-datepicker__header .react-datepicker__day-names .react-datepicker__day-name {
+            font-size: 12px;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__current-month {
+            padding: 0.3rem 1rem 0.5rem 1rem;
+            font-size: 1.1rem !important;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__navigation {
+            top: 17px;
+        }
+
+        .my-chart-head {
+            padding: 1.5rem 1rem;
+            font-size: 1.1rem;
+        }
+
+        .my-chart-head {
+            padding: 1.5rem 1rem;
+            font-size: 1.1rem;
+        }
+
+        .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day.react-datepicker__day--selected::before {
+            top: 45%;
+            left: 53%;
+        }
+
+        .btn-add {
+            padding: 0px 8px;
+            font-size: 10px;
+            height: 35.5px !important;
+            margin-left: 4px !important;
+        }
+
+        .css-i4bv87-MuiSvgIcon-root {
+            width: 0.9em !important;
+            height: 0.9em !important;
+        }
+
+        .calcedar-field .react-date-picker__wrapper {
+            padding: 8px 4px;
+        }
+
+        .calender-row .card-body {
+            padding: 1rem 0.4rem !important;
+        }
+
+        .calender .btn-gradient-primary {
+            height: 32px !important;
+        }
+
+        .calender .form-control,
+        .swal2-modal .swal2-content .swal2-input {
+            font-size: 0.7125rem;
+        }
+
+        .react-date-picker__inputGroup__year {
+            width: 25px !important;
+        }
+
+        .react-date-picker__inputGroup__day {
+            width: 14px !important;
+        }
+
+        .calender .add-items {
+            margin-bottom: 0.6rem;
+        }
+
+        .calender-row .col-lg-7 {
+            padding: 0px 10px;
+        }
+
+        .calender-row .col-lg-5 {
+            padding: 0px 10px 10px 10px;
+        }
+
+        .calender-wrapper .card-body {
+            padding: 0px !important;
+        }
+
+        .calender .form-control {
+            padding: 0.6rem 0.4rem !important;
+        }
+
+        .calender .card-body {
+            padding: 1rem 1rem;
+        }
+
+        .edit {
+            margin-right: 9px;
+        }
+
+        .list-wrapper .edit {
+            font-size: 1rem;
+        }
+
+        .list-wrapper .remove {
+            font-size: 1rem;
+        }
+
+        .calender .form-check .form-check-label {
+            font-size: 0.775rem;
+        }
+
+        .react-date-picker__inputGroup__month {
+            width: 19px;
+        }
+
+        .dashboard-custom-date-picker .react-datepicker .react-datepicker__week {
+            padding-left: 0rem;
+            padding-right: 0rem;
+        }
+
+        .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
+            width: 203px !important;
+            height: 142px !important;
+        }
+
+        .swal2-title {
+            padding: 0.5em 1em 0;
+        }
+
+        .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+            top: -4px !important;
+            left: -5px !important;
+        }
+
+        .doc-modal i {
+            left: 49%;
+        }
+
+        #content-search-field {
+            left: 63% !important;
+        }
+
+        .row-std-time #content-search-field {
+            left: 63% !important;
+        }
+
+        .personal-info li .title {
+            width: 30%;
+        }
+    }
+}

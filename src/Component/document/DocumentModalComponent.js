@@ -1,0 +1,379 @@
+import axios from 'axios';
+import React, { useState } from 'react'
+import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useRef } from 'react';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import Spinner from '../common/Spinner';
+import { GetLocalStorage } from '../../service/StoreLocalStorage';
+
+const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) => {
+    const [show, setShow] = useState(false);
+    const [document, setDoument] = useState({
+        name: "",
+        description: "",
+        image: "",
+        imageName: ""
+    })
+    const [nameError, setNameError] = useState('')
+    const [descriptioneError, setDescriptioneError] = useState('')
+    const [imageError, setImagerror] = useState('');
+    const [loader, setloader] = useState(false)
+    const [Error, setError] = useState([])
+
+    let { getCommonApi } = GlobalPageRedirect();
+
+    // image crop state
+    const [crop, setCrop] = useState({
+        unit: '%',
+        width: 70,
+        height: 70
+    })
+    const [imagesrc, setimagesrc] = useState("")
+    const [images, setimages] = useState("")
+    const [secondshow, setsecondshow] = useState(false);
+
+    const ref = useRef(null)
+    const inputRef = useRef(null)
+
+    // modal show function
+    const handleShow = () => {
+        if (data) {
+            setDoument({
+                name: data.name,
+                description: data.description,
+                image: process.env.REACT_APP_IMAGE_API + '/storage/' + data.image,
+                imageName: data.image.split(".").pop() === 'pdf' ? "pdf" : "",
+                id: data.id
+            })
+        }
+        setShow(true)
+    }
+
+    // modal close function
+    const handleClose = (e) => {
+        e.preventDefault();
+        setShow(false)
+        setDoument({
+            name: "",
+            description: "",
+            image: "",
+            imageName: ""
+        });
+        setNameError('');
+        setDescriptioneError('');
+        setImagerror('');
+        setError([])
+    }
+
+    //onchange function
+    const InputEvent = (e) => {
+        let { name, value } = e.target;
+
+        setDoument({ ...document, [name]: value })
+    }
+
+    // image field onchange function
+    const imageChange = (e) => {
+        setsecondshow(false)
+        if (e.target.files.length !== 0) {
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                if (e.target.files[0].type !== "application/pdf") {
+                    setsecondshow(true)
+                    setimagesrc(reader.result.toString())
+                } else {
+                    setDoument({ ...document, image: reader.result, imageName: "pdf" });
+                }
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        if (e.target.files.length === 0 && !document.image) {
+            setImagerror('Please select file.')
+        } else {
+            setImagerror('');
+        }
+    }
+
+    // submit function
+    const HandleSubmit = (e) => {
+        e.preventDefault();
+        validationName();
+        validationDescription();
+        validationImage();
+        setError([])
+
+        let { name, description, image, id } = document
+        if (!name || !description || !image) {
+            return false;
+        }
+        if (nameError || descriptioneError || imageError) {
+            return false;
+        }
+        if (id) {
+            setloader(true)
+            // api update document
+            axios.post(`${process.env.REACT_APP_API_KEY}/important_documents/update`, {
+                id,
+                name,
+                description,
+                image: image.includes("important_document") ? "" : image
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GetLocalStorage('token')}`
+                }
+            }).then((res) => {
+                if (res.data.success) {
+                    setloader(false)
+                    setloader(false)
+                    toast.success('Edited Successfully.')
+                    setToggle(!toggle)
+                    setShow(false)
+                    setDoument({
+                        name: '',
+                        description: '',
+                        image: '',
+                        imageName: ''
+                    })
+                } else {
+                    toast.error("Something went wrong, Please check your details and try again.")
+                    setloader(false)
+                }
+            }
+            ).catch((error) => {
+                setloader(false)
+                console.log("documentmodalcomponent update api  error == >>> ", error)
+                if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        if (typeof error.response.data.error === "string") {
+                            toast.error(error.response.data.error)
+                        } else {
+                            setError(error.response.data.error);
+                        }
+                    }
+                }
+            })
+        } else {
+            setloader(true)
+            // api add document
+            axios.post(`${process.env.REACT_APP_API_KEY}/important_documents/add`, {
+                name,
+                description,
+                image
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GetLocalStorage('token')}`
+                }
+            }).then((res) => {
+                if (res.data.success) {
+                    toast.success('Successfully added a new document.');
+                    setloader(false)
+                    setToggle(!toggle)
+                    setShow(false)
+                    setDoument({
+                        name: '',
+                        description: '',
+                        image: '',
+                        imageName: ''
+                    })
+                } else {
+                    toast.error("Something went wrong, Please check your details and try again.")
+                    setloader(false)
+                }
+            }
+            ).catch((error) => {
+                setloader(false)
+                console.log("documentmodalcomponent add api  error == >>> ", error)
+                if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        if (typeof error.response.data.error === "string") {
+                            toast.error(error.response.data.error)
+                        } else {
+                            setError(error.response.data.error);
+                        }
+                    }
+                }
+            })
+        }
+
+    }
+
+    // file name field vlidation
+    const validationName = () => {
+        if (!document.name) {
+            setNameError('Please enter file name.')
+        } else if (!document.name.trim() || !document.name.match(/^[a-zA-Z0-9 ]*$/)) {
+            setNameError('Please enter a valid file name.')
+        } else {
+            setNameError('')
+        }
+    }
+
+    // descrption field validation
+    const validationDescription = () => {
+        if (!document.description) {
+            setDescriptioneError('Please enter description.')
+        } else if (!document.description.trim()) {
+            setDescriptioneError('Please enter a valid description.')
+        }
+        else {
+            setDescriptioneError('');
+        }
+    }
+
+    // image validation
+    const validationImage = () => {
+        if (!document.image) {
+            setImagerror('Please select file.')
+        } else {
+            setImagerror('');
+        }
+    }
+
+    // crop image submit
+    const onclick = () => {
+        const canvas = ref.current;
+        const scaleX = images.naturalWidth / images.width;
+        const scaleY = images.naturalHeight / images.height;
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        const ctx = canvas.getContext("2d");
+
+        // New lines to be added
+        const pixelRatio = window.devicePixelRatio;
+        canvas.width = crop.width * pixelRatio;
+        canvas.height = crop.height * pixelRatio;
+        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        ctx.imageSmoothingQuality = "high";
+
+        ctx.drawImage(
+            images,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            crop.width * scaleX,
+            crop.height * scaleY,
+            0,
+            0,
+            crop.width,
+            crop.height
+        );
+
+        // As Base64 string
+        const base64Image = canvas.toDataURL("image/jpeg");
+        if (base64Image.includes('image')) {
+            setDoument({ ...document, image: base64Image, imageName: "" })
+        } else {
+            setDoument({ ...document, image: imagesrc, imageName: "" })
+        }
+        setsecondshow(false)
+    }
+
+    // reemove image
+    const removeItem = () => {
+        setDoument({ ...document, image: "" });
+    }
+
+    return (
+        <>
+            {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+                : <button
+                    className='btn btn-gradient-primary btn-rounded btn-fw text-center' disabled={!(role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === '1'))} onClick={handleShow}>
+                    <i className="fa-solid fa-plus" ></i>&nbsp;Add
+                </button>
+            }
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+                <Modal.Header className='small-modal'>
+                    <Modal.Title>{data ? 'Edit Document' : 'Add Document'}
+                    </Modal.Title>
+                    <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0 doc-modal">
+                        <div className="card">
+                            <div className="card-body">
+                                <form className="forms-sample">
+                                    <div className={`${!document.image ? 'file-upload-section' : 'file-design'}`} onClick={() => inputRef.current.click()}>
+                                        {document.image ?
+                                            <><img src={!document.imageName ? document.image : '/images/pdf.png'} alt="file" width={100} className='img-fluid' /></>
+                                            : <> <FileUploadIcon /> &nbsp; Select a image and pdf file to upload</>
+                                        }
+                                        {document.image && <i className="fa-solid fa-xmark" onClick={removeItem}></i>}
+                                        <input type='file' accept="image/png,image/jpeg,image/jpg,application/pdf" onChange={imageChange} ref={inputRef} className='d-none' />
+                                    </div>
+                                    {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
+                                    <div className="form-group">
+                                        <label htmlFor="1" className='mt-3'>File Name</label>
+                                        <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} />
+                                        {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="2" className='mt-3'>Description</label>
+                                        <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} />
+                                        {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
+                                    </div>
+                                    <ol>
+                                        {Error.map((val) => {
+                                            return <li className='error' key={val}>{val}</li>
+                                        })}
+                                    </ol>
+                                    <div className='d-flex justify-content-end modal-button'>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
+                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {loader && <Spinner />}
+                </Modal.Body>
+            </Modal>
+
+
+            {/* image crop modal */}
+            < Modal show={secondshow} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal' centered >
+                <Modal.Header className='small-modal'>
+                    <Modal.Title>Crop Image
+                    </Modal.Title>
+                    <p className='close-modal' onClick={() => setsecondshow(false)}><i className="fa-solid fa-xmark"></i></p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="container-fluid p-0">
+                        < div className="row" >
+                            <div className=" col-12">
+                                <ReactCrop src={imagesrc} crop={crop} onChange={newCrop => setCrop(newCrop)} onImageLoaded={setimages} />
+                            </div>
+                            <div className="col-12 text-center">
+                                <label className="upload m-0" >
+                                    <CloudUploadIcon />  Upload Different Image <input type="file" accept="image/png,image/jpeg,image/jpg,application/pdf"
+                                        name="image" id="" style={{ display: "none" }} onChange={imageChange} />
+                                </label>
+                            </div>
+                            <div className="col-12 d-flex py-2 upload-btn">
+                                <button className="btn btn-gradient-primary" onClick={() => { setsecondshow(false); setDoument({ ...document, image: imagesrc, imageName: "" }) }}>Upload Original</button>
+                                <button className="btn btn-gradient-primary" onClick={onclick}>Save Cropped Image</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal >
+            <canvas ref={ref} className='d-none'></canvas>
+        </>
+    )
+}
+
+export default DocumentModalComponent
