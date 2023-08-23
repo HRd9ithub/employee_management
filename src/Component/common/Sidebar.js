@@ -155,9 +155,9 @@ const Sidebar = () => {
     <>
       <nav className={`sidebar sidebar-offcanvas ${sidebarToggle ? "active" : ""}`} id="sidebar" ref={sidebarRef}>
         <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          {window.innerWidth >= 992 ? logoToggle ?
+          {logoToggle ?
             <Link className="navbar-brand brand-logo " to="/"><img src='/Images/d9_logo_black.png' alt="logo" /></Link> :
-            <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link> : ""}
+            <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link> }
         </div>
         <ul className="nav">
           {/* dashboard */}

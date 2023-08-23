@@ -234,13 +234,10 @@ const Dashboard = () => {
                                                                  return <li key={val.id}>{val.name}</li>
                                                             })}
                                                        </ul>
-                                                       {/* {holiday.length !== 0 &&
-                                                            <img src="/images/giphy.gif" alt="Computer man" className='yay-gif' />}
-                                                       {holiday.length === 0 && */}
+                                                       {holiday.length === 0 && 
                                                        <ul>
-                                                            {/* <img src="/images/sorry-removebg-preview.png" alt="Sorry image" className='sorry' /> */}
                                                             No Holiday !
-                                                       </ul>
+                                                       </ul>}
                                                   </div>
                                              </div>
                                         </div>
@@ -248,23 +245,22 @@ const Dashboard = () => {
                                              <div className='my-chart'>
                                                   <div className='my-chart-head text-center'>On Leave Today</div>
                                                   <div className='p-3'>
-                                                       {/* <ul>
-                                                            Wow! Everyone is Present Today.
+                                                       <ul>
                                                             {todayLeave?.map((val) => {
                                                             return (
                                                                  <div className="text-capitalize d-flex align-items-center" key={val.id}>
                                                                       <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} target="_blank">
-                                                                           eslint-disable-next-line
+                                                                           {/* eslint-disable-next-line */}
                                                                            <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile image" />
                                                                       </NavLink>
                                                                       {val.user?.first_name.concat(" ", val.user?.last_name)}
                                                                  </div>
                                                             )
                                                        })}
-                                                  </ul> */}
+                                                  </ul> 
                                                   {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
                                                        <ul>
-                                                            <li>All Employees are Present.</li>
+                                                            <li> Wow! Everyone is Present Today.</li>
                                                        </ul>}
                                              </div>
                                         </div>

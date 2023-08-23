@@ -76,8 +76,7 @@ const Employee = ({ HandleProgress }) => {
   };
 
   // delete function
-  const handleDelete = (data) => {
-    let { id } = data;
+  const handleDelete = (id) => {
     let token = GetLocalStorage("token");
     const request = {
       headers: {
@@ -259,8 +258,8 @@ const Employee = ({ HandleProgress }) => {
             <div className="row breadcrumb-btn">
               <div className="col-10">
                 <ul id="breadcrumb" className="mb-0">
-                  <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                  <li><a href="/employees" className="ibeaker"><i className="fa-solid fa-user icon"></i> Employee</a></li>
+                  <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                  <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-user icon"></i> Employee</NavLink></li>
                 </ul>
               </div>
               <div className="col-2">
@@ -333,10 +332,6 @@ const Employee = ({ HandleProgress }) => {
                           </NavLink></TableCell>
                           <TableCell>
                             <div>
-                              {/* <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} target="_blank">
-                              {val.profile_image &&
-                                <img className="profile-action-icon text-center" src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} alt="Profile_image" />}
-                            </NavLink> */}
                               {val.first_name.concat(" ", val.last_name)}
                             </div>
                           </TableCell>
@@ -367,7 +362,7 @@ const Employee = ({ HandleProgress }) => {
                       )
                     }) :
                       <TableRow>
-                        <TableCell colSpan={7} align="center">
+                        <TableCell colSpan={8} align="center">
                           No Records Found
                         </TableCell>
                       </TableRow>
