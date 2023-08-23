@@ -349,10 +349,7 @@ const TimeSheetReport = () => {
                   {/* search box */}
                   <div className="col-md-8 col-sm-4 col-3 p-0 text-end" id="two"></div>
                   <div className="col-md-4 col-sm-4 col-3 p-0 text-end" id="two">
-                    <Form.Control type="text" className={`${visible ? "open" : "close-btn"}`} id="exampleInputUsername1" onChange={handleFilter} placeholder=" &#xf002; &nbsp; Search " size="lg" style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
-                    <div className="magnifierContainer">
-                      <i className={`fa-solid fa-magnifying-glass material-icons`} onClick={handleVisibility}></i>
-                    </div>
+                    <Form.Control type="text" className="open" id="exampleInputUsername1" onChange={handleFilter} placeholder=" &#xf002; &nbsp; Search " size="lg" style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
                   </div>
                    {/* employee dropdrown part */}
                   <div className='col-xl-6 col-lg-6 col-sm-6 col-12 pr-0 pr-sm-0'>
