@@ -330,13 +330,13 @@ const TimeSheetReport = () => {
           <div className=''>
             <div className='container-fluid '>
               <div className="row breadcrumb-btn">
-                <div className="col-10">
+                <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                   <ul id="breadcrumb" className="mb-0">
                     <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
                     <li><a href="/TimeSheetReport" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet Report</a></li>
                   </ul>
                 </div>
-                <div className="col-2">
+                <div className="col-lg-2 col-md-2 col-sm-3 col-3">
                   <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center'>
                     <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
                   </div>
@@ -344,42 +344,32 @@ const TimeSheetReport = () => {
               </div>
             </div>
             <div className="background-wrapper bg-white pt-5">
-              <div className='container-fluid pr-5'>
-                <div className='row justify-content-end row-std inner-pages'>
+              <div className='container-fluid'>
+                <div className='row row-std inner-pages'>
                   {/* search box */}
-                  <div className="col-md-8 col-sm-4 col-3 p-0 text-end" id="two"></div>
-                  <div className="col-md-4 col-sm-4 col-3 p-0 text-end" id="two">
+                  <div className="col-md-8 col-sm-12 p-0 text-end" id="two"></div>
+                  <div className="col-md-4 col-sm-12" id="two">
                     <Form.Control type="text" className="open" id="exampleInputUsername1" onChange={handleFilter} placeholder=" &#xf002; &nbsp; Search " size="lg" style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
                   </div>
-                   {/* employee dropdrown part */}
-                  <div className='col-xl-6 col-lg-6 col-sm-6 col-12 pr-0 pr-sm-0'>
-                  <div className="form-group mb-0">
-                    <label htmlFor="1" className='mt-3'>Employees </label>
-                    <select className="form-control" id="employee" name='data' value={data} onChange={onChange}>
-                      <option value='0'>All</option>
-                      {user.map((val) => {
-                        return (
-                          <option key={val.id} value={val.id}>{val.first_name.concat(" ", val.last_name)}</option>
-                        )
-                      })}
-                    </select>
+                  {/* employee dropdrown part */}
+                  <div className='col-md-6 col-sm-6 col-12 pr-sm-1'>
+                    <div className="form-group mb-0">
+                      <label htmlFor="1" className='mt-3'>Employees </label>
+                      <select className="form-control" id="employee" name='data' value={data} onChange={onChange}>
+                        <option value='0'>All</option>
+                        {user.map((val) => {
+                          return (
+                            <option key={val.id} value={val.id}>{val.first_name.concat(" ", val.last_name)}</option>
+                          )
+                        })}
+                      </select>
                     </div>
                   </div>
                   {/* month dropdrown part */}
-                  <div className='col-md-4 col-lg-4 col-sm-4 col-12 pr-0 pr-sm-0 pl-sm-1'>
+                  <div className='col-md-6 col-sm-6 col-12 pl-sm-1'>
                     <div className="form-group mb-0">
                       <label htmlFor="1" className='mt-3'> Select date</label>
                       <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback}><input className="form-control" /></DateRangePicker>
-                    </div>
-                  </div>
-
-
-                  {/* button */}
-                  <div className='col-md-4 col-lg-4 col-sm-4 col-12 pr-0 pr-sm-0 add-btn-top' >
-                    <div>
-                      <button className='btn text-center add-btn m-0' onClick={generateReport}>
-                        Generate Report
-                      </button>
                     </div>
                   </div>
                 </div>

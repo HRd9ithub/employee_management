@@ -4,10 +4,9 @@
         font-size: 19px;
         margin: 0 !important;
     }
-
-    /* .brand-logo img {
-        width: 193px;
-    } */
+    .sidebar {
+        width: 280px;
+    }
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img img {
         width: 40px;
@@ -214,7 +213,11 @@
 }
 
 @media (max-width: 1600px) {
-
+    .sidebar {
+        /* height: 100vh; */
+        /* overflow: auto; */
+        width: 250px;
+    }
     .kIaWtg {
         font-size: 15px;
     }
@@ -239,9 +242,6 @@
         font-size: 17px;
     }
 
-    /* .sidebar {
-        width: 270px;
-    } */
 
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 1.085rem;
@@ -407,7 +407,9 @@
         font-size: 15px !important;
         padding: 9px 0px;
     }
-
+    .sidebar {
+        width: 225px;
+    }
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.862rem;
     }
@@ -438,18 +440,6 @@
         color: white;
         background-color: red;
     }
-/* 
-    .brand-logo img {
-        width: 182px;
-    } */
-
-    /* .sidebar .nav:not(.sub-menu) {
-        margin-top: 8px;
-    } */
-
-    /* .sidebar {
-        width: 250px;
-    } */
 
     .common-box-dashboard h4 {
         font-size: 20px;
@@ -486,6 +476,7 @@
     .css-1ex1afd-MuiTableCell-root {
         font-size: 13px !important;
     }
+
     /* .sidebar, .sidebar-wrap {
         width: 235px;
     } */
@@ -578,12 +569,6 @@
     .btn-gradient-primary {
         padding: 11px 0px !important;
     }
-
-    /* 
-    .sidebar {
-        width: 222px;
-    } */
-
 }
 
 @media (max-width: 1200px) {
@@ -655,7 +640,8 @@
         font-size: 13px !important;
         padding: 9px 0px;
     }
-/* 
+
+    /* 
     .brand-logo img {
         width: 169px;
     } */
@@ -976,6 +962,7 @@
     .personal-info li {
         width: 100%;
     }
+
     .logo-none {
         display: block;
         width: 18%;
@@ -1028,15 +1015,6 @@
 
     .sidebar .nav .nav-item {
         padding: 0 2rem;
-    }
-
-    .sidebar {
-        /* border-radius: 12px;
-        margin-right: 13px;
-        margin-top: 14px; */
-        box-shadow: -4px 1px 7px #00478ca6;
-        border-left: 2px solid #00458f;
-        /* width: 209px; */
     }
 
     .sidebar .nav.sub-menu .nav-item .nav-link {
@@ -1414,6 +1392,10 @@
         width: 29% !important;
         height: 35px !important;
     }
+
+    .sidebar-offcanvas {
+        left: -55%;
+    }
 }
 
 @media (max-width:667px) {
@@ -1450,11 +1432,6 @@
         width: 25px;
         height: 25px;
     }
-
-    /* 
-    .sidebar {
-        width: 222px;
-    } */
 
     .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.65rem 2rem 0.55rem 2.9rem;
@@ -1528,10 +1505,6 @@
         padding: 0 1.2rem;
     }
 
-    /* .sidebar {
-        width: 190px;
-    } */
-
     .sidebar i {
         height: 27px;
         width: 27px;
@@ -1545,6 +1518,26 @@
 
     .btn-gradient-primary {
         font-size: 12px;
+    }
+
+    #breadcrumb a {
+        font-size: 12px;
+    }
+
+    #breadcrumb a:after {
+        border-width: 18px 10px;
+    }
+
+    #breadcrumb a {
+        height: 36px;
+        line-height: 37px;
+        padding: 0 5px 0 0px;
+        text-align: center;
+        margin-right: 26px;
+    }
+
+    #breadcrumb a:before {
+        border-width: 18px 10px;
     }
 
     .add-employee-btn i {
@@ -1915,19 +1908,9 @@
         font-size: 11px;
     }
 
-    div#two {
-        padding-right: 4px !important;
-    }
-
     div#one {
         /* order: 1 !important; */
         text-align: start !important;
-    }
-
-    div#two {
-        /* order: 2 !important; */
-        padding-bottom: 0px !important;
-
     }
 
     .btn-gradient-primary {
@@ -1946,10 +1929,13 @@
         font-size: 11px;
     }
 
-    /* .navbar .navbar-brand-wrapper .navbar-brand img {
-        width: 76%;
-        height: 45px;
-    } */
+    .brand-logo img {
+        height: 41px;
+    }
+
+    .breadcrumb-btn .col-lg-2 {
+        padding-right: 0px;
+    }
 
     .logo-none {
         height: 36px;
@@ -2028,7 +2014,8 @@
     .personal-info li .title {
         margin-right: 32px;
     }
-/* 
+
+    /* 
     .close-btn {
         display: none;
         transition: all 0.5s ease;
@@ -2307,24 +2294,6 @@
         display: none;
     }
 
-    /* .add-employee-btn {
-        margin-top: 0px;
-        position: fixed;
-        right: 14px;
-        top: 15px;
-    } */
-
-    .btn,
-    .form-wizard .container>div:not(.content)>button,
-    .swal2-modal .swal2-buttonswrapper .swal2-styled,
-    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-confirm,
-    .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-cancel,
-    .swal2-modal .swal2-actions .swal2-styled,
-    .fc button {
-        font-size: 0.675rem;
-        margin-left: 3px;
-    }
-
     #two .form-control-lg {
         padding: 10px 10px;
     }
@@ -2344,17 +2313,9 @@
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.75rem;
     }
-
-    /* .sidebar {
-        width: 170px;
-    } */
-
+    
     .sidebar .nav .nav-item .nav-link {
         padding: 0.35rem 0 0.35rem 0;
-    }
-
-    .form-group label {
-        margin-top: 0px !important;
     }
 
     .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
@@ -2558,6 +2519,23 @@
         }
 
         /* employee */
+        #breadcrumb a {
+            height: 34px;
+            line-height: 33px;
+            margin-right: 24px;
+        }
+
+        #breadcrumb a:before {
+            border-width: 17px 10px;
+        }
+
+        #breadcrumb a:after {
+            border-width: 17px 10px;
+        }
+
+        .breadcrumb-btn {
+            top: 22px;
+        }
 
         .profile-action-icon {
             height: 50px;
@@ -2607,10 +2585,6 @@
         .sidebar .nav .nav-item {
             padding: 0 1rem;
         }
-
-        /* .sidebar {
-            width: 165px;
-        } */
 
         .form-control-lg {
             padding: 10px 11px;
@@ -2736,20 +2710,10 @@
             padding-right: 5px;
         }
 
-        div#two {
-            padding-bottom: 0px !important;
-            border-radius: 6px;
-        }
-
         div#one {
             padding-left: 15px;
             padding-bottom: 0px;
         }
-
-        /* .navbar .navbar-brand-wrapper .navbar-brand img {
-            width: 86%;
-            height: 43px;
-        } */
 
         .eZQoCD {
             min-height: 44px !important;
@@ -2807,9 +2771,6 @@
             padding: unset;
         }
 
-        div#two {
-            padding-right: 0px !important;
-        }
 
         #one {
             padding-left: 6px;
@@ -2977,6 +2938,10 @@
 
         .submit-btn {
             padding: 0.6rem 2rem;
+        }
+
+        .sidebar-offcanvas {
+            left: -85%;
         }
     }
 
@@ -3431,12 +3396,6 @@
             margin-bottom: 0px;
         }
 
-        /* .edit-icon {
-        float: none;
-        font-size: 10px;
-        padding: 4px;
-    } */
-
         .tab-view .card-body {
             padding: 1rem !important;
         }
@@ -3496,10 +3455,6 @@
 
         .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item i {
             font-size: 15px;
-        }
-
-        #two {
-            max-width: 11%;
         }
 
         .common-box-dashboard {
@@ -3680,6 +3635,14 @@
 
         .personal-info li .title {
             width: 30%;
+        }
+
+        #breadcrumb a:before {
+            border-width: 17px 8px;
+            left: -16px;
+        }
+        #breadcrumb a {
+            margin-right: 21px;
         }
     }
 }
