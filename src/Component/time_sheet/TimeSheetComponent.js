@@ -270,13 +270,13 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                 <div className=''>
                     <div className='container-fluid '>
                         <div className="row breadcrumb-btn">
-                            <div className="col-10">
+                           <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                                 <ul id="breadcrumb" className="mb-0">
                                     <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
                                     <li><a href="/timesheet" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet</a></li>
                                 </ul>
                             </div>
-                            <div className="col-2">
+                           <div className="col-lg-2 col-md-2 col-sm-3 col-3">
                             </div>
                         </div>
                     </div>
