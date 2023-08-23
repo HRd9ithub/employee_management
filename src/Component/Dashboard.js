@@ -155,8 +155,8 @@ const Dashboard = () => {
 
      return (
           <>
-               <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    <div className='employee-content'>
+               <motion.div className="box pt-3" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+                    <div className='employee-content '>
                          <div className='container-fluid inner-pages py-3'>
                               <div className='row p-3 align-items-center row-std'>
                                    <div className='col-12 employee-path' id="one">
@@ -245,19 +245,19 @@ const Dashboard = () => {
                                              <div className='my-chart'>
                                                   <div className='my-chart-head text-center'>On Leave Today</div>
                                                   <div className='p-3'>
-                                                       <ul>
+                                                       {/* <ul>
                                                             {todayLeave?.map((val) => {
                                                             return (
                                                                  <div className="text-capitalize d-flex align-items-center" key={val.id}>
                                                                       <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} target="_blank">
-                                                                           {/* eslint-disable-next-line */}
+                                                                            eslint-disable-next-line 
                                                                            <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile image" />
                                                                       </NavLink>
                                                                       {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus/>}
                                                                  </div>
                                                             )
                                                        })}
-                                                  </ul> 
+                                                  </ul>  */}
                                                   {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
                                                        <ul>
                                                             <li> Wow! Everyone is Present Today.</li>

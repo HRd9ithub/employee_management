@@ -265,13 +265,13 @@ const Leave = () => {
                 <div className=''>
                     <div className='container-fluid '>
                         <div className="row breadcrumb-btn">
-                            <div className="col-10">
+                           <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                                 <ul id="breadcrumb" className="mb-0">
                                     <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
                                     <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave</NavLink></li>
                                 </ul>
                             </div>
-                            <div className="col-2">
+                           <div className="col-lg-2 col-md-2 col-sm-3 col-3">
                                 <div className=' add-employee-btn'>
                                     <LeaveModal getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />
                                 </div>
@@ -282,7 +282,7 @@ const Leave = () => {
                         <div className='container-fluid pr-5'>
                             <div className='row justify-content-end row-std inner-pages'>
                                 {/* search box */}
-                                <div className={`col-md-3 col-sm-4 col-3 p-0 text-end `} id="two">
+                                <div className={`col-md-4 col-sm-5 col-12 text-end `} id="two">
                                     <Form.Control type="text" className="open" id="exampleInputUsername1" placeholder=" &#xf002; &nbsp; Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
                                 </div>
 
