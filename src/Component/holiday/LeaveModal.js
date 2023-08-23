@@ -377,22 +377,11 @@ const LeaveModal = (props) => {
         }
     }
 
-    // button toggle disable or not
-    if (UserData.name.toLowerCase() !== 'admin') {
-        if (accessData.length !== 0 && accessData[0].create === "1") {
-            toggleButton = false
-        } else {
-            toggleButton = true
-        }
-    } else {
-        toggleButton = false
-    }
-
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-                :
-                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center ' disabled={toggleButton} onClick={handleShow}>
+                :  ((UserData && UserData.role?.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].create === "1")) &&
+                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button>
             }

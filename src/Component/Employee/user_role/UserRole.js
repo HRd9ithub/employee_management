@@ -15,7 +15,7 @@ const UserRole = ({ HandleProgress }) => {
   const [loader, setloader] = useState(false);
   const [records, setRecords] = useState([]);
   const [recordsFilter, setRecordsFilter] = useState([]);
-  let { UserData, accessData, handleVisibility, visible } = useContext(AppProvider);
+  let { UserData, accessData} = useContext(AppProvider);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -191,8 +191,8 @@ const UserRole = ({ HandleProgress }) => {
               <div className="col-10">
 
                 <ul id="breadcrumb" className="mb-0">
-                  <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                  <li><a href="/userRole" className="ibeaker"><i className="fa-solid fa-user icon"></i> User Role</a></li>
+                  <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                  <li><NavLink to="/userRole" className="ibeaker"><i className="fa-solid fa-user icon"></i> User Role</NavLink></li>
                 </ul>
               </div>
               <div className="col-2">

@@ -148,7 +148,7 @@ const UserDoumentForm = (props) => {
                     <label>Resume File</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file ">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/*,.doc, .docx,.pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang">{`${file.resume_name ? file.resume_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={(!file.resume_name || file.resume)} className='custom-file-btn'>
@@ -160,7 +160,7 @@ const UserDoumentForm = (props) => {
                     <label>Offer Letter</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,application/pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang2">{`${file.offer_letter_name ? file.offer_letter_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.offer_letter_name || file.offer_letter} className='custom-file-btn'>
@@ -173,7 +173,7 @@ const UserDoumentForm = (props) => {
                     <label>Joining Letter</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,application/pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang3">{`${file.joining_letter_name ? file.joining_letter_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.joining_letter_name || file.joining_letter} className='custom-file-btn'>
@@ -185,7 +185,7 @@ const UserDoumentForm = (props) => {
                     <label>Other</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,application/pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang4">{`${file.other_name ? file.other_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.other_name || file.other} className='custom-file-btn'>

@@ -21,7 +21,7 @@ const TimeSheetComponent = ({ HandleProgress }) => {
 
     let { getCommonApi } = GlobalPageRedirect()
 
-    let { UserData, handleVisibility, visible } = useContext(AppProvider);
+    let { UserData} = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -203,11 +203,15 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                 val.date.toString().includes(value) ||
                 val.login_time?.toString().includes(value) ||
                 val.logout_time?.toString().includes(value) ||
-                (val.count_time && val.count_time).toString().includes(value) 
+                val.count_time?.toString().includes(value)
                 // val.id.toString().includes(value) 
             );
         });
-        setDataFilter(list);
+        if(value){
+            setDataFilter(list);
+        }else{
+            setDataFilter(data)
+        }
     }
 
 
@@ -272,8 +276,8 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                         <div className="row breadcrumb-btn">
                             <div className="col-10">
                                 <ul id="breadcrumb" className="mb-0">
-                                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                                    <li><a href="/timesheet" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet</a></li>
+                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                                    <li><NavLink to="/timesheet" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet</NavLink></li>
                                 </ul>
                             </div>
                             <div className="col-2">

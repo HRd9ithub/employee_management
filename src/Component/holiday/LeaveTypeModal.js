@@ -169,12 +169,11 @@ const LeaveTypeModal = (props) => {
         <>
             {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
                 :
-                <>
+                (role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
                     <button
-                        className='btn btn-gradient-primary btn-rounded btn-fw text-center' disabled={!(role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === '1'))} onClick={handleShow}>
+                        className='btn btn-gradient-primary btn-rounded btn-fw text-center'  onClick={handleShow}>
                         <i className="fa-solid fa-plus" ></i>&nbsp;Add
-                    </button>
-                </>}
+                    </button>}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Leave Type' : 'Add Leave Type'}

@@ -193,8 +193,8 @@ const LeaveType = ({ HandleProgress }) => {
                         <div className="row breadcrumb-btn">
                             <div className="col-10">
                                 <ul id="breadcrumb" className="mb-0">
-                                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                                    <li><a href="/LeaveType" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave Type</a></li>
+                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                                    <li><NavLink to="/leavetype" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave Type</NavLink></li>
                                 </ul>
                             </div>
                             <div className="col-2">
@@ -229,7 +229,7 @@ const LeaveType = ({ HandleProgress }) => {
                                                     LeaveType
                                                 </TableSortLabel>
                                             </TableCell>
-                                            {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].update !== "0") &&
+                                            {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].update !== "0")) &&
                                                 <TableCell>
                                                     Action
                                                 </TableCell>}
@@ -241,7 +241,7 @@ const LeaveType = ({ HandleProgress }) => {
                                                 <TableRow key={ind}>
                                                     <TableCell>{val.id}</TableCell>
                                                     <TableCell>{val.name}</TableCell>
-                                                    {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].update !== "0") &&
+                                                    {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].update !== "0")) &&
                                                         <TableCell>
                                                             <div className='action'>
                                                                 <LeaveTypeModal data={val} getLeaveType={getLeaveType} role={UserData && UserData.role.name} accessData={accessData} records={records} />

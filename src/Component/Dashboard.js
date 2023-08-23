@@ -14,7 +14,7 @@ import moment from 'moment';
 import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
-
+import { HiOutlineMinus } from "react-icons/hi";
 
 const Dashboard = () => {
      const [startDate, setstartDate] = useState("");
@@ -186,7 +186,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} >
+                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`}  onClick={() => navigate("/timesheet")}>
                                         <NavLink className="common-box-dashboard Present nav-link">
                                              <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                              <div className="common-info-dashboard">
@@ -196,7 +196,7 @@ const Dashboard = () => {
                                              <h4 className="mt-2">Present Today</h4>
                                         </NavLink>
                                    </div>
-                                   <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`}>
+                                   <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`}  onClick={() => navigate("/leave")}>
                                         <NavLink className="common-box-dashboard Today nav-link">
                                              <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                              <div className="common-info-dashboard">
@@ -253,7 +253,7 @@ const Dashboard = () => {
                                                                            {/* eslint-disable-next-line */}
                                                                            <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile image" />
                                                                       </NavLink>
-                                                                      {val.user?.first_name.concat(" ", val.user?.last_name)}
+                                                                      {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus/>}
                                                                  </div>
                                                             )
                                                        })}
