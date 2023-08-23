@@ -201,10 +201,7 @@ const DocumentComponent = ({ HandleProgress }) => {
                             <div className='row justify-content-end row-std inner-pages'>
                                 {/* search box */}
                                 <div className={`col-md-3 col-sm-4 col-3 p-0 text-end `} id="two">
-                                    <Form.Control type="text" className={`${visible ? "open" : "close-btn"}`} id="exampleInputUsername1" placeholder=" &#xf002; &nbsp; Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
-                                    <div className="magnifierContainer">
-                                        <i className={`fa-solid fa-magnifying-glass material-icons`} onClick={handleVisibility}></i>
-                                    </div>
+                                    <Form.Control type="text" className="open" id="exampleInputUsername1" placeholder=" &#xf002; &nbsp; Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
                                 </div>
                             </div>
                         </div>

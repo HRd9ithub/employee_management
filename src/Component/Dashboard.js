@@ -257,7 +257,7 @@ const Dashboard = () => {
                                                                  </div>
                                                             )
                                                        })}
-                                                  </ul>
+                                                  </ul> 
                                                   {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
                                                        <ul>
                                                             <li> Wow! Everyone is Present Today.</li>
