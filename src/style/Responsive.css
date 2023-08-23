@@ -3215,7 +3215,7 @@
             border-right: none;
         }
 
-        #two .form-control {
+        /* #two .form-control {
             height: 29px;
             font-size: 10px;
             position: absolute;
@@ -3223,7 +3223,7 @@
             z-index: 8;
             right: -39px;
             width: 91px;
-        }
+        } */
 
         .navbar .navbar-brand-wrapper {
             width: 50%;

@@ -187,8 +187,8 @@ const Designation = ({ HandleProgress }) => {
             <div className="row breadcrumb-btn">
               <div className="col-10">
                 <ul id="breadcrumb" className="mb-0">
-                  <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                  <li><a href="/designation" className="ibeaker"><i className="fa-solid fa-user icon"></i> Designation</a></li>
+                  <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                  <li><NavLink to="/designation" className="ibeaker"><i className="fa-solid fa-user icon"></i> Designation</NavLink></li>
                 </ul>
               </div>
               <div className="col-2">

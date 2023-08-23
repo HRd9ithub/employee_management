@@ -560,8 +560,8 @@ span.eye-icon {
 .fc .fc-button-group .show>.dropdown-toggle.fc-button-primary.fc-button-active:not(:disabled),
 .fc .fc-header-toolbar .fc-left .show>.dropdown-toggle.fc-today-button {
   color: #fff;
-  background-color: #074a98;
-  border-color: #074a98;
+  background-color: #173549;
+  border-color: #173549;
 }
 
 .profile-action-icon {
@@ -868,7 +868,7 @@ span.eye-icon {
 
 .sidebar .item-hover.active {
   background: #f6f9fb !important;
-  border-left: 3px solid #074a98 !important;
+  border-left: 3px solid #173549 !important;
 }
 
 .sidebar .item-hover.active .slider-hover-icon {
@@ -878,7 +878,7 @@ span.eye-icon {
 
 .sidebar .item-hover:hover {
   background: #f6f9fb !important;
-  border-left: 3px solid #074a98;
+  border-left: 3px solid #173549;
 }
 
 .sidebar .item-hover:hover .slider-hover-icon {
@@ -982,7 +982,7 @@ span.eye-icon {
 }
 
 .custom-file .custom-file-label:after {
-  background-color: #074a98;
+  background-color: #173549;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link:before {
@@ -1082,7 +1082,7 @@ span.eye-icon {
 }
 
 .profile-image {
-  border: 1px solid #074a98;
+  border: 1px solid #173549;
   width: 150px;
   margin: 0px auto;
   border-radius: 50%;
@@ -1231,7 +1231,7 @@ span.eye-icon {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
-  background: #074a98;
+  background: #173549;
   color: white !important;
   padding: 0rem 1rem;
 }
@@ -1251,7 +1251,7 @@ span.eye-icon {
 
 .modal-content {
   box-shadow: 2px 1px 17px #7a7a7a52;
-  border: 2px solid #074a98;
+  border: 2px solid #173549;
   background-color: white;
   background: #ffff;
 }
@@ -2895,8 +2895,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: 50% !important;
   background-color: red !important;
   color: #fff;
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
