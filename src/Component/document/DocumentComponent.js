@@ -185,8 +185,8 @@ const DocumentComponent = ({ HandleProgress }) => {
                         <div className="row breadcrumb-btn">
                            <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                                 <ul id="breadcrumb" className="mb-0">
-                                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                                    <li><a href="/documents" className="ibeaker"><i className="fa-solid fa-user icon"></i> Document</a></li>
+                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                                    <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-user icon"></i> Document</NavLink></li>
                                 </ul>
                             </div>
                            <div className="col-lg-2 col-md-2 col-sm-3 col-3">
@@ -229,9 +229,10 @@ const DocumentComponent = ({ HandleProgress }) => {
                                                     Description
                                                 </TableSortLabel>
                                             </TableCell>
+                                            {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].delete !== "0" && accessData[0].update !== "0") )&&
                                             <TableCell>
                                                 Action
-                                            </TableCell>
+                                            </TableCell>}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -251,7 +252,7 @@ const DocumentComponent = ({ HandleProgress }) => {
                                                     </TableCell>
                                                     <TableCell>{val.name}</TableCell>
                                                     <TableCell>{val.description}</TableCell>
-                                                    {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete !== "0" && accessData[0].update !== "0") &&
+                                                    {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].delete !== "0" && accessData[0].update !== "0") )&&
                                                         <TableCell>
                                                             <div className='action'>
                                                                 {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].update === "0") ? "" : <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} role={UserData && UserData.role.name} accessData={accessData} />}

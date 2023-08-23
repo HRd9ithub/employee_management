@@ -226,23 +226,33 @@ const Leave = () => {
         return rowArray.map((el) => el[0])
     }
 
-// eslint-disable-next-line
+    // eslint-disable-next-line
     const actionToggle = useMemo(() => {
         if (UserData && UserData.role.name.toLowerCase() === "admin") {
-            setAction(true)
+            leaveRecordFilter.forEach((val) => {
+                if (val.status === 'Pending' || val.status === "Read") {
+                    setAction(true)
+                } else {
+                    if (val.status === 'Approved' && val.status === "Declined" && new Date(val.from_date) <= new Date()) {
+                        setAction(false)
+                    } else {
+                        setAction(true)
+                    }
+                }
+            })
         } else {
             if (accessData.length !== 0 && accessData[0].update !== '0') {
                 leaveRecordFilter.forEach((val) => {
                     if (val.status === 'Pending' || val.status === "Read") {
                         setAction(true)
-                    }else{
+                    } else {
                         setAction(false)
                     }
                 })
             }
         }
         // eslint-disable-next-line
-    }, [leaveRecordFilter,UserData]);
+    }, [leaveRecordFilter, UserData]);
 
     return (
         <>
@@ -257,8 +267,8 @@ const Leave = () => {
                         <div className="row breadcrumb-btn">
                            <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                                 <ul id="breadcrumb" className="mb-0">
-                                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                                    <li><a href="/leave" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave</a></li>
+                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                                    <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave</NavLink></li>
                                 </ul>
                             </div>
                            <div className="col-lg-2 col-md-2 col-sm-3 col-3">
@@ -282,99 +292,99 @@ const Leave = () => {
                             {/* table */}
                             <TableContainer >
                                 <Table className="common-table-section">
-                                <TableHead className="common-header">
-                                    <TableRow>
-                                        {/* <TableCell>
+                                    <TableHead className="common-header">
+                                        <TableRow>
+                                            {/* <TableCell>
                                             <TableSortLabel active={orderBy === "id"} direction={orderBy === "id" ? order : "asc"} onClick={() => handleRequestSort("id")}>
                                                 Id
                                             </TableSortLabel>
                                         </TableCell> */}
-                                        <TableCell>
-                                            Profile
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                Employee
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "leave_type"} direction={orderBy === "leave_type" ? order : "asc"} onClick={() => handleRequestSort("leave_type")}>
-                                                Leave Type
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "from_date"} direction={orderBy === "from_date" ? order : "asc"} onClick={() => handleRequestSort("from_date")}>
-                                                from
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "to_date"} direction={orderBy === "to_date" ? order : "asc"} onClick={() => handleRequestSort("to_date")}>
-                                                To
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "day"} direction={orderBy === "day" ? order : "asc"} onClick={() => handleRequestSort("day")}>
-                                                Duration
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "leave_status"} direction={orderBy === "leave_status" ? order : "asc"} onClick={() => handleRequestSort("leave_status")}>
-                                                Leave For
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
-                                                Reason
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            Status
-                                        </TableCell>
-                                        {(Action || leaveRecordFilter.length === 0) &&
                                             <TableCell>
-                                                Action
-                                            </TableCell>}
-                                    </TableRow>
-                                </TableHead>
-                                    <TableBody>
-                                    {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                        return (
-                                            <TableRow key={ind}>
-                                                {/* <TableCell>{val.id}</TableCell> */}
-                                                <TableCell>{val.user &&
-                                                    <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} target="_blank">
-                                                        <img className="profile-action-icon text-center" src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} alt="Profile_image" />
-                                                    </NavLink>}</TableCell>
-                                                <TableCell>
-                                                        {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
-                                                </TableCell>
-                                                <TableCell>{val.leave_type ? val.leave_type.name : <HiOutlineMinus />}</TableCell>
-                                                <TableCell>{val.from_date}</TableCell>
-                                                <TableCell>{val.to_date}</TableCell>
-                                                <TableCell>{val.day}</TableCell>
-                                                <TableCell>{val.leave_status}</TableCell>
-                                                <TableCell>{val.description}</TableCell>
-                                                <TableCell>
-                                                    <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name !== "Admin")} onClick={() => handlesshowModal(val.status, val.id)}>{val.status}</button>
-                                                </TableCell>
-                                                {Action &&
-                                                    <TableCell>
-                                                        <div className='action'>
-                                                            {/* eslint-disable-next-line no-mixed-operators */}
-                                                            {((val.status !== 'Pending' && val.status !== "Read") && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name.toLowerCase() !== "admin" && (accessData.length !== 0 && accessData[0].update === '0' || val.status !== 'Pending' && val.status !== "Read")) ? "" : <LeaveModal data={val} getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />}
-                                                            {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
-                                                        </div>
-                                                    </TableCell>}
-                                            </TableRow>
-                                        )
-                                    }) :
-                                        <TableRow>
-                                            <TableCell colSpan={11} align="center">
-                                                No Records Found
+                                                Profile
                                             </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                    Employee
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "leave_type"} direction={orderBy === "leave_type" ? order : "asc"} onClick={() => handleRequestSort("leave_type")}>
+                                                    Leave Type
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "from_date"} direction={orderBy === "from_date" ? order : "asc"} onClick={() => handleRequestSort("from_date")}>
+                                                    from
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "to_date"} direction={orderBy === "to_date" ? order : "asc"} onClick={() => handleRequestSort("to_date")}>
+                                                    To
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "day"} direction={orderBy === "day" ? order : "asc"} onClick={() => handleRequestSort("day")}>
+                                                    Duration
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "leave_status"} direction={orderBy === "leave_status" ? order : "asc"} onClick={() => handleRequestSort("leave_status")}>
+                                                    Leave For
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
+                                                    Reason
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                Status
+                                            </TableCell>
+                                            {(Action || leaveRecordFilter.length === 0) &&
+                                                <TableCell>
+                                                    Action
+                                                </TableCell>}
                                         </TableRow>
-                                    }
-                                </TableBody>
+                                    </TableHead>
+                                    <TableBody>
+                                        {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                            return (
+                                                <TableRow key={ind}>
+                                                    {/* <TableCell>{val.id}</TableCell> */}
+                                                    <TableCell>{val.user &&
+                                                        <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} target="_blank">
+                                                            <img className="profile-action-icon text-center" src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} alt="Profile_image" />
+                                                        </NavLink>}</TableCell>
+                                                    <TableCell>
+                                                        {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
+                                                    </TableCell>
+                                                    <TableCell>{val.leave_type ? val.leave_type.name : <HiOutlineMinus />}</TableCell>
+                                                    <TableCell>{val.from_date}</TableCell>
+                                                    <TableCell>{val.to_date}</TableCell>
+                                                    <TableCell>{val.day}</TableCell>
+                                                    <TableCell>{val.leave_status}</TableCell>
+                                                    <TableCell>{val.description}</TableCell>
+                                                    <TableCell>
+                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name !== "Admin")} onClick={() => handlesshowModal(val.status, val.id)}>{val.status}</button>
+                                                    </TableCell>
+                                                    {Action &&
+                                                        <TableCell>
+                                                            <div className='action'>
+                                                                {/* eslint-disable-next-line no-mixed-operators */}
+                                                                {((val.status !== 'Pending' && val.status !== "Read") && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name.toLowerCase() !== "admin" && (accessData.length !== 0 && accessData[0].update === '0' || val.status !== 'Pending' && val.status !== "Read")) ? "" : <LeaveModal data={val} getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />}
+                                                                {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
+                                                            </div>
+                                                        </TableCell>}
+                                                </TableRow>
+                                            )
+                                        }) :
+                                            <TableRow>
+                                                <TableCell colSpan={11} align="center">
+                                                    No Records Found
+                                                </TableCell>
+                                            </TableRow>
+                                        }
+                                    </TableBody>
                                 </Table>
                             </TableContainer>
                             <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
@@ -388,8 +398,8 @@ const Leave = () => {
                         </div>
                     </div >
                 </div >
-             {/* status changes modal * */}
-             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+                {/* status changes modal * */}
+                <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                     <Modal.Header className='small-modal'>
                         <Modal.Title>Status Change</Modal.Title>
                         <p className='close-modal' onClick={handleshideModal}><i className="fa-solid fa-xmark"></i></p>

@@ -139,12 +139,12 @@ const TimeSheetReport = () => {
   }
 
   // generate  onclick function
-  const generateReport = async (id) => {
+  const generateReport = async (id,start,end) => {
     // handleMonthValidate();} else {
     let user_id = id || data
 
-    let fromDate = moment(UserData && UserData.role?.name.toLowerCase() === 'admin' ? startDate : selectedDate).format("DD-MM-YYYY")
-    let toDate = moment(UserData && UserData.role?.name.toLowerCase() === 'admin' ? endDate : selectedDate).format("DD-MM-YYYY")
+    let fromDate = moment(UserData && UserData.role?.name.toLowerCase() === 'admin' ? start || startDate : selectedDate).format("DD-MM-YYYY")
+    let toDate = moment(UserData && UserData.role?.name.toLowerCase() === 'admin' ? end || endDate : selectedDate).format("DD-MM-YYYY")
     try {
       setLoader(true)
       const response = await axios.post(`${process.env.REACT_APP_API_KEY}/timesheet/filterTimeCount`, { fromDate, toDate, user_id }, {
@@ -189,6 +189,7 @@ const TimeSheetReport = () => {
   const handleCallback = (start, end, label) => {
     setStartDate(start._d)
     setendtDate(end._d)
+    generateReport("",start._d,end._d)
   }
 
   // serach filter
@@ -332,14 +333,14 @@ const TimeSheetReport = () => {
               <div className="row breadcrumb-btn">
                 <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                   <ul id="breadcrumb" className="mb-0">
-                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                    <li><a href="/TimeSheetReport" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet Report</a></li>
+                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                    <li><NavLink to="/timesheetreport" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet Report</NavLink></li>
                   </ul>
                 </div>
-                <div className="col-lg-2 col-md-2 col-sm-3 col-3">
-                  <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center'>
+                <div className="col-2">
+                  <button className=' btn btn-gradient-primary btn-rounded btn-fw text-center' disabled={recordsFilter.length < 1}>
                     <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -356,7 +357,7 @@ const TimeSheetReport = () => {
                     <div className="form-group mb-0">
                       <label htmlFor="1" className='mt-3'>Employees </label>
                       <select className="form-control" id="employee" name='data' value={data} onChange={onChange}>
-                        <option value='0'>All</option>
+                        <option value='all'>All</option>
                         {user.map((val) => {
                           return (
                             <option key={val.id} value={val.id}>{val.first_name.concat(" ", val.last_name)}</option>

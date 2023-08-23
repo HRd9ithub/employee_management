@@ -182,7 +182,7 @@ function DesignationModal({ data, getdesignation, accessData, user, records }) {
   return (
     <>
       {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-        : (
+        :   (user.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
           <button
             className="btn btn-gradient-primary btn-rounded btn-fw text-center "
             disabled={toggleButton}
@@ -190,7 +190,7 @@ function DesignationModal({ data, getdesignation, accessData, user, records }) {
           >
             <i className="fa-solid fa-plus"></i>&nbsp;Add
           </button>
-        )}
+        }
       <Modal
         show={show}
         animation={true}

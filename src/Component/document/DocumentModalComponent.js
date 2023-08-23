@@ -83,11 +83,14 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
         if (e.target.files.length !== 0) {
             var reader = new FileReader();
             reader.onloadend = function () {
-                if (e.target.files[0].type !== "application/pdf") {
+                console.log('e.target.files', e.target.files)
+                if (e.target.files[0].type !== "application/pdf" && e.target.files[0].type !== "application/msword") {
                     setsecondshow(true)
                     setimagesrc(reader.result.toString())
-                } else {
+                } else if (e.target.files[0].type === "application/pdf") {
                     setDoument({ ...document, image: reader.result, imageName: "pdf" });
+                } else {
+                    setDoument({ ...document, image: reader.result, imageName: "word" });
                 }
             }
             reader.readAsDataURL(e.target.files[0]);
@@ -284,14 +287,15 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
 
     // reemove image
     const removeItem = () => {
-        setDoument({ ...document, image: "" });
+        setDoument({ ...document, image: "", imageName: "" });
     }
 
     return (
         <>
-            {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-                : <button
-                    className='btn btn-gradient-primary btn-rounded btn-fw text-center' disabled={!(role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === '1'))} onClick={handleShow}>
+            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+                :  (role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
+                 <button
+                    className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button>
             }
@@ -308,12 +312,12 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
                                 <form className="forms-sample">
                                     <div className={`${!document.image ? 'file-upload-section' : 'file-design'}`} onClick={() => inputRef.current.click()}>
                                         {document.image ?
-                                            <><img src={!document.imageName ? document.image : '/images/pdf.png'} alt="file" width={100} className='img-fluid' /></>
+                                            <><img src={!document.imageName ? document.image : document.imageName === "pdf" ? '/images/pdf.png' : "/images/doc.png"} alt="file" width={100} className='img-fluid' /></>
                                             : <> <FileUploadIcon /> &nbsp; Select a image and pdf file to upload</>
                                         }
-                                        {document.image && <i className="fa-solid fa-xmark" onClick={removeItem}></i>}
-                                        <input type='file' accept="image/png,image/jpeg,image/jpg,application/pdf" onChange={imageChange} ref={inputRef} className='d-none' />
+                                        <input type='file' accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={imageChange} ref={inputRef} className='d-none' />
                                     </div>
+                                    {document.image && <i className="fa-solid fa-xmark" onClick={removeItem}></i>}
                                     {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'>File Name</label>

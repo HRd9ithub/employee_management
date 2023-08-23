@@ -1085,10 +1085,6 @@ span.eye-icon {
   width: 100% !important;
 }
 
-.mdi {
-  color: #fff;
-}
-
 .navbar .navbar-brand-wrapper .navbar-brand img {
   width: 70%;
   height: 50px;
@@ -2495,7 +2491,7 @@ svg {
 
 .btn-secondary.dropdown-toggle {
   color: #fff;
-  background-color: #004392 !important;
+  background-color: #173549  !important;
   border: none !important;
 }
 

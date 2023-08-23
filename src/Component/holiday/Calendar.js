@@ -230,7 +230,7 @@ const Calendar = ({ HandleProgress }) => {
     let single_detail = holidayDetail.find((elem) => {
       return elem.id === id
     })
-    setlist({ name: single_detail.name, id: single_detail.id, date: new Date(single_detail.date) })
+    setlist({ name: single_detail.name, id: single_detail.id, date: single_detail.date })
     seteditToggle(true)
   }
 
