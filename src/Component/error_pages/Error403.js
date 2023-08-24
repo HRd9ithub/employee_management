@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { Component } from 'react';
-import { NavLink } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
 export class Error403 extends Component {
   render() {

@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children, name }) => {
         // eslint-disable-next-line
     }, [location, PageData])
 
-    if ((UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].list === '1') || name === "view" || name === "Dashboard" ) {
+    if ((UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].list === '1') || name === "view" || name === "Dashboard" || ( location.pathname.slice("1").toLowerCase().includes("employees/edit") && accessData.length !== 0 && accessData[0].update === '1') ) {
         return children
     } else {
         if (PageData.length === 0) {

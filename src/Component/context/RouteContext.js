@@ -149,12 +149,11 @@ const RouteContext = ({ children }) => {
         })
         let page_id = ""
         // find page id
-        if (path.slice("1").toLowerCase().includes("employees/view")) {
+        if (path.slice("1").toLowerCase().includes("employees/view") || path.slice("1").toLowerCase().includes("employees/edit")) {
             page_id = state.PageData.find((val) => {
                 return val.name.toLowerCase() === "employees"
             })
         } else {
-            console.log("!2")
             page_id = state.PageData.find((val) => {
                 return val.name.toLowerCase() === path.slice('1').toLowerCase()
             })

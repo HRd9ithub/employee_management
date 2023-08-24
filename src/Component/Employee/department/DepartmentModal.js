@@ -128,7 +128,7 @@ function DepartmentModal({ data, getuser, accessData, user, records }) {
                         Authorization: `Bearer ${token}`
                     },
                 }
-                axios.post(`${process.env.REACT_APP_API_KEY}/department/add`, { name: name.charAt(0).toUpperCase() + name.slice(1)}, request)
+                axios.post(`${process.env.REACT_APP_API_KEY}/department/add`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, request)
                     .then(data => {
                         if (data.data.success) {
                             toast.success('Successfully added a new department.')
@@ -162,24 +162,14 @@ function DepartmentModal({ data, getuser, accessData, user, records }) {
         }
     }
 
-    // button toggle diable or not
-    if (user.toLowerCase() !== 'admin') {
-        if (accessData.length !== 0 && accessData[0].create === "1") {
-            toggleButton = false
-        } else {
-            toggleButton = true
-        }
-    } else {
-        toggleButton = false
-    }
-
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
-                <button
-                    className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={handleShow} disabled={toggleButton}>
+                (user.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
+                < button
+                    className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={handleShow} >
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
-                </button>
+                </button >
             }
             {/* Department Name * */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>

@@ -239,20 +239,20 @@ const MailComponent = ({ HandleProgress }) => {
                         <div className="row breadcrumb-btn">
                            <div className="col-lg-10 col-md-10 col-sm-9 col-8">
                                 <ul id="breadcrumb" className="mb-0">
-                                    <li><a href="/" className="ihome"><span className="icon icon-home"> </span></a></li>
-                                    <li><a href="/email" className="ibeaker"><i className="fa-solid fa-user icon"></i> Mail</a></li>
+                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
+                                    <li><NavLink to="/email" className="ibeaker"><i className="fa-solid fa-user icon"></i> Mail</NavLink></li>
                                 </ul>
                             </div>
                            <div className="col-lg-2 col-md-2 col-sm-3 col-3">
                                 <div className='add-employee-btn'>
+                                    { ((UserData && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].create === "1")) &&
                                     <button
                                         type="submit"
                                         className="btn btn-gradient-primary  me-2"
                                         onClick={handleSubmit}
-                                        disabled={!((UserData && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].create === '1'))}
                                     >
                                         Submit
-                                    </button>
+                                    </button>}
                                 </div>
                             </div>
                         </div>

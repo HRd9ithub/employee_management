@@ -239,7 +239,8 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> : 
-                <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handleShow} disabled={toggleButton}><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
+              (user.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
+                <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handleShow} ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
             }
             <Modal show={show} animation={true} size="lg" aria-labelledby="example-modal-sizes-title-sm" className="small-modal department-modal user-modal" centered>
                 <Modal.Header className="small-modal">

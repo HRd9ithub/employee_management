@@ -495,15 +495,13 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
 
     return (
         <>
-            <div className=' add-employee-btn'>
-                <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
-                    setPage(true)
-                    setModalShow(true)
-                }} disabled={UserData.toLowerCase() !== "admin" && accessData.length !== 0 && accessData[0].create === "0"}>
-                    <i className="fa-solid fa-plus"></i>&nbsp;Add
-                </button>
-            </div>
-
+        {(UserData.toLowerCase() === "admin" || accessData.length !== 0 && accessData[0].create === "1") &&
+            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
+                setPage(true)
+                setModalShow(true)
+            }} >
+                <i className="fa-solid fa-plus"></i>&nbsp;Add
+            </button>}
             <Modal
                 show={modalShow}
                 onHide={onHideModal}

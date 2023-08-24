@@ -11,6 +11,8 @@ const Sidebar = () => {
   const [data, setData] = useState({})
   let { UserData, Permission, PageData, loader, setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
 
+  const [widthTogle, setWidthToggle] = useState("")
+
   let location = useLocation()
 
   let menuref = useRef(null);
@@ -24,6 +26,12 @@ const Sidebar = () => {
       if (!logoToggle) {
         document.body.classList.add('sidebar-icon-only');
       }
+    }
+    let data = document.getElementsByClassName('sidebar-icon-only');
+    if(data.length !== 0){
+      setWidthToggle(false)
+    }else{
+      setWidthToggle(true)
     }
   })
 
@@ -140,8 +148,12 @@ const Sidebar = () => {
 
   useEffect(() => {
     const toggleSidebars = (e) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target) && menuref.current && !menuref.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target) && settingref.current && !settingref.current.contains(e.target)) {
-        setSidebarToggle(false);
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target)) {
+        if( UserData?.role?.name.toLowerCase() === "admin" && (menuref.current && !menuref.current.contains(e.target) && settingref.current && !settingref.current.contains(e.target))){
+          setSidebarToggle(false);
+        }else{
+          setSidebarToggle(false);
+        }
       }
     }
     document.addEventListener("mousedown", toggleSidebars);
@@ -151,13 +163,14 @@ const Sidebar = () => {
     // eslint-disable-next-line
   }, [sidebarRef]);
 
+
   return (
     <>
       <nav className={`sidebar sidebar-offcanvas ${sidebarToggle ? "active" : ""}`} id="sidebar" ref={sidebarRef}>
         <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          {logoToggle ?
+          {widthTogle ?
             <Link className="navbar-brand brand-logo " to="/"><img src='/Images/d9_logo_black.png' alt="logo" /></Link> :
-            <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link> }
+            <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link>}
         </div>
         <ul className="nav">
           {/* dashboard */}
