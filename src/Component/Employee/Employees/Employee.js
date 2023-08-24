@@ -253,33 +253,29 @@ const Employee = ({ HandleProgress }) => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=''>
-          <div className='container-fluid '>
-            <div className="row breadcrumb-btn">
-              <div className="col-lg-10 col-md-10 col-sm-9 col-8">
-                <ul id="breadcrumb" className="mb-0">
-                  <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
-                  <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-user icon"></i> Employee</NavLink></li>
-                </ul>
-              </div>
-              <div className="col-lg-2 col-md-2 col-sm-3 col-3">
-                <div className='add-employee-btn'>
-                  <AddEmployeeModal UserData={UserData.role.name} accessData={accessData.length !== 0 && accessData} getAlluser={getAlluser} allData={allRecords} />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="background-wrapper bg-white pt-5">
+        <div>
+          <div className="background-wrapper bg-white pt-3">
             <div className='container-fluid'>
-              <div className='row justify-content-end row-std inner-pages'>
+              <div className='row justify-content-end align-items-center row-std'>
+                <div className="col-sm-8  col-8">
+                  <NavLink className="path-header">Employee</NavLink>
+                  <ul id="breadcrumb" className="mb-0">
+                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                    <li><NavLink to="/employees" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                  </ul>
+                </div>
                 {/* search box */}
-                <div className={`col-md-4 col-sm-5 col-12 text-end `} id="two">
-                  <Form.Control type="text" className= "open" id="exampleInputUsername1" placeholder=" &#xf002; &nbsp; Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
+                <div className="col-sm-3 col-8 pr-md-0" id="two">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <Form.Control type="text" className="open" id="exampleInputUsername1" placeholder="Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
+                </div>
+                <div className="col-sm-1 col-3 pl-md-0" id="two">
+                    <AddEmployeeModal UserData={UserData.role.name} accessData={accessData.length !== 0 && accessData} getAlluser={getAlluser} allData={allRecords} />
                 </div>
               </div>
             </div>
 
-              {/* table */}
+            {/* table */}
             <div>
               <TableContainer >
                 <Table className="common-table-section">

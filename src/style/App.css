@@ -16,7 +16,7 @@
 
 body {
   /* background-image: url(../../public/Images/bg-new.jpg); */
-  background-color: #ccd4d8;
+  background-color: #ebeff0;
   /* background-size: cover;
   background-repeat: no-repeat; */
   min-height: 100vh;
@@ -57,6 +57,24 @@ h6,
   src: url(../../public/Images/Roboto_Slab/static/RobotoSlab-SemiBold.ttf);
   font-family: font_main_semi;
 }
+
+/* button */
+
+.btn-gradient-primary {
+  background: #00cec0;
+  border-radius: 5px !important;
+  padding: 8px 14px !important;
+}
+
+.btn-gradient-primary:hover {
+  background: #00cac1;
+  color: darkgreen !important;
+}
+#three{
+  background-color: #00cec0;
+}
+/* button */
+
 
 .error {
   color: red;
@@ -364,15 +382,6 @@ span.eye-icon {
 
 /* =================================Department ===================================== */
 
-.btn-gradient-primary {
-  background: linear-gradient(to right, #33aff1, #034191);
-  border: 2px solid #034191;
-  /* transition: opacity 0.3s ease; */
-  width: 92% !important;
-  padding: 15px 0px !important;
-  border-radius: 4px !important;
-}
-
 .btn-gradient-primary a {
   color: white;
 }
@@ -380,10 +389,6 @@ span.eye-icon {
 .add-employee-btn {
   text-align: end !important;
 }
-
-/* .btn-gradient-primary:active {
-  opacity: .8;
-} */
 
 .eZQoCD {
   margin-top: 0px !important;
@@ -399,13 +404,7 @@ span.eye-icon {
 }
 
 
-.btn-gradient-primary:hover {
-  background: #00cac1;
-  /* border: 2px solid #034191; */
-  /* transition: all 1s; */
-  color: darkgreen !important;
-  /* opacity: 100%; */
-}
+
 
 .btn-gradient-primary:hover a {
   color: darkgreen;
@@ -487,8 +486,14 @@ span.eye-icon {
 
 #two {
   text-align: end;
+  position: relative;
 }
-
+#two .fa-solid {
+  position: absolute;
+  right: 8%;
+  top: 24%;
+  font-size: 18px;
+}
 .btn-light {
   color: #000000;
   background-color: #f3fafe;
@@ -1928,7 +1933,10 @@ svg {
 
 .open {
   display: block;
+  border-bottom: 1px solid #173549;
+  border-radius: 0px;
   transition: display 0.35s ease-out;
+  padding: 0px 40px;
 }
 
 .magnifierContainer {
@@ -2939,21 +2947,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transform: translate(-6%, 28%);
 }
 
+/* 
 .breadcrumb-btn {
   position: relative;
   top: 24px;
-}
+} */
 
 /* ........................... breacrumb ............................ */
 
-
+.path-header{
+  font-size: 19px;
+  font-family: 'font_main_semi';
+  color: #02cabb;
+}
 #breadcrumb {
   list-style: none;
-  display: inline-block;
+  padding-left: 0px;
 }
 
 #breadcrumb .icon {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 #breadcrumb li {
@@ -2961,48 +2974,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 #breadcrumb a {
-  color: #FFF;
+  color: #173549;
   display: block;
-  background: #00cac1;
+  /* background: #00cac1; */
   text-decoration: none;
   position: relative;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 10px 0 5px;
+  /* height: 40px; */
+  line-height: 23px;
+  padding: 0px 10px 0 0px;
   text-align: center;
-  margin-right: 23px;
+  /* margin-right: 23px; */
+  font-family: 'font_main_bold';
 }
 
-.ibeaker {
-  background-color: darkblue;
-}
 
-.ibeaker:before {
+/* .ibeaker:before {
   border-color: darkblue;
   border-left-color: transparent;
-}
+} */
 
-.ibeaker:after {
+/* .ibeaker:after {
   border-left-color: darkblue;
-}
+} */
 
-.ihome {
+/* .ihome {
   padding-left: 15px;
-}
+} */
 
-.ihome:before {
+/* .ihome:before {
   border: none;
-}
+} */
 
 .ibeaker {
   padding-right: 15px;
 }
 
-.ibeaker:after {
+/* .ibeaker:after {
   border: none;
-}
+} */
 
-#breadcrumb a:before {
+/* #breadcrumb a:before {
   content: "";
   position: absolute;
   top: 0;
@@ -3010,8 +3021,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-width: 20px 10px;
   width: 0;
   height: 0;
-}
-
+} */
+/* 
 #breadcrumb a:after {
   content: "";
   position: absolute;
@@ -3020,7 +3031,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-width: 20px 10px;
   width: 0;
   height: 0;
-}
+} */
 
 #breadcrumb li a:active {
   color: darkgreen;
@@ -3032,6 +3043,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 }
 
+/* 
 #breadcrumb a:before {
   left: -20px;
   border-left-color: transparent;
@@ -3041,7 +3053,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   left: 100%;
   border-color: transparent;
   border-left-color: #00cac1;
-}
+} */
 
 #breadcrumb a:hover {
   color: lightblue;
