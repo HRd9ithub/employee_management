@@ -197,8 +197,8 @@ const UserDoumentForm = (props) => {
                     return <li className='error' key={error}>{elem}</li>
                 })}
                 <div className="submit-section d-flex justify-content-between py-3">
-                    <button className="btn btn-primary submit-btn" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
-                    <button className="btn btn-primary submit-btn" onClick={HandleSubmit}>Save</button>
+                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                    <button className="btn btn-gradient-primary" onClick={HandleSubmit}>Save</button>
                 </div>
             </form>
             {loader && <Spinner />}

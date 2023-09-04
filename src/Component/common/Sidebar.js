@@ -206,20 +206,20 @@ const Sidebar = () => {
                           return (
                             cur.page_id === elem.id && cur.list === '1' && handleDropDown("employee") ?
                               <div key={elem.id}>
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link" to="/employees">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/department">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/designation">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/premission">{elem.name}</NavLink></li>}
+                                {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to="/employees">{elem.name}</NavLink></li>}
+                                {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/department">{elem.name}</NavLink></li>}
+                                {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/designation">{elem.name}</NavLink></li>}
+                                {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/premission">{elem.name}</NavLink></li>}
                               </div>
                               : ""
                           )
                         })
                         :
                         <div key={elem.id}>
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link" to="/employees">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/department">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/designation">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/premission">{elem.name}</NavLink></li>}
+                          {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to="/employees">{elem.name}</NavLink></li>}
+                          {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/department">{elem.name}</NavLink></li>}
+                          {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/designation">{elem.name}</NavLink></li>}
+                          {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/premission">{elem.name}</NavLink></li>}
                         </div>
                     )
                   })}

@@ -253,24 +253,31 @@ const Employee = ({ HandleProgress }) => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div>
-          <div className="background-wrapper bg-white pt-3">
-            <div className='container-fluid'>
-              <div className='row justify-content-end align-items-center row-std'>
-                <div className="col-sm-8  col-8">
-                  <NavLink className="path-header">Employee</NavLink>
-                  <ul id="breadcrumb" className="mb-0">
-                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                    <li><NavLink to="/employees" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
-                  </ul>
-                </div>
-                {/* search box */}
-                <div className="col-sm-3 col-8 pr-md-0" id="two">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <Form.Control type="text" className="open" id="exampleInputUsername1" placeholder="Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
-                </div>
-                <div className="col-sm-1 col-3 pl-md-0" id="two">
+        <div className=" container-fluid pt-4">
+          <div className="background-wrapper bg-white pt-2">
+            <div className=''>
+              <div className='row justify-content-end align-items-center row-std m-0'>
+                <div className="col-12 d-flex justify-content-between align-items-center">
+                  <div>
+                    <NavLink className="path-header">Employee</NavLink>
+                    <ul id="breadcrumb" className="mb-0">
+                      <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                      <li><NavLink to="/employees" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                    </ul>
+                  </div>
+                  <div className="d-flex" id="two">
+                    <div className="search-full">
+                      <input type="text" class="input-search-full" name="txt" placeholder="Search"/>
+                      <i class="fas fa-search"></i>
+                    </div>
+                    <div class="search-box mr-3">
+                      <form name="search-inner">
+                        <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                      </form>
+                      <i class="fas fa-search"></i>
+                    </div>
                     <AddEmployeeModal UserData={UserData.role.name} accessData={accessData.length !== 0 && accessData} getAlluser={getAlluser} allData={allRecords} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -281,7 +288,7 @@ const Employee = ({ HandleProgress }) => {
                 <Table className="common-table-section">
                   <TableHead className="common-header">
                     <TableRow>
-                      <TableCell>
+                      <TableCell align="center" >
                         <TableSortLabel active={orderBy === "employee_id"} direction={orderBy === "employee_id" ? order : "asc"} onClick={() => handleRequestSort("employee_id")}>
                           Employee Id
                         </TableSortLabel>
@@ -321,7 +328,7 @@ const Employee = ({ HandleProgress }) => {
                     {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                       return (
                         <TableRow key={ind}>
-                          <TableCell>{val.employee_id}</TableCell>
+                          <TableCell align="center">{val.employee_id}</TableCell>
                           <TableCell>  <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} target="_blank">
                             {val.profile_image &&
                               <img className="profile-action-icon text-center" src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} alt="Profile_image" />}

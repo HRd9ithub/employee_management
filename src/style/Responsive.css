@@ -500,7 +500,6 @@
     }
 
     .sidebar .nav.sub-menu .nav-item .nav-link:before {
-        left: 46px;
         font-size: .55rem;
     }
 
@@ -647,10 +646,6 @@
 
     .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.75rem 2rem 0.75rem 2.9rem;
-    }
-
-    .sidebar .nav.sub-menu .nav-item .nav-link:before {
-        left: 24px;
     }
 
     /* 
@@ -1503,31 +1498,10 @@
     .sidebar .nav .nav-item .nav-link {
         padding: 0.35rem 0 0.55rem 0;
     }
-/* 
+
     .btn-gradient-primary {
         font-size: 12px;
-    } */
-
-    #breadcrumb a {
-        font-size: 12px;
-    }
-
-    #breadcrumb a:after {
-        border-width: 18px 10px;
-    }
-
-    #breadcrumb a {
-        height: 36px;
-        line-height: 37px;
-        padding: 0 5px 0 0px;
-        text-align: center;
-        margin-right: 26px;
-    }
-
-    #breadcrumb a:before {
-        border-width: 18px 10px;
-    }
-
+    } 
     .add-employee-btn i {
         font-size: 12px !important;
     }

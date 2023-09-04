@@ -227,8 +227,8 @@ const EmergencyForm = (props) => {
                     })}
                 </ol>
                 <div className="submit-section d-flex justify-content-between py-3">
-                    <button className="btn btn-primary submit-btn" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ?"Back" :"Cancel"}</button>
-                    <button className="btn btn-primary submit-btn"    onClick={handleSubmit}>Save</button>
+                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ?"Back" :"Cancel"}</button>
+                    <button className="btn btn-gradient-primary"    onClick={handleSubmit}>Save</button>
                 </div>
             </form>
             {loader && <Spinner/>}

@@ -124,7 +124,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="navbar default-layout-navbar ">
+    <nav className="navbar default-layout-navbar sticky-top">
       <div className="navbar-menu-wrapper d-flex align-items-stretch">
         {/* <img src='/Images/d9_logo_black.png' className='logo-none' alt="logo" /> */}
         <button className="navbar-toggler navbar-toggler align-self-center" type="button" >
@@ -139,36 +139,7 @@ const Navbar = () => {
           }}></span>
         </button>
         <ul className="navbar-nav navbar-nav-right">
-          {/* profile drop drown */}
-          <li className="nav-item nav-profile">
-            <Dropdown alignRight>
-              <Dropdown.Toggle className="nav-link" >
-                <div className="nav-profile-img">
-                  {UserData && <img src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/storage/${UserData.profile_image}`} alt="user" />}
-                  <span className="availability-status online"></span>
-                </div>
-                <div className="nav-profile-text">
-                  <p className="mb-1 text-white text-capitalize">{UserData.first_name && UserData.first_name.concat(" ", UserData.last_name)}<i className="fa-solid fa-chevron-down"
-                    style={{
-                      fontSize: '12px',
-                      marginLeft: '5px'
-                    }}
-                  ></i></p>
-                </div>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item className='dropdown-item' onClick={() => history(`/profile/${UserData.id}`)}>
-                  <i className="mdi mdi-account-circle mr-2 text-primary"></i>
-                  Profile
-                </Dropdown.Item>
-                <div className="dropdown-divider"></div>
-                <Dropdown.Item className='dropdown-item' onClick={handleLogout}>
-                  <i className="mdi mdi-logout mr-2 text-primary"></i>
-                  Sign Out
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </li>
+          
           {/* notification drop drown */}
           {(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') &&
             <li className="nav-item">
@@ -250,6 +221,36 @@ const Navbar = () => {
               </Dropdown>
             </li>
           }
+          {/* profile drop drown */}
+          <li className="nav-item nav-profile">
+            <Dropdown alignRight>
+              <Dropdown.Toggle className="nav-link" >
+                <div className="nav-profile-img">
+                  {UserData && <img src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/storage/${UserData.profile_image}`} alt="user" />}
+                  <span className="availability-status online"></span>
+                </div>
+                <div className="nav-profile-text">
+                  <p className="mb-1 text-white text-capitalize">{UserData.first_name && UserData.first_name.concat(" ", UserData.last_name)}<i className="fa-solid fa-chevron-down"
+                    style={{
+                      fontSize: '12px',
+                      marginLeft: '5px'
+                    }}
+                  ></i></p>
+                </div>
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="navbar-dropdown">
+                <Dropdown.Item className='dropdown-item' onClick={() => history(`/profile/${UserData.id}`)}>
+                  <i className="mdi mdi-account-circle mr-2 text-primary"></i>
+                  Profile
+                </Dropdown.Item>
+                <div className="dropdown-divider"></div>
+                <Dropdown.Item className='dropdown-item' onClick={handleLogout}>
+                  <i className="mdi mdi-logout mr-2 text-primary"></i>
+                  Sign Out
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </li>
         </ul>
         <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" ref={sidebarRef} type="button" onClick={toggleOffcanvas}>
           <span className="mdi mdi-menu sider-menu"></span>
