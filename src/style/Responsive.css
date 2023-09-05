@@ -73,18 +73,6 @@
         padding: 9px 0px;
     }
 
-    .btn-gradient-primary {
-        background: linear-gradient(to right, #0483c7, #00cec0);
-        border: 0;
-        border-radius: 20px !important;
-        width: 96% !important;
-        margin-left: 5px;
-        padding: 16px 0px !important;
-        -webkit-transition: all 1s !important;
-        -moz-transition: all 1s !important;
-        -o-transition: all 1s !important;
-        transition: all 1s !important;
-    }
 
     .page-title {
         font-size: 31px;
@@ -392,10 +380,10 @@
     #two .form-control-lg {
         height: 2.5rem;
     }
-
+/* 
     .btn-gradient-primary {
         padding: 12px 0px !important;
-    }
+    } */
 
     .gHZEHz {
         font-size: 15px !important;
@@ -512,7 +500,6 @@
     }
 
     .sidebar .nav.sub-menu .nav-item .nav-link:before {
-        left: 46px;
         font-size: .55rem;
     }
 
@@ -566,9 +553,9 @@
 }
 
 @media (max-width: 1330px) {
-    .btn-gradient-primary {
+    /* .btn-gradient-primary {
         padding: 11px 0px !important;
-    }
+    } */
 }
 
 @media (max-width: 1200px) {
@@ -630,9 +617,9 @@
         font-size: .9rem;
     }
 
-    .btn-gradient-primary {
+    /* .btn-gradient-primary {
         padding: 11px 0px !important;
-    }
+    } */
 
     .sidebar i {
         height: 30px;
@@ -659,10 +646,6 @@
 
     .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.75rem 2rem 0.75rem 2.9rem;
-    }
-
-    .sidebar .nav.sub-menu .nav-item .nav-link:before {
-        left: 24px;
     }
 
     /* 
@@ -1518,28 +1501,7 @@
 
     .btn-gradient-primary {
         font-size: 12px;
-    }
-
-    #breadcrumb a {
-        font-size: 12px;
-    }
-
-    #breadcrumb a:after {
-        border-width: 18px 10px;
-    }
-
-    #breadcrumb a {
-        height: 36px;
-        line-height: 37px;
-        padding: 0 5px 0 0px;
-        text-align: center;
-        margin-right: 26px;
-    }
-
-    #breadcrumb a:before {
-        border-width: 18px 10px;
-    }
-
+    } 
     .add-employee-btn i {
         font-size: 12px !important;
     }
@@ -1913,9 +1875,9 @@
         text-align: start !important;
     }
 
-    .btn-gradient-primary {
+    /* .btn-gradient-primary {
         padding: 9px 0px !important;
-    }
+    } */
 
     .forms-sample input {
         font-size: 12px;

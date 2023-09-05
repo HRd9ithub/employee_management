@@ -155,14 +155,15 @@ const Dashboard = () => {
 
      return (
           <>
-               <motion.div className="box pt-3" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    <div className='employee-content '>
+               <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+                    <div className=''>
                          <div className='container-fluid inner-pages py-3'>
                               <div className='row p-3 align-items-center row-std'>
-                                   <div className='col-12 employee-path' id="one">
+                                   <div className='col-12 employee-path px-2' id="one">
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
                               </div>
+                                   {UserData.role && UserData.role.name.toLowerCase() === "admin" && <>
                               <div className="row mt-3">
                                    <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => UserData.role && UserData.role.name.toLowerCase() === "admin" && navigate("/employees")}>
                                         <NavLink className="common-box-dashboard total-employee nav-link">
@@ -174,7 +175,6 @@ const Dashboard = () => {
                                              <h4 className="mt-2">Total Employees</h4>
                                         </NavLink>
                                    </div>
-                                   {UserData.role && UserData.role.name.toLowerCase() === "admin" && <>
                                         <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
@@ -205,8 +205,8 @@ const Dashboard = () => {
                                              </div>
                                              <h4 className="mt-2">Absent Today</h4>
                                         </NavLink>
-                                   </div></>}
                               </div>
+                                   </div></>}
 
                               <div className='row'>
                                    <div className='col-md-5 mt-3 box-dashboard'>

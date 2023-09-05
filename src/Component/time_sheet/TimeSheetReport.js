@@ -139,7 +139,7 @@ const TimeSheetReport = () => {
   }
 
   // generate  onclick function
-  const generateReport = async (id,start,end) => {
+  const generateReport = async (id, start, end) => {
     // handleMonthValidate();} else {
     let user_id = id || data
 
@@ -189,7 +189,7 @@ const TimeSheetReport = () => {
   const handleCallback = (start, end, label) => {
     setStartDate(start._d)
     setendtDate(end._d)
-    generateReport("",start._d,end._d)
+    generateReport("", start._d, end._d)
   }
 
   // serach filter
@@ -284,96 +284,115 @@ const TimeSheetReport = () => {
         transition={{ duration: 0.5 }}
       >
         {UserData && UserData.role?.name.toLowerCase() !== 'admin' ?
-          <div className="row">
-            <div className="col-md-5 grid-margin stretch-card">
-              <div className="card ">
-                <div className="card-body p-0 d-flex">
-                  <div className="dashboard-custom-date-picker">
-                    {(() => {
-                      let highlight = [];
+          <div className='bg-white pb-5'>
+            <div className="col-12 d-flex justify-content-between align-items-center py-2">
+              <div>
+                <NavLink className="path-header">Time Sheet Report</NavLink>
+                <ul id="breadcrumb" className="mb-0">
+                  <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                  <li><NavLink to="/timesheetreport" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Time Sheet Report</NavLink></li>
+                </ul>
+              </div>
+            </div>
+              <div className="row px-4 pb-5">
+                <div className="col-md-7 grid-margin stretch-card employee-side-calender">
+                  <div className="card">
+                    <div className="card-body p-0 d-flex">
+                      <div className="dashboard-custom-date-picker">
+                        {(() => {
+                          let highlight = [];
 
-                      for (let index = 0; index < holidayDetail.length; index++) {
-                        highlight.push(subDays(new Date(`${holidayDetail[index].date}`), 0));
-                      }
-                      return (
-                        <DatePickers inline selected={selectedDate} onChange={handleChange} highlightDates={highlight} />
-                      );
-                    })()}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-7 grid-margin stretch-card">
-              <div className="card">
-                <div className='head text-center'>
-                  <h1>Total Working Hours</h1>
-                </div>
-                <div className='hours-standard'>
-                  <CircularProgressbar
-                    value={percentage.split(":").shift()}
-                    text={`${percentage}`}
-                    maxValue={10}
-                    styles={buildStyles({
-                      strokeLinecap: 'butt',
-                      textSize: '16px',
-                      maxValue: 10,
-                      pathTransitionDuration: 0.8,
-                      // pathColor: `rgb(7 74 151 ${percentage / 10})`,
-                      textColor: '#f88',
-                      trailColor: '#d6d6d6',
-                      backgroundColor: '#074a98',
-                    })}
-                  />
-                </div>
-              </div>
-            </div>
-          </div> :
-          <div className=''>
-            <div className='container-fluid '>
-              <div className="row breadcrumb-btn">
-                <div className="col-lg-10 col-md-10 col-sm-9 col-8">
-                  <ul id="breadcrumb" className="mb-0">
-                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
-                    <li><NavLink to="/timesheetreport" className="ibeaker"><i className="fa-solid fa-user icon"></i> Time Sheet Report</NavLink></li>
-                  </ul>
-                </div>
-                <div className="col-2">
-                  <button className=' btn btn-gradient-primary btn-rounded btn-fw text-center' disabled={recordsFilter.length < 1}>
-                    <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="background-wrapper bg-white pt-5">
-              <div className='container-fluid'>
-                <div className='row row-std inner-pages'>
-                  {/* search box */}
-                  <div className="col-md-8 col-sm-12 p-0 text-end" id="two"></div>
-                  <div className="col-md-4 col-sm-12" id="two">
-                    <Form.Control type="text" className="open" id="exampleInputUsername1" onChange={handleFilter} placeholder=" &#xf002; &nbsp; Search " size="lg" style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
-                  </div>
-                  {/* employee dropdrown part */}
-                  <div className='col-md-6 col-sm-6 col-12 pr-sm-1'>
-                    <div className="form-group mb-0">
-                      <label htmlFor="1" className='mt-3'>Employees </label>
-                      <select className="form-control" id="employee" name='data' value={data} onChange={onChange}>
-                        <option value='all'>All</option>
-                        {user.map((val) => {
+                          for (let index = 0; index < holidayDetail.length; index++) {
+                            highlight.push(subDays(new Date(`${holidayDetail[index].date}`), 0));
+                          }
                           return (
-                            <option key={val.id} value={val.id}>{val.first_name.concat(" ", val.last_name)}</option>
-                          )
-                        })}
-                      </select>
-                    </div>
-                  </div>
-                  {/* month dropdrown part */}
-                  <div className='col-md-6 col-sm-6 col-12 pl-sm-1'>
-                    <div className="form-group mb-0">
-                      <label htmlFor="1" className='mt-3'> Select date</label>
-                      <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback}><input className="form-control" /></DateRangePicker>
+                            <DatePickers inline selected={selectedDate} onChange={handleChange} highlightDates={highlight} />
+                          );
+                        })()}
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div className="col-md-5 grid-margin stretch-card employee-side">
+                  <div className="card">
+                    <div className='head text-center'>
+                      <h1 className='m-0'>Total Working Hours</h1>
+                    </div>
+                    <div className='hours-standard'>
+                      <CircularProgressbar
+                        value={percentage.split(":").shift()}
+                        text={`${percentage}`}
+                        maxValue={10}
+                        styles={buildStyles({
+                          strokeLinecap: 'butt',
+                          textSize: '16px',
+                          maxValue: 10,
+                          pathTransitionDuration: 0.8,
+                          // pathColor: `rgb(7 74 151 ${percentage / 10})`,
+                          textColor: '#f88',
+                          trailColor: '#d6d6d6',
+                          backgroundColor: '#074a98',
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div> :
+          <div className=" container-fluid pt-4">
+            <div className="background-wrapper bg-white pt-2">
+              <div className=''>
+                <div className='row justify-content-end align-items-center row-std m-0'>
+                  <div className="col-12 d-flex justify-content-between align-items-center">
+                    <div>
+                      <NavLink className="path-header">Time Sheet Report</NavLink>
+                      <ul id="breadcrumb" className="mb-0">
+                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                        <li><NavLink to="/timesheetreport" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Time Sheet Report</NavLink></li>
+                      </ul>
+                    </div>
+                    <div className="d-flex" id="two">
+                      <div className="search-full">
+                        <input type="text" class="input-search-full" name="txt" placeholder="Search" />
+                        <i class="fas fa-search"></i>
+                      </div>
+                      <div class="search-box mr-3">
+                        <form name="search-inner">
+                          <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                        </form>
+                        <i class="fas fa-search"></i>
+                      </div>
+                      {recordsFilter.length >= 1 &&
+                        <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
+                          <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
+                        </div>}
+                    </div>
+                  </div>
+                </div>
+                <div className='container-fluid'>
+                  <div className='row'>
+                    <div className='col-6'>
+                      <div className="form-group mb-0">
+                        <label htmlFor="1" className='mt-3'>Employees </label>
+                        <select className="form-control" id="employee" name='data' value={data} onChange={onChange}>
+                          <option value='all'>All</option>
+                          {user.map((val) => {
+                            return (
+                              <option key={val.id} value={val.id}>{val.first_name.concat(" ", val.last_name)}</option>
+                            )
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div className='col-6'>
+                      <div className="form-group mb-0">
+                        <label htmlFor="1" className='mt-3'> Select date</label>
+                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback}><input className="form-control" /></DateRangePicker>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               {/* table */}

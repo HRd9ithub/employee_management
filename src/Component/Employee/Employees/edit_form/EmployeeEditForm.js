@@ -86,69 +86,73 @@ const EmployeeEditForm = () => {
 
   return (
     <>
-      <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4">
-        <div className="card modal-content">
-          {/* ............................Header one.......................... */}
-          <div className="modal-header employee-form">
-            <Tabs
-              value={value}
-              onChange={changeTab}
-              aria-label="secondary tabs example"
-            >
-              <Tab value="Personal" label="Personal Information" />
-              <Tab value="Account" label="Account Information" />
-              <Tab value="Education" label="Education Information" />
-              <Tab value="Document" label="Document Information" />
-              <Tab value="Emergency" label="Emergency Contact Information" />
-            </Tabs>
-          </div>
+      <div className="container-fluid px-4">
 
-          {/* ............................Header two.......................... */}
-          <div className="modal-header-none">
-            <div className="dropdown">
-              <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {/* eslint-disable-next-line no-useless-concat */}
-                {value && value + " " + "Information"} <i className="fa-solid fa-chevron-down"></i>
-              </button>
-              <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
-                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
+        <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4">
+          <div className="card modal-content">
+            {/* ............................Header one.......................... */}
+            <div className="modal-header employee-form">
+              <Tabs
+                value={value}
+                onChange={changeTab}
+                aria-label="secondary tabs example"
+              >
+                <Tab value="Personal" label="Personal Information" />
+                <Tab value="Account" label="Account Information" />
+                <Tab value="Education" label="Education Information" />
+                <Tab value="Document" label="Document Information" />
+                <Tab value="Emergency" label="Emergency Contact Information" />
+              </Tabs>
+            </div>
+
+            {/* ............................Header two.......................... */}
+            <div className="modal-header-none">
+              <div className="dropdown">
+                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {/* eslint-disable-next-line no-useless-concat */}
+                  {value && value + " " + "Information"} <i className="fa-solid fa-chevron-down"></i>
+                </button>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="card-body">
-            {value === "Personal" ?
-              <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
-              : value === "Account" ?
-                <AccountForm
-                  userDetail={userDetail}
-                  userId={userId}
-                  getEmployeeDetail={getEmployeeDetail}
-                />
-                : value === "Education" ?
-                  <EductionForm
+            <div className="card-body">
+              {value === "Personal" ?
+                <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
+                : value === "Account" ?
+                  <AccountForm
                     userDetail={userDetail}
-                    getEmployeeDetail={getEmployeeDetail}
                     userId={userId}
-                  /> :
-                  value === "Document" ?
-                    <UserDoumentForm
+                    getEmployeeDetail={getEmployeeDetail}
+                  />
+                  : value === "Education" ?
+                    <EductionForm
                       userDetail={userDetail}
                       getEmployeeDetail={getEmployeeDetail}
-                      userId={userId} />
-                    : <EmergencyForm
-                      userDetail={userDetail}
-                      getEmployeeDetail={getEmployeeDetail}
-                      userId={userId} />
-            }
+                      userId={userId}
+                    /> :
+                    value === "Document" ?
+                      <UserDoumentForm
+                        userDetail={userDetail}
+                        getEmployeeDetail={getEmployeeDetail}
+                        userId={userId} />
+                      : <EmergencyForm
+                        userDetail={userDetail}
+                        getEmployeeDetail={getEmployeeDetail}
+                        userId={userId} />
+              }
+            </div>
           </div>
         </div>
       </div>
+
       {loader && <Spinner />}
 
     </>

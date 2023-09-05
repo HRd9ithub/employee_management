@@ -14,6 +14,7 @@ import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { subDays } from "date-fns";
+import { NavLink } from 'react-router-dom';
 
 const Calendar = ({ HandleProgress }) => {
   let DateRef = useRef();
@@ -296,11 +297,20 @@ const Calendar = ({ HandleProgress }) => {
         animate={{ opacity: 1, transform: 'translateY(0px)' }}
         transition={{ duration: 0.5 }}
       >
-        <div className="row calender-row inner-pages">
-          <div className="col-lg-5 grid-margin stretch-card calender-wrapper">
+        <div className='bg-white pb-5'>
+            <div className="col-12 d-flex justify-content-between align-items-center py-2">
+              <div>
+                <NavLink className="path-header">Calender</NavLink>
+                <ul id="breadcrumb" className="mb-0">
+                  <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                  <li><NavLink to="/holiday" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
+                </ul>
+              </div>
+            </div>
+        <div className="row px-4 pb-5">
+          <div className="col-md-7 grid-margin stretch-card calender-wrapper employee-side-calender">
             <div className="card">
               <div className="card-body p-0 d-flex">
-
                 <div className="dashboard-custom-date-picker">
                   {(() => {
                     let highlight = [];
@@ -316,7 +326,7 @@ const Calendar = ({ HandleProgress }) => {
               </div>
             </div>
           </div>
-          <div className="col-lg-7 grid-margin stretch-card standard-wrapper">
+          <div className="col-md-5 grid-margin stretch-card standard-wrapper employee-side">
             <div className="card calender">
               <div className="card-body">
                 {UserData && UserData.role.name.toLowerCase() === 'admin' &&
@@ -373,7 +383,7 @@ const Calendar = ({ HandleProgress }) => {
                       return (
                         <li key={elem.id}>
                           <div className="form-check">
-                            <label htmlFor="" className="form-check-label" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;{(moment(elem.date).format('dddd'))}&nbsp;&nbsp;{elem.name}
+                            <label htmlFor="" className="form-check-label m-0" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{(moment(elem.date).format('dddd'))}&nbsp;&nbsp;{elem.name}
                               <i className="input-helper"></i>
                             </label>
                           </div>
@@ -401,6 +411,8 @@ const Calendar = ({ HandleProgress }) => {
               </div>
             </div>
           </div>
+          </div>
+
         </div>
       </motion.div>
       {loader && <Spinner />}

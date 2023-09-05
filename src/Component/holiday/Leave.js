@@ -262,34 +262,37 @@ const Leave = () => {
                 animate={{ opacity: 1, transform: 'translateY(0px)' }}
                 transition={{ duration: 0.5 }}
             >
-                <div className=''>
-                    <div className='container-fluid '>
-                        <div className="row breadcrumb-btn">
-                           <div className="col-lg-10 col-md-10 col-sm-9 col-8">
-                                <ul id="breadcrumb" className="mb-0">
-                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
-                                    <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-user icon"></i> Leave</NavLink></li>
-                                </ul>
-                            </div>
-                           <div className="col-lg-2 col-md-2 col-sm-3 col-3">
-                                <div className=' add-employee-btn'>
-                                    <LeaveModal getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />
+                <div className=" container-fluid pt-4">
+                    <div className="background-wrapper bg-white pt-2">
+                        <div className=''>
+                            <div className='row justify-content-end align-items-center row-std m-0'>
+                                <div className="col-12 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <NavLink className="path-header">Leave</NavLink>
+                                        <ul id="breadcrumb" className="mb-0">
+                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                            <li><NavLink to="/leave" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
+                                        </ul>
+                                    </div>
+                                    <div className="d-flex" id="two">
+                                        <div className="search-full">
+                                            <input type="text" class="input-search-full" name="txt" placeholder="Search" />
+                                            <i class="fas fa-search"></i>
+                                        </div>
+                                        <div class="search-box mr-3">
+                                            <form name="search-inner">
+                                                <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                                            </form>
+                                            <i class="fas fa-search"></i>
+                                        </div>
+                                        <LeaveModal getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="background-wrapper bg-white pt-5">
-                        <div className='container-fluid pr-5'>
-                            <div className='row justify-content-end row-std inner-pages'>
-                                {/* search box */}
-                                <div className={`col-md-4 col-sm-5 col-12 text-end `} id="two">
-                                    <Form.Control type="text" className="open" id="exampleInputUsername1" placeholder=" &#xf002; &nbsp; Search " size="lg" onChange={HandleFilter} style={{ fontFamily: 'font_awesome', fontWeight: '500' }} />
-                                </div>
 
-                            </div>
-                        </div >
+                        {/* table */}
                         <div>
-                            {/* table */}
                             <TableContainer >
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">

@@ -1002,8 +1002,8 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     })}
                 </ol>
                 <div className="submit-section d-flex justify-content-between">
-                    <button className="btn btn-primary submit-btn" onClick={BackBtn}>Back</button>
-                    <button className="btn btn-primary submit-btn" onClick={handleSubmit}>Save</button>
+                    <button className="btn btn-light" onClick={BackBtn}>Back</button>
+                    <button className="btn btn-gradient-primary" onClick={handleSubmit}>Save</button>
                 </div>
             </form >
 

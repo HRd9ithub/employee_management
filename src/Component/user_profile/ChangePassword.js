@@ -158,8 +158,8 @@ const ChangePassword = () => {
                     return <li className='error' key={val} >{val}</li>
                 })}
             </ol>
-            <div className="submit-section">
-                <button type="submit" disabled={!list.password || !list.newpassword || !list.renewpassword || passwordError || newPasswordError || renewpasswordError} className="btn btn-primary submit-btn m-0" onClick={changePaasword}>Change Password</button>
+            <div className="submit-section pb-3">
+                <button type="submit" disabled={!list.password || !list.newpassword || !list.renewpassword || passwordError || newPasswordError || renewpasswordError} className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>
             {loader && <Spinner />}
         </form>

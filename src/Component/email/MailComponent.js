@@ -204,7 +204,7 @@ const MailComponent = ({ HandleProgress }) => {
                     if (mailDetail.length === 0) {
                         toast.success("Successfully added a new mail detail.");
                     } else {
-                        toast.success("Successfully updated a mail detail.");
+                        toast.success("Successfully updated!");
                     }
                     // redirect('/maildetail')
                 } else {
@@ -234,145 +234,147 @@ const MailComponent = ({ HandleProgress }) => {
     return (
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                <div className=''>
-                    <div className='container-fluid '>
-                        <div className="row breadcrumb-btn">
-                           <div className="col-lg-10 col-md-10 col-sm-9 col-8">
-                                <ul id="breadcrumb" className="mb-0">
-                                    <li><NavLink to="/" className="ihome"><span className="icon icon-home"> </span></NavLink></li>
-                                    <li><NavLink to="/email" className="ibeaker"><i className="fa-solid fa-user icon"></i> Mail</NavLink></li>
-                                </ul>
-                            </div>
-                           <div className="col-lg-2 col-md-2 col-sm-3 col-3">
-                                <div className='add-employee-btn'>
-                                    { ((UserData && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].create === "1")) &&
-                                    <button
-                                        type="submit"
-                                        className="btn btn-gradient-primary  me-2"
-                                        onClick={handleSubmit}
-                                    >
-                                        Submit
-                                    </button>}
+                <div className=" container-fluid pt-4">
+                    <div className="background-wrapper bg-white pt-2">
+                        <div className=''>
+                            <div className='row justify-content-end align-items-center row-std m-0'>
+                                <div className="col-12 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <NavLink className="path-header">Email</NavLink>
+                                        <ul id="breadcrumb" className="mb-0">
+                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                            <li><NavLink to="/email" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Email</NavLink></li>
+                                        </ul>
+                                    </div>
+                                    <div className="d-flex" id="two">
+                                        <button
+                                            type="submit"
+                                            className="btn btn-gradient-primary  me-2"
+                                            onClick={handleSubmit}
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="background-wrapper bg-white pt-5">
 
-                        <div className='container-fluid inner-pages px-2'>
-                            <form className="forms-sample pt-4">
-                                <div className="container-fluid">
-                                    <div className="row">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_mailer">Mail Mailer</label>
-                                            <input type="text" className="form-control" id="mail_mailer" placeholder="Enter mail mailer" name="mail_mailer" onChange={InputEvent} value={mail.mail_mailer} onKeyUp={ValidationMailler} />
-                                            {mail_mailer_error && (
-                                                <div className="error"> {mail_mailer_error}</div>
-                                            )}
+
+                            <div className='container-fluid inner-pages px-2'>
+                                <form className="forms-sample pt-4">
+                                    <div className="container-fluid">
+                                        <div className="row">
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_mailer">Mail Mailer</label>
+                                                <input type="text" className="form-control" id="mail_mailer" placeholder="Enter mail mailer" name="mail_mailer" onChange={InputEvent} value={mail.mail_mailer} onKeyUp={ValidationMailler} />
+                                                {mail_mailer_error && (
+                                                    <div className="error"> {mail_mailer_error}</div>
+                                                )}
+                                            </div>
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_host">Mail Host</label>
+                                                <input type="text" className="form-control" id="mail_host" placeholder="Enter mail host" name="mail_host" onChange={InputEvent} value={mail.mail_host} onKeyUp={ValidationHost} />
+                                                {mail_host_error && (
+                                                    <div className="error"> {mail_host_error}</div>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_host">Mail Host</label>
-                                            <input type="text" className="form-control" id="mail_host" placeholder="Enter mail host" name="mail_host" onChange={InputEvent} value={mail.mail_host} onKeyUp={ValidationHost} />
-                                            {mail_host_error && (
-                                                <div className="error"> {mail_host_error}</div>
-                                            )}
+
+                                        <div className="row">
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_port">Mail Port</label>
+                                                <input
+                                                    type="number"
+                                                    className="form-control"
+                                                    id="mail_port"
+                                                    placeholder="Enter mail port"
+                                                    name="mail_port"
+                                                    onChange={InputEvent}
+                                                    value={mail.mail_port}
+                                                    onKeyUp={ValidationPort}
+                                                />
+                                                {mail_port_error && (
+                                                    <div className="error"> {mail_port_error}</div>
+                                                )}
+                                            </div>
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_username">Mail User Name</label>
+                                                <input
+                                                    type="email"
+                                                    className="form-control"
+                                                    id="mail_username"
+                                                    placeholder="Enter mail username"
+                                                    name="mail_username"
+                                                    onChange={InputEvent}
+                                                    value={mail.mail_username}
+                                                    onKeyUp={ValidationUserName}
+                                                />
+                                                {mail_username_error && (
+                                                    <div className="error"> {mail_username_error}</div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_password">Mail Password</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="mail_password"
+                                                    placeholder="Enter mail password"
+                                                    name="mail_password"
+                                                    onChange={InputEvent}
+                                                    value={mail.mail_password}
+                                                    onKeyUp={validationPassword}
+                                                />
+                                                {mail_password_error && (
+                                                    <div className="error"> {mail_password_error}</div>
+                                                )}
+                                            </div>
+                                            <div className="form-group col-md-6">
+                                                <label htmlFor="mail_encryption">Mail Encryption</label>
+                                                <input type="text" className="form-control" id="mail_encryption" placeholder="Enter mail encryption" name="mail_encryption" onChange={InputEvent} value={mail.mail_encryption} onKeyUp={validationEncryption} />
+                                                {mail_encryption_error && (
+                                                    <div className="error"> {mail_encryption_error}</div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="form-group col-md-6 ">
+                                                <label htmlFor="mail_from_address">Mail From Address</label>
+                                                <input type="email" className="form-control" id="mail_from_address" placeholder="Enter mail from address" name="mail_from_address" onChange={InputEvent} value={mail.mail_from_address} onKeyUp={validationFromAddress} />
+                                                {mail_from_address_error && (<div className="error"> {mail_from_address_error}</div>)}
+                                            </div>
+                                            <div className="form-group col-md-6 ">
+                                                <label htmlFor="mail_from_name">Mail From Name</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="mail_from_name"
+                                                    placeholder="Enter mail from name"
+                                                    name="mail_from_name"
+                                                    onChange={InputEvent}
+                                                    value={mail.mail_from_name}
+                                                    onKeyUp={validationFromName}
+                                                />
+                                                {mail_from_name_error && (
+                                                    <div className="error"> {mail_from_name_error}</div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="row">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_port">Mail Port</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                id="mail_port"
-                                                placeholder="Enter mail port"
-                                                name="mail_port"
-                                                onChange={InputEvent}
-                                                value={mail.mail_port}
-                                                onKeyUp={ValidationPort}
-                                            />
-                                            {mail_port_error && (
-                                                <div className="error"> {mail_port_error}</div>
-                                            )}
-                                        </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_username">Mail User Name</label>
-                                            <input
-                                                type="email"
-                                                className="form-control"
-                                                id="mail_username"
-                                                placeholder="Enter mail username"
-                                                name="mail_username"
-                                                onChange={InputEvent}
-                                                value={mail.mail_username}
-                                                onKeyUp={ValidationUserName}
-                                            />
-                                            {mail_username_error && (
-                                                <div className="error"> {mail_username_error}</div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="row">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_password">Mail Password</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="mail_password"
-                                                placeholder="Enter mail password"
-                                                name="mail_password"
-                                                onChange={InputEvent}
-                                                value={mail.mail_password}
-                                                onKeyUp={validationPassword}
-                                            />
-                                            {mail_password_error && (
-                                                <div className="error"> {mail_password_error}</div>
-                                            )}
-                                        </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="mail_encryption">Mail Encryption</label>
-                                            <input type="text" className="form-control" id="mail_encryption" placeholder="Enter mail encryption" name="mail_encryption" onChange={InputEvent} value={mail.mail_encryption} onKeyUp={validationEncryption} />
-                                            {mail_encryption_error && (
-                                                <div className="error"> {mail_encryption_error}</div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="row">
-                                        <div className="form-group col-md-6 ">
-                                            <label htmlFor="mail_from_address">Mail From Address</label>
-                                            <input type="email" className="form-control" id="mail_from_address" placeholder="Enter mail from address" name="mail_from_address" onChange={InputEvent} value={mail.mail_from_address} onKeyUp={validationFromAddress} />
-                                            {mail_from_address_error && (<div className="error"> {mail_from_address_error}</div>)}
-                                        </div>
-                                        <div className="form-group col-md-6 ">
-                                            <label htmlFor="mail_from_name">Mail From Name</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="mail_from_name"
-                                                placeholder="Enter mail from name"
-                                                name="mail_from_name"
-                                                onChange={InputEvent}
-                                                value={mail.mail_from_name}
-                                                onKeyUp={validationFromName}
-                                            />
-                                            {mail_from_name_error && (
-                                                <div className="error"> {mail_from_name_error}</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                <ol>
-                                    {error.map((val) => {
-                                        return <li className="error" key={val}>{val}</li>
-                                    })}
-                                </ol>
-                            </form>
+                                    <ol>
+                                        {error.map((val) => {
+                                            return <li className="error" key={val}>{val}</li>
+                                        })}
+                                    </ol>
+                                </form>
+                            </div>
                         </div>
-                    </div>
                 </div>
+
             </motion.div>
             {loader && <Spinner />}
         </>
