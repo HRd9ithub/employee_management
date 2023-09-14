@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { useEffect } from "react";
@@ -9,28 +9,25 @@ import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 
-function UserRoleModal({ data, getuserRole, user, accessData, records }) {
+function UserRoleModal({ data, getuserRole, permission }) {
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
     const [show, setShow] = useState(false);
     const [loader, setloader] = useState(false);
-    const [list, setList] = useState({
-        name: "",
-    });
+    const [name, setName] = useState("")
     const [error, seterror] = useState('');
     const [Error, setError] = useState([]);
     const [page, setPage] = useState([])
     const [id, setId] = useState("");
-    let toggleButton = false;
 
     let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
-        if (data) {
-            setList({
-                name: data.name,
-            });
-            setId(data.id);
-        }
         setShow(true);
     };
 
@@ -38,17 +35,17 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
     const handleClose = (e) => {
         e.preventDefault();
         setShow(false);
-        setList({
-            name: "",
-        });
+        setName("")
         seterror('');
+        setError([]);
+        setId("")
     };
 
     // onchange function
     const InputEvent = (e) => {
-        let { name, value } = e.target;
+        let { value } = e.target;
 
-        setList({ ...list, [name]: value });
+        setName(value)
     };
 
     useEffect(() => {
@@ -60,60 +57,49 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
 
     // form validation
     const handlenameValidate = () => {
-        let msg = "";
-        if (!list.name) {
+        if (!name) {
             seterror("User role is required.");
-            msg = "error";
-        } else if (!list.name.trim() || !list.name.match(/^[A-Za-z ]+$/)) {
+        } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
             seterror("Please enter a valid user role.");
-            msg = "error";
-        } else if (list.name.match(/^[A-Za-z ]+$/)) {
-            let temp = records.findIndex((val) => {
-                return val.name.trim().toLowerCase() === list.name.trim().toLowerCase();
-            });
-            if (temp === -1 || (data && data.name.toLowerCase() === list.name.toLowerCase())) {
-                seterror("");
-                msg = "";
-            } else {
-                seterror("The user role is already exists.");
-                msg = "error";
-            }
         } else {
             seterror("");
-            msg = "";
         }
-        return msg;
     };
-
 
     // get page name deatil
     const getPageData = async () => {
         try {
             setloader(true)
-            let token = GetLocalStorage('token');
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
+            let url = ""
+            if (id) {
+                url = `${process.env.REACT_APP_API_KEY}/role/${id}`
+            } else {
+                url = `${process.env.REACT_APP_API_KEY}/role/static`
             }
-            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/page/list`, request)
+            const res = await axios.get(url, config)
             if (res.data.success) {
-                let data = res.data.data.map(element => {
-                    return { name: element.name, id: element.id, view: "0", create: "0", update: "0", delete: "0" }
-                });
-                setPage(data)
+                if (id) {
+                    let data = res.data.data.map((val) => {
+                        return val.permissions
+                    })
+                    setPage(data)
+                    console.log(page)
+                    setName(res.data.data[0].name)
+                    setId(res.data.data[0]._id)
+                } else {
+                    setPage(res.data.data)
+                }
             }
         } catch (error) {
             console.log(error, "<<< === user role page  get api")
-            if (error.response.status === 401) {
-                getCommonApi();
+            if (!error.response) {
+                toast.error(error.message)
             } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
+                if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    if (typeof error.response.data.error === "string") {
-                        toast.error(error.response.data.error)
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             }
@@ -125,110 +111,48 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
     // submit data function
     const handleSubmit = (e) => {
         e.preventDefault();
-        const errortoggle = handlenameValidate();
+        console.warn(page)
+        !error && handlenameValidate();
         setError([])
-        if (!errortoggle) {
-            if (id) {
-                setloader(true);
-                // data edit api call
-                let token = GetLocalStorage("token");
-                // header define
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                axios.post(`${process.env.REACT_APP_API_KEY}/role/update`, { name: list.name.charAt(0).toUpperCase() + list.name.slice(1), id }, request).then((data) => {
-                    if (data.data.success) {
-                        setloader(false);
-                        toast.success("Successfully edited a user role.");
-                        setShow(false);
-                        getuserRole();
-                        setList({
-                            name: "",
-                        })
-                        setId("")
-                    } else {
-                        setloader(false);
-                        toast.error(data.data.message.name[0]);
-                    }
-                }).catch((error) => {
-                    setloader(false);
-                    console.log("🚀 ~ file: ~ error:", error.response.data.message);
+        let url = "";
+        if (id) {
+            url = axios.put(`${process.env.REACT_APP_API_KEY}/role/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+        } else {
+            url = axios.post(`${process.env.REACT_APP_API_KEY}/role/`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+        }
+        if (name && !error) {
+            setloader(true)
+            url.then((response) => {
+                if (response.data.success) {
+                    toast.success(response.data.message)
+                    setShow(false);
+                    getuserRole();
+                    setName("")
+                    setPage([])
+                    setId("")
+                }
+            }).catch((error) => {
+                console.log(error);
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
                     if (error.response.status === 401) {
                         getCommonApi();
                     } else {
                         if (error.response.data.message) {
                             toast.error(error.response.data.message)
                         } else {
-                            if (typeof error.response.data.error === "string") {
-                                toast.error(error.response.data.error)
-                            }
-                            else {
-                                setError(error.response.data.error);
-                            }
+                            setError(error.response.data.error);
                         }
                     }
-                });
-            } else {
-                setloader(true)
-                // data add api call
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                axios.post(`${process.env.REACT_APP_API_KEY}/role/add`, { name: list.name.charAt(0).toUpperCase() + list.name.slice(1) }, request).then((data) => {
-                    if (data.data.success) {
-                        setloader(false);
-                        toast.success("Successfully added a user role.");
-                        setShow(false);
-                        getuserRole();
-                        setList({
-                            name: "",
-                        })
-                    } else {
-                        setloader(false);
-                        toast.error(data.data.message.name[0]);
-                    }
-                }).catch((error) => {
-                    setloader(false);
-                    console.log("🚀 ~ file: ~ error:", error.response.data.message);
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        } else {
-                            if (typeof error.response.data.error === "string") {
-                                toast.error(error.response.data.error)
-                            } else {
-                                setError(error.response.data.error)
-                            }
-                        }
-                    }
-                });
-            }
+                }
+            }).finally(() => setloader(false))
         }
     };
 
-    // button toggle diable or not
-    if (user.toLowerCase() !== "admin") {
-        if (accessData.length !== 0 && accessData[0].create === "1") {
-            toggleButton = false;
-        } else {
-            toggleButton = true;
-        }
-    } else {
-        toggleButton = false;
-    }
-
     const handleChange = (e, id, name) => {
         let changeData = page.map((val) => {
-            if (val.id === id) {
+            if (val.menuId === id) {
                 return { ...val, [name]: e.target.checked === true ? "1" : "0" }
             }
             return val
@@ -236,10 +160,43 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
         setPage(changeData)
     }
 
+    // check role
+    const checkRole = async () => {
+        !name && handlenameValidate();
+        if (name && !error) {
+            setloader(true)
+            let config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${GetLocalStorage('token')}`
+                },
+            }
+            axios.post(`${process.env.REACT_APP_API_KEY}/role/name`, { name, id }, config).then((response) => {
+                console.log(response)
+                if (response.data.success) {
+                    seterror("")
+                }
+            }).catch((error) => {
+                console.log(error)
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
+                    if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.data.message) {
+                            seterror(error.response.data.message)
+                        }
+                    }
+                }
+            }).finally(() => setloader(false))
+        }
+    }
+
     return (
         <>
-            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> : 
-              (user.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
+            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
+                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
                 <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handleShow} ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
             }
             <Modal show={show} animation={true} size="lg" aria-labelledby="example-modal-sizes-title-sm" className="small-modal department-modal user-modal" centered>
@@ -256,14 +213,14 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
                                 <form className="forms-sample row">
                                     <div className="form-group col-12 ">
                                         <label htmlFor="1">User Role</label>
-                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter user role" name="name" value={list.name} onChange={InputEvent} onKeyUp={handlenameValidate} />
+                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter user role" name="name" value={name} onChange={InputEvent} onBlur={checkRole} onKeyUp={handlenameValidate} />
                                         {error && (<small id="emailHelp" className="form-text error">{error}</small>)}
                                     </div>
                                     <Table className="col-12" >
                                         <thead className='mt-3'>
                                             <tr>
                                                 <th className="pl-3">Module Permission</th>
-                                                <th className="pl-4">View</th>
+                                                <th className="pl-4">List</th>
                                                 <th className="pl-4">Create</th>
                                                 <th className="pl-4">Update</th>
                                                 <th className="pl-4">Delete</th>
@@ -272,12 +229,12 @@ function UserRoleModal({ data, getuserRole, user, accessData, records }) {
                                         <tbody>
                                             {page.map((val) => {
                                                 return (
-                                                    <tr key={val.id}>
+                                                    <tr key={val.menuId}>
                                                         <td className="">{val.name}</td>
-                                                        <td className=""><Switch id={val.id} checked={val.view === "1" ? true : false} onChange={(e) => handleChange(e, val.id, "view")} /></td>
-                                                        <td className=""><Switch id={val.id} checked={val.create === "1" ? true : false} onChange={(e) => handleChange(e, val.id, "create")} /></td>
-                                                        <td className=""><Switch id={val.id} checked={val.update === "1" ? true : false} onChange={(e) => handleChange(e, val.id, "update")} /></td>
-                                                        <td className=""><Switch id={val.id} checked={val.delete === "1" ? true : false} onChange={(e) => handleChange(e, val.id, "delete")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.list == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "list")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.create == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "create")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.update == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "update")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.delete == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "delete")} /></td>
                                                     </tr>
                                                 )
                                             })}

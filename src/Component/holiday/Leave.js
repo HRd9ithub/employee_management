@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../common/Spinner'
-import { toast } from 'react-toastify'
-import { Form } from 'react-bootstrap';
+import { toast } from 'react-hot-toast'
 import LeaveModal from './LeaveModal'
 import { motion } from 'framer-motion'
-import { AppProvider } from '../context/RouteContext'
 import { HiOutlineMinus } from "react-icons/hi";
 import Modal from 'react-bootstrap/Modal';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import { GetLocalStorage } from '../../service/StoreLocalStorage'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import Avatar from '@mui/material/Avatar';
 
 const Leave = () => {
-    let { accessData, UserData, getLeave, records, setLoading, Loading, handleVisibility, visible } = useContext(AppProvider);
     const [show, setShow] = useState(false);
     const [status, setstatus] = useState("");
     const [id, setid] = useState("");
+    const [permission, setpermission] = useState("");
     const [leaveRecord, setleaveRecord] = useState([]);
     const [leaveRecordFilter, setleaveRecordFilter] = useState([]);
-    const [Action, setAction] = useState(false);
+    const [Loading, setLoading] = useState(false);
+    const [subLoading, setsubLoading] = useState(false);
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -32,26 +32,42 @@ const Leave = () => {
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("name")
 
+    // leave data get
+    const getLeave = async () => {
+        setLoading(true);
+        try {
+            let token = GetLocalStorage('token');
+            const request = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+            }
+            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave/`, request)
+            if (res.data.success) {
+                setleaveRecordFilter(res.data.data)
+                setleaveRecord(res.data.data)
+                setpermission(res.data.permissions)
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         getLeave();
         // eslint-disable-next-line
     }, [])
-
-    useEffect(() => {
-        if (UserData?.role.name.toLowerCase() !== "admin") {
-            setleaveRecord(records.filter((val) => val.user?.id === UserData.id))
-            setleaveRecordFilter(records.filter((val) => val.user?.id === UserData.id))
-        } else {
-            setleaveRecord(records);
-            setleaveRecordFilter(records);
-        }
-        // action button show or not 
-        let data = leaveRecordFilter.filter((val) => {
-            return (val.status === 'Pending' && val.status === "Read" && new Date(val.from_date) > new Date()) || (UserData && (UserData.role.name.toLowerCase() !== "admin" || (val.status === 'Pending' && val.status === "Read")))
-        })
-        data.length !== 0 ? setAction(true) : setAction(false)
-        // eslint-disable-next-line
-    }, [records])
 
     // status change modal SHOW
     const handlesshowModal = (status, id) => {
@@ -70,98 +86,46 @@ const Leave = () => {
         let data = event.target.value;
         let filter_data = leaveRecord.filter((val) => {
             return (val.user?.first_name && val.user.first_name.concat(" ", val.user.last_name).toLowerCase().includes(data.toLowerCase())) ||
-                val.leave_type?.name.toLowerCase().includes(data.toLowerCase()) ||
+                val.leaveType.toLowerCase().includes(data.toLowerCase()) ||
                 val.from_date.toString().includes(data.toLowerCase()) ||
                 val.to_date.toString().includes(data.toLowerCase()) ||
-                val.day.toString().includes(data.toLowerCase()) ||
-                val.leave_status.toLowerCase().includes(data.toLowerCase()) ||
-                val.description.toLowerCase().includes(data.toLowerCase()) ||
+                val.duration.toString().includes(data.toLowerCase()) ||
+                val.leave_for.toLowerCase().includes(data.toLowerCase()) ||
+                val.reason.toLowerCase().includes(data.toLowerCase()) ||
                 val.status.toLowerCase().includes(data.toLowerCase())
         })
         setleaveRecordFilter(filter_data)
     }
 
-    // delete function
-    // const handleDelete = (id) => {
-    //     let token = GetLocalStorage('token');
-    //     const request = {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     }
-    //     Swal.fire({
-    //         title: 'Delete Leave',
-    //         text: "Are you sure want to delete?",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#1bcfb4',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Yes, delete it!',
-    //         cancelButtonText: 'No, cancel!',
-    //         width: '450px',
-    //     }).then(async (result) => {
-    //         if (result.isConfirmed) {
-    //             setLoading(true)
-    //             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/delete`, { id: id }, request)
-    //             if (res.data.success) {
-    //                 getLeave()
-    //                 toast.success('Successfully Deleted a leave.')
-    //             } else {
-    //                 setLoading(false)
-    //                 toast.error(res.data.message)
-    //             }
-    //         }
-    //     }).catch((error) => {
-    //         setLoading(false)
-    //         console.log('error', error)
-    //         if (error.response.status === 401) {
-    //             getCommonApi();
-    //         } else {
-    //             if (error.response.data.message) {
-    //                 toast.error(error.response.data.message)
-    //             } else {
-    //                 if (typeof error.response.data.error === "string") {
-    //                     toast.error(error.response.data.error)
-    //                 }
-    //             }
-    //         }
-    //     })
-    // }
-
     // status change function
     const handleStatus = async (e) => {
         e.preventDefault();
         try {
-            setLoading(true)
+            setsubLoading(true)
             let token = GetLocalStorage('token');
             const request = {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, { id: id, status }, request)
+            const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/leave/${id}`, { status }, request)
             if (res.data.success) {
-                toast.success('Successfully edited a leave status.');
+                toast.success(res.data.message);
                 setShow(false);
                 getLeave();
-            } else {
-                setLoading(false)
-                toast.error(res.data.message)
             }
         } catch (error) {
-            setLoading(false)
-            console.log('error', error)
-            if (error.response.status === 401) {
+            if (!error.response) {
+                toast.error(error.message);
+            } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
-                } else {
-                    if (typeof error.response.data.error === "string") {
-                        toast.error(error.response.data.error)
-                    }
                 }
             }
+        } finally {
+            setsubLoading(false)
         }
     }
 
@@ -193,10 +157,10 @@ const Leave = () => {
             }
             return 0
         } else if (orderBy === "name") {
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user < a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if (b.user ? b.user.first_name?.concat(" ", b.user.last_name) : b.user < a.user ? a.user.first_name?.concat(" ", a.user.last_name) : a.user) {
                 return -1
             }
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if (a.user ? b.user.first_name?.concat(" ", b.user.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.user.last_name) : a.user) {
                 return 1
             }
             return 0
@@ -228,31 +192,34 @@ const Leave = () => {
 
     // eslint-disable-next-line
     const actionToggle = useMemo(() => {
-        if (UserData && UserData.role.name.toLowerCase() === "admin") {
-            leaveRecordFilter.forEach((val) => {
-                if (val.status === 'Pending' || val.status === "Read") {
-                    setAction(true)
+        if (permission) {
+            if ((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1)) {
+                if (permission && permission.name?.toLowerCase() === "admin") {
+                    let data = leaveRecordFilter.find((val) => {
+                        return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
+                    })
+                    if(data){
+                        return true
+                    }else{
+                        return false
+                    }
                 } else {
-                    if (val.status === 'Approved' && val.status === "Declined" && new Date(val.from_date) <= new Date()) {
-                        setAction(false)
-                    } else {
-                        setAction(true)
+                    let data = leaveRecordFilter.find((val) => {
+                        return val.status === "Pending" || val.status === "Read"
+                    })
+                    console.log(data)
+                    if (data) {
+                        return true
                     }
                 }
-            })
-        } else {
-            if (accessData.length !== 0 && accessData[0].update !== '0') {
-                leaveRecordFilter.forEach((val) => {
-                    if (val.status === 'Pending' || val.status === "Read") {
-                        setAction(true)
-                    } else {
-                        setAction(false)
-                    }
-                })
+            } else {
+                return false
             }
         }
         // eslint-disable-next-line
-    }, [leaveRecordFilter, UserData]);
+    }, [leaveRecordFilter]);
+
+    console.log(actionToggle, "actionToggle")
 
     return (
         <>
@@ -271,21 +238,21 @@ const Leave = () => {
                                         <NavLink className="path-header">Leave</NavLink>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/leave" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
+                                            <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
                                         </ul>
                                     </div>
                                     <div className="d-flex" id="two">
                                         <div className="search-full">
-                                            <input type="text" class="input-search-full" name="txt" placeholder="Search" />
-                                            <i class="fas fa-search"></i>
+                                            <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                            <i className="fas fa-search"></i>
                                         </div>
-                                        <div class="search-box mr-3">
+                                        <div className="search-box mr-3">
                                             <form name="search-inner">
-                                                <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                                                <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
                                             </form>
-                                            <i class="fas fa-search"></i>
+                                            <i className="fas fa-search"></i>
                                         </div>
-                                        <LeaveModal getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />
+                                        <LeaveModal getLeave={getLeave} permission={permission} />
                                     </div>
                                 </div>
                             </div>
@@ -297,11 +264,9 @@ const Leave = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
-                                            {/* <TableCell>
-                                            <TableSortLabel active={orderBy === "id"} direction={orderBy === "id" ? order : "asc"} onClick={() => handleRequestSort("id")}>
+                                            <TableCell>
                                                 Id
-                                            </TableSortLabel>
-                                        </TableCell> */}
+                                            </TableCell>
                                             <TableCell>
                                                 Profile
                                             </TableCell>
@@ -311,7 +276,7 @@ const Leave = () => {
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "leave_type"} direction={orderBy === "leave_type" ? order : "asc"} onClick={() => handleRequestSort("leave_type")}>
+                                                <TableSortLabel active={orderBy === "leaveType"} direction={orderBy === "leaveType" ? order : "asc"} onClick={() => handleRequestSort("leaveType")}>
                                                     Leave Type
                                                 </TableSortLabel>
                                             </TableCell>
@@ -326,24 +291,24 @@ const Leave = () => {
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "day"} direction={orderBy === "day" ? order : "asc"} onClick={() => handleRequestSort("day")}>
+                                                <TableSortLabel active={orderBy === "duration"} direction={orderBy === "duration" ? order : "asc"} onClick={() => handleRequestSort("duration")}>
                                                     Duration
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "leave_status"} direction={orderBy === "leave_status" ? order : "asc"} onClick={() => handleRequestSort("leave_status")}>
+                                                <TableSortLabel active={orderBy === "leave_for"} direction={orderBy === "leave_for" ? order : "asc"} onClick={() => handleRequestSort("leave_for")}>
                                                     Leave For
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
+                                                <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
                                                     Reason
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
                                                 Status
                                             </TableCell>
-                                            {(Action || leaveRecordFilter.length === 0) &&
+                                            {actionToggle &&
                                                 <TableCell>
                                                     Action
                                                 </TableCell>}
@@ -353,29 +318,30 @@ const Leave = () => {
                                         {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    {/* <TableCell>{val.id}</TableCell> */}
+                                                    <TableCell>{ind + 1}</TableCell>
                                                     <TableCell>{val.user &&
-                                                        <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} target="_blank">
-                                                            <img className="profile-action-icon text-center" src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user.profile_image}`} alt="Profile_image" />
+                                                        <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} target="_blank">
+                                                            <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
                                                         </NavLink>}</TableCell>
                                                     <TableCell>
                                                         {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
                                                     </TableCell>
-                                                    <TableCell>{val.leave_type ? val.leave_type.name : <HiOutlineMinus />}</TableCell>
+                                                    <TableCell>{val.leaveType ? val.leaveType : <HiOutlineMinus />}</TableCell>
                                                     <TableCell>{val.from_date}</TableCell>
                                                     <TableCell>{val.to_date}</TableCell>
-                                                    <TableCell>{val.day}</TableCell>
-                                                    <TableCell>{val.leave_status}</TableCell>
-                                                    <TableCell>{val.description}</TableCell>
+                                                    <TableCell>{val.duration}</TableCell>
+                                                    <TableCell>{val.leave_for}</TableCell>
+                                                    <TableCell>{val.reason}</TableCell>
                                                     <TableCell>
-                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name !== "Admin")} onClick={() => handlesshowModal(val.status, val.id)}>{val.status}</button>
+                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
                                                     </TableCell>
-                                                    {Action &&
+                                                    {actionToggle &&
                                                         <TableCell>
                                                             <div className='action'>
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
-                                                                {((val.status !== 'Pending' && val.status !== "Read") && new Date(val.from_date) < new Date()) || (UserData && UserData.role.name.toLowerCase() !== "admin" && (accessData.length !== 0 && accessData[0].update === '0' || val.status !== 'Pending' && val.status !== "Read")) ? "" : <LeaveModal data={val} getLeave={getLeave} UserData={UserData && UserData.role} accessData={accessData} />}
-                                                                {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
+                                                                {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
+                                                                !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
+                                                                <LeaveModal data={val} getLeave={getLeave} permission={permission} />}
                                                             </div>
                                                         </TableCell>}
                                                 </TableRow>
@@ -429,8 +395,8 @@ const Leave = () => {
                                 </div>
                             </div>
                         </div>
-                        {(Loading && show) && <Spinner />}
                     </Modal.Body>
+                    {subLoading && <Spinner />}
                 </Modal>
             </motion.div>
             {Loading && <Spinner />}

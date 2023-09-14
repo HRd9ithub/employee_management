@@ -51,11 +51,11 @@ const RouteContext = ({ children }) => {
             const request = {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
+                    authorization: `Bearer ${GetLocalStorage('token')}`
                 },
             }
 
-            let res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/edit`, { id }, request)
+            let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`, request)
             let result = await res.data.data;
             dispatch({ type: "GET_USER_DATA", payload: result })
         } catch (error) {
@@ -66,10 +66,6 @@ const RouteContext = ({ children }) => {
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
-                } else {
-                    if (typeof error.response.data.error === "string") {
-                        toast.error(error.response.data.error)
-                    }
                 }
             }
         }
@@ -173,7 +169,7 @@ const RouteContext = ({ children }) => {
     }
 
     // leave data get
-    const getLeave = async () => {
+    const getLeaveNotification = async () => {
         setLoading(true);
         try {
             let token = GetLocalStorage('token');
@@ -183,10 +179,9 @@ const RouteContext = ({ children }) => {
                     Authorization: `Bearer ${token}`
                 },
             }
-            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave/list`, request)
+            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/notification`,{}, request)
             if (res.data.success) {
-                setRecords(res.data.data)
-                setRecordsFilter(res.data.data)
+                console.log(res)
                 dispatch({ type: "LEAVE_NOTIFICATION", payload: res.data.data })
             }
             setLoading(false)
@@ -194,16 +189,13 @@ const RouteContext = ({ children }) => {
             setLoading(false)
             console.log(error, "esjrihewaiu")
             if (!error.response) {
+                toast.error(error.message)
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
-                } else {
-                    if (typeof error.response.data.error === "string") {
-                        toast.error(error.response.data.error)
-                    }
-                }
+                } 
             }
         }
     }
@@ -228,17 +220,17 @@ const RouteContext = ({ children }) => {
     }, [width]);
 
     useEffect(() => {
-        if (GetLocalStorage('token') && pathname === '/') {
+        if (GetLocalStorage('token')) {
             getUserData();
-            getPage();
-            getPremission();
+            // getPage();
+            // getPremission();
         }
         // eslint-disable-next-line
-    }, [pathname])
+    }, [])
 
 
     return (
-        <AppProvider.Provider value={{ ...state, visible, width, logoToggle, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getPremission, FindPermission, getPage, setRecords, getLeave, records, recordsFilter, setRecordsFilter, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state, visible, width, logoToggle, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getPremission, FindPermission, getPage, setRecords, getLeaveNotification, records, recordsFilter, setRecordsFilter, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )

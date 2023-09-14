@@ -2,7 +2,7 @@ import Modal from 'react-bootstrap/Modal';
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 const LeaveModal = (props) => {
-    let { data, getLeave, UserData, accessData } = props;
+    let { data, getLeave, permission } = props;
     const [show, setShow] = useState(false);
     const [loader, setloader] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
@@ -46,7 +46,6 @@ const LeaveModal = (props) => {
     })
     const [id, setId] = useState('')
     const [error, setError] = useState([])
-    let toggleButton = false
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -56,13 +55,14 @@ const LeaveModal = (props) => {
     // modal show function
     const handleShow = () => {
         if (data) {
+            console.log(data)
             setleave({ leave_type_id: data.leave_type_id })
-            setStatus({ leave_status: data.leave_status, status: data.status })
-            setReason({ description: data.description })
-            setFrom({ from_date: moment(new Date(data.from_date)).format("YYYY-MM-DD") })
-            setTo({ to_date: moment(new Date(data.to_date)).format("YYYY-MM-DD") })
+            setStatus({ leave_status: data.leave_for, status: data.status })
+            setReason({ description: data.reason })
+            setFrom({ from_date: data.from_date })
+            setTo({ to_date: data.to_date })
             setinfo({ user_id: data.user_id })
-            setId(data.id)
+            setId(data._id)
         }
         setPage(true)
         setShow(true)
@@ -86,12 +86,11 @@ const LeaveModal = (props) => {
     const InputEvent = (e) => {
         let value = e.target.value;
         setleave({ ...leave, leave_type_id: value })
-        let data = leaveTypeDetail.find((val) => val.id.toString() === value)
+        let data = leaveTypeDetail.find((val) => val._id === value)
         if (data?.name.toLowerCase() === "casual leave") {
             let date = new Date();
             date.setDate(date.getDate() + 4);
             setleaveType(moment(date).format("YYYY-MM-DD"))
-            console.warn(moment(date).format("YYYY-MM-DD"))
         } else {
             setleaveType("");
         }
@@ -100,7 +99,7 @@ const LeaveModal = (props) => {
     // submit function
     const HandleSubmit = (e) => {
         e.preventDefault();
-        UserData && UserData.name.toLowerCase() === 'admin' && userValidation()
+        permission && permission.name?.toLowerCase() === 'admin' && userValidation()
         leaveTypeValidation();
         fromDateValidation();
         toDateValidation();
@@ -108,113 +107,80 @@ const LeaveModal = (props) => {
         descriptionValidate()
         setError([])
 
-        if (!leave.leave_type_id || !from.from_date || !to.to_date || !status_info.leave_status || !reason.description || (UserData && UserData.name.toLowerCase() === 'admin' && !info.user_id)) {
+        if (!leave.leave_type_id || !from.from_date || !to.to_date || !status_info.leave_status || !reason.description || (permission && permission.name?.toLowerCase() === 'admin' && !info.user_id)) {
             return false;
-        } else {
-            setloader(true);
-            // object destructuring
-            let { leave_type_id } = leave
-            let { from_date } = from
-            let { to_date } = to
-            let { leave_status, status } = status_info
-            let { description } = reason
-            let { user_id } = info
+        }
+        if (leave.leave_type_id_error || from.from_date_error || to.to_date_error || status_info.leave_status_error || reason.description_error || (permission && permission.name?.toLowerCase() === 'admin' && info.user_id_error)) {
+            return false
+        }
+        setloader(true);
+        // object destructuring
+        let { leave_type_id } = leave
+        let { from_date } = from
+        let { to_date } = to
+        let { leave_status, status } = status_info
+        let { description } = reason
+        let { user_id } = info
 
-            if (data) {
-                // edit api call
-                let token = GetLocalStorage('token');
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-                axios.post(`${process.env.REACT_APP_API_KEY}/leave/update`, { id, leave_type_id, user_id, from_date: moment(from_date).format("DD-MM-YYYY"), to_date: moment(to_date).format("DD-MM-YYYY"), leave_status, description, day, status: UserData && UserData.name.toLowerCase() !== 'admin' ? "Pending" : status }, request)
-                    .then(data => {
-                        if (data.data.success) {
-                            setloader(false)
-                            toast.success('Successfully Edited a leave.')
-                            setShow(false)
-                            setPage(false)
-                            getLeave()
-                        } else {
-                            setloader(false)
-                            setPage(false)
-                            toast.error("Something went wrong, Please check your details and try again.")
-                        }
-                    }).catch((error) => {
-                        setloader(false)
-                        setPage(false)
-                        console.log('error', error)
-                        if (error.response.status === 401) {
-                            getCommonApi();
-                        } else {
-                            if (error.response.data.message) {
-                                toast.error(error.response.data.message)
-                            } else {
-                                if (typeof error.response.data.error === "string") {
-                                    toast.error(error.response.data.error)
-                                } else {
-                                    setError(error.response.data.error);
-                                }
-                            }
-                        }
-                    })
-            } else {
-                setloader(true);
-                // add api call
-                let token = GetLocalStorage('token');
-                const request = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                }
-                axios.post(`${process.env.REACT_APP_API_KEY}/leave/add`, { leave_type_id, user_id, from_date: moment(from_date).format("YYYY-MM-DD"), to_date: moment(to_date).format("YYYY-MM-DD"), leave_status, description, day, status: UserData && UserData.name.toLowerCase() !== 'admin' ? "Pending" : status }, request)
-                    .then(data => {
-                        if (data.data.success) {
-                            setloader(false)
-                            setPage(false)
-                            toast.success('Successfully added a new leave.')
-                            setShow(false)
-                            setleave({ leave_type_id: '', leave_type_id_error: "" })
-                            setStatus({ leave_status: '', leave_status_error: '', status: "Pending" })
-                            setReason({ description: '', description_error: '' })
-                            setFrom({ from_date: '', from_date_error: '' })
-                            setTo({ to_date: '', to_date_error: "" })
-                            setinfo({ user_id: '', user_id_error: "" })
-                            getLeave()
-                        } else {
-                            setloader(false)
-                            setPage(false)
-                            toast.error("Something went wrong, Please check your details and try again.")
-                        }
-                    }).catch((error) => {
-                        setloader(false)
-                        setPage(false)
-                        console.log('error', error)
-                        if (error.response.status === 401) {
-                            getCommonApi();
-                        } else {
-                            if (error.response.data.message) {
-                                toast.error(error.response.data.message)
-                            } else {
-                                if (typeof error.response.data.error === "string") {
-                                    toast.error(error.response.data.error)
-                                } else {
-                                    setError(error.response.data.error);
-                                }
-                            }
-                        }
-                    })
+        // edit api call
+        let token = GetLocalStorage('token');
+        const request = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
             }
         }
+        let common = {
+            leave_type_id,
+            user_id,
+            from_date: moment(from_date).format("YYYY-MM-DD"),
+            to_date: moment(to_date).format("YYYY-MM-DD"),
+            leave_for: leave_status,
+            reason: description,
+            duration: day,
+            status: (permission && permission.name?.toLowerCase() === 'admin') ? status : "Pending"
+        }
+        let url = ""
+        if (id) {
+            url = axios.put(`${process.env.REACT_APP_API_KEY}/leave/${id}`, common, request)
+        } else {
+           url = axios.post(`${process.env.REACT_APP_API_KEY}/leave/`, common, request)
+        }
+        url.then(data => {
+            if (data.data.success) {
+                toast.success(data.data.message);
+                setShow(false)
+                setleave({ leave_type_id: '', leave_type_id_error: "" })
+                setStatus({ leave_status: '', leave_status_error: '', status: "Approved" })
+                setReason({ description: '', description_error: '' })
+                setFrom({ from_date: '', from_date_error: '' })
+                setTo({ to_date: '', to_date_error: "" })
+                setinfo({ user_id: '', user_id_error: "" })
+                getLeave()
+            }
+        }).catch((error) => {
+            if (!error.response) {
+                toast.error(error.message);
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                } else {
+                    setError(error.response.data.error);
+                }
+            }
+        }).finally(() => {
+            setPage(false);
+            setloader(false)
+        })
+
     }
 
     useEffect(() => {
         // leave type get data in api
         const getLeaveType = async () => {
+            setloader(true)
             try {
                 let token = GetLocalStorage('token');
                 const request = {
@@ -223,62 +189,64 @@ const LeaveModal = (props) => {
                         Authorization: `Bearer ${token}`
                     },
                 }
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave_type/list`, request)
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leavetype/`, request)
                 if (res.data.success) {
                     setleaveTypeDetail(res.data.data)
-                    setloader(false)
                 }
             } catch (error) {
-                setloader(false)
-                console.log('error', error)
-                if (error.response.status === 401) {
-                    getCommonApi();
+                if (!error.response) {
+                    toast.error(error.message);
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                    if (error.response.status === 401) {
+                        getCommonApi();
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
                         }
                     }
                 }
+            } finally {
+                setloader(false)
             }
         }
-        // user data get
-        const getuser = async () => {
+        // get user name
+        const get_username = async () => {
+            setloader(true)
             try {
-                let token = GetLocalStorage('token');
                 const request = {
                     headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${GetLocalStorage("token")}`,
                     },
-                }
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/list`, request)
+                };
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
+
                 if (res.data.success) {
-                    setUser(res.data.data.filter((val) => val.role?.name.toLowerCase() !== "admin"))
+                    console.log(res.data)
+                    let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
+                    setUser(data);
                 }
             } catch (error) {
-                console.log('error', error)
-                if (error.response.status === 401) {
-                    getCommonApi();
+                console.log(error, "error");
+                if (!error.response) {
+                    toast.error(error.message);
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                    if (error.response.status === 401) {
+                        getCommonApi();
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
                         }
                     }
                 }
+            } finally {
+                setloader(false)
             }
-        }
+        };
         if (page) {
-            setloader(true)
             getLeaveType()
         }
-        if ((UserData && UserData.name.toLowerCase() === 'admin') && page) {
-            getuser()
+        if ((permission && permission.name?.toLowerCase() === 'admin') && page) {
+            get_username()
         }
         // eslint-disable-next-line
     }, [page])
@@ -376,10 +344,11 @@ const LeaveModal = (props) => {
             setReason({ ...reason, description_error: '' })
         }
     }
+    console.log(permission)
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-                :  ((UserData && UserData?.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].create === "1")) &&
+                : permission &&  (permission.name?.toLowerCase() === "admin" || (permission?.permissions?.length !== 0 && permission?.permissions?.create === 1)) &&
                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button>
@@ -396,20 +365,21 @@ const LeaveModal = (props) => {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
-                                    {UserData && UserData.name.toLowerCase() === 'admin' && <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'>User</label>
-                                        <select className="form-control " id="user" name='user' disabled={data} value={info
-                                            .user_id} onChange={(e) => setinfo({ ...info, user_id: e.target.value })} onClick={userValidation} >
-                                            <option value='0'>Select User </option>
-                                            {user.map((val) => {
-                                                return (
-                                                    <option key={val.id} value={val.id}>{val.first_name.concat(' ', val.last_name)}</option>
-                                                )
-                                            })}
-                                        </select>
-                                        {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
-                                        {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>}
-                                    </div>}
+                                    {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                        <div className="form-group">
+                                            <label htmlFor="1" className='mt-3'>User</label>
+                                            <select className="form-control " id="user" name='user' disabled={data} value={info
+                                                .user_id} onChange={(e) => setinfo({ ...info, user_id: e.target.value })} onClick={userValidation} >
+                                                <option value='0'>Select User </option>
+                                                {user.map((val) => {
+                                                    return (
+                                                        <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                            {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
+                                            {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>}
+                                        </div>}
 
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave Type</label>
@@ -418,7 +388,7 @@ const LeaveModal = (props) => {
                                             <option value='0'>Select Leave Type </option>
                                             {leaveTypeDetail.map((val) => {
                                                 return (
-                                                    <option key={val.id} value={val.id} className='text-capitalize'>{val.name}</option>
+                                                    <option key={val._id} value={val._id} className='text-capitalize'>{val.name}</option>
                                                 )
                                             })}
                                         </select>
@@ -485,7 +455,7 @@ const LeaveModal = (props) => {
                                         {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
                                     </div>
 
-                                    {UserData && UserData.name.toLowerCase() === 'admin' &&
+                                    {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
                                         <div className="form-group">
                                             <label htmlFor="1" className='mt-3'>Status</label>
                                             <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>

@@ -1,27 +1,33 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { AppProvider } from "../context/RouteContext";
+import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
 import Spinners from "../common/Spinner";
-import { Form } from "react-bootstrap";
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../service/StoreLocalStorage";
+import { AiOutlineDownload } from "react-icons/ai";
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { CSVLink } from "react-csv";
+import moment from "moment";
+import Avatar from '@mui/material/Avatar';
 
-const TimeSheetComponent = ({ HandleProgress }) => {
+const TimeSheetComponent = () => {
+    let date_today = new Date();
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
-    // const [singleData, setsingleData] = useState([]);
+    const [permission, setpermission] = useState("");
     const [Loader, setLoader] = useState(true);
-    // const [ToggleBtn, setToggleBtn] = useState(false);   
+    const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
+    const [endDate, setendtDate] = useState(new Date());
+    const [userName, setUserName] = useState([]);
+    const [user_id, setuser_id] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect()
-
-    let { UserData } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -31,89 +37,39 @@ const TimeSheetComponent = ({ HandleProgress }) => {
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
 
-    // time management in button click
-    // const handleTime = () => {
-    //     setLoader(true)
-    //     // setToggleBtn(true);
-    //     let Hours = new Date().getHours();
-    //     let Minutes = new Date().getMinutes();
-    //     let login_time = Hours + ":" + Minutes;
-    //     let logout_time = Hours + ":" + Minutes;
-
-    //     if (singleData.length !== 0) {
-    //         if (singleData[singleData.length - 1].logout_time) {
-    //             if (singleData[singleData.length - 1].login_time > singleData[singleData.length - 1].logout_time) {
-    //                 addLogoutTime(logout_time)
-    //             } else {
-    //                 addLoginTime(login_time)
-    //             }
-    //         } else {
-    //             addLogoutTime(logout_time)
-    //         }
-    //     } else {
-    //         addLoginTime(login_time)
-    //     }
-    // };
-
-    // add login time function
-    // const addLoginTime = (login_time) => {
-    //     axios.post(`${process.env.REACT_APP_API_KEY}/timesheet/logintime`, { login_time }, {
-    //         headers: {
-    //             Authorization: `Bearer ${GetLocalStorage("token")}`,
-    //         },
-    //     }).then((res) => {
-    //         if (res.data.success) {
-    //             getSingleData()
-    //             getTimesheet();
-    //             toast.success("Login time add successfully.");
-    //         }
-    //     }).catch((error) => {
-    //         console.log("error", error)
-    //         if (error.response.status === 401) {
-    //             getCommonApi();
-    //         } else {
-    //             if (error.response.data.message) {
-    //                 toast.error(error.response.data.message)
-    //             } else {
-    //                 if (typeof error.response.data.error === "string") {
-    //                     toast.error(error.response.data.error)
-    //                 }
-    //             }
-    //         }
-    //     })
-    // }
-
-    // add logout time function
-    // const addLogoutTime = (logout_time) => {
-    //     axios.post(`${process.env.REACT_APP_API_KEY}/timesheet/logout_time`, { logout_time }, {
-    //         headers: {
-    //             Authorization: `Bearer ${GetLocalStorage("token")}`,
-    //         },
-    //     }).then((res) => {
-    //         if (res.data.success) {
-    //             getSingleData();
-    //             getTimesheet();
-    //             handleLogout();
-    //         }
-    //     }).catch((error) => {
-    //         console.log("err", error)
-    //         if (error.response.status === 401) {
-    //             getCommonApi();
-    //         } else {
-    //             if (error.response.data.message) {
-    //                 toast.error(error.response.data.message)
-    //             } else {
-    //                 if (typeof error.response.data.error === "string") {
-    //                     toast.error(error.response.data.error)
-    //                 }
-    //             }
-    //         }
-    //     })
-    // }
-
     // get timesheet data
-    const getTimesheet = async () => {
-        HandleProgress(20);
+    const getTimesheet = async (id, start, end) => {
+        setLoader(true)
+        try {
+            const request = {
+                params: { startDate: start || startDate, endDate: end || endDate, id },
+                headers: {
+                    Authorization: `Bearer ${GetLocalStorage("token")}`,
+                },
+            };
+            const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timeSheet`, request);
+            if (result.data.success) {
+                setData(result.data.data);
+                setDataFilter(result.data.data);
+                setpermission(result.data.permissions);
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message);
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        } finally {
+            setLoader(false)
+        }
+    };
+
+    // get user name
+    const get_username = async () => {
         setLoader(true)
         try {
             const request = {
@@ -121,74 +77,33 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                     Authorization: `Bearer ${GetLocalStorage("token")}`,
                 },
             };
-            HandleProgress(50);
-            const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timesheet/list`, request);
-            HandleProgress(70);
-            if (result.data.success) {
-                if (UserData.role.name.toLowerCase() !== "admin") {
-                    const value = result.data.data.filter((val) => {
-                        return val.user_id === UserData.id;
-                    });
-                    setData(value);
-                    setDataFilter(value);
-                } else {
-                    setData(result.data.data);
-                    setDataFilter(result.data.data);
-                }
+            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
+
+            if (res.data.success) {
+                console.log(res.data)
+                setUserName(res.data.data);
             }
         } catch (error) {
-            console.log("TimeSheetComponent page all data get api === >>> ", error);
-            if (error.response.status === 401) {
-                getCommonApi();
+            console.log(error, "error");
+            if (!error.response) {
+                toast.error(error.message);
             } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
+                if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    if (typeof error.response.data.error === "string") {
-                        toast.error(error.response.data.error)
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             }
         } finally {
-            HandleProgress(100);
             setLoader(false)
         }
     };
 
-    // single data get
-    // const getSingleData = async () => {
-    //     try {
-    //         const request = {
-    //             headers: {
-    //                 Authorization: `Bearer ${GetLocalStorage("token")}`,
-    //             },
-    //         };
-    //         const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timesheet/user_time_list`, request);
-    //         if (result.data.success) {
-    //             let { data } = result.data;
-    //             // setsingleData(data);
-    //         }
-    //     } catch (error) {
-    //         console.log("TimeSheetComponent page singleData get api === >>> ", error);
-    //         if (error.response.status === 401) {
-    //             getCommonApi();
-    //         } else {
-    //             if (error.response.data.message) {
-    //                 toast.error(error.response.data.message)
-    //             } else {
-    //                 if (typeof error.response.data.error === "string") {
-    //                     toast.error(error.response.data.error)
-    //                 }
-    //             }
-    //         }
-    //     } finally {
-    //         // setToggleBtn(false);
-    //     }
-    // };
-
     useEffect(() => {
-        // getSingleData();
         getTimesheet();
+        get_username();
         // eslint-disable-next-line
     }, []);
 
@@ -199,12 +114,11 @@ const TimeSheetComponent = ({ HandleProgress }) => {
 
         const list = data.filter((val, ind) => {
             return (
-                val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
-                val.date.toString().includes(value) ||
-                val.login_time?.toString().includes(value) ||
-                val.logout_time?.toString().includes(value) ||
-                val.count_time?.toString().includes(value)
-                // val.id.toString().includes(value) 
+                permission && permission.name.toLowerCase() === "admin" && val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
+                val.date.includes(value) ||
+                val.login_time?.includes(value) ||
+                val.logout_time?.includes(value) ||
+                val.total?.includes(value)
             );
         });
         if (value) {
@@ -268,6 +182,32 @@ const TimeSheetComponent = ({ HandleProgress }) => {
         return rowArray.map((el) => el[0])
     }
 
+    // user change function
+    const userChange = (e) => {
+        setuser_id(e.target.value)
+        getTimesheet(e.target.value)
+    }
+
+    const handleCallback = (start, end, label) => {
+        setStartDate(start._d)
+        setendtDate(end._d)
+        getTimesheet(user_id, start._d, end._d)
+    }
+
+    let header = [
+        { label: "Id", key: "id" },
+        { label: "Name", key: "name" },
+        { label: "Date", key: "Date" },
+        { label: "Day", key: "Day" },
+        { label: "Login Time", key: "login_time" },
+        { label: "Login Out", key: "logout_time" },
+        { label: "Total Hours", key: "Hours" },
+    ]
+
+    let csvdata = dataFilter.map((val, ind) => {
+        return { id: ind + 1, name :val.user.first_name.concat(" ", val.user.last_name) , Date: val.date, Day: moment(val.date).format('dddd'),login_time : val.login_time, logout_time:val.logout_time, Hours: val.total }
+    })
+
     return (
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
@@ -280,19 +220,46 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                                         <NavLink className="path-header">Time Sheet</NavLink>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/timesheet" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
+                                            <li><NavLink to="/timesheet" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
                                         </ul>
                                     </div>
                                     <div className="d-flex" id="two">
                                         <div className="search-full">
-                                            <input type="text" class="input-search-full" name="txt" placeholder="Search" />
-                                            <i class="fas fa-search"></i>
+                                            <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                            <i className="fas fa-search"></i>
                                         </div>
-                                        <div class="search-box mr-3">
+                                        <div className="search-box mr-3">
                                             <form name="search-inner">
-                                                <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                                                <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
                                             </form>
-                                            <i class="fas fa-search"></i>
+                                            <i className="fas fa-search"></i>
+                                        </div>
+                                        {dataFilter.length >= 1 &&
+                                        <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
+                                            <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank" ><AiOutlineDownload />&nbsp;CSV</CSVLink>
+                                        </div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='container-fluid'>
+                                <div className='row'>
+                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                        <div className='col-6'>
+                                            <div className="form-group mb-0">
+                                                <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                    <option value=''>All</option>
+                                                    {userName.map((val) => {
+                                                        return (
+                                                            val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>}
+                                    <div className='col-6'>
+                                        <div className="form-group mb-0 position-relative">
+                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                                        <i className="fa-regular fa-calendar range_icon"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -305,17 +272,14 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
-                                            {/* <TableCell>
-                                        <TableSortLabel active={orderBy === "id"} direction={orderBy === "id" ? order : "asc"} onClick={() => handleRequestSort("id")}>
-                                            Id
-                                        </TableSortLabel>
-                                    </TableCell> */}
-                                            {UserData && UserData.role?.name.toLowerCase() === "admin" &&
-                                                <TableCell>
-                                                    <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                        Employee
-                                                    </TableSortLabel>
-                                                </TableCell>}
+                                            <TableCell>
+                                                Id
+                                            </TableCell>
+                                            {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                    Employee
+                                                </TableSortLabel>
+                                            </TableCell>}
                                             <TableCell>
                                                 <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                     Date
@@ -332,7 +296,7 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "count_time"} direction={orderBy === "count_time" ? order : "asc"} onClick={() => handleRequestSort("count_time")}>
+                                                <TableSortLabel active={orderBy === "total"} direction={orderBy === "total" ? order : "asc"} onClick={() => handleRequestSort("total")}>
                                                     Total Hours
                                                 </TableSortLabel>
                                             </TableCell>
@@ -342,13 +306,21 @@ const TimeSheetComponent = ({ HandleProgress }) => {
                                         {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    {/* <TableCell>{val.id}</TableCell> */}
-                                                    {UserData && UserData.role?.name.toLowerCase() === "admin" &&
-                                                        <TableCell>{val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}</TableCell>}
+                                                    <TableCell>{ind + 1}</TableCell>
+                                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                                        <TableCell>
+                                                            <NavLink className='pr-3 d-flex align-items-center name_col'>
+                                                                {val.user ? <>
+                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                    {val.user.first_name.concat(" ", val.user.last_name)}
+                                                                </> : <HiOutlineMinus />
+                                                                }
+                                                            </NavLink>
+                                                        </TableCell>}
                                                     <TableCell>{val.date}</TableCell>
                                                     <TableCell>{val.login_time}</TableCell>
                                                     <TableCell>{val.logout_time ? val.logout_time : <HiOutlineMinus />}</TableCell>
-                                                    <TableCell>{val.count_time ? val.count_time : (<HiOutlineMinus />)}</TableCell>
+                                                    <TableCell>{val.total ? val.total : (<HiOutlineMinus />)}</TableCell>
                                                 </TableRow>
                                             )
                                         }) :

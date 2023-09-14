@@ -1,17 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useRef } from 'react';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from '../common/Spinner';
+import { Form } from 'react-bootstrap';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
-const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) => {
+const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [show, setShow] = useState(false);
     const [document, setDoument] = useState({
         name: "",
@@ -27,28 +23,16 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    // image crop state
-    const [crop, setCrop] = useState({
-        unit: '%',
-        width: 70,
-        height: 70
-    })
-    const [imagesrc, setimagesrc] = useState("")
-    const [images, setimages] = useState("")
-    const [secondshow, setsecondshow] = useState(false);
-
-    const ref = useRef(null)
-    const inputRef = useRef(null)
 
     // modal show function
     const handleShow = () => {
         if (data) {
+            console.log(data)
             setDoument({
                 name: data.name,
                 description: data.description,
-                image: process.env.REACT_APP_IMAGE_API + '/storage/' + data.image,
-                imageName: data.image.split(".").pop() === 'pdf' ? "pdf" : "",
-                id: data.id
+                imageName: data.image,
+                id: data._id
             })
         }
         setShow(true)
@@ -78,22 +62,9 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
     }
 
     // image field onchange function
-    const imageChange = (e) => {
-        setsecondshow(false)
+    const fileChange = (e) => {
         if (e.target.files.length !== 0) {
-            var reader = new FileReader();
-            reader.onloadend = function () {
-                console.log('e.target.files', e.target.files)
-                if (e.target.files[0].type !== "application/pdf" && e.target.files[0].type !== "application/msword") {
-                    setsecondshow(true)
-                    setimagesrc(reader.result.toString())
-                } else if (e.target.files[0].type === "application/pdf") {
-                    setDoument({ ...document, image: reader.result, imageName: "pdf" });
-                } else {
-                    setDoument({ ...document, image: reader.result, imageName: "word" });
-                }
-            }
-            reader.readAsDataURL(e.target.files[0]);
+            setDoument({ ...document, image: e.target.files[0], imageName: e.target.files[0].name });
         }
         if (e.target.files.length === 0 && !document.image) {
             setImagerror('Please select file.')
@@ -110,274 +81,154 @@ const DocumentModalComponent = ({ data, setToggle, toggle, accessData, role }) =
         validationImage();
         setError([])
 
-        let { name, description, image, id } = document
-        if (!name || !description || !image) {
+        let { name, description, image,imageName, id } = document
+        if (!name || !description || !imageName) {
             return false;
         }
         if (nameError || descriptioneError || imageError) {
             return false;
         }
+        var formdata = new FormData();
+        formdata.append('image', image);
+        formdata.append('name', name);
+        formdata.append('description', description);
+
+        let url = "";
+        let config = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${GetLocalStorage('token')}`
+            }
+        }
+
         if (id) {
-            setloader(true)
-            // api update document
-            axios.post(`${process.env.REACT_APP_API_KEY}/important_documents/update`, {
-                id,
-                name,
-                description,
-                image: image.includes("important_document") ? "" : image
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GetLocalStorage('token')}`
-                }
-            }).then((res) => {
-                if (res.data.success) {
-                    setloader(false)
-                    setloader(false)
-                    toast.success('Edited Successfully.')
-                    setToggle(!toggle)
-                    setShow(false)
-                    setDoument({
-                        name: '',
-                        description: '',
-                        image: '',
-                        imageName: ''
-                    })
+            url = axios.put(`${process.env.REACT_APP_API_KEY}/document/${id}`, formdata, config)
+        } else {
+            url = axios.post(`${process.env.REACT_APP_API_KEY}/document/`, formdata, config)
+        }
+        setloader(true)
+        url.then((res) => {
+            if (res.data.success) {
+                toast.success(res.data.message)
+                setToggle(!toggle)
+                setShow(false)
+                setDoument({
+                    name: '',
+                    description: '',
+                    image: '',
+                    imageName: ''
+                })
+            }
+        }).catch((error) => {
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 } else {
-                    toast.error("Something went wrong, Please check your details and try again.")
-                    setloader(false)
+                    setError(error.response.data.error);
                 }
             }
-            ).catch((error) => {
-                setloader(false)
-                console.log("documentmodalcomponent update api  error == >>> ", error)
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
-                    }
-                }
-            })
-        } else {
-            setloader(true)
-            // api add document
-            axios.post(`${process.env.REACT_APP_API_KEY}/important_documents/add`, {
-                name,
-                description,
-                image
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GetLocalStorage('token')}`
-                }
-            }).then((res) => {
-                if (res.data.success) {
-                    toast.success('Successfully added a new document.');
-                    setloader(false)
-                    setToggle(!toggle)
-                    setShow(false)
-                    setDoument({
-                        name: '',
-                        description: '',
-                        image: '',
-                        imageName: ''
-                    })
-                } else {
-                    toast.error("Something went wrong, Please check your details and try again.")
-                    setloader(false)
-                }
-            }
-            ).catch((error) => {
-                setloader(false)
-                console.log("documentmodalcomponent add api  error == >>> ", error)
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
-                    }
-                }
-            })
-        }
-
+        }).finally(() => setloader(false))
     }
 
-    // file name field vlidation
-    const validationName = () => {
-        if (!document.name) {
-            setNameError('Please enter file name.')
-        } else if (!document.name.trim() || !document.name.match(/^[a-zA-Z0-9 ]*$/)) {
-            setNameError('Please enter a valid file name.')
-        } else {
-            setNameError('')
-        }
+// file name field vlidation
+const validationName = () => {
+    if (!document.name) {
+        setNameError('Please enter file name.')
+    } else if (!document.name.trim() || !document.name.match(/^[a-zA-Z0-9 ]*$/)) {
+        setNameError('Please enter a valid file name.')
+    } else {
+        setNameError('')
     }
+}
 
-    // descrption field validation
-    const validationDescription = () => {
-        if (!document.description) {
-            setDescriptioneError('Please enter description.')
-        } else if (!document.description.trim()) {
-            setDescriptioneError('Please enter a valid description.')
-        }
-        else {
-            setDescriptioneError('');
-        }
+// descrption field validation
+const validationDescription = () => {
+    if (!document.description) {
+        setDescriptioneError('Please enter description.')
+    } else if (!document.description.trim()) {
+        setDescriptioneError('Please enter a valid description.')
     }
+    else {
+        setDescriptioneError('');
+    }
+}
 
-    // image validation
-    const validationImage = () => {
-        if (!document.image) {
-            setImagerror('Please select file.')
-        } else {
-            setImagerror('');
+// image validation
+const validationImage = () => {
+    if (!document.imageName) {
+        setImagerror('Please select file.')
+    } else {
+        setImagerror('');
+    }
+}
+
+
+
+return (
+    <>
+        {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+            : permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+            <button
+                className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
+                <i className="fa-solid fa-plus" ></i>&nbsp;Add
+            </button>
         }
-    }
-
-    // crop image submit
-    const onclick = () => {
-        const canvas = ref.current;
-        const scaleX = images.naturalWidth / images.width;
-        const scaleY = images.naturalHeight / images.height;
-        canvas.width = crop.width;
-        canvas.height = crop.height;
-        const ctx = canvas.getContext("2d");
-
-        // New lines to be added
-        const pixelRatio = window.devicePixelRatio;
-        canvas.width = crop.width * pixelRatio;
-        canvas.height = crop.height * pixelRatio;
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-        ctx.imageSmoothingQuality = "high";
-
-        ctx.drawImage(
-            images,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            crop.width * scaleX,
-            crop.height * scaleY,
-            0,
-            0,
-            crop.width,
-            crop.height
-        );
-
-        // As Base64 string
-        const base64Image = canvas.toDataURL("image/jpeg");
-        if (base64Image.includes('image')) {
-            setDoument({ ...document, image: base64Image, imageName: "" })
-        } else {
-            setDoument({ ...document, image: imagesrc, imageName: "" })
-        }
-        setsecondshow(false)
-    }
-
-    // reemove image
-    const removeItem = () => {
-        setDoument({ ...document, image: "", imageName: "" });
-    }
-
-    return (
-        <>
-            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-                :  (role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
-                 <button
-                    className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
-                    <i className="fa-solid fa-plus" ></i>&nbsp;Add
-                </button>
-            }
-            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
-                <Modal.Header className='small-modal'>
-                    <Modal.Title>{data ? 'Edit Document' : 'Add Document'}
-                    </Modal.Title>
-                    <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className=" grid-margin stretch-card inner-pages mb-lg-0 doc-modal">
-                        <div className="card">
-                            <div className="card-body">
-                                <form className="forms-sample">
-                                    <div className={`${!document.image ? 'file-upload-section' : 'file-design'}`} onClick={() => inputRef.current.click()}>
-                                        {document.image ?
-                                            <><img src={!document.imageName ? document.image : document.imageName === "pdf" ? '/images/pdf.png' : "/images/doc.png"} alt="file" width={100} className='img-fluid' /></>
-                                            : <> <FileUploadIcon /> &nbsp; Select a image and pdf file to upload</>
-                                        }
-                                        <input type='file' accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={imageChange} ref={inputRef} className='d-none' />
+        <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+            <Modal.Header className='small-modal'>
+                <Modal.Title>{data ? 'Edit Document' : 'Add Document'}
+                </Modal.Title>
+                <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
+            </Modal.Header>
+            <Modal.Body>
+                <div className=" grid-margin stretch-card inner-pages mb-lg-0 doc-modal">
+                    <div className="card">
+                        <div className="card-body">
+                            <form className="forms-sample">
+                                <div className='form-group'>
+                                    <label>File</label>
+                                    <div className='d-flex justify-content-between'>
+                                        <div className="custom-file">
+                                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
+                                            <label className="custom-file-label" htmlFor="customFileLang2">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
+                                        </div>
+                                        <button disabled={!document.imageName || document.image} className='custom-file-btn'>
+                                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
+                                        </button>
                                     </div>
-                                    {document.image && <i className="fa-solid fa-xmark" onClick={removeItem}></i>}
-                                    {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'>File Name</label>
-                                        <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} />
-                                        {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="2" className='mt-3'>Description</label>
-                                        <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} />
-                                        {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
-                                    </div>
-                                    <ol>
-                                        {Error.map((val) => {
-                                            return <li className='error' key={val}>{val}</li>
-                                        })}
-                                    </ol>
-                                    <div className='d-flex justify-content-end modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
-                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                                {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
+                                <div className="form-group">
+                                    <label htmlFor="1" className='mt-3'>File Name</label>
+                                    <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} />
+                                    {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="2" className='mt-3'>Description</label>
+                                    <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} />
+                                    {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
+                                </div>
+                                <ol>
+                                    {Error.map((val) => {
+                                        return <li className='error' key={val}>{val}</li>
+                                    })}
+                                </ol>
+                                <div className='d-flex justify-content-end modal-button'>
+                                    <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
+                                    <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    {loader && <Spinner />}
-                </Modal.Body>
-            </Modal>
-
-
-            {/* image crop modal */}
-            < Modal show={secondshow} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal' centered >
-                <Modal.Header className='small-modal'>
-                    <Modal.Title>Crop Image
-                    </Modal.Title>
-                    <p className='close-modal' onClick={() => setsecondshow(false)}><i className="fa-solid fa-xmark"></i></p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="container-fluid p-0">
-                        < div className="row" >
-                            <div className=" col-12">
-                                <ReactCrop src={imagesrc} crop={crop} onChange={newCrop => setCrop(newCrop)} onImageLoaded={setimages} />
-                            </div>
-                            <div className="col-12 text-center">
-                                <label className="upload m-0" >
-                                    <CloudUploadIcon />  Upload Different Image <input type="file" accept="image/png,image/jpeg,image/jpg,application/pdf"
-                                        name="image" id="" style={{ display: "none" }} onChange={imageChange} />
-                                </label>
-                            </div>
-                            <div className="col-12 d-flex py-2 upload-btn">
-                                <button className="btn btn-gradient-primary" onClick={() => { setsecondshow(false); setDoument({ ...document, image: imagesrc, imageName: "" }) }}>Upload Original</button>
-                                <button className="btn btn-gradient-primary" onClick={onclick}>Save Cropped Image</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal >
-            <canvas ref={ref} className='d-none'></canvas>
-        </>
-    )
+                </div>
+                {loader && <Spinner />}
+            </Modal.Body>
+        </Modal>
+    </>
+)
 }
 
 export default DocumentModalComponent

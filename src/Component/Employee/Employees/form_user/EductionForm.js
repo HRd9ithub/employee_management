@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -9,17 +9,23 @@ import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 
 const EductionForm = (props) => {
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
     const [eduction, setEduction] = useState([{
-        degree_title: '',
+        degree: '',
         university_name: '',
-        year_attended: '',
+        year: '',
         user_id: '',
         percentage: '',
     }])
-    const [degree_title_error, setdegree_title_error] = useState([])
+    const [degree_error, setdegree_error] = useState([])
     const [university_name_error, setuniversity_name_error] = useState([])
-    const [year_attended_error, setyear_attended_error] = useState([])
+    const [year_error, setyear_error] = useState([])
     const [percentage_error, setpercentage_error] = useState([]);
     const [loader, setLoader] = useState(false);
     const [disableBtn, setDisableBtn] = useState(false);
@@ -38,8 +44,8 @@ const EductionForm = (props) => {
     }
 
     useEffect(() => {
-        if (userDetail.education_detail.length > 0) {
-            setEduction(userDetail.education_detail)
+        if (userDetail.education.length > 0) {
+            setEduction(userDetail.education)
         } else {
             eduction[0].user_id = userDetail.id
         }
@@ -50,31 +56,31 @@ const EductionForm = (props) => {
 
     useEffect(() => {
         let disableData = eduction.filter((curElem) => {
-            return !curElem.degree_title || !curElem.university_name || !curElem.year_attended || !curElem.percentage
+            return !curElem.degree || !curElem.university_name || !curElem.year || !curElem.percentage
         })
-        if (disableData.length > 0 || degree_title_error.length > 0 || university_name_error.length > 0 || year_attended_error.length > 0 || percentage_error.length > 0) {
+        if (disableData.length > 0 || degree_error.length > 0 || university_name_error.length > 0 || year_error.length > 0 || percentage_error.length > 0) {
             setDisableBtn(true)
         } else {
             setDisableBtn(false)
         }
-    }, [eduction, year_attended_error, degree_title_error, university_name_error, percentage_error])
+    }, [eduction, year_error, degree_error, university_name_error, percentage_error])
 
     // degree name validation
     const handleDegreeValidate = (ind) => {
-        if (!eduction[ind].degree_title || eduction[ind].degree_title.trim().length < 0) {
-            setdegree_title_error([...degree_title_error.filter((val) => {
+        if (!eduction[ind].degree || eduction[ind].degree.trim().length < 0) {
+            setdegree_error([...degree_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Degree field is required.", id: ind }]);
 
-        } else if (!eduction[ind].degree_title.match(/^[a-zA-Z. ]*$/)) {
-            setdegree_title_error([...degree_title_error.filter((val) => {
+        } else if (!eduction[ind].degree.match(/^[a-zA-Z. ]*$/)) {
+            setdegree_error([...degree_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Please enter a valid degree.", id: ind }])
         } else {
-            let temp = degree_title_error.filter((elem) => {
+            let temp = degree_error.filter((elem) => {
                 return elem.id !== ind
             })
-            setdegree_title_error(temp)
+            setdegree_error(temp)
         }
     }
     //  university name validation
@@ -97,24 +103,24 @@ const EductionForm = (props) => {
     }
     //year validation
     const handleYearValidate = (ind) => {
-        if (!eduction[ind].year_attended) {
-            setyear_attended_error([...year_attended_error.filter((val) => {
+        if (!eduction[ind].year) {
+            setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Year field is required.", id: ind }]);
 
-        } else if (!eduction[ind].year_attended.toString().match(/^[0-9]*$/) || eduction[ind].year_attended > new Date().getFullYear()) {
-            setyear_attended_error([...year_attended_error.filter((val) => {
+        } else if (!eduction[ind].year.toString().match(/^[0-9]*$/) || eduction[ind].year > new Date().getFullYear()) {
+            setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Please enter a valid year.", id: ind }])
-        } else if (eduction[ind].year_attended.toString().length < 4) {
-            setyear_attended_error([...year_attended_error.filter((val) => {
+        } else if (eduction[ind].year.toString().length < 4) {
+            setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Please enter at least 4 characters.", id: ind }])
         } else {
-            let temp = year_attended_error.filter((elem) => {
+            let temp = year_error.filter((elem) => {
                 return elem.id !== ind
             })
-            setyear_attended_error(temp)
+            setyear_error(temp)
         }
     }
 
@@ -146,7 +152,6 @@ const EductionForm = (props) => {
             history("/employees")
         } else {
             handleClose();
-            getuser();
         }
     }
 
@@ -154,237 +159,170 @@ const EductionForm = (props) => {
     const HandleSubmit = async (e) => {
         e.preventDefault();
         setError([]);
-        if (degree_title_error.length > 0 || university_name_error.length > 0 || year_attended_error.length > 0 || percentage_error.length > 0) {
+        if (degree_error.length > 0 || university_name_error.length > 0 || year_error.length > 0 || percentage_error.length > 0) {
             return false
         }
+        // edit data in mysql
+        setLoader(true)
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_KEY}/education/`, { info: eduction,user_id : userDetail._id},config)
+            if (response.data.success) {
+                toast.success(response.data.message);
+                if (pathname.toLocaleLowerCase().includes('/profile')) {
+                    getuser();
+                    handleClose();
+                } else {
+                    getEmployeeDetail();
+                }
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: EductionForm.js:183 ~ HandleSubmit ~ error:", error)
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                } else {
+                    setError(error.response.data.error);
+                }
+            }
+        } finally { setLoader(false) }
+}
 
-        if (userDetail.education_detail.length > 0) {
-            // edit data in mysql
-            setLoader(true)
-            try {
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/education_detail/update`, { record: JSON.stringify(eduction) }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GetLocalStorage('token')}`
-                    }
-                })
-                if (response.data.success) {
-                    setLoader(false)
-                    toast.success("Saved successfully");
+// add row of form
+const addDuplicate = () => {
+    let data = [...eduction, {
+        degree: '',
+        university_name: '',
+        year: '',
+        percentage: '',
+        user_id: userDetail.id
+    }]
+
+    setEduction(data)
+}
+
+// delete row
+const deleteRow = (id, ind) => {
+    setError([])
+    if (id) {
+        Swal.fire({
+            title: "Delete Field",
+            text: "Are you sure want to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1bcfb4",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            width: "450px",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setLoader(true);
+                const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/education/${id}`,config);
+                if (res.data.success) {
+                    toast.success(res.data.message);
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();
-                        handleClose();
                     } else {
                         getEmployeeDetail();
                     }
-                } else {
-                    setLoader(false)
-                    toast.error("Something went wrong, Please check your details and try again.")
-                }
-            } catch (error) {
-                console.log("🚀 ~ file: EductionForm.js:183 ~ HandleSubmit ~ error:", error)
-                setLoader(false)
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
-                    }
                 }
             }
-        } else {
-            //     // add data in mysql
-            try {
-                setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/education_detail/add`, { record: JSON.stringify(eduction) }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GetLocalStorage('token')}`
-                    }
-                })
-                if (response.data.success) {
-                    setLoader(false);
-                    if (pathname.toLocaleLowerCase().includes('/profile')) {
-                        getuser();
-                        handleClose();
-                    } else {
-                        getEmployeeDetail();
-                    }
-                    toast.success("Added successfully")
-
+        }).catch((error) => {
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 } else {
-                    setLoader(false);
-                    toast.error("Something went wrong, Please check your details and try again.")
-                }
-            } catch (error) {
-                setLoader(false)
-                console.log("🚀 ~ file: EductionForm.js:111 ~ HandleSubmit ~ error:", error)
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
-                    }
+                    setError(error.response.data.error);
                 }
             }
-
-        }
+        }).finally(() => setLoader(false))
+    } else {
+        let deleteField = [...eduction];
+        deleteField.splice(ind, 1);
+        setEduction(deleteField)
+        setuniversity_name_error(university_name_error.filter((val) => val.id !== ind))
+        setdegree_error(university_name_error.filter((val) => val.id !== ind))
+        setyear_error(university_name_error.filter((val) => val.id !== ind))
+        setpercentage_error(university_name_error.filter((val) => val.id !== ind))
     }
+}
 
-    // add row of form
-    const addDuplicate = () => {
-        let data = [...eduction, {
-            degree_title: '',
-            university_name: '',
-            year_attended: '',
-            percentage: '',
-            user_id: userDetail.id
-        }]
+return (
+    <>
+        <form className="forms-sample">
+            {eduction.map((val, ind) => {
+                return (
+                    <div className='education-wrapper mt-3' key={ind}>
+                        {ind > 0 && <div data-action="delete" className='delete text-right' onClick={() => deleteRow(val._id, ind)}>
+                            <i className="fa-solid fa-trash-can "></i>
+                        </div>}
+                        <div className="form-group">
+                            <label htmlFor="2" className='mt-3'>University Name</label>
+                            <input type="text" className="form-control" id="2" placeholder="Enter university name" name='university_name' onChange={(event) => InputEvent(event, ind)} value={val.university_name} onKeyUp={() => handleuniversityValidate(ind)} onBlur={() => handleuniversityValidate(ind)} autoComplete='off' />
+                            {/* eslint-disable-next-line */}
+                            {university_name_error.map((val) => {
+                                if (val.id === ind) {
+                                    return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
+                                }
+                            })}
 
-        setEduction(data)
-    }
-
-    // delete row
-    const deleteRow = (id, ind) => {
-        if (id) {
-            let token = GetLocalStorage("token");
-            const request = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-            Swal.fire({
-                title: "Delete Field",
-                text: "Are you sure want to delete?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#1bcfb4",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                width: "450px",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    setLoader(true);
-                    const res = await axios.post(`${process.env.REACT_APP_API_KEY}/education_detail/delete`, { id: id }, request);
-                    if (res.data.success) {
-                        toast.success("Field has been successfully deleted.");
-                        if (pathname.toLocaleLowerCase().includes('/profile')) {
-                            // getuser();
-                        } else {
-                            getEmployeeDetail();
-                        }
-                        let deleteField = [...eduction];
-                        deleteField.splice(ind, 1);
-                        setEduction(deleteField)
-                        setLoader(false);
-                    } else {
-                        toast.error(res.data.message);
-                        setLoader(false);
-                    }
-                }
-            }).catch((error) => {
-                setLoader(false);
-                console.log("error", error);
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        }
-                    }
-                }
-            })
-        } else {
-            let deleteField = [...eduction];
-            deleteField.splice(ind, 1);
-            setEduction(deleteField)
-        }
-    }
-
-    return (
-        <>
-            <form className="forms-sample">
-                {eduction.map((val, ind) => {
-                    return (
-                        <div className='education-wrapper mt-3' key={ind}>
-                            {ind > 0 && <div data-action="delete" className='delete text-right' onClick={() => deleteRow(val.id, ind)}>
-                                <i className="fa-solid fa-trash-can "></i>
-                            </div>}
-                            <div className="form-group">
-                                <label htmlFor="2" className='mt-3'>University Name</label>
-                                <input type="text" className="form-control" id="2" placeholder="Enter university name" name='university_name' onChange={(event) => InputEvent(event, ind)} value={val.university_name} onKeyUp={() => handleuniversityValidate(ind)} autoComplete='off' />
-                                {/* eslint-disable-next-line */}
-                                {university_name_error.map((val) => {
-                                    if (val.id === ind) {
-                                        return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
-                                    }
-                                })}
-
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="3" className='mt-3'>Degree</label>
-                                <input type="text" className="form-control" id="3" placeholder="Enter degree" name='degree_title' onChange={(event) => InputEvent(event, ind)} value={val.degree_title} onKeyUp={() => handleDegreeValidate(ind)} autoComplete='off' />
-                                {/* eslint-disable-next-line */}
-                                {degree_title_error.map((val) => {
-                                    if (val.id === ind) {
-                                        return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
-                                    }
-                                })}
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="1" className='mt-3'>Percentage</label>
-                                <input type="text" className="form-control" id="1" placeholder="Enter percentage" name='percentage' onChange={(event) => InputEvent(event, ind)} value={val.percentage} onKeyUp={() => handlepercentageValidate(ind)} autoComplete='off' />
-                                    {/* eslint-disable-next-line */}
-                                {percentage_error.map((val) => {
-                                    if (val.id === ind) {
-                                        return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
-                                    }
-                                })}
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="6" className='mt-3'>Year</label>
-                                <input type="text" className="form-control" id="6" placeholder="Enter year" name='year_attended' onChange={(event) => InputEvent(event, ind)} value={val.year_attended} onKeyUp={() => handleYearValidate(ind)} maxLength={4} autoComplete='off' />
-                                {/* eslint-disable-next-line */}
-                                {year_attended_error.map((val) => {
-                                    if (val.id === ind) {
-                                        return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
-                                    }
-                                })}
-                            </div>
                         </div>
-                    )
+                        <div className="form-group">
+                            <label htmlFor="3" className='mt-3'>Degree</label>
+                            <input type="text" className="form-control" id="3" placeholder="Enter degree" name='degree' onChange={(event) => InputEvent(event, ind)} value={val.degree} onKeyUp={() => handleDegreeValidate(ind)} onBlur={() => handleDegreeValidate(ind)} autoComplete='off' />
+                            {/* eslint-disable-next-line */}
+                            {degree_error.map((val) => {
+                                if (val.id === ind) {
+                                    return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
+                                }
+                            })}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="1" className='mt-3'>Percentage</label>
+                            <input type="text" className="form-control" id="1" placeholder="Enter percentage" name='percentage' onChange={(event) => InputEvent(event, ind)} value={val.percentage} onKeyUp={() => handlepercentageValidate(ind)} onBlur={() => handlepercentageValidate(ind)} autoComplete='off' />
+                            {/* eslint-disable-next-line */}
+                            {percentage_error.map((val) => {
+                                if (val.id === ind) {
+                                    return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
+                                }
+                            })}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="6" className='mt-3'>Year</label>
+                            <input type="text" className="form-control" id="6" placeholder="Enter year" name='year' onChange={(event) => InputEvent(event, ind)} value={val.year} onBlur={() => handleYearValidate(ind)} onKeyUp={() => handleYearValidate(ind)} maxLength={4} autoComplete='off' />
+                            {/* eslint-disable-next-line */}
+                            {year_error.map((val) => {
+                                if (val.id === ind) {
+                                    return <small id="emailHelp" className="form-text error" key={val.id}>{val.name}</small>
+                                }
+                            })}
+                        </div>
+                    </div>
+                )
+            })}
+            <div className="mt-2"><NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink></div>
+            <ol>
+                {error.map((val) => {
+                    return <li className='error' key={val}>{val}</li>
                 })}
-                <div className="mt-2"><NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink></div>
-                <ol>
-                    {error.map((val) => {
-                        return <li className='error' key={val}>{val}</li>
-                    })}
-                </ol>
-                <div className="submit-section d-flex justify-content-between py-3">
-                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
-                    <button className="btn btn-gradient-primary" disabled={disableBtn} onClick={HandleSubmit}>Save</button>
-                </div>
-            </form>
-            {loader && <Spinner />}
-        </>
+            </ol>
+            <div className="submit-section d-flex justify-content-between py-3">
+                <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                <button className="btn btn-gradient-primary" disabled={disableBtn} onClick={HandleSubmit}>Save</button>
+            </div>
+        </form>
+        {loader && <Spinner />}
+    </>
 
-    )
+)
 }
 
 export default EductionForm

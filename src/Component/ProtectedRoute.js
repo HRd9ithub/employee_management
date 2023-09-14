@@ -18,21 +18,22 @@ const ProtectedRoute = ({ children, name }) => {
         if (!GetLocalStorage("token")) {
             // redirect page
             navigate('/login')
-        } else {
-            // get single user data
-            if(Permission.length === 0){
-                getPremission();
-            }
-            if(!UserData){
+        } 
+        else {
+        //     // get single user data
+        //     if(Permission.length === 0){
+        //         getPremission();
+        //     }
+        //     if(!UserData){
                 getUserData();
-            }
-            if (PageData.length === 0) {
-                getPage();
-            }
-            // find only one page permision condition
-            if (Permission.length !== 0 && (UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin') && !name) {
-                FindPermission(location.pathname)
-            }
+        //     }
+        //     if (PageData.length === 0) {
+        //         getPage();
+        //     }
+        //     // find only one page permision condition
+        //     if (Permission.length !== 0 && (UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin') && !name) {
+        //         FindPermission(location.pathname)
+        //     }
         }
     }
 
@@ -41,21 +42,21 @@ const ProtectedRoute = ({ children, name }) => {
         // eslint-disable-next-line
     }, [location, PageData])
 
-    if ((UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].list === '1') || name === "view" || name === "Dashboard" || ( location.pathname.slice("1").toLowerCase().includes("employees/edit") && accessData.length !== 0 && accessData[0].update === '1') ) {
-        return children
-    } else {
-        if (PageData.length === 0) {
-            setTimeout(() => {
-                return (
-                    <Error403 />
-                )
-            }, 3000)
-        } else {
-            return (
-                <Error403 />
-            )
-        }
-    }
+    return children
+    // if ((UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') || (accessData.length !== 0 && accessData[0].list === '1') || name === "view" || name === "Dashboard" || ( location.pathname.slice("1").toLowerCase().includes("employees/edit") && accessData.length !== 0 && accessData[0].update === '1') ) {
+    // } else {
+    //     if (PageData.length === 0) {
+    //         setTimeout(() => {
+    //             return (
+    //                 <Error403 />
+    //             )
+    //         }, 3000)
+    //     } else {
+    //         return (
+    //             <Error403 />
+    //         )
+    //     }
+    // }
 }
 
 export default ProtectedRoute;

@@ -4,8 +4,8 @@ import React from "react";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Spinner from "../common/Spinner";
-import { toast } from "react-toastify";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const ForgetPassword = () => {
   // eslint-disable-next-line
@@ -43,22 +43,23 @@ const ForgetPassword = () => {
       return false;
     } else {
       setLoader(true)
-      axios.post(`${process.env.REACT_APP_API_KEY}/forgotpassword`, { email }).then((response) => {
-        if(response.data.success){
-          setLoader(false);
-          toast.success("Check your Email.");
-          window.open('https://mail.google.com/', "_blank")
+      axios.post(`${process.env.REACT_APP_API_KEY}/auth/forgotpassword`, { email }).then((response) => {
+        if (response.data.success) {
+          let { message } = response.data
+          // window.open('https://mail.google.com/', "_blank")
           history('/login');
+          setLoader(false);
+          toast.success(message);
           setEmail("");
         }
       }).catch((error) => {
         console.log("error", error);
-        if (error.response.data.error) {
-          toast.error("Sorry! Email address not found.");
-        } else{
+        setLoader(false)
+        if (!error.response) {
+          toast.error(error.message);
+        } else {
           toast.error(error.response.data.message);
         }
-        setLoader(false)
       });
     }
   };

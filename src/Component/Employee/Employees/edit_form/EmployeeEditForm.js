@@ -4,7 +4,6 @@ import "react-calendar/dist/Calendar.css";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import Spinner from "../../../common/Spinner";
 import AccountForm from "../form_user/AccountForm";
 import EductionForm from "../form_user/EductionForm";
@@ -12,11 +11,19 @@ import UserDoumentForm from "../form_user/userDoumentForm";
 import EmergencyForm from "../form_user/EmergencyForm";
 import { NavLink } from "react-bootstrap";
 import PersonalDetailForm from "../form_user/PersonalDetailForm";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage";
+import axios from "axios";
+import LoginInfo from "../view/LoginInfo";
 
 const EmployeeEditForm = () => {
+  let config = {
+    headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GetLocalStorage('token')}`
+    },
+}
 
   const [value, setValue] = React.useState('Personal');
   const [userId, setUserId] = useState("");
@@ -41,44 +48,29 @@ const EmployeeEditForm = () => {
   // get employee data for single
   const getEmployeeDetail = async () => {
     try {
-      //create header
-      const request = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-      }
-
-      let res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/edit`, { id }, request)
+      let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`,config)
 
       if (res.data.success) {
         let result = await res.data.data;
         setUserDetail(result);
-        setUserId(result.id);
-        setLoader(false)
-      } else {
-        setLoader(false)
+        setUserId(result._id);
       }
     } catch (error) {
-      console.log('error', error)
-      setLoader(false)
-      if (error.response.status === 401) {
+      console.log(error, "esjrihewaiu");
+      if (!error.response) {
+        toast.error(error.message)
+      } else if (error.response.status === 401) {
         getCommonApi();
       } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
-        } else {
-          if (typeof error.response.data.error === "string") {
-            toast.error(error.response.data.error)
-          }
         }
       }
-    }
+    } finally { setLoader(false) }
   }
 
   useEffect(() => {
     if (id) {
-      setLoader(true)
       getEmployeeDetail()
     }
     // eslint-disable-next-line
@@ -102,6 +94,7 @@ const EmployeeEditForm = () => {
                 <Tab value="Education" label="Education Information" />
                 <Tab value="Document" label="Document Information" />
                 <Tab value="Emergency" label="Emergency Contact Information" />
+                <Tab value="login" label="Login Information" />
               </Tabs>
             </div>
 
@@ -119,6 +112,7 @@ const EmployeeEditForm = () => {
                   <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
                   <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
                   <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
+                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("login")}>Login Information</NavLink>
                 </div>
               </div>
             </div>
@@ -143,7 +137,10 @@ const EmployeeEditForm = () => {
                         userDetail={userDetail}
                         getEmployeeDetail={getEmployeeDetail}
                         userId={userId} />
-                      : <EmergencyForm
+                      : value === "login" ? 
+                      <LoginInfo userId={userId} />
+                      :
+                      <EmergencyForm
                         userDetail={userDetail}
                         getEmployeeDetail={getEmployeeDetail}
                         userId={userId} />

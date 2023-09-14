@@ -15,22 +15,25 @@ import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
 import { HiOutlineMinus } from "react-icons/hi";
+import Spinner from './common/Spinner';
+import Avatar from '@mui/material/Avatar';
+
 
 const Dashboard = () => {
+     const [loader, setLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState("");
-     // eslint-disable-next-line
-     const [totalEmployeeActive, settotalEmployeeActive] = useState("");
+     const [leaveRequest, setleaveRequest] = useState("");
      const [presentToday, setpresentToday] = useState("");
      const [todayLeave, settodayLeave] = useState([]);
      const [holiday, setHoliday] = useState([])
      const [holidayfilter, setHolidayfilter] = useState([])
-     // eslint-disable-next-line
-     const [activity, setActivity] = useState([])
+     const [birthDay, setBirthDay] = useState([])
+     const [birthDayFilter, setBirthDayFilter] = useState([])
 
      let { getCommonApi } = GlobalPageRedirect();
 
-     let { UserData, leaveNotification } = useContext(AppProvider)
+     let { UserData } = useContext(AppProvider)
 
      let navigate = useNavigate();
 
@@ -43,7 +46,7 @@ const Dashboard = () => {
      useEffect(() => {
           const getData = async () => {
                try {
-                    // setloader(true);
+                    setLoader(true);
                     let token = GetLocalStorage("token");
                     const request = {
                          headers: {
@@ -54,87 +57,29 @@ const Dashboard = () => {
                     const res = await axios.get(`${process.env.REACT_APP_API_KEY}/dashboard`, request);
 
                     if (res.data.success) {
-                         settotalEmployee(res.data.data.totalEmployee)
-                         settotalEmployeeActive(res.data.data.totalEmployeeActive)
-                         setpresentToday(res.data.data.presentToday)
-                         settodayLeave(res.data.data.todayLeave);
+                         let { totalEmployee, leaveRequest, presentToday, absentToday, holidayDay, birthDay, reportBy } = res.data
+                         settotalEmployee(totalEmployee)
+                         setpresentToday(presentToday)
+                         settodayLeave(absentToday);
+                         setHolidayfilter(holidayDay)
+                         setBirthDay(birthDay);
+                         setleaveRequest(leaveRequest)
                     }
                } catch (error) {
                     console.log(error, " <<< ==== error ");
-                    if (error.response.status === 401) {
+                    if (!error.response) {
+                         toast.error(error.message)
+                    } else if (error.response.status === 401) {
                          getCommonApi();
-                    } else {
-                         if (error.response.data.message) {
-                              toast.error(error.response.data.message)
-                         } else {
-                              if (typeof error.response.data.error === "string") {
-                                   toast.error(error.response.data.error)
-                              }
-                         }
+                    } else if (error.response.data.message) {
+                         toast.error(error.response.data.message)
                     }
                } finally {
-                    // setloader(false);
-               }
-          }
-          const get_holiday_detail = async () => {
-               try {
-                    let token = GetLocalStorage("token");
-                    const request = {
-                         headers: {
-                              "Content-Type": "application/json",
-                              Authorization: `Bearer ${token}`
-                         },
-                    }
-                    const res = await axios.get(`${process.env.REACT_APP_API_KEY}/holiday_calendar/list`, request)
-                    if (res.data.success) {
-                         setHoliday(res.data.data)
-                         setHolidayfilter(res.data.data);
-                    }
-               } catch (error) {
-                    console.log('error', error)
-                    if (error.response.status === 401) {
-                         getCommonApi();
-                    } else {
-                         if (error.response.data.message) {
-                              toast.error(error.response.data.message)
-                         } else {
-                              if (typeof error.response.data.error === "string") {
-                                   toast.error(error.response.data.error)
-                              }
-                         }
-                    }
-               }
-          }
-          const getTime = async () => {
-               try {
-                    const request = {
-                         headers: {
-                              Authorization: `Bearer ${GetLocalStorage("token")}`,
-                         },
-                    };
-                    const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timesheet/list`, request);
-                    if (result.data.success) {
-                         setActivity(result.data.data.filter((elem) => elem.date === moment(new Date()).format("YYYY-MM-DD")).sort((a, b) => new Date(b.date.concat(",", b.login_time)) - new Date(a.date.concat(",", a.login_time))).sort((a, b) => new Date(b.date.concat(",", b.logout_time)) - new Date(a.date.concat(",", a.logout_time))));
-                    }
-               } catch (error) {
-                    console.log("TimeSheetComponent page all data get api === >>> ", error);
-                    if (error.response.status === 401) {
-                         getCommonApi();
-                    } else {
-                         if (error.response.data.message) {
-                              toast.error(error.response.data.message)
-                         } else {
-                              if (typeof error.response.data.error === "string") {
-                                   toast.error(error.response.data.error)
-                              }
-                         }
-                    }
+                    setLoader(false);
                }
           }
           if (GetLocalStorage("token")) {
                getData();
-               get_holiday_detail();
-               getTime();
           }
           // eslint-disable-next-line
      }, [])
@@ -150,7 +95,11 @@ const Dashboard = () => {
           let data = holidayfilter.filter((val) => {
                return val.date === moment(date).format("YYYY-MM-DD")
           })
+          let birth = birthDay.filter((val) => {
+               return val.date === moment(date).format("YYYY-MM-DD")
+          })
           setHoliday(data)
+          setBirthDayFilter(birth)
      }
 
      return (
@@ -163,50 +112,52 @@ const Dashboard = () => {
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
                               </div>
-                                   {UserData.role && UserData.role.name.toLowerCase() === "admin" && <>
-                              <div className="row mt-3">
-                                   <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => UserData.role && UserData.role.name.toLowerCase() === "admin" && navigate("/employees")}>
-                                        <NavLink className="common-box-dashboard total-employee nav-link">
-                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <div className="common-info-dashboard">
-                                                  <h2>{totalEmployee}</h2>
-                                                  <FaUsers />
-                                             </div>
-                                             <h4 className="mt-2">Total Employees</h4>
-                                        </NavLink>
-                                   </div>
+                              {/* {console.log(UserData.role.length)} */}
+                              {UserData && UserData?.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && <>
+                                   <div className="row mt-3">
+                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && navigate("/employees")}>
+                                             <NavLink className="common-box-dashboard total-employee nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h2>{totalEmployee}</h2>
+                                                       <FaUsers />
+                                                  </div>
+                                                  <h4 className="mt-2">Total Employees</h4>
+                                             </NavLink>
+                                        </div>
                                         <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h2>{leaveNotification.length}</h2>
+                                                       <h2>{leaveRequest}</h2>
                                                        <i className="fa-solid fa-image-portrait"></i>
 
                                                   </div>
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`}  onClick={() => navigate("/timesheet")}>
-                                        <NavLink className="common-box-dashboard Present nav-link">
-                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <div className="common-info-dashboard">
-                                                  <h2>{presentToday}</h2>
-                                                  <FaUserAlt />
-                                             </div>
-                                             <h4 className="mt-2">Present Today</h4>
-                                        </NavLink>
+                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => navigate("/timesheet")}>
+                                             <NavLink className="common-box-dashboard Present nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h2>{presentToday}</h2>
+                                                       <FaUserAlt />
+                                                  </div>
+                                                  <h4 className="mt-2">Present Today</h4>
+                                             </NavLink>
+                                        </div>
+                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => navigate("/leave")}>
+                                             <NavLink className="common-box-dashboard Today nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h2>{todayLeave.length}</h2>
+                                                       <i className="fa-solid fa-bookmark"></i>
+                                                  </div>
+                                                  <h4 className="mt-2">Absent Today</h4>
+                                             </NavLink>
+                                        </div>
                                    </div>
-                                   <div className={`mb-2 position-relative box-dashboard ${UserData.role && UserData.role.name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`}  onClick={() => navigate("/leave")}>
-                                        <NavLink className="common-box-dashboard Today nav-link">
-                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <div className="common-info-dashboard">
-                                                  <h2>{todayLeave.length}</h2>
-                                                  <i className="fa-solid fa-bookmark"></i>
-                                             </div>
-                                             <h4 className="mt-2">Absent Today</h4>
-                                        </NavLink>
-                              </div>
-                                   </div></>}
+                              </>}
 
                               <div className='row'>
                                    <div className='col-md-5 mt-3 box-dashboard'>
@@ -214,15 +165,15 @@ const Dashboard = () => {
                                              {(() => {
                                                   let highlight = [];
 
-                                                  for (let index = 0; index < holidayfilter.length; index++) {
-                                                       highlight.push(subDays(new Date(`${holidayfilter[index].date}`), 0));
-                                                  }
+                                                  holidayfilter.forEach((val) => {
+                                                       highlight.push(subDays(new Date(val.date), 0));
+                                                  })
                                                   return (
-                                                       <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight}/>
+                                                       <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} />
                                                   );
                                              })()}
                                         </div>
-                                   </div> 
+                                   </div>
                                    <div className='col-md-7 pl-md-0 box-dashboard'>
                                         <div className='col-md-12 px-0 mt-3 d-flex align-items-center justify-content-center'>
                                              <div className='my-chart'>
@@ -231,13 +182,16 @@ const Dashboard = () => {
 
                                                        <ul>
                                                             {holiday.map((val) => {
-                                                                 return <li key={val.id}>{val.name}</li>
+                                                                 return <li key={val._id}>{val.name}</li>
+                                                            })}
+                                                            {birthDayFilter.map((val) => {
+                                                                 return <li key={val._id}>{val.name}</li>
                                                             })}
                                                        </ul>
-                                                       {holiday.length === 0 && 
-                                                       <ul>
-                                                            No Holiday !
-                                                       </ul>}
+                                                       {holiday.length === 0 && birthDayFilter.length === 0 &&
+                                                            <ul>
+                                                                 No Holiday !
+                                                            </ul>}
                                                   </div>
                                              </div>
                                         </div>
@@ -245,31 +199,32 @@ const Dashboard = () => {
                                              <div className='my-chart'>
                                                   <div className='my-chart-head text-center'>On Leave Today</div>
                                                   <div className='p-3'>
-                                                       {/* <ul>
-                                                            {todayLeave?.map((val) => {
-                                                            return (
-                                                                 <div className="text-capitalize d-flex align-items-center" key={val.id}>
-                                                                      <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} target="_blank">
-                                                                            eslint-disable-next-line 
-                                                                           <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile image" />
-                                                                      </NavLink>
-                                                                      {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus/>}
-                                                                 </div>
-                                                            )
-                                                       })}
-                                                  </ul>  */}
-                                                  {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
                                                        <ul>
-                                                            <li> Wow! Everyone is Present Today.</li>
-                                                       </ul>}
+                                                            {todayLeave?.map((val) => {
+                                                                 return (
+                                                                      <div className="text-capitalize d-flex align-items-center" key={val._id}>
+                                                                           <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} target="_blank">
+                                                                                {/* <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile_image" /> */}
+                                                                                <Avatar alt={val.user?.first_name} src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user?.profile_image}`} sx={{ width: 34, height: 34 }} />
+                                                                           </NavLink>
+                                                                           {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus />}
+                                                                      </div>
+                                                                 )
+                                                            })}
+                                                       </ul>
+                                                       {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
+                                                            <ul>
+                                                                 <li> Wow! Everyone is Present Today.</li>
+                                                            </ul>}
+                                                  </div>
                                              </div>
                                         </div>
                                    </div>
                               </div>
                          </div>
                     </div>
-                    </div>
                </motion.div>
+               {loader && <Spinner />}
           </>
      )
 }

@@ -1,31 +1,27 @@
 import Modal from 'react-bootstrap/Modal';
 import React from 'react'
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 const LeaveTypeModal = (props) => {
-    let { data, getLeaveType, role, accessData, records } = props;
+    let { data, getLeaveType, permission } = props;
     const [show, setShow] = useState(false);
     const [loader, setloader] = useState(false);
-    const [list, setList] = useState({
-        name: '',
-        error: '',
-        id: ''
-    });
-    const [error, setError] = useState([])
+    const [name, setName] = useState("")
+    const [id, setId] = useState("")
+    const [error, setError] = useState("")
+    const [Backerror, setBackerror] = useState("")
     let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
         if (data) {
-            setList({
-                name: data.name,
-                id: data.id
-            })
+            setName(data.name);
+            setId(data._id);
         }
         setShow(true)
     }
@@ -34,146 +30,120 @@ const LeaveTypeModal = (props) => {
     const handleClose = (e) => {
         e.preventDefault();
         setShow(false)
-        setList({
-            name: '',
-            error: ''
-        });
+        setName("");
+        setError("")
+        setId("")
     }
 
     // onchange function
     const InputEvent = (e) => {
         let value = e.target.value;
 
-        setList({ ...list, name: value })
+        setName(value)
     }
 
     // form validation function
     const HandleValidate = () => {
-        if (!list.name) {
-            setList({ ...list, error: 'Please enter a leave type.' })
-        } else if (!list.name.trim() || !list.name.match(/^[A-Za-z ]+$/)) {
-            setList({ ...list, error: 'Please enter a valid leave type.' })
-        } else if (list.name.match(/^[A-Za-z ]+$/)) {
-            let temp = records.findIndex((val) => {
-                return val.name.trim().toLowerCase() === list.name.trim().toLowerCase()
-            });
-            if (temp === -1 || (data && data.name.toLowerCase() === list.name.toLowerCase())) {
-                setList({ ...list, error: '' })
-            } else {
-                setList({ ...list, error: 'Leave type already exists. ' })
-            }
+        if (!name) {
+            setError('Please enter a leave type.')
+        } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
+            setError('Please enter a valid leave type.');
+        } else {
+            setError("");
         }
     }
 
     // submit function
     const HandleSubmit = (e) => {
         e.preventDefault();
+        setBackerror("")
+        !error && HandleValidate();
 
-        HandleValidate();
-        setError([]);
-
-        if (!list.name || list.error) {
+        if (!name || error) {
             return false;
         } else {
-            if (list.id) {
-                setloader(true);
-                let token = GetLocalStorage('token');
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                }
-                axios.post(`${process.env.REACT_APP_API_KEY}/leave_type/update`, { name: list.name.charAt(0).toUpperCase() + list.name.slice(1), id: list.id }, request)
-                    .then(data => {
-                        if (data.data.success) {
-                            setloader(false);
-                            toast.success('Successfully Edited a leave type.')
-                            setShow(false)
-                            getLeaveType()
-                            setList({
-                                name: '',
-                                error: '',
-                                id: ''
-                            })
-                        } else {
-                            setloader(false);
-                            toast.error(data.data.message.name[0])
-                            // setList({ ...list, error: data.data.message.name[0] })
-                        }
-                    }).catch((error) => {
-                        setloader(false);
-                        console.log('error', error)
-                        if (error.response.status === 401) {
-                            getCommonApi();
-                        } else {
-                            if (error.response.data.message) {
-                                toast.error(error.response.data.message)
-                            } else {
-                                if (typeof error.response.data.error === "string") {
-                                    toast.error(error.response.data.error)
-                                } else {
-                                    setError(error.response.data.error);
-                                }
-                            }
-                        }
-                    })
+            setloader(true);
+            let token = GetLocalStorage('token');
+            const request = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+            }
+            let url = ""
+            if (id) {
+                url = axios.patch(`${process.env.REACT_APP_API_KEY}/leavetype/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, request)
             } else {
-                setloader(true);
-                let token = GetLocalStorage('token');
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
+                url = axios.post(`${process.env.REACT_APP_API_KEY}/leavetype/`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, request)
+            }
+
+            url.then(data => {
+                if (data.data.success) {
+                    toast.success(data.data.message)
+                    setShow(false)
+                    getLeaveType()
+                    setName("");
+                    setId("");
+                }
+            }).catch((error) => {
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        setBackerror(error.response.data.error);
                     }
                 }
-                axios.post(`${process.env.REACT_APP_API_KEY}/leave_type/add`, { name: list.name.charAt(0).toUpperCase() + list.name.slice(1) }, request)
-                    .then(data => {
-                        if (data.data.success) {
-                            setloader(false);
-                            toast.success('Successfully added a new leave type.')
-                            setShow(false)
-                            getLeaveType();
-                            setList({
-                                name: '',
-                                error: '',
-                                id: ''
-                            })
-                        } else {
-                            setloader(false);
-                            toast.error(data.data.message.name[0])
-                        }
-                    }).catch((error) => {
-                        setloader(false);
-                        console.log('error', error)
-                        if (error.response.status === 401) {
-                            getCommonApi();
-                        } else {
-                            if (error.response.data.message) {
-                                toast.error(error.response.data.message)
-                            } else {
-                                if (typeof error.response.data.error === "string") {
-                                    toast.error(error.response.data.error)
-                                } else {
-                                    setError(error.response.data.error);
-                                }
-                            }
-                        }
-                    })
-            }
+            }).finally(() => setloader(false))
         }
 
     }
 
+    // check leave type
+    const checkLeaveType = async () => {
+        !name && HandleValidate();
+        if (name && !error) {
+            setloader(true)
+            let config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${GetLocalStorage('token')}`
+                },
+            }
+            axios.post(`${process.env.REACT_APP_API_KEY}/leavetype/name`, { name, id }, config).then((response) => {
+                console.log(response)
+                if (response.data.success) {
+                    setError("")
+                }
+            }).catch((error) => {
+                console.log(error)
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
+                    if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.data.message) {
+                            setError(error.response.data.message)
+                        }
+                    }
+                }
+            }).finally(() => setloader(false))
+        }
+    }
+
     return (
         <>
-            {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
                 :
-                (role.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
-                    <button
-                        className='btn btn-gradient-primary btn-rounded btn-fw text-center'  onClick={handleShow}>
-                        <i className="fa-solid fa-plus" ></i>&nbsp;Add
-                    </button>}
+                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+                <button
+                    className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
+                    <i className="fa-solid fa-plus" ></i>&nbsp;Add
+                </button>}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Leave Type' : 'Add Leave Type'}
@@ -187,14 +157,10 @@ const LeaveTypeModal = (props) => {
                                 <form className="forms-sample">
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave Type</label>
-                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={list.name} onChange={InputEvent} onKeyUp={HandleValidate} />
-                                        {list.error && <small id="emailHelp" className="form-text error">{list.error}</small>}
+                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={name} onChange={InputEvent} onKeyUp={HandleValidate} onBlur={checkLeaveType} />
+                                        {error && <small id="emailHelp" className="form-text error">{error}</small>}
+                                        {Backerror && <small id="emailHelp" className="form-text error">{Backerror}</small>}
                                     </div>
-                                    <ol>
-                                        {error.map((val) => {
-                                            return <li className='error' key={val} > {val}</li>
-                                        })}
-                                    </ol>
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>

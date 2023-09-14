@@ -741,11 +741,6 @@ span.eye-icon {
   color: #ffffff !important;
 }
 
-.mdi {
-  color: #ffffff !important;
-
-}
-
 .navbar .navbar-brand-wrapper .navbar-brand img {
   height: 54px;
 }
@@ -1238,6 +1233,15 @@ span.eye-icon {
 .profile-image:hover {
   box-shadow: 0px 0px 8px #aaa inset;
 
+}
+
+.name_col{
+  text-decoration: none;
+  color: #434343;
+}
+.name_col:hover{
+  text-decoration: none;
+  color: #434343;
 }
 
 .profile-image img {
@@ -2197,7 +2201,7 @@ svg {
   font-family: font_main_semi;
 }
 
-.profile-view .profile-img-wrap img {
+.profile-view .profile-img-wrap .img {
   border-radius: 50%;
   height: 120px;
   width: 120px;
@@ -2626,9 +2630,9 @@ svg {
 .box-dashboard .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
   padding: 0.7rem 0;
 }
-.dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
+/* .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
   padding: 1rem 0!important;
-}
+} */
 
 /*  =========================== Modal header None =========================== */
 .modal-header-none {
@@ -3244,4 +3248,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .search-box:hover i {
   opacity: 0;
   z-index: -1;
+}
+
+.range_icon{
+  position: absolute;
+    top: 14px;
+    right: 12px;
+    font-size: 21px;
+    color: #004b8f;
+}
+
+
+
+/* link expired css*/
+
+.link_expire i.fa-regular.fa-circle-xmark {
+  font-size: 9rem;
+  color: #cc1f1f;
 }
