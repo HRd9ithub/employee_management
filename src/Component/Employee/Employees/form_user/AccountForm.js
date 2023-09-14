@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import {GetLocalStorage} from "../../../../service/StoreLocalStorage"
+import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
+import axios from 'axios';
 
 const AccountForm = (props) => {
-    let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
+    let { userDetail,  handleClose, getEmployeeDetail,getuser } = props;
     const [account, setAccount] = useState({
         bank_name: '',
         account_number: '',
@@ -25,11 +31,11 @@ const AccountForm = (props) => {
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState([]);
 
-    let {getCommonApi} = GlobalPageRedirect();
+    let { getCommonApi } = GlobalPageRedirect();
 
     useEffect(() => {
-        if (userDetail.account_detail) {
-            setAccount(userDetail.account_detail)
+        if (userDetail.account_detail.length !== 0) {
+            setAccount(userDetail.account_detail[0])
         }
     }, [userDetail]);
 
@@ -68,8 +74,8 @@ const AccountForm = (props) => {
             setaccount_number_error("Account number field is required.")
         } else if (!account.account_number.toString().match(/^[0-9]*$/)) {
             setaccount_number_error("Please enter a valid account number.")
-        } else if (account.account_number.toString().length < 9) {
-            setaccount_number_error("Please enter at least 9 characters.")
+        } else if (account.account_number.toString().length < 12) {
+            setaccount_number_error("Please enter at least 12 characters.")
         }
         else {
             setaccount_number_error('')
@@ -81,8 +87,8 @@ const AccountForm = (props) => {
             setifsc_code_error("Ifsc code field is required.")
         } else if (!account.ifsc_code.match(/^[a-zA-Z0-9]*$/)) {
             setifsc_code_error("Please enter a valid ifsc code.")
-        } else if (account.ifsc_code.length < 10) {
-            setifsc_code_error("Please enter at least 10 characters.")
+        } else if (account.ifsc_code.length < 11) {
+            setifsc_code_error("Please enter at least 11 characters.")
         }
         else {
             setifsc_code_error('')
@@ -121,137 +127,86 @@ const AccountForm = (props) => {
             // edit data in mysql
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account_details/update`, { bank_name, account_number, ifsc_code, user_id: userDetail && userDetail.id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GetLocalStorage('token')}`
-                    }
-                });
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account`, { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name },config);
                 if (response.data.success) {
-                    setLoader(false)
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();
                         handleClose();
+                    }else{
+                        getEmployeeDetail()
                     }
-                    toast.success("Saved Successfully.")
-                } else {
-                    setLoader(false)
-                    toast.error("Something went wrong, please check your details and try again.")
+                    toast.success(response.data.message)
                 }
             } catch (error) {
-                setLoader(false);
                 console.log("🚀 ~ file: AccountForm.js:183 ~ HandleSubmit ~ error:", error)
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
+                        setError(error.response.data.error);
                     }
                 }
-            }
-        }else {
-            // add data in mysql
-            try {
-                setLoader(true)
-                        const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account_details/add`, { bank_name, branch_name, account_number, ifsc_code, user_id: userDetail && userDetail.id, name: name.charAt(0).toUpperCase() + name.slice(1) }, {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${GetLocalStorage('token')}`
-                            }
-                        });
-                        if (response.data.success) {
-                            setLoader(false);
-                            if (pathname.toLocaleLowerCase().includes('/profile')) {
-                                console.log('first')
-                                getuser();
-                                handleClose();
-                            } else {
-                                getEmployeeDetail()
-                            }
-                            toast.success("Added Successfully")
-                        } else {
-                            setLoader(false)
-                            toast.error("Something went wrong, Please check your details and try again.")
-                        }
-                    } catch (error) {
-                        console.log("🚀 ~ file: AccountForm.js:111 ~ HandleSubmit ~ error:", error)
-                        setLoader(false)
-                        if (error.response.status === 401) {
-                            getCommonApi();
-                        } else {
-                            if (error.response.data.message) {
-                                toast.error(error.response.data.message)
-                            } else {
-                                if (typeof error.response.data.error === "string") {
-                                    toast.error(error.response.data.error)
-                                } else {
-                                    setError(error.response.data.error);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            let history = useNavigate();
-            // back btn
-            const BackBtn = (e) => {
-                e.preventDefault();
-                if (pathname.toLocaleLowerCase().includes('/employees')) {
-                    history("/employees")
-                } else {
-                    handleClose();
-                }
-            }
-
-            return (
-                <>
-                    <form className="forms-sample">
-                        <div className="form-group">
-                            <label htmlFor="2" className='mt-2'>Account Number</label>
-                            <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onKeyUp={handleAccountNumberValidate} autoComplete='off' />
-                            {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="3" className='mt-2'>IFSC Code</label>
-                            <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={10} onChange={InputEvent} value={account.ifsc_code} onKeyUp={handleIfscCodeValidate} autoComplete='off' />
-                            {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="1" className='mt-2'> Bank Name</label>
-                            <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onKeyUp={handleBankNameValidate} autoComplete='off' />
-                            {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="6" className='mt-2'> Branch Name</label>
-                            <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onKeyUp={handleBranchNameValidate} autoComplete='off' />
-                            {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="3" className='mt-2'>Account Holder Name</label>
-                            <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onKeyUp={handlenameValidate} autoComplete='off' />
-                            {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
-                        </div>
-                        <ol>
-                            {error.map((elem) => {
-                                return <li className='error' key={elem}>{elem}</li>
-                            })}
-                        </ol>
-                        <div className="submit-section d-flex justify-content-between pb-3">
-                            <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
-                            <button className=" btn btn-gradient-primary" onClick={HandleSubmit}>Save</button>
-                        </div>
-                    </form>
-                    {loader && <Spinner />}
-                </>
-
-            )
+            }finally{setLoader(false)}
         }
+    }
 
-        export default AccountForm;
+    let history = useNavigate();
+    // back btn
+    const BackBtn = (e) => {
+        e.preventDefault();
+        if (pathname.toLocaleLowerCase().includes('/employees')) {
+            history("/employees")
+        } else {
+            handleClose();
+        }
+    }
+
+    return (
+        <>
+            <form className="forms-sample">
+                <div className="form-group">
+                    <label htmlFor="2" className='mt-2'>Account Number</label>
+                    <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onKeyUp={handleAccountNumberValidate} onBlur={handleAccountNumberValidate} autoComplete='off' />
+                    {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="3" className='mt-2'>IFSC Code</label>
+                    <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onKeyUp={handleIfscCodeValidate} onBlur={handleIfscCodeValidate} autoComplete='off' />
+                    {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="1" className='mt-2'> Bank Name</label>
+                    <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onKeyUp={handleBankNameValidate} onBlur={handleBankNameValidate} autoComplete='off' />
+                    {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="6" className='mt-2'> Branch Name</label>
+                    <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onKeyUp={handleBranchNameValidate} onBlur={handleBranchNameValidate} autoComplete='off' />
+                    {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
+                </div>
+                <div className="form-group">
+                    <label htmlFor="3" className='mt-2'>Account Holder Name</label>
+                    <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onKeyUp={handlenameValidate} onBlur={handlenameValidate} autoComplete='off' />
+                    {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
+                </div>
+                <ol>
+                    {error.map((elem) => {
+                        return <li className='error' key={elem}>{elem}</li>
+                    })}
+                </ol>
+                <div className="submit-section d-flex justify-content-between pb-3">
+                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                    <button className=" btn btn-gradient-primary" onClick={HandleSubmit}>Save</button>
+                </div>
+            </form>
+            {loader && <Spinner />}
+        </>
+
+    )
+}
+
+export default AccountForm;

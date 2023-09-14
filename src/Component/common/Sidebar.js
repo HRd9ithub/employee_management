@@ -6,12 +6,20 @@ import { useState } from 'react';
 import { useContext } from 'react';
 import { AppProvider } from '../context/RouteContext';
 import Spinner from './Spinner';
+import axios from 'axios';
+import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { toast } from 'react-hot-toast';
+import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import { useMemo } from 'react';
 
 const Sidebar = () => {
-  const [data, setData] = useState({})
-  let { UserData, Permission, PageData, loader, setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
-
+  const [data, setData] = useState({});
+  const [menu, setMenu] = useState([]);
+  const [loader, setLoader] = useState(false);
   const [widthTogle, setWidthToggle] = useState("")
+  let { UserData, setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
+
+  let { getCommonApi } = GlobalPageRedirect();
 
   let location = useLocation()
 
@@ -28,16 +36,49 @@ const Sidebar = () => {
       }
     }
     let data = document.getElementsByClassName('sidebar-icon-only');
-    if(data.length !== 0){
+    if (data.length !== 0) {
       setWidthToggle(false)
-    }else{
+    } else {
       setWidthToggle(true)
     }
   })
 
+  const getMenu = async () => {
+    try {
+      setLoader(true);
+      let token = GetLocalStorage("token");
+      const request = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/menu`, request);
+
+      if (res.data.success) {
+        let { data } = res.data
+        setMenu(data)
+      }
+    } catch (error) {
+      console.log(error, " <<< ==== error ");
+      if (!error.response) {
+        toast.error(error.message)
+      } else if (error.response.status === 401) {
+        getCommonApi();
+      } else if (error.response.data.message) {
+        toast.error(error.response.data.message)
+      }
+    } finally {
+      setLoader(false);
+    }
+  }
+
 
   // hover effect
   useEffect(() => {
+    if (GetLocalStorage("token")) {
+      getMenu();
+    }
     // add class 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
     const body = document.querySelector('body');
     document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
@@ -93,41 +134,6 @@ const Sidebar = () => {
     document.querySelector('.sidebar-offcanvas').classList.remove('active')
   }
 
-  const handleDropDown = (name) => {
-    let dropDwonshow = ""
-    if (name === 'employee') {
-      submenu = ['employees', 'department', 'designation', 'userrole', 'premission']
-    } else if (name === 'leave') {
-      submenu = ['holiday', 'leavetype', 'leave']
-    } else if (name === "setting") {
-      submenu = ['userrole', 'email']
-    }
-
-    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-      return true
-    }
-
-    if (UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin') {
-      // eslint-disable-next-line
-      PageData && PageData.map((elem) => {
-        Permission.filter((val) => {
-          return val.role_id === UserData.role_id
-        }).length !== 0 && Permission.filter((val) => {
-          return val.role_id === UserData.role_id
-          // eslint-disable-next-line
-        }).map((cur) => {
-          // eslint-disable-next-line
-          submenu.map((data) => {
-            if (cur.page_id === elem.id && cur.list === '1' && elem.name.toLowerCase().replace(/\s/g, '') === data) {
-              dropDwonshow = "show"
-            }
-          })
-        })
-      })
-      return dropDwonshow ? true : false
-    }
-  }
-
 
   const showSidebar = () => {
     const body = document.querySelector('body');
@@ -146,13 +152,63 @@ const Sidebar = () => {
     });
   }
 
+    // employee drop down display or not 
+    let employee = useMemo(() => {
+      let submenu = ['employees', 'department', 'designation']
+      let response = ""
+      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+        response = true
+      } else {
+        response = menu.some((val) => {
+          return submenu.includes(val.name.toLowerCase())
+        })
+      }
+      return response
+    }, [menu])
+  
+    // leave drop down display or not 
+    let leave = useMemo(() => {
+      let submenu = ['holiday', 'leavetype', 'leaves']
+      let response = ""
+      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+        response = true
+      } else {
+        response = menu.some((val) => {
+          return submenu.includes(val.name.toLowerCase())
+        })
+      }
+      return response
+    }, [menu])
+  
+    // leave drop down display or not 
+    let setting = useMemo(() => {
+      let submenu = ['user role']
+      let response = ""
+      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+        response = true
+      } else {
+        response = menu.some((val) => {
+          return submenu.includes(val.name.toLowerCase())
+        })
+      }
+      return response
+    }, [menu])
+
+
   useEffect(() => {
     const toggleSidebars = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target)) {
-        if( UserData?.role?.name.toLowerCase() === "admin" && (menuref.current && !menuref.current.contains(e.target) && settingref.current && !settingref.current.contains(e.target))){
-          setSidebarToggle(false);
-        }else{
-          setSidebarToggle(false);
+         if(UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin'){
+          menuref.current && !menuref.current.contains(e.target) &&  settingref.current && !settingref.current.contains(e.target) && setSidebarToggle(false);  
+        } else {
+          if (employee && menuref.current && !menuref.current.contains(e.target)) {
+            setSidebarToggle(false);
+          }
+          if (setting && settingref.current && !settingref.current.contains(e.target)) {
+            setSidebarToggle(false);
+          }else{
+            setSidebarToggle(false);
+          }
         }
       }
     }
@@ -161,7 +217,9 @@ const Sidebar = () => {
       document.removeEventListener("mousedown", toggleSidebars);
     };
     // eslint-disable-next-line
-  }, [sidebarRef]);
+  }, [sidebarRef,UserData]);
+
+
 
 
   return (
@@ -184,8 +242,8 @@ const Sidebar = () => {
             </NavLink>
           </li>
           {/* employee */}
-          {handleDropDown("employee") &&
-            <li ref={menuref} className={`nav-item item-hover ${(HandleACtive('employee') || location.pathname.slice("1").toLowerCase().includes("employees/view") || location.pathname.slice("1").toLowerCase().includes("employees/edit")) && 'active'}`} onMouseEnter={showSidebar} >
+          {employee &&
+            <li ref={menuref} className={`nav-item item-hover  ${(HandleACtive('employee') || location.pathname.slice("1").toLowerCase().includes("employees/view") || location.pathname.slice("1").toLowerCase().includes("employees/edit")) && 'active'}`} onMouseEnter={showSidebar} >
               <div className={data.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => toggleMenuState('basicUiMenuOpen')}>
                 <i className={`fa-solid fa-user slider-hover-icon employee-icon`} style={{
                   color: "#bba8bff5", fontSize: '15px'
@@ -195,40 +253,21 @@ const Sidebar = () => {
               </div>
               <Collapse in={data.basicUiMenuOpen}>
                 <ul className="nav flex-column sub-menu">
-                  {PageData && PageData.map((elem) => {
+                  {menu.map((elem) => {
                     return (
-                      UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                        Permission.filter((val) => {
-                          return val.role_id === UserData.role_id
-                        }).length !== 0 && Permission.filter((val) => {
-                          return val.role_id === UserData.role_id
-                        }).map((cur) => {
-                          return (
-                            cur.page_id === elem.id && cur.list === '1' && handleDropDown("employee") ?
-                              <div key={elem.id}>
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to="/employees">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/department">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/designation">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/premission">{elem.name}</NavLink></li>}
-                              </div>
-                              : ""
-                          )
-                        })
-                        :
-                        <div key={elem.id}>
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to="/employees">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/department">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/designation">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'premission' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to="/premission">{elem.name}</NavLink></li>}
-                        </div>
+                      <div key={elem._id}>
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                      </div>
                     )
                   })}
                 </ul>
               </Collapse>
             </li>}
           {/* leave */}
-          {handleDropDown("leave") &&
-            <li ref={leaveref} className={`nav-item item-hover ${HandleACtive('leave') ? 'active' : ''}`} onMouseEnter={showSidebar}>
+          {leave &&
+            <li ref={leaveref} className={`nav-item item-hover  ${HandleACtive('leave') ? 'active' : ''}`} onMouseEnter={showSidebar}>
               <div className={data.leave ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => toggleMenuState('leave')} data-toggle="collapse">
                 <i className={`fa-regular fa-calendar slider-hover-icon leave-icon `} style={{ color: "#fff", fontSize: '15px' }}></i>
                 <span className={`menu-title`}>Leave</span>
@@ -236,165 +275,44 @@ const Sidebar = () => {
               </div>
               <Collapse in={data.leave}>
                 <ul className="nav flex-column sub-menu">
-                  {PageData && PageData.map((elem) => {
+                  {menu.map((elem) => {
                     return (
-                      UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                        Permission.filter((val) => {
-                          return val.role_id === UserData.role_id
-                        }).map((cur) => {
-                          return (
-                            cur.page_id === elem.id && cur.list === '1' && handleDropDown("leave") ?
-                              <div key={elem.id}>
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'leave' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
-                              </div>
-                              : ""
-                          )
-                        }) :
-                        <div key={elem.id}>
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'leave' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
-                        </div>
+                      <div key={elem._id}>
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
+                      </div>
                     )
                   })}
                 </ul>
               </Collapse>
             </li>}
-          {/* page */}
-          {/* <li className='nav-item item-hover' onClick={() => setData({})} >
-            {PageData && PageData.map((elem) => {
-              return (
-                UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                  Permission.filter((val) => {
-                    return val.role_id === UserData.role_id
-                  }).map((cur) => {
-                    return (
-                      cur.page_id === elem.id && cur.list === '1' ?
-                        elem.name.toLowerCase().replace(/\s/g, '') === 'page' &&
-                        <NavLink key={elem.id} className="nav-link" to="/page" onClick={toggleSidebar}>
-                          <i className={`fa-solid fa-file slider-hover-icon page-icon ${window.location.pathname.toLowerCase() === '/page' && 'active'}`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                          <span className={`menu-title ${window.location.pathname.toLowerCase() === '/page' && 'active'}`}>{elem.name}</span>
-                        </NavLink>
-                        : ""
-                    )
-                  }) :
-                  elem.name.toLowerCase().replace(/\s/g, '') === 'page' &&
-                  <NavLink key={elem.id} className="nav-link" to="/page" onClick={toggleSidebar}>
-                    <i className={`fa-solid fa-file slider-hover-icon page-icon ${window.location.pathname.toLowerCase() === '/page' && 'active'}`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                    <span className={`menu-title ${window.location.pathname.toLowerCase() === '/page' && 'active'}`}>{elem.name}</span>
-                  </NavLink>
-              )
-            })}
-          </li> */}
           {/* timesheet */}
           <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/timesheet' && 'active'} `} onClick={() => setData({})} >
-            {PageData && PageData.map((elem) => {
+            {menu.map((elem) => {
               return (
-                UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                  Permission.filter((val) => {
-                    return val.role_id === UserData.role_id
-                  }).map((cur) => {
-                    return (
-                      cur.page_id === elem.id && cur.list === '1' ?
-                        elem.name.toLowerCase().replace(/\s/g, '') === 'timesheet' &&
-                        <NavLink key={elem.id} className="nav-link" to="/timesheet" onClick={toggleSidebar}>
-                          <i className={`fa-solid fa-clock slider-hover-icon timesheet-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                          <span className={`menu-title`}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
-                        </NavLink>
-                        : ""
-                    )
-                  }) :
-                  elem.name.toLowerCase().replace(/\s/g, '') === 'timesheet' &&
-                  <NavLink key={elem.id} className="nav-link" to="/timesheet" onClick={toggleSidebar}>
-                    <i className={`fa-solid fa-clock slider-hover-icon timesheet-icon  `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                    <span className={`menu-title `}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
-                  </NavLink>
-              )
+                elem.name.toLowerCase().replace(/\s/g, '') === 'timesheet' &&
+                <NavLink key={elem._id} className="nav-link" to="/timesheet" onClick={toggleSidebar}>
+                  <i className={`fa-solid fa-clock slider-hover-icon timesheet-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
+                  <span className={`menu-title`}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
+                </NavLink>)
             })}
           </li>
-          {/* timesheet */}
-          <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/timesheetreport' && 'active'}`} onClick={() => setData({})} >
-            {PageData && PageData.map((elem) => {
-              return (
-                UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                  Permission.filter((val) => {
-                    return val.role_id === UserData.role_id
-                  }).map((cur) => {
-                    return (
-                      cur.page_id === elem.id && cur.list === '1' ?
-                        elem.name.toLowerCase().replace(/\s/g, '') === 'timesheetreport' &&
-                        <NavLink key={elem.id} className="nav-link" to="/timesheetreport" onClick={toggleSidebar}>
-                          <i className={`fa-regular fa-file-lines slider-hover-icon report-icon `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                          <span className={`menu-title `}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
-                        </NavLink>
-                        : ""
-                    )
-                  }) :
-                  elem.name.toLowerCase().replace(/\s/g, '') === 'timesheetreport' &&
-                  <NavLink key={elem.id} className="nav-link" to="/timesheetreport" onClick={toggleSidebar}>
-                    <i className={`fa-regular fa-file-lines slider-hover-icon report-icon  `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                    <span className={`menu-title `}>{elem.name.slice(0, 9)} {elem.name.slice(9)}</span>
-                  </NavLink>
-              )
-            })}
-          </li>
-          {/* email */}
-          {/* <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/email' && 'active'}`} onClick={() => setData({})}>
-            {PageData && PageData.map((elem) => {
-              return (
-                UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                  Permission.filter((val) => {
-                    return val.role_id === UserData.role_id
-                  }).map((cur) => {
-                    return (
-                      cur.page_id === elem.id && cur.list === '1' ?
-                        elem.name.toLowerCase().replace(/\s/g, '') === 'email' &&
-                        <NavLink key={elem.id} className={`nav-link `} to="/Email" onClick={toggleSidebar}>
-                          <i className={`fa-solid fa-envelope-open-text slider-hover-icon email-icon `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                          <span className={`menu-title `}>{elem.name}</span>
-                        </NavLink>
-                        : ""
-                    )
-                  }) :
-                  elem.name.toLowerCase().replace(/\s/g, '') === 'email' &&
-                  <NavLink key={elem.id} className={`nav-link `} to="/Email" onClick={toggleSidebar}>
-                    <i className={`fa-solid fa-envelope-open-text slider-hover-icon email-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                    <span className={`menu-title`}>{elem.name}</span>
-                  </NavLink>
-              )
-            })}
-          </li> */}
           {/* document */}
           <li className={`nav-item item-hover  ${window.location.pathname.toLowerCase() === '/documents' && 'active'}`} onClick={() => setData({})}>
-            {PageData && PageData.map((elem) => {
+            {menu.map((elem) => {
               return (
-                UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                  Permission.filter((val) => {
-                    return val.role_id === UserData.role_id
-                  }).map((cur) => {
-                    return (
-                      cur.page_id === elem.id && cur.list === '1' ?
-                        elem.name.toLowerCase().replace(/\s/g, '') === 'documents' &&
-                        <NavLink key={elem.id} className="nav-link" to="/documents" onClick={toggleSidebar}>
-                          <i className={`fa-solid fa-book slider-hover-icon document-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                          <span className={`menu-title`}>{elem.name}</span>
-                        </NavLink>
-                        : ""
-                    )
-                  }) :
-                  elem.name.toLowerCase().replace(/\s/g, '') === 'documents' &&
-                  <NavLink key={elem.id} className="nav-link" to="/documents" onClick={toggleSidebar}>
-                    <i className={`fa-solid fa-book slider-hover-icon document-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                    <span className={`menu-title`}>{elem.name}</span>
-                  </NavLink>
+                elem.name.toLowerCase().replace(/\s/g, '') === 'document' &&
+                <NavLink key={elem._id} className="nav-link" to="/documents" onClick={toggleSidebar}>
+                  <i className={`fa-solid fa-book slider-hover-icon document-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
+                  <span className={`menu-title`}>{elem.name}</span>
+                </NavLink>
               )
             })}
           </li>
           {/* setting */}
-          {handleDropDown("setting") &&
-            <li ref={settingref} className={`nav-item item-hover ${HandleACtive('setting') && 'active'}`} onMouseEnter={showSidebar}>
+          {setting &&
+            <li ref={settingref} className={`nav-item item-hover  ${HandleACtive('setting') && 'active'}`} onMouseEnter={showSidebar}>
               <div className={data.setting ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => toggleMenuState('setting')} data-toggle="collapse">
                 <i className={`fa-solid fa-gear slider-hover-icon email-icon`} style={{
                   color: "#bba8bff5", fontSize: '15px'
@@ -404,29 +322,12 @@ const Sidebar = () => {
               </div>
               <Collapse in={data.setting}>
                 <ul className="nav flex-column sub-menu">
-                  {PageData && PageData.map((elem) => {
+                  {menu.map((elem) => {
                     return (
-                      UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' ?
-                        Permission.filter((val) => {
-                          return val.role_id === UserData.role_id
-                        }).length !== 0 && Permission.filter((val) => {
-                          return val.role_id === UserData.role_id
-                        }).map((cur) => {
-                          return (
-                            cur.page_id === elem.id && cur.list === '1' && handleDropDown("employee") ?
-                              <div key={elem.id}>
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
-                                {elem.name.toLowerCase().replace(/\s/g, '') === 'email' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/email">{elem.name}</NavLink></li>}
-                              </div>
-                              : ""
-                          )
-                        })
-                        :
-                        <div key={elem.id}>
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
-                          {elem.name.toLowerCase().replace(/\s/g, '') === 'email' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/email">{elem.name}</NavLink></li>}
-                        </div>
-                    )
+                      <div key={elem._id}>
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
+                        {/* {elem.name.toLowerCase().replace(/\s/g, '') === 'email' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/email">{elem.name}</NavLink></li>} */}
+                      </div>)
                   })}
                 </ul>
               </Collapse>

@@ -1,33 +1,33 @@
 import React, { useContext } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { AppProvider } from '../context/RouteContext';
 import moment from 'moment';
 import { useEffect } from 'react';
 import Spinner from './Spinner';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { FaAngleDown, FaAngleLeft } from "react-icons/fa";
 import { useState } from 'react';
 import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import Avatar from '@mui/material/Avatar';
 // import { Trans } from 'react-i18next';
 
 const Navbar = () => {
   let { handleLogout, loader } = Globalcomponent()
-  let { UserData, leaveNotification, getLeave, setLoading, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { UserData, leaveNotification, getLeaveNotification, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
   const [sidebar, setsidebar] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggleOffcanvas = () => {
     setSidebarToggle(!sidebarToggle)
   }
 
   let { getCommonApi } = GlobalPageRedirect();
-
-  let { pathname } = useLocation();
 
   useEffect(() => {
     // HandleButton()
@@ -40,16 +40,16 @@ const Navbar = () => {
       document.body.classList.remove('sidebar-icon-only');
       setlogoToggle(true)
     }
-// eslint-disable-next-line
+    // eslint-disable-next-line
   }, [sidebar])
 
   // get leave notification
   useEffect(() => {
-    if (GetLocalStorage("token") && UserData?.role?.name.toLowerCase() === "admin") {
-      getLeave();
+    if (GetLocalStorage("token") && UserData && UserData.role?.length !== 0 && UserData.role[0]?.name.toLowerCase() === "admin") {
+      getLeaveNotification();
     }
     // eslint-disable-next-line
-  }, [pathname])
+  }, [UserData])
 
   // page redirect
   let history = useNavigate();
@@ -64,18 +64,17 @@ const Navbar = () => {
           Authorization: `Bearer ${token}`
         }
       }
-      const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, { id: id, status: "Read" }, request)
+      const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/leave/${id}`, { status: "Read" }, request)
       if (res.data.success) {
-        getLeave();
-        history('/leave')
-      } else {
         setLoading(false)
-        toast.error("Something went wrong, Please check your details and try again.")
+        getLeaveNotification();
+        history('/leave')
       }
     } catch (error) {
       setLoading(false)
-      console.log('error', error)
-      if (error.response.status === 401) {
+      if (!error.response) {
+        toast.error(error.message)
+      } else if (error.response.status === 401) {
         getCommonApi();
       } else {
         if (error.response.data.message) {
@@ -87,11 +86,6 @@ const Navbar = () => {
 
   // view all click
   const allStatusChange = async () => {
-    let record = []
-    leaveNotification.forEach((val) => {
-      record.push({ id: val.id, status: "read" })
-    })
-
     try {
       setLoading(true)
       let token = GetLocalStorage('token');
@@ -100,24 +94,21 @@ const Navbar = () => {
           Authorization: `Bearer ${token}`
         }
       }
-      const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/allStatus`, { record: JSON.stringify(record) }, request)
+      const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
       if (res.data.success) {
-        getLeave();
+        getLeaveNotification();
         history('/leave')
-      } else {
         setLoading(false)
-        toast.error("Something went wrong, Please check your details and try again.")
       }
     } catch (error) {
       setLoading(false)
-      console.log('error', error)
-      if (error.response.status === 401) {
+      if (!error.response) {
+        toast.error(error.message)
+      } else if (error.response.status === 401) {
         getCommonApi();
       } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
-        } else {
-          toast.error(error.response.data.error)
         }
       }
     }
@@ -139,9 +130,9 @@ const Navbar = () => {
           }}></span>
         </button>
         <ul className="navbar-nav navbar-nav-right">
-          
+
           {/* notification drop drown */}
-          {(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') &&
+          {(UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') &&
             <li className="nav-item">
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link count-indicator">
@@ -169,16 +160,16 @@ const Navbar = () => {
                               return new Date(b.from_date) - new Date(a.from_date)
                             }).map((elem) => {
                               return (
-                                <div key={elem.id}>
+                                <div key={elem._id}>
                                   <Dropdown.Item className="dropdown-item preview-item" onClick={evt => {
                                     evt.preventDefault()
-                                    changeStatus(elem.id)
+                                    changeStatus(elem._id)
                                   }}>
                                     <div className="preview-thumbnail">
                                       <div className="preview-icon bg-success">
                                         {elem.user && elem.user.profile_image &&
-                                        // eslint-disable-next-line
-                                          <img src={`${process.env.REACT_APP_IMAGE_API}/storage/${elem.user.profile_image}`} alt='image' />}
+                                          // eslint-disable-next-line
+                                          <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
                                       </div>
                                     </div>
                                     <div className="preview-item-content d-flex align-items-start flex-column justify-content-center">
@@ -187,7 +178,7 @@ const Navbar = () => {
                                         <small style={{ color: '#aaaa', marginTop: '3px' }}>{moment(elem.from_date).format("DD MMM")}</small>
                                       </div>
                                       <p className="text-gray ellipsis mb-0">
-                                        {elem.leave_type.name} Request
+                                        {elem.leaveType} Request
                                       </p>
                                     </div>
                                   </Dropdown.Item>
@@ -226,7 +217,8 @@ const Navbar = () => {
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link" >
                 <div className="nav-profile-img">
-                  {UserData && <img src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/storage/${UserData.profile_image}`} alt="user" />}
+                  {/* {UserData && <img src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${UserData.profile_image}`} alt="user" />} */}
+                  {UserData && <Avatar alt={UserData.first_name} className='text-capitalize' src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${UserData.profile_image}`} sx={{ width: 30, height: 30 }} />}
                   <span className="availability-status online"></span>
                 </div>
                 <div className="nav-profile-text">
@@ -239,7 +231,7 @@ const Navbar = () => {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="navbar-dropdown">
-                <Dropdown.Item className='dropdown-item' onClick={() => history(`/profile/${UserData.id}`)}>
+                <Dropdown.Item className='dropdown-item' onClick={() => history(`/profile/${UserData._id}`)}>
                   <i className="mdi mdi-account-circle mr-2 text-primary"></i>
                   Profile
                 </Dropdown.Item>
@@ -258,7 +250,7 @@ const Navbar = () => {
       </div>
       <div className="nav-standard">
       </div>
-      {(loader) && <Spinner />}
+      {(loader || loading) && <Spinner />}
     </nav>
   );
 }

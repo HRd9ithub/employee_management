@@ -1,30 +1,31 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import Modal from "react-bootstrap/Modal";
 import { Form } from "react-bootstrap";
 import { country } from "../../../../static/County.js";
-import { toast } from "react-toastify";
-import axios from "axios";
+import { toast } from "react-hot-toast";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useContext } from "react";
 import { AppProvider } from "../../../context/RouteContext.js";
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useRef } from 'react';
 import Spinner from "../../../common/Spinner.js";
-import { defaultImage } from "../../../../static/DefaultImage.js"
 import { useLocation, useNavigate } from "react-router-dom";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
 import { MdCancel } from "react-icons/md";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
+import axios from "axios";
 
 function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuser, value }) {
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
     const [employee, setEmployee] = useState({
         first_name: "",
         last_name: "",
         email: "",
-        mobile_no: "",
+        phone: "",
         address: "",
         country: "",
         state: "",
@@ -34,30 +35,19 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         gender: "",
         blood_group: "",
         date_of_birth: "",
-        join_date: "",
+        joining_date: "",
         role_id: "",
         designation_id: "",
         department_id: "",
         status: "Active",
-        profile_image: defaultImage,
         leaveing_date: "",
         maried_status: "",
-        reporting_by: ""
+        report_by: ""
     });
-    // const hosto
-    const [image, setImage] = useState(defaultImage);
     const [userRole, setUserRole] = useState([]);
     const [Department, setDepartment] = useState([]);
     const [Designations, setDesignations] = useState([]);
-    // image crop state
-    const [crop, setCrop] = useState({
-        unit: '%',
-        width: 70,
-        height: 70
-    })
-    const [imagesrc, setimagesrc] = useState("")
-    const [images, setimages] = useState("")
-    const [secondshow, setsecondshow] = useState(false);
+
     const [loader, setLoader] = useState(false);
     const [allRecords, setallRecords] = useState([]);
     const [reportToerror, setreporttoError] = useState('');
@@ -91,7 +81,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     let history = useNavigate();
 
-    const ref = useRef(null);
     const birthDateRef = useRef(null);
     const joinDateRef = useRef(null);
     const leaveDateRef = useRef(null);
@@ -99,135 +88,87 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // get department,designation,user role
     useLayoutEffect(() => {
         const get_role = async () => {
+            setLoader(true)
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_KEY}/role/list`,
-                    request
-                );
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`,config);
                 if (res.data.success) {
                     setUserRole(res.data.data);
                 }
             } catch (error) {
                 console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        }
                     }
                 }
-            }
+            } finally { setLoader(false) }
         };
         const get_Department = async () => {
+            setLoader(true)
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_KEY}/department/list`,
-                    request
-                );
-
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department`,config);
+                
                 if (res.data.success) {
-                    let temp = res.data.data.filter((elem) => {
-                        return elem.status === "Active";
-                    });
-                    setDepartment(temp);
+                    setDepartment(res.data.data);
                 }
             } catch (error) {
                 console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        }
                     }
                 }
-            }
+            } finally { setLoader(false) }
         };
         const get_Designations = async () => {
+            setLoader(true)
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_KEY}/designation/list`,
-                    request
-                );
-
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation`,config);
+                
                 if (res.data.success) {
                     setDesignations(res.data.data);
                 }
             } catch (error) {
                 console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        }
                     }
                 }
-            }
+            } finally { setLoader(false) }
         };
         // get employee data in backend
         const getAlluser = async () => {
+            setLoader(true);
             try {
-                setLoader(true);
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/list`, request);
-
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`,{},config);
                 if (res.data.success) {
                     setallRecords(res.data.data)
                 }
             } catch (error) {
-                console.log(error, " <<< ==== error ");
-                if (error.response.status === 401) {
+                console.log(error, "esjrihewaiu");
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
-                    } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        }
                     }
                 }
-            } finally {
-                setLoader(false);
-            }
+            }finally{setLoader(false)}
         };
         if (!value) {
             getAlluser();
@@ -240,9 +181,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     useEffect(() => {
         if (userDetail) {
-            if (userDetail.profile_image) {
-                setImage(`${process.env.REACT_APP_IMAGE_API}/storage/${userDetail.profile_image}`);
-            }
             let dataFilter = Object.fromEntries(Object.entries(userDetail).filter(([_, v]) => v != null))
             setEmployee(dataFilter);
         }
@@ -277,13 +215,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (employee.profile_image) {
-            if (employee.profile_image.startsWith("uploads")) {
-                delete employee["profile_image"];
-                setEmployee({ ...employee });
-            }
-        }
-        let { first_name, last_name, email, mobile_no, leaveing_date, reporting_by, join_date, id, age, maried_status, employee_id, profile_image, role_id, confirmPassword, designation_id, password, department_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
+        let { first_name, last_name, email, phone, leaveing_date, report_by, joining_date, _id, age, maried_status, employee_id, profile_image, role_id, confirmPassword, designation_id, password, department_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
         firstNameValidation();
         lastNameValidation();
         if (!emailError) {
@@ -294,7 +226,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         designationValidation();
         roleValidation();
         handleJoinDatevalidation();
-        // reportValidation()
+        reportValidation()
 
         if (value !== "Personal") {
             cityValidate();
@@ -330,7 +262,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         }
 
         if (value !== "Profile" && value !== "Personal") {
-            if (!first_name || !last_name || !email || !mobile_no || !join_date || !role_id || !designation_id || !department_id) {
+            if (!first_name || !last_name || !email || !phone || !joining_date || !role_id || !designation_id || !department_id || !report_by) {
                 return false
             }
             if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError || departmentError) {
@@ -340,19 +272,11 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
         setLoader(true)
         try {
-            let token = GetLocalStorage("token");
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
-            };
-            const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/update`, {
+            const response = await axios.put(`${process.env.REACT_APP_API_KEY}/user/${_id}`, {
                 first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
                 last_name: last_name.charAt(0).toUpperCase() + last_name.slice(1),
                 email,
-                id,
-                mobile_no,
+                phone: phone,
                 employee_id,
                 address,
                 country,
@@ -364,19 +288,17 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 gender,
                 blood_group,
                 date_of_birth,
-                join_date,
-                password,
+                joining_date: joining_date,
                 role_id,
                 designation_id,
                 department_id,
                 status,
-                profile_image,
                 confirmPassword,
                 leaveing_date,
-                reporting_by
-            }, request);
+                report_by
+            },config);
             if (response.data.success) {
-                if (userDetail.id.toString() === GetLocalStorage('user_id')) {
+                if (userDetail._id === GetLocalStorage('user_id') && (pathname.toLocaleLowerCase().includes('/employees') || value === "Profile")) {
                     getUserData()
                 }
                 if (pathname.toLocaleLowerCase().includes('/employees')) {
@@ -388,14 +310,13 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     getuser()
                 }
                 setLoader(false)
-            } else {
-                setLoader(false)
-                toast.error("Something went wrong, Please check your details and try again.");
             }
         } catch (error) {
             console.log("error", error);
             setLoader(false)
-            if (error.response.status === 401) {
+            if (!error.response) {
+                toast.error(error.message);
+            } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
                 if (error.response.data.message) {
@@ -403,8 +324,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 } else {
                     if (typeof error.response.data.error === "object") {
                         setError(error.response.data.error)
-                    } else {
-                        toast.error(error.response.data.error)
                     }
                 }
             }
@@ -445,41 +364,39 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     // email check in database
     const checkEmail = async () => {
+        !employee.email && emailValidation();
         if (!emailError && userDetail.email !== employee.email) {
-            let token = GetLocalStorage("token");
             setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/checkemail`, { email: employee.email }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
-            }).then((response) => {
-                if (!response.data.success) {
-                    setemailError("Email Address is already exists.");
-                    setLoader(false)
-                } else {
+            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }).then((response) => {
+                if (response.data.success) {
                     setemailError("")
-                    setLoader(false)
                 }
             }).catch((error) => {
-                setLoader(false)
-                console.log('error :>> ', error.response);
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message);
+                console.log('error :>> ', error);
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    setemailError(error.response.data.error[0]);
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        setemailError(error.response.data.error);
+                    }
                 }
+            }).finally(() => {
+                setLoader(false)
             })
         }
     }
 
     // phone validation
     const phoneValidation = () => {
-        if (!employee.mobile_no) {
+        if (!employee.phone) {
             setphoneError("Please enter a mobile number.");
-        } else if (!employee.mobile_no.match(/^[0-9]+$/)) {
+        } else if (!employee.phone.toString().match(/^[0-9]+$/)) {
             setphoneError("Please enter a valid mobile number.");
-        } else if (employee.mobile_no.length !== 10) {
+        } else if (employee.phone.toString().length !== 10) {
             setphoneError("Please enter a valid mobile number.");
         } else {
             setphoneError("");
@@ -509,8 +426,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     // report to validation
     const reportValidation = () => {
-        console.log('first')
-        if (!employee.reporting_by || employee.reporting_by === "report") {
+        if (!employee.report_by || employee.report_by === "report") {
             setreporttoError("Please select report to.");
         } else {
             setreporttoError("")
@@ -536,7 +452,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     // joinig date validation
     const handleJoinDatevalidation = () => {
-        if (!employee.join_date) {
+        if (!employee.joining_date) {
             setjoningDateError("Please select joining date");
         } else {
             setjoningDateError("");
@@ -636,58 +552,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         }
     }
 
-    // image onchnage function
-    const imageChange = (e) => {
-        if (e.target.files.length !== 0) {
-            var reader = new FileReader();
-            reader.onloadend = function () {
-                setsecondshow(true)
-                setimagesrc(reader.result.toString());
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    }
-
-    // crop image submit
-    const onclick = () => {
-        const canvas = ref.current
-        const scaleX = images.naturalWidth / images.width;
-        const scaleY = images.naturalHeight / images.height;
-        canvas.width = crop.width;
-        canvas.height = crop.height;
-        const ctx = canvas.getContext("2d");
-
-        // New lines to be added
-        const pixelRatio = window.devicePixelRatio;
-        canvas.width = crop.width * pixelRatio;
-        canvas.height = crop.height * pixelRatio;
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-        ctx.imageSmoothingQuality = "high";
-
-        ctx.drawImage(
-            images,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            crop.width * scaleX,
-            crop.height * scaleY,
-            0,
-            0,
-            crop.width,
-            crop.height
-        );
-
-        // As Base64 string
-        const base64Image = canvas.toDataURL("image/jpeg");
-        if (base64Image.includes('image')) {
-            setEmployee({ ...employee, profile_image: base64Image })
-            setImage(base64Image)
-        } else {
-            setEmployee({ ...employee, profile_image: imagesrc })
-            setImage(imagesrc)
-        }
-        setsecondshow(false)
-    }
-
     // back btn
     const BackBtn = (e) => {
         e.preventDefault();
@@ -701,20 +565,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     return (
         <>
             <form className="forms-sample">
-                {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") && <>
-                    <div className="employee-id shadow rounded">
+                {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") &&
+                    <div className="employee-id shadow rounded mb-4">
                         <h5 >Employee Id : -  {employee.employee_id}</h5>
-                    </div>
-                    <div className="text-center image-standard">
-                        <div className="profile-image">
-                            <img src={image && image} alt="" />
-                        </div>
-                        <label className="profile-edit-icon">
-                            <i className="fa-solid fa-pencil"></i>
-                            <input type="file" accept="image/png, image/jpg, image/jpeg" className="d-none" onChange={imageChange} />
-                        </label>
-                    </div>
-                </>}
+                    </div>}
 
 
                 <div className="row">
@@ -722,14 +576,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputfname">First Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onKeyUp={firstNameValidation} />
+                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onKeyUp={firstNameValidation} onBlur={firstNameValidation} />
                                 <small id="emailHelp" className="form-text error">{firstNameError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onKeyUp={lastNameValidation} />
+                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onKeyUp={lastNameValidation} onBlur={lastNameValidation} />
                                 <small id="emailHelp" className="form-text error">{lastNameError}</small>
                             </div>
                         </div>
@@ -742,15 +596,15 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
-                                <label htmlFor="exampleInputmobile_no">Mobile No.</label>
-                                <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" value={employee.mobile_no || ""} onChange={InputEvent} onKeyUp={phoneValidation} />
+                                <label htmlFor="exampleInputphone">Mobile No.</label>
+                                <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onKeyUp={phoneValidation} onBlur={phoneValidation} inputMode="numeric" />
                                 <small id="emailHelp" className="form-text error">{phoneError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputAddress">Address</label>
-                                <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onKeyUp={addressValidation} />
+                                <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onKeyUp={addressValidation} onBlur={addressValidation} />
                                 <small id="emailHelp" className="form-text error">{addressError}</small>
                             </div>
                         </div>
@@ -775,7 +629,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputState">State</label>
-                                <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onKeyUp={stateValidation} />
+                                <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onKeyUp={stateValidation} onBlur={stateValidation} />
                                 <small id="emailHelp" className="form-text error">{stateError}</small>
                             </div>
                         </div>
@@ -793,6 +647,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     value={employee.city || ""}
                                     onChange={InputEvent}
                                     onKeyUp={cityValidate}
+                                    onBlur={cityValidate}
                                 />
                                 <small id="emailHelp" className="form-text error">
                                     {cityError}
@@ -802,7 +657,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputPostcode">Postcode</label>
-                                <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onKeyUp={postcodeValidation} />
+                                <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onKeyUp={postcodeValidation} onBlur={postcodeValidation} />
                                 <small id="emailHelp" className="form-text error">{postcodeError}</small>
                             </div>
                         </div>
@@ -813,7 +668,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 <label htmlFor="exampleInputDate">Date Of Birth</label>
                                 <input type="date"
                                     className="form-control"
-                                    value={employee.date_of_birth || ""}
+                                    value={employee.date_of_birth ? moment(employee.date_of_birth).format("YYYY-MM-DD") : ""}
                                     ref={birthDateRef}
                                     onChange={(e) => {
                                         handleagechange(e.target.value);
@@ -822,7 +677,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     onClick={() => { birthDateRef.current.showPicker(); handleDateOfBorthValidation(); }}
                                     max={moment(new Date()).format("YYYY-MM-DD")}
                                 />
-                                <CalendarMonthIcon className='calendar-icon' />
+                                <CalendarMonthIcon className='calendar-icon' onClick={() => { birthDateRef.current.showPicker(); handleDateOfBorthValidation(); }} />
                                 <small id="emailHelp" className="form-text error">{dateofbirthError}</small>
                             </div>
                         </div>}
@@ -834,10 +689,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 </label>
                                 <input type="date"
                                     className="form-control"
-                                    value={employee.join_date || ""}
+                                    value={employee.joining_date ? moment(employee.joining_date).format("YYYY-MM-DD") : ""}
                                     ref={joinDateRef}
                                     onChange={(e) => {
-                                        setEmployee({ ...employee, join_date: e.target.value })
+                                        setEmployee({ ...employee, joining_date: e.target.value })
                                         if (!e.target.value) {
                                             setjoningDateError("Please select joining date");
                                         } else {
@@ -875,7 +730,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputBlood">Blood Group</label>
-                                <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onKeyUp={bloodgroupValidation} />
+                                <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onKeyUp={bloodgroupValidation} onBlur={bloodgroupValidation} />
                                 <small id="emailHelp" className="form-text error">{bloodgroupError}</small>
                             </div>
                         </div>
@@ -900,7 +755,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     <option value="department">Select Department</option>
                                     {Department.map((val) => {
                                         return (
-                                            <option key={val.id} value={val.id}>
+                                            <option key={val._id} value={val._id}>
                                                 {val.name}
                                             </option>
                                         );
@@ -917,7 +772,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     <option value="designation">Select Designation </option>
                                     {Designations.map((val) => {
                                         return (
-                                            <option key={val.id} value={val.id}>
+                                            <option key={val._id} value={val._id}>
                                                 {val.name}
                                             </option>
                                         );
@@ -936,17 +791,18 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     {userRole.map((val) => {
                                         return (
                                             val.name.toLowerCase() !== "admin" &&
-                                            <option key={val.id} value={val.id}>{val.name}</option>
-                                            );
+                                            <option key={val._id} value={val._id}>{val.name}</option>
+                                        );
                                     })}
                                 </select>
                                 <small id="emailHelp" className="form-text error">{roleError}</small>
+                                {userRole.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user role.</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControlStatus">Status</label>
-                                            {/* eslint-disable-next-line eqeqeq */}
+                                {/* eslint-disable-next-line eqeqeq */}
                                 <select className="form-control" id="exampleFormControlStatus" name="status" onChange={InputEvent} disabled={userDetail.id == GetLocalStorage("user_id")}>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -956,15 +812,16 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="reportby">Report To</label>
-                                <select className="form-control" id="reportby" name="reporting_by" value={employee.reporting_by === null ? "" : employee.reporting_by} onChange={InputEvent} onClick={reportValidation}>
+                                <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={InputEvent} onClick={reportValidation}>
                                     <option value="report">Select Report To</option>
                                     {allRecords.map((val) => {
                                         return (
-                                            <option key={val.id} value={val.id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
                                         );
                                     })}
                                 </select>
                                 <small id="emailHelp" className="form-text error">{reportToerror}</small>
+                                {allRecords.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one employee.</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
@@ -974,7 +831,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 </label>
                                 <input type="date"
                                     className="form-control"
-                                    value={employee.leaveing_date || ""}
+                                    value={employee.leaveing_date ? moment(employee.leaveing_date).format("YYYY-MM-DD") : ""}
                                     ref={leaveDateRef}
                                     onChange={(e) => {
                                         setEmployee({ ...employee, leaveing_date: e.target.value })
@@ -986,7 +843,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     }}
                                     autoComplete='off'
                                     onClick={() => { leaveDateRef.current.showPicker(); handleleavingdateValidation(); }}
-                                    min={moment(employee.join_date).format("YYYY-MM-DD")}
+                                    min={moment(employee.joining_date).format("YYYY-MM-DD")}
                                 />
                                 <CalendarMonthIcon className='calendar-icon' />
                                 {employee.leaveing_date &&
@@ -1007,35 +864,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 </div>
             </form >
 
-            {/* image crop modal */}
-            < Modal show={secondshow} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal' centered >
-                <Modal.Header className='small-modal'>
-                    <Modal.Title>Crop Image
-                    </Modal.Title>
-                    <p className='close-modal' onClick={() => setsecondshow(false)}><i className="fa-solid fa-xmark"></i></p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="container-fluid p-0">
-                        < div className="row" >
-                            <div className=" col-12">
-                                <ReactCrop src={imagesrc} crop={crop} onChange={newCrop => setCrop(newCrop)} onImageLoaded={setimages} />
-                            </div>
-                            <div className="col-12 text-center">
-                                <label className="upload m-0" >
-                                    <CloudUploadIcon />  Upload Different Image <input type="file" accept="image/png,image/jpeg,image/jpg"
-                                        name="image" id="" style={{ display: "none" }} onChange={imageChange} />
-                                </label>
-                            </div>
-                            <div className="col-12 d-flex py-2 upload-btn">
-                                <button className="btn btn-gradient-primary" onClick={() => { setsecondshow(false); setImage(imagesrc); setEmployee({ ...employee, profile_image: imagesrc }) }}>Upload Original</button>
-                                <button className="btn btn-gradient-primary" onClick={onclick}>Save Cropped Image</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal >
-            <canvas ref={ref} className='d-none'></canvas>
             {loader && <Spinner />}
         </>
     );

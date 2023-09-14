@@ -19,7 +19,6 @@ import TimeSheetComponent from '../time_sheet/TimeSheetComponent';
 import Error404 from '../error_pages/Error404';
 import ForgetPassword from '../auth/ForgetPassword';
 import ResetPassword from '../auth/ResetPassword';
-import TimeSheetReport from '../time_sheet/TimeSheetReport';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
 import RedirectPage from './RedirectPage';
@@ -34,7 +33,7 @@ const AppRoute = ({HandleProgress}) => {
                 <Route exact path='/password' element={<RedirectPage Component={ForgetPassword} />}></Route>
                 <Route exact path='/set_new_password' element={<RedirectPage Component={ResetPassword} />}></Route>
                 {/* dashboard */}
-                <Route exact path='/' element={<ProtectedRoute name="Dashboard"><Dashboard /></ProtectedRoute>}></Route>
+                <Route exact path='/' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={<ProtectedRoute name="view"><EmployeeViewComponent HandleProgress={HandleProgress} /></ProtectedRoute>}></Route>
                 {/* <Route exact path='/profile' element={<ProtectedRoute name="Dashboard"><UserProfile /></ProtectedRoute>}></Route> */}
@@ -60,7 +59,7 @@ const AppRoute = ({HandleProgress}) => {
                 <Route exact path='/documents' element={<ProtectedRoute ><DocumentComponent HandleProgress={HandleProgress} /></ProtectedRoute>}></Route>
                 {/* timesheet component */}
                 <Route exact path='/timesheet' element={<ProtectedRoute ><TimeSheetComponent HandleProgress={HandleProgress} /></ProtectedRoute>}></Route>
-                <Route exact path='/timesheetreport' element={<ProtectedRoute ><TimeSheetReport HandleProgress={HandleProgress} /></ProtectedRoute>}></Route>
+                {/* <Route exact path='/timesheetreport' element={<ProtectedRoute ><TimeSheetReport HandleProgress={HandleProgress} /></ProtectedRoute>}></Route> */}
                 {/*  route not match call this route */}
                 <Route path="*" element={<ProtectedRoute ><Error404 /></ProtectedRoute>} />
             </Routes>

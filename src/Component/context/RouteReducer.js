@@ -46,12 +46,9 @@ export const RouteReducer = (state, action) => {
             // eslint-disable-next-line
             break;
         case "LEAVE_NOTIFICATION":
-            let data = action.payload.filter((elem) => {
-                return elem.status === "Pending"
-            })
             return {
                 ...state,
-                leaveNotification: data
+                leaveNotification: action.payload
             }
             // eslint-disable-next-line
             break;

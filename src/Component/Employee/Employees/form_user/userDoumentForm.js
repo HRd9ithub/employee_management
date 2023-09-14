@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
@@ -29,12 +29,7 @@ const UserDoumentForm = (props) => {
     // onchange function
     const InputEvent = (e) => {
         if (e.target.files.length !== 0) {
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-                setFile({ ...file, [e.target.name]: reader.result, [`${e.target.name}_name`]: e.target.files[0].name })
-            }
-            reader.readAsDataURL(e.target.files[0]);
+                setFile({ ...file, [e.target.name]: e.target.files[0], [`${e.target.name}_name`]: e.target.files[0].name })
         }
     }
 
@@ -44,23 +39,24 @@ const UserDoumentForm = (props) => {
     let other_temp = "";
 
     useEffect(() => {
-
-        if (userDetail.resume !== null) {
+    if(userDetail.user_document.length > 0){
+        if (userDetail.user_document[0].resume !== null) {
             // eslint-disable-next-line
-            resume_temp = userDetail.resume
+            resume_temp = userDetail.user_document[0].resume
         }
-        if (userDetail.offer_letter !== null) {
+        if (userDetail.user_document[0].offer_letter !== null) {
             // eslint-disable-next-line
-            offer_letter_temp = userDetail.offer_letter
+            offer_letter_temp = userDetail.user_document[0].offer_letter
         }
-        if (userDetail.joining_letter !== null) {
+        if (userDetail.user_document[0].joining_letter !== null) {
             // eslint-disable-next-line
-            joining_letter_temp = userDetail.joining_letter;
+            joining_letter_temp = userDetail.user_document[0].joining_letter;
         }
-        if (userDetail.other !== null) {
+        if (userDetail.user_document[0].other !== null) {
             // eslint-disable-next-line
-            other_temp = userDetail.other;
+            other_temp = userDetail.user_document[0].other;
         }
+    }
 
         setFile({
             resume: "",
@@ -84,48 +80,44 @@ const UserDoumentForm = (props) => {
             toast.error("Please select atleast one file.");
             return false;
         } else {
+            var formdata = new FormData();
+            formdata.append('resume', resume);
+            formdata.append('offer_letter', offer_letter);
+            formdata.append('joining_letter', joining_letter);
+            formdata.append('other', other);
+            formdata.append('user_id', userDetail._id);
+
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/userProfile/documents`, { resume, other, joining_letter, offer_letter, user_id: userDetail.id }, {
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user_document/`,formdata , {
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "multipart/form-data",
                         'Authorization': `Bearer ${GetLocalStorage('token')}`
                     }
                 });
                 if (response.data.success) {
-                    setLoader(false);
-                    if (other_temp || offer_letter_temp || resume_temp || joining_letter_temp) {
-                        toast.success("Saved Successfully")
-                    } else {
-                        toast.success("Added Successfully")
-                    }
+                    toast.success(response.data.message)
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();
                         handleClose();
                     } else {
                         getEmployeeDetail()
                     }
-                } else {
-                    setLoader(false)
-                    toast.error("Something went wrong, Please check your details and try again.")
                 }
             } catch (error) {
                 console.log("🚀 ~ file: AccountForm.js:111 ~ HandleSubmit ~ error:", error)
-                setLoader(false)
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message)
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     } else {
-                        if (typeof error.response.data.error === "object") {
-                            setError(error.response.data.error)
-                        } else {
-                            toast.error(error.response.data.error)
-                        }
+                        setError(error.response.data.error);
                     }
                 }
-            }
+            } finally { setLoader(false) }
         }
     }
 
@@ -148,11 +140,11 @@ const UserDoumentForm = (props) => {
                     <label>Resume File</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file ">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang">{`${file.resume_name ? file.resume_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={(!file.resume_name || file.resume)} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/storage/${file.resume_name}`} target='_VIEW'>Preview</a>
+                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.resume_name}`} target='_VIEW'>Preview</a>
                         </button>
                     </div>
                 </div>
@@ -160,11 +152,11 @@ const UserDoumentForm = (props) => {
                     <label>Offer Letter</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang2">{`${file.offer_letter_name ? file.offer_letter_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.offer_letter_name || file.offer_letter} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/storage/${file.offer_letter_name}`} target='_VIEW'>Preview</a>
+                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.offer_letter_name}`} target='_VIEW'>Preview</a>
                         </button>
                     </div>
                 </div>
@@ -173,11 +165,11 @@ const UserDoumentForm = (props) => {
                     <label>Joining Letter</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang3">{`${file.joining_letter_name ? file.joining_letter_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.joining_letter_name || file.joining_letter} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/storage/${file.joining_letter_name}`} target='_VIEW'>Preview</a>
+                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.joining_letter_name}`} target='_VIEW'>Preview</a>
                         </button>
                     </div>
                 </div>
@@ -185,11 +177,11 @@ const UserDoumentForm = (props) => {
                     <label>Other</label>
                     <div className='d-flex justify-content-between'>
                         <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,.doc, .docx,.pdf" onChange={InputEvent} />
+                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
                             <label className="custom-file-label" htmlFor="customFileLang4">{`${file.other_name ? file.other_name : 'Upload file'}`}</label>
                         </div>
                         <button disabled={!file.other_name || file.other} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/storage/${file.other_name}`} target='_VIEW'>Preview</a>
+                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.other_name}`} target='_VIEW'>Preview</a>
                         </button>
                     </div>
                 </div>

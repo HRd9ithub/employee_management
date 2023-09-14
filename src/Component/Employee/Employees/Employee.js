@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Form } from "react-bootstrap";
 import Spinner from "../../common/Spinner";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { useContext } from "react";
@@ -14,17 +13,17 @@ import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import Avatar from '@mui/material/Avatar';
 
 const Employee = ({ HandleProgress }) => {
   const [records, setRecords] = useState([]);
-  const [allRecords, setallRecords] = useState([]);
   // eslint-disable-next-line
   const [value, setvalue] = useState("");
   const [recordsFilter, setRecordsFilter] = useState([]);
   const [loader, setloader] = useState(false);
   const [toggle, setToggle] = useState(false);
-
-  let { UserData, accessData, handleVisibility, visible } = useContext(AppProvider);
+  const [permission, setPermission] = useState("")
+  let { UserData } = useContext(AppProvider);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -40,38 +39,36 @@ const Employee = ({ HandleProgress }) => {
 
   // status update function
   const handleStatus = async (row) => {
-    let { id } = row;
+    let { _id } = row;
     setloader(true);
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GetLocalStorage('token')}`
+      },
+    }
     try {
-      let token = GetLocalStorage("token");
-      const request = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/status`, { id: id }, request);
+      const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/user/${_id}`, {}, config);
 
       if (res.data.success) {
         setToggle(!toggle);
-        toast.success("Status updated successfully.");
-      } else {
-        setloader(false);
-        toast.error(res.data.message);
+        toast.success(res.data.message);
       }
     } catch (error) {
-      setloader(false);
       console.log("error", error);
-      if (error.response.status === 401) {
-        getCommonApi();
+      if (!error.response) {
+        toast.error(error.message)
       } else {
-        if (error.response.data.message) {
-          toast.error(error.response.data.message)
+        if (error.response.status === 401) {
+          getCommonApi();
         } else {
-          if (typeof error.response.data.error === "string") {
-            toast.error(error.response.data.error)
+          if (error.response.data.message) {
+            toast.error(error.response.data.message)
           }
         }
       }
+    } finally {
+      setloader(false)
     }
   };
 
@@ -96,28 +93,23 @@ const Employee = ({ HandleProgress }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         setloader(true);
-        const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/delete`, { id: id }, request);
+        const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/user/${id}`, request);
         if (res.data.success) {
           setToggle(!toggle);
-          toast.success("Employee has been successfully deleted.");
-        } else {
-          setloader(false);
-          toast.error(res.data.message);
+          toast.success(res.data.message);
         }
       }
     }).catch((error) => {
       console.log("error", error);
       setloader(false);
-      if (error.response.status === 401) {
+      if(!error.response){
+        toast.error(error.message)
+      }else if (error.response.status === 401) {
         getCommonApi();
       } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
-        } else {
-          if (typeof error.response.data.error === "string") {
-            toast.error(error.response.data.error)
-          }
-        }
+        } 
       }
     })
   };
@@ -130,8 +122,9 @@ const Employee = ({ HandleProgress }) => {
         val.employee_id?.toLowerCase().includes(data.toLowerCase()) ||
         val.first_name?.concat(" ", val.last_name).toLowerCase().includes(data.toLowerCase()) ||
         val.email.toLowerCase().includes(data.toLowerCase()) ||
-        val.mobile_no.toLowerCase().includes(data.toLowerCase()) ||
-        val.role?.name.toLowerCase().includes(data.toLowerCase())
+        val.phone.toString().includes(data.toLowerCase()) ||
+        val.role?.name.toLowerCase().includes(data.toLowerCase()) ||
+        (val.report && val.report?.first_name?.concat(" ", val.report.last_name).toLowerCase().includes(data.toLowerCase()))
       );
     });
     setRecordsFilter(filter_data);
@@ -140,22 +133,18 @@ const Employee = ({ HandleProgress }) => {
 
   // get employee data in backend
   const getAlluser = async () => {
-    HandleProgress(20);
     try {
       setloader(true);
-      let token = GetLocalStorage("token");
-      const request = {
+
+      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/user`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      HandleProgress(50);
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/list`, request);
+          Authorization: `Bearer ${GetLocalStorage('token')}`
+        }
+      });
 
-      HandleProgress(80);
       if (res.data.success) {
-        setallRecords(res.data.data)
+        setPermission(res.data.permissions)
         let data = res.data.data.filter((val) => {
           return val?.role?.name.toLowerCase() !== "admin"
         })
@@ -164,19 +153,18 @@ const Employee = ({ HandleProgress }) => {
       }
     } catch (error) {
       console.log(error, " <<< ==== error ");
-      if (error.response.status === 401) {
-        getCommonApi();
+      if (!error.response) {
+        toast.error(error.message);
       } else {
-        if (error.response.data.message) {
-          toast.error(error.response.data.message)
+        if (error.response.status === 401) {
+          getCommonApi();
         } else {
-          if (typeof error.response.data.error === "string") {
-            toast.error(error.response.data.error)
+          if (error.response.data.message) {
+            toast.error(error.response.data.message)
           }
         }
       }
     } finally {
-      HandleProgress(100);
       setloader(false);
     }
   };
@@ -222,6 +210,14 @@ const Employee = ({ HandleProgress }) => {
         return 1
       }
       return 0
+    } else if (orderBy === "report") {
+      if (b[orderBy].first_name?.concat(" ", b.last_name) < a[orderBy].first_name?.concat(" ", a.last_name)) {
+        return -1
+      }
+      if (b[orderBy].first_name?.concat(" ", b.last_name) > a[orderBy].first_name?.concat(" ", a.last_name)) {
+        return 1
+      }
+      return 0
     } else {
       if (b[orderBy] < a[orderBy]) {
         return -1
@@ -262,21 +258,21 @@ const Employee = ({ HandleProgress }) => {
                     <NavLink className="path-header">Employee</NavLink>
                     <ul id="breadcrumb" className="mb-0">
                       <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/employees" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                      <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
                     </ul>
                   </div>
                   <div className="d-flex" id="two">
                     <div className="search-full">
-                      <input type="text" class="input-search-full" name="txt" placeholder="Search"/>
-                      <i class="fas fa-search"></i>
+                      <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                      <i className="fas fa-search"></i>
                     </div>
-                    <div class="search-box mr-3">
+                    <div className="search-box mr-3">
                       <form name="search-inner">
-                        <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
                       </form>
-                      <i class="fas fa-search"></i>
+                      <i className="fas fa-search"></i>
                     </div>
-                    <AddEmployeeModal UserData={UserData.role.name} accessData={accessData.length !== 0 && accessData} getAlluser={getAlluser} allData={allRecords} />
+                    <AddEmployeeModal getAlluser={getAlluser} permission={permission} />
                   </div>
                 </div>
               </div>
@@ -307,7 +303,7 @@ const Employee = ({ HandleProgress }) => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "mobile_no"} direction={orderBy === "mobile_no" ? order : "asc"} onClick={() => handleRequestSort("mobile_no")}>
+                        <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
                           Contact No.
                         </TableSortLabel>
                       </TableCell>
@@ -317,11 +313,17 @@ const Employee = ({ HandleProgress }) => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        Status
+                        <TableSortLabel active={orderBy === "report"} direction={orderBy === "report" ? order : "asc"} onClick={() => handleRequestSort("report")}>
+                          Report To
+                        </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        Action
+                        Status
                       </TableCell>
+                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                        <TableCell>
+                          Action
+                        </TableCell>}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -329,9 +331,9 @@ const Employee = ({ HandleProgress }) => {
                       return (
                         <TableRow key={ind}>
                           <TableCell align="center">{val.employee_id}</TableCell>
-                          <TableCell>  <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} target="_blank">
+                          <TableCell>  <NavLink className='pr-3 name_col' to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.profile_image}`} target="_blank">
                             {val.profile_image &&
-                              <img className="profile-action-icon text-center" src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.profile_image}`} alt="Profile_image" />}
+                              <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.profile_image}`} sx={{ width: 30, height: 30 }} />}
                           </NavLink></TableCell>
                           <TableCell>
                             <div>
@@ -339,33 +341,42 @@ const Employee = ({ HandleProgress }) => {
                             </div>
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
-                          <TableCell>{val.mobile_no}</TableCell>
+                          <TableCell>{val.phone}</TableCell>
                           <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
+                          <TableCell>
+                            <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.report.profile_image}`} target="_blank">
+                              {val.report ? <>
+                                <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                {val?.report?.first_name.concat(" ", val.report.last_name)}
+                              </> : <HiOutlineMinus />
+                              }
+                            </NavLink>
+                          </TableCell>
                           <TableCell>
                             <Switch color="success"
                               checked={val.status === "Active" ? true : false}
                               onChange={() => handleStatus(val)}
                               disabled={
-                                (UserData && UserData.role.name.toLowerCase() !== "admin") &&
-                                (accessData.length !== 0 && accessData[0].update === "0") ||
-                                (UserData && UserData.id === val.id)
+                                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                UserData && UserData._id === val._id
                               }
                             />
                           </TableCell>
-                          <TableCell>
-                            <div className='action'>
-                              <i className="fa-solid fa-eye" onClick={() => history('/employees/view/' + val.id)}></i>
-                              {(UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin') && (accessData.length !== 0 && accessData[0].update === "0") ? "" :
-                                <i className="fa-solid fa-pen-to-square" onClick={() => history('/employees/edit/' + val.id)}></i>}
-                              {(UserData && UserData.id === val.id) || (UserData && UserData.role && UserData.role.name.toLowerCase() !== 'admin' && accessData.length !== 0 && accessData[0].delete === "0") ? "" :
-                                <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>}
-                            </div>
-                          </TableCell>
+                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                            <TableCell>
+                              <div className='action'>
+                                <i className="fa-solid fa-eye" onClick={() => history('/employees/view/' + val._id)}></i>
+                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                  <i className="fa-solid fa-pen-to-square" onClick={() => history('/employees/edit/' + val._id)}></i>}
+                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
+                                  <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                              </div>
+                            </TableCell>}
                         </TableRow>
                       )
                     }) :
                       <TableRow>
-                        <TableCell colSpan={8} align="center">
+                        <TableCell colSpan={9} align="center">
                           No Records Found
                         </TableCell>
                       </TableRow>
@@ -384,8 +395,9 @@ const Employee = ({ HandleProgress }) => {
             </div>
           </div>
         </div>
-      </motion.div>
-      {loader && <Spinner />}
+      </motion.div >
+      {loader && <Spinner />
+      }
     </>
   );
 };

@@ -1,17 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { toast } from "react-toastify";
 import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
+import { toast } from "react-hot-toast";
 
-function DesignationModal({ data, getdesignation, accessData, user, records }) {
+function DesignationModal({ data, getdesignation, permission, records }) {
   const [show, setShow] = useState(false);
   const [loader, setloader] = useState(false);
-  const [list, setList] = useState({
-    name: "",
-  });
+  const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [id, setId] = useState("");
   const [error, setError] = useState([]);
@@ -22,11 +20,8 @@ function DesignationModal({ data, getdesignation, accessData, user, records }) {
   // modal show function
   const handleShow = () => {
     if (data) {
-      setList({
-        name: data.name,
-        department_id: data.department_id,
-      });
-      setId(data.id);
+      setName(data.name);
+      setId(data._id);
     }
     setShow(true);
   };
@@ -35,162 +30,126 @@ function DesignationModal({ data, getdesignation, accessData, user, records }) {
   const handleClose = (e) => {
     e.preventDefault();
     setShow(false);
-    setList({
-      name: "",
-    });
+    setName("");
     setNameError("");
+    setId("");
   };
 
   // onchange function
   const InputEvent = (e) => {
-    let { name, value } = e.target;
+    let { value } = e.target;
 
-    if (name === "name") {
-      if (list.name < 1) {
-        value = value.toUpperCase();
-      }
-    }
-
-    setList({ ...list, [name]: value });
+    setName(value);
   };
 
   // designation name field validation function
   const handlenameValidate = () => {
-    if (!list.name) {
+    if (!name) {
       setNameError("Designation name is required.");
-    } else if (!list.name.trim() || !list.name.match(/^[A-Za-z ]+$/)) {
+    } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
       setNameError("Please enter a valid designation name.");
-    } else if (list.name.match(/^[A-Za-z ]+$/)) {
-      let temp = records.findIndex((val) => {
-        return val.name.trim().toLowerCase() === list.name.trim().toLowerCase();
-      });
-      if (temp === -1 || (data && data.name.trim().toLowerCase() === list.name.trim().toLowerCase())) {
-        setNameError("");
-      } else {
-        setNameError("The designation name already exists. ");
-      }
+    } else {
+      setNameError("");
     }
   };
 
   // submit function
   const handleSubmit = (e) => {
     e.preventDefault();
-    handlenameValidate();
-    if (!list.name) {
+    if (!nameError) {
+      handlenameValidate();
+    }
+    setError([]);
+    let url = "";
+
+    if (!name || nameError) {
       return false;
     }
-    if (!nameError) {
-      setError([]);
-      if (id) {
-        setloader(true);
-        // data edit api call
-        let { name } = list;
-        let token = GetLocalStorage("token");
-        const request = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        axios.post(`${process.env.REACT_APP_API_KEY}/designation/update`, { name: name.charAt(0).toUpperCase() + name.slice(1), id }, request).then((data) => {
-          if (data.data.success) {
-            setloader(false)
-            toast.success("Successfully edited a designation.");
-            setShow(false);
-            getdesignation();
-            setList({
-              name: "",
-            })
-            setId("")
-          } else {
-            setloader(false)
-            toast.error(data.data.message.name[0]);
-          }
-        }).catch((error) => {
-          setloader(false)
-          console.log("🚀 ~ file: DesignationModal.js:132 ~ handleSubmit ~ error:", error);
-          if (error.response.status === 401) {
-            getCommonApi();
-          } else {
-            if (error.response.data.message) {
-              toast.error(error.response.data.message)
-            } else {
-              if (typeof error.response.data.error === "string") {
-                toast.error(error.response.data.error)
-              } else {
-                setError(error.response.data.error);
-              }
-            }
-          }
-        });
-      } else {
-        setloader(true);
-        // add data api call
-        let token = GetLocalStorage("token");
-        const request = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        axios.post(`${process.env.REACT_APP_API_KEY}/designation/add`, { name: list.name.charAt(0).toUpperCase() + list.name.slice(1) }, request).then((data) => {
-          if (data.data.success) {
-            setloader(false);
-            toast.success("Successfully edited a new designation.");
-            setShow(false);
-            getdesignation();
-            setList({
-              name: "",
-            })
-          } else {
-            setloader(false);
-            toast.error(data.data.message.name[0]);
-          }
-        }).catch((error) => {
-          setloader(false);
-          console.log("🚀 ~ file: DesignationModal.js:155 ~ handleSubmit ~ error:", error);
-          if (error.response.status === 401) {
-            getCommonApi();
-          } else {
-            if (error.response.data.message) {
-              toast.error(error.response.data.message)
-            } else {
-              if (typeof error.response.data.error === "string") {
-                toast.error(error.response.data.error)
-              } else {
-                setError(error.response.data.error);
-              }
-            }
-          }
-        });
-      }
+    let config = {
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GetLocalStorage('token')}`
+      },
+  }
+    if (id) {
+      url = axios.patch(`${process.env.REACT_APP_API_KEY}/designation/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
+    } else {
+      url = axios.post(`${process.env.REACT_APP_API_KEY}/designation/`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
     }
+    setloader(true);
+
+    url.then((data) => {
+      if (data.data.success) {
+        setShow(false)
+        toast.success(data.data.message)
+        getdesignation();
+        setName("")
+        setId('');
+      }
+    }).catch((error) => {
+      console.log("🚀 ~ file: DepartmentModal.js:97 ~ getPage ~ error:", error)
+      if (!error.response) {
+        toast.error(error.message);
+      } else {
+        if (error.response.status === 401) {
+          getCommonApi();
+        } else {
+          if (error.response.data.message) {
+            toast.error(error.response.data.message)
+          } else {
+            setError(error.response.data.error);
+          }
+        }
+      }
+    }).finally(() => setloader(false));
   };
 
-  // button toggle diable or not
-  if (user.toLowerCase() !== "admin") {
-    if (accessData.length !== 0 && accessData[0].create === "1") {
-      toggleButton = false;
-    } else {
-      toggleButton = true;
+  // check designation
+  const checkDesignation = async () => {
+    !name && handlenameValidate();
+    if (name && !nameError) {
+      setloader(true)
+      let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
     }
-  } else {
-    toggleButton = false;
+      axios.post(`${process.env.REACT_APP_API_KEY}/designation/name`, { name, id },config).then((response) => {
+        console.log(response)
+        if (response.data.success) {
+          setNameError("")
+        }
+      }).catch((error) => {
+        console.log(error)
+        if (!error.response) {
+          toast.error(error.message);
+        } else {
+          if (error.response.status === 401) {
+            getCommonApi();
+          } else {
+            if (error.response.data.message) {
+              setNameError(error.response.data.message)
+            }
+          }
+        }
+      }).finally(() => setloader(false))
+    }
   }
+
 
   return (
     <>
-      {data ?<i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-        :   (user.toLowerCase() === 'admin' || (accessData.length !== 0 && accessData[0].create === "1")) &&
-          <button
-            className="btn btn-gradient-primary btn-rounded btn-fw text-center "
-            disabled={toggleButton}
-            onClick={handleShow}
-          >
-            <i className="fa-solid fa-plus"></i>&nbsp;Add
-          </button>
-        }
+      {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+        : permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+        <button
+          className="btn btn-gradient-primary btn-rounded btn-fw text-center "
+          disabled={toggleButton}
+          onClick={handleShow}
+        >
+          <i className="fa-solid fa-plus"></i>&nbsp;Add
+        </button>
+      }
       <Modal
         show={show}
         animation={true}
@@ -220,9 +179,10 @@ function DesignationModal({ data, getdesignation, accessData, user, records }) {
                       id="exampleInputfname"
                       placeholder="Enter Designation name"
                       name="name"
-                      value={list.name}
+                      value={name}
                       onChange={InputEvent}
                       onKeyUp={handlenameValidate}
+                      onBlur={checkDesignation}
                     />
                     {nameError && (<small id="emailHelp" className="form-text error">{nameError}</small>)}
                   </div>

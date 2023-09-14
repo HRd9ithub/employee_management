@@ -1,13 +1,19 @@
 import React from 'react'
 import { useState } from 'react'
 import { Globalcomponent } from '../auth_context/GlobalComponent'
-import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import Spinner from '../common/Spinner';
 import { GetLocalStorage } from '../../service/StoreLocalStorage'
+import axios from 'axios'
 
 const ChangePassword = () => {
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
     // change password state
     const [list, setList] = useState({
         password: "",
@@ -57,7 +63,7 @@ const ChangePassword = () => {
         if (!list.renewpassword) {
             setrenewpasswordError("Please enter confirm Password.");
         } else if (list.renewpassword !== list.newpassword) {
-            setrenewpasswordError("Password do not match.");
+            setrenewpasswordError("New Password and Confirm Password does not match.");
         } else {
             setrenewpasswordError("")
         }
@@ -79,31 +85,17 @@ const ChangePassword = () => {
         } else {
             setLoader(true)
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    }
-                };
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/changepassword`, { currentPassword: password, password: newpassword, password_confirmation: renewpassword }, request);
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword },config);
 
                 if (response.data.success) {
-                    toast.success("Your password has been changed successfully.");
+                    toast.success(response.data.message);
                     handleLogout();
                     setList({
                         newpassword: '',
                         renewpassword: "",
                         password: ""
                     })
-                } else {
-                    toast.error("Invalid current Password.");
-                    setList({
-                        newpassword: '',
-                        renewpassword: "",
-                        password: ""
-                    })
-                }
+                } 
             } catch (error) {
                 console.log('UserProfile change password api >>> ', error)
                 setList({
@@ -138,18 +130,18 @@ const ChangePassword = () => {
             <div className="row mb-3">
                 <div className="col-md-4 pr-md-1">
                     <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
-                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onKeyUp={handlepasswordValidate} onFocus={handlepasswordValidate} />
+                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onKeyUp={handlepasswordValidate} onBlur={handlepasswordValidate} />
                     <small className="error">{passwordError}</small>
                 </div>
 
                 <div className="col-md-4 pr-md-1 pl-md-2">
                     <label htmlFor="newPassword" className="col-form-label">New Password</label>
-                    <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onKeyUp={handlenewPasswordValidate} onFocus={handlenewPasswordValidate} />
+                    <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onKeyUp={handlenewPasswordValidate} onBlur={handlenewPasswordValidate} />
                     <small className="error">{newPasswordError}</small>
                 </div>
                 <div className="col-md-4 pl-md-2">
-                    <label htmlFor="renewPassword" className="col-form-label">Repeat New Password</label>
-                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onKeyUp={handleRepeatnewPasswordValidate} />
+                    <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
+                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onKeyUp={handleRepeatnewPasswordValidate} onBlur={handleRepeatnewPasswordValidate} />
                     <small className="error">{renewpasswordError}</small>
                 </div>
             </div>

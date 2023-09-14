@@ -2,19 +2,24 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { defaultImage } from '../../../../static/DefaultImage';
-import axios from 'axios';
 import Spinner from '../../../common/Spinner';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import { useRef } from 'react';
+import axios from 'axios';
+import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 
-const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
+const AddEmployeeModal = ({ getAlluser, permission }) => {
+    let config = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GetLocalStorage('token')}`
+        },
+    }
     // eslint-disable-next-line
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -36,15 +41,14 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
         designation_id: "",
         department_id: "",
         status: "Active",
-        profile_image: defaultImage,
         confirmPassword: "",
         employee_id: "",
         reporting_by: ""
-        // employee_id: `D9-${Math.random().toString().slice(3, 5)}`
     });
     const [loader, setLoader] = useState(false);
     const [userRole, setUserRole] = useState([]);
     const [Department, setDepartment] = useState([]);
+    const [userName, setUserName] = useState([]);
     const [Designations, setDesignations] = useState([]);
     const [firstNameError, setfirstNameError] = useState('');
     const [lastNameError, setlastNameError] = useState('');
@@ -65,99 +69,108 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
         const get_role = async () => {
             setLoader(true);
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/list`, request);
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/`,config);
                 if (res.data.success) {
                     setUserRole(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
-                    getCommonApi();
+                console.log(error, "error");
+                if (!error.response) {
+                    toast.error(error.message);
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                    if (error.response.status === 401) {
+                        getCommonApi();
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
                         }
                     }
                 }
+            } finally {
+                setLoader(false)
             }
         };
         const get_Department = async () => {
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department/list`, request);
+                setLoader(true)
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department/`,config);
 
                 if (res.data.success) {
-                    let temp = res.data.data.filter((elem) => {
-                        return elem.status === "Active";
-                    });
-                    setDepartment(temp);
+                    setDepartment(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
-                    getCommonApi();
+                console.log(error, "error");
+                if (!error.response) {
+                    toast.error(error.message);
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                    if (error.response.status === 401) {
+                        getCommonApi();
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
                         }
                     }
                 }
+            } finally {
+                setLoader(false)
             }
         };
         const get_Designations = async () => {
+            setLoader(true)
             try {
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/list`, request);
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`,config);
 
                 if (res.data.success) {
                     setDesignations(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
-                if (error.response.status === 401) {
-                    getCommonApi();
+                console.log(error, "error");
+                if (!error.response) {
+                    toast.error(error.message);
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                    if (error.response.status === 401) {
+                        getCommonApi();
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
                         }
                     }
                 }
             } finally {
-                setLoader(false);
+                setLoader(false)
+            }
+        };
+        const get_username = async () => {
+            setLoader(true)
+            try {
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`,{},config);
+
+                if (res.data.success) {
+                    console.log(res.data)
+                    setUserName(res.data.data);
+                }
+            } catch (error) {
+                console.log(error, "error");
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
+                    if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        }
+                    }
+                }
+            } finally {
+                setLoader(false)
             }
         };
         if (page) {
             get_role();
             get_Department();
             get_Designations();
+            get_username();
         }
         // eslint-disable-next-line
     }, [page]);
@@ -180,7 +193,6 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
             designation_id: "",
             department_id: "",
             status: "Active",
-            profile_image: defaultImage,
             confirmPassword: "",
             employee_id: "",
             reporting_by: ""
@@ -240,59 +252,56 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
 
     // email check in database
     const checkEmail = async () => {
+        !employee.email && emailValidation();
         if (!emailError && employee.email) {
-            let token = GetLocalStorage("token");
             setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/checkemail`, { email: employee.email }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
-            }).then((response) => {
-                if (!response.data.success) {
-                    setemailError("Email address is already exists.");
-                    setLoader(false)
-                } else {
+          
+            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email },config).then((response) => {
+                if (response.data.success) {
                     setemailError("")
-                    setLoader(false)
                 }
             }).catch((error) => {
-                setLoader(false)
-                console.log('error :>> ', error.response);
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message);
+                console.log('error :>> ', error);
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    setemailError(error.response.data.error[0]);
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        setemailError(error.response.data.error);
+                    }
                 }
+            }).finally(() => {
+                setLoader(false)
             })
         }
     }
 
     // employee id  check in database
     const checkEmployeeId = async () => {
+        !employee.employee_id && employeeIdValidation();
         if (!EmployeeIdError && employee.employee_id) {
-            let token = GetLocalStorage("token");
             setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/checkEmployeeId`, { id: employee.employee_id }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                }
-            }).then((response) => {
-                if (!response.data.success) {
-                    setEmployeeIdError("Employee id is already exists.");
-                    setLoader(false)
-                } else {
+            axios.post(`${process.env.REACT_APP_API_KEY}/user/employeeId`, { employee_id: employee.employee_id },config).then((response) => {
+                if (response.data.success) {
                     setEmployeeIdError("")
-                    setLoader(false)
                 }
             }).catch((error) => {
                 console.log('error :>> ', error.response);
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message);
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    setEmployeeIdError(error.response.data.error[0]);
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        setEmployeeIdError(error.response.data.error);
+                    }
                 }
+            }).finally(() => {
                 setLoader(false)
             })
         }
@@ -420,35 +429,27 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
             return false;
         } else {
             try {
-                setLoader(true)
-                let token = GetLocalStorage("token");
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
+                setLoader(true);
 
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/add`, {
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/`, {
                     first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
                     last_name: last_name.charAt(0).toUpperCase() + last_name.slice(1),
                     email,
-                    mobile_no,
-                    join_date,
+                    phone: mobile_no,
+                    joining_date: join_date,
                     password,
                     role_id,
                     designation_id,
                     department_id,
                     status,
-                    profile_image,
                     confirmPassword,
                     employee_id,
-                    reporting_by
-                }, request);
+                    report_by: reporting_by
+                },config);
 
                 if (response.data.success) {
                     setModalShow(false)
-                    toast.success("Successfully Added.");
+                    toast.success(response.data.message);
                     setEmployee({
                         first_name: "",
                         last_name: "",
@@ -460,33 +461,28 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                         designation_id: "",
                         department_id: "",
                         status: "Active",
-                        profile_image: defaultImage,
                         confirmPassword: "",
                         employee_id: "",
                         reporting_by: ""
                     });
                     history('/Employees');
                     getAlluser();
-                } else {
-                    toast.error("Something went wrong, Please check your details and try again.");
                 }
-                setLoader(false)
             } catch (error) {
-                setLoader(false)
                 console.log('error', error)
-                if (error.response.status === 401) {
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
                     getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     } else {
-                        if (typeof error.response.data.error === "string") {
-                            toast.error(error.response.data.error)
-                        } else {
-                            setError(error.response.data.error);
-                        }
+                        setError(error.response.data.error);
                     }
                 }
+            } finally {
+                setLoader(false);
             }
         }
     }
@@ -495,13 +491,13 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
 
     return (
         <>
-        {(UserData.toLowerCase() === "admin" || accessData.length !== 0 && accessData[0].create === "1") &&
-            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
-                setPage(true)
-                setModalShow(true)
-            }} >
-                <i className="fa-solid fa-plus"></i>&nbsp;Add
-            </button>}
+            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+                <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
+                    setPage(true)
+                    setModalShow(true)
+                }} >
+                    <i className="fa-solid fa-plus"></i>&nbsp;Add
+                </button>}
             <Modal
                 show={modalShow}
                 onHide={onHideModal}
@@ -525,42 +521,42 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputfname">First Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onKeyUp={firstNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onKeyUp={firstNameValidation} onBlur={firstNameValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{firstNameError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onKeyUp={lastNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onKeyUp={lastNameValidation} onBlur={lastNameValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{lastNameError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputEmail1">Email Address</label>
-                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" onChange={handleChange} value={employee.email} onKeyUp={emailValidation} onBlur={checkEmail} autoComplete='off' />
+                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" onChange={handleChange} value={employee.email} onBlur={checkEmail}  onKeyUp={emailValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{emailError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputmobile_no">Mobile No.</label>
-                                                <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" onChange={handleChange} value={employee.mobile_no} onKeyUp={phoneValidation} autoComplete='off' inputMode='numeric' />
+                                                <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" onChange={handleChange} value={employee.mobile_no} onKeyUp={phoneValidation} onBlur={phoneValidation} autoComplete='off' inputMode='numeric' />
                                                 <small id="emailHelp" className="form-text error">{phoneError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="password">Password</label>
-                                                <input type="password" className="form-control" id="password" placeholder="Enter password" name="password" autocompleted="password" value={employee.password} onChange={handleChange} onKeyUp={passwordValidation} autoComplete='off' onFocus={passwordValidation} />
+                                                <input type="password" className="form-control" id="password" placeholder="Enter password" name="password" autocompleted="password" value={employee.password} onChange={handleChange} onKeyUp={passwordValidation} autoComplete='off' onBlur={passwordValidation} />
                                                 <small id="emailHelp" className="form-text error">{passwordError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="cpassword">Confirm Password</label>
-                                                <input type="password" className="form-control" id="cpassword" placeholder="Enter confirm password" name="confirmPassword" autocompleted="confirmPassword" value={employee.confirmPassword} onChange={handleChange} onKeyUp={confirmPasswordValidation} autoComplete='off' />
+                                                <input type="password" className="form-control" id="cpassword" placeholder="Enter confirm password" name="confirmPassword" autocompleted="confirmPassword" value={employee.confirmPassword} onChange={handleChange} onKeyUp={confirmPasswordValidation} onBlur={confirmPasswordValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{confirmPasswordError}</small>
                                             </div>
                                         </div>
@@ -590,6 +586,7 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                                     }}
                                                     autoComplete='off'
                                                     onClick={() => { DateRef.current.showPicker(); handleJoinDatevalidation(); }}
+                                                    onBlur={() => handleJoinDatevalidation()}
                                                 />
                                                 <CalendarMonthIcon className='calendar-icon' />
                                                 <small id="emailHelp" className="form-text error">{joningDateError}</small>
@@ -602,7 +599,7 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                                     <option value="department">Select Department</option>
                                                     {Department.map((val) => {
                                                         return (
-                                                            <option key={val.id} value={val.id}>
+                                                            <option key={val._id} value={val._id}>
                                                                 {val.name}
                                                             </option>
                                                         );
@@ -619,7 +616,7 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                                     <option value="designation">Select Designation </option>
                                                     {Designations.map((val) => {
                                                         return (
-                                                            <option key={val.id} value={val.id}>
+                                                            <option key={val._id} value={val._id}>
                                                                 {val.name}
                                                             </option>
                                                         );
@@ -637,11 +634,12 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                                     {userRole.map((val) => {
                                                         return (
                                                             val.name.toLowerCase() !== "admin" &&
-                                                            <option key={val.id} value={val.id}>{val.name}</option>
+                                                            <option key={val._id} value={val._id}>{val.name}</option>
                                                         );
                                                     })}
                                                 </select>
                                                 <small id="emailHelp" className="form-text error">{roleError}</small>
+                                                {userRole.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user role.</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -658,13 +656,14 @@ const AddEmployeeModal = ({ UserData, accessData, getAlluser, allData }) => {
                                                 <label htmlFor="frer">Report To</label>
                                                 <select className="form-control" id="frer" name="reporting_by" value={employee.reporting_by || ""} onChange={handleChange} onClick={reportValidation}>
                                                     <option value="report">Select Report To</option>
-                                                    {allData.map((val) => {
+                                                    {userName.map((val) => {
                                                         return (
-                                                            <option key={val.id} value={val.id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
                                                         );
                                                     })}
                                                 </select>
-                                                {/* <small id="emailHelp" className="form-text error">{reportToerror}</small> */}
+                                                <small id="emailHelp" className="form-text error">{reportToerror}</small>
+                                                {userName.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one employee.</small>}
                                             </Form.Group>
                                         </div>
                                     </div>

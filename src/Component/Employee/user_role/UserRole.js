@@ -1,21 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../../common/Spinner";
-import { toast } from "react-toastify";
-import { Form } from "react-bootstrap";
+import { toast } from "react-hot-toast";
 import UserRoleModal from "./UserRoleModal";
 import { motion } from "framer-motion";
-import { AppProvider } from "../../context/RouteContext";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 
-const UserRole = ({ HandleProgress }) => {
+const UserRole = () => {
   const [loader, setloader] = useState(false);
   const [records, setRecords] = useState([]);
   const [recordsFilter, setRecordsFilter] = useState([]);
-  let { UserData, accessData} = useContext(AppProvider);
+  const [permission,setPermission] = useState("")
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -27,58 +25,8 @@ const UserRole = ({ HandleProgress }) => {
 
   let { getCommonApi } = GlobalPageRedirect();
 
-  // delete function
-  // const handleDelete = (id) => {
-  //   let token = GetLocalStorage("token");
-  //   // header define
-  //   const request = {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   };
-
-  //   Swal.fire({
-  //     title: "Delete User role",
-  //     text: "Are you sure want to delete?",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#1bcfb4",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, delete it!",
-  //     cancelButtonText: "No, cancel!",
-  //     width: "450px",
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       setloader(true);
-  //       const res = await axios.post(`${process.env.REACT_APP_API_KEY}/role/delete`, { id: id }, request);
-  //       if (res.data.success) {
-  //         setToggle(!toggle);
-  //         toast.success("User role successfully deleted.");
-  //       } else {
-  //         setloader(false);
-  //         toast.error(res.data.message);
-  //       }
-  //     }
-  //   }).catch((error) => {
-  //     setloader(false);
-  //     console.log("error", error);
-  //     if (error.response.status === 401) {
-  //       getCommonApi();
-  //     } else {
-  //       if (error.response.data.message) {
-  //         toast.error(error.response.data.message)
-  //       } else {
-  //         if (typeof error.response.data.error === "string") {
-  //           toast.error(error.response.data.error)
-  //         }
-  //       }
-  //     }
-  //   })
-  // };
-
   // get user role data
   const getuserRole = async () => {
-    HandleProgress(20);
     try {
       setloader(true);
       let token = GetLocalStorage("token");
@@ -88,31 +36,29 @@ const UserRole = ({ HandleProgress }) => {
           Authorization: `Bearer ${token}`,
         },
       };
-      HandleProgress(50);
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/list`, request);
-      HandleProgress(70);
+      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`, request);
       if (res.data.success) {
         let data = res.data.data.filter((val) => {
           return val.name.toLowerCase() !== "admin"
         })
+        setPermission(res.data.permissions)
         setRecords(data);
         setRecordsFilter(data);
       }
     } catch (error) {
-      console.log(error, "esjrihewaiu");
-      if (error.response.status === 401) {
-        getCommonApi();
+      console.log(error, "error");
+      if (!error.response) {
+        toast.error(error.message)
       } else {
-        if (error.response.data.message) {
-          toast.error(error.response.data.message)
+        if (error.response.status === 401) {
+          getCommonApi();
         } else {
-          if (typeof error.response.data.error === "string") {
-            toast.error(error.response.data.error)
-          }
+          if (error.response.data.message) {
+            toast.error(error.response.data.message)
+          } 
         }
       }
     } finally {
-      HandleProgress(100);
       setloader(false);
     }
   };
@@ -126,11 +72,10 @@ const UserRole = ({ HandleProgress }) => {
   const HandleFilter = (event) => {
     let data = event.target.value;
     let filter_data = records.filter((val) => {
-      return val.name.toLowerCase().includes(data.toLowerCase()) ||    val.id.toString().includes(data.toLowerCase())
+      return val.name.toLowerCase().includes(data.toLowerCase()) 
     });
     setRecordsFilter(filter_data);
   };
-
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -194,81 +139,76 @@ const UserRole = ({ HandleProgress }) => {
                     <NavLink className="path-header">User Role</NavLink>
                     <ul id="breadcrumb" className="mb-0">
                       <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/userRole" className="ibeaker"><i class="fa-solid fa-play"></i> &nbsp; User Role</NavLink></li>
+                      <li><NavLink to="/userRole" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; User Role</NavLink></li>
                     </ul>
                   </div>
                   <div className="d-flex" id="two">
                     <div className="search-full">
-                      <input type="text" class="input-search-full" name="txt" placeholder="Search"/>
-                      <i class="fas fa-search"></i>
+                      <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                      <i className="fas fa-search"></i>
                     </div>
-                    <div class="search-box mr-3">
+                    <div className="search-box mr-3">
                       <form name="search-inner">
-                        <input type="text" class="input-search" name="txt" onmouseout="this.value = ''; this.blur();" />
+                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
                       </form>
-                      <i class="fas fa-search"></i>
+                      <i className="fas fa-search"></i>
                     </div>
-                    <UserRoleModal getuserRole={getuserRole} user={UserData && UserData.role.name} accessData={accessData} records={records}/>
+                    <UserRoleModal getuserRole={getuserRole} permission={permission && permission} />
                   </div>
                 </div>
               </div>
             </div>
 
-                  
-           {/* Table *********************** */}
-           <div>
-            <TableContainer >
-              <Table className="common-table-section">
-                <TableHead className="common-header">
-                  <TableRow>
-                    <TableCell>
-                      <TableSortLabel active={orderBy === "id"} direction={orderBy === "id" ? order : "asc"} onClick={() => handleRequestSort("id")}>
-                        Id
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>
-                      <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                        User Role
-                      </TableSortLabel>
-                    </TableCell>
-                    {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].update !== "0")) && 
-                    <TableCell>
-                      Action
-                    </TableCell>}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                    return (
-                      <TableRow key={ind}>
-                        <TableCell>{val.id}</TableCell>
-                        <TableCell>{val.name}</TableCell>
-                        {((UserData && UserData.role.name.toLowerCase() === "admin") || (accessData.length !== 0 && accessData[0].update !== "0")) &&
-                        <TableCell>
-                          <div className='action'>
-                            <UserRoleModal
+
+            {/* Table *********************** */}
+            <div>
+              <TableContainer >
+                <Table className="common-table-section">
+                  <TableHead className="common-header">
+                    <TableRow>
+                      <TableCell>
+                          Id
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                          User Role
+                        </TableSortLabel>
+                      </TableCell>
+                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                      <TableCell>
+                        Action
+                      </TableCell>}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                      return (
+                        <TableRow key={ind}>
+                          <TableCell>{ind + 1}</TableCell>
+                          <TableCell>{val.name}</TableCell>
+                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                          <TableCell>
+                            <div className='action'>
+                              <UserRoleModal
                                 data={val}
                                 getuserRole={getuserRole}
-                                user={UserData && UserData.role.name}
-                                accessData={accessData}
-                                records={records}
                               />
-                            {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
-                          </div>
-                        </TableCell>}
+                              {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
+                            </div>
+                          </TableCell>}
+                        </TableRow>
+                      )
+                    }) :
+                      <TableRow>
+                        <TableCell colSpan={3} align="center">
+                          No Records Found
+                        </TableCell>
                       </TableRow>
-                    )
-                  }) :
-                    <TableRow>
-                      <TableCell colSpan={3} align="center">
-                        No Records Found
-                      </TableCell>
-                    </TableRow>
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                 component="div"
                 onPageChange={onChangePage}
                 onRowsPerPageChange={onChangeRowsPerPage}
@@ -276,8 +216,8 @@ const UserRole = ({ HandleProgress }) => {
                 count={recordsFilter.length}
                 page={page}>
               </TablePagination>
-        </div>
-        </div>
+            </div>
+          </div>
 
         </div>
       </motion.div>
