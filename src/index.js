@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { RouteContext } from './Component/context/RouteContext';
-import { ToastContainer, Zoom } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,19 +20,6 @@ root.render(
         <App />
       </motion.div>
     </RouteContext>
-    {/* <ToastContainer
-        position="top-right"
-        autoClose={3500}
-        hideProgressBar={true}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        theme="colored"
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Zoom}
-      /> */}
     <Toaster
       position="top-right"
       reverseOrder={false}

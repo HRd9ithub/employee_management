@@ -7,7 +7,7 @@ import 'react-calendar/dist/Calendar.css';
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from './auth_context/GlobalPageRedirect';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
@@ -30,6 +30,7 @@ const Dashboard = () => {
      const [holidayfilter, setHolidayfilter] = useState([])
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
+     const [reportBy, setreportBy] = useState([])
 
      let { getCommonApi } = GlobalPageRedirect();
 
@@ -61,12 +62,12 @@ const Dashboard = () => {
                          settotalEmployee(totalEmployee)
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
-                         setHolidayfilter(holidayDay)
                          setBirthDay(birthDay);
+                         setHolidayfilter(holidayDay)
                          setleaveRequest(leaveRequest)
+                         setreportBy(reportBy)
                     }
                } catch (error) {
-                    console.log(error, " <<< ==== error ");
                     if (!error.response) {
                          toast.error(error.message)
                     } else if (error.response.status === 401) {
@@ -85,8 +86,22 @@ const Dashboard = () => {
      }, [])
 
      useEffect(() => {
+          // datefilter(new Date());
+          const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
+          const endOfMonth = moment().endOf('month').format('YYYY-MM-DD');
+          const startOfDate = moment().startOf('month').format('DD-MM');
+          const endOfDate = moment().endOf('month').format('DD-MM');
           if (holidayfilter.length !== 0) {
-               datefilter(new Date());
+               let data = holidayfilter.filter((val) => {
+                    return val.date >= startOfMonth &&  val.date <= endOfMonth
+               })
+               setHoliday(data)
+          }
+          if(birthDay.length !== 0){
+               let birth = birthDay.filter((val) => {
+                    return moment(val.date_of_birth).format("DD-MM") >= startOfDate && moment(val.date_of_birth).format("DD-MM") <= endOfDate
+               })
+               setBirthDayFilter(birth)
           }
           // eslint-disable-next-line
      }, [holidayfilter])
@@ -96,7 +111,7 @@ const Dashboard = () => {
                return val.date === moment(date).format("YYYY-MM-DD")
           })
           let birth = birthDay.filter((val) => {
-               return val.date === moment(date).format("YYYY-MM-DD")
+               return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM")
           })
           setHoliday(data)
           setBirthDayFilter(birth)
@@ -112,7 +127,6 @@ const Dashboard = () => {
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
                               </div>
-                              {/* {console.log(UserData.role.length)} */}
                               {UserData && UserData?.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && <>
                                    <div className="row mt-3">
                                         <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && navigate("/employees")}>
@@ -159,6 +173,21 @@ const Dashboard = () => {
                                    </div>
                               </>}
 
+                              {UserData && UserData?.role.length !== 0 && UserData.role[0].name.toLowerCase() !== "admin" &&
+                                   reportBy.length !== 0 &&
+                                   <div className={`mb-2 position-relative box-dashboard col-md-4`} >
+                                        <div className="common-box-dashboard total-employee nav-link">
+                                             <h4 className="mt-2">Report By</h4>
+                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                             <ol className="common-info-dashboard d-flex flex-column">
+                                                  {reportBy.map((val) => {
+                                                       return <li key={val._id} style={{ fontSize: "15px" }}>{val.first_name?.concat(" ", val.last_name)}</li>
+                                                  })}
+                                             </ol>
+                                        </div>
+                                   </div>
+                              }
+
                               <div className='row'>
                                    <div className='col-md-5 mt-3 box-dashboard'>
                                         <div className="dashboard-custom-date-picker shadow">
@@ -182,10 +211,10 @@ const Dashboard = () => {
 
                                                        <ul>
                                                             {holiday.map((val) => {
-                                                                 return <li key={val._id}>{val.name}</li>
+                                                                 return <li key={val._id} className='my-2'>{val.name}</li>
                                                             })}
                                                             {birthDayFilter.map((val) => {
-                                                                 return <li key={val._id}>{val.name}</li>
+                                                                 return <li key={val._id} className='my-2'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</li>
                                                             })}
                                                        </ul>
                                                        {holiday.length === 0 && birthDayFilter.length === 0 &&
@@ -203,9 +232,8 @@ const Dashboard = () => {
                                                             {todayLeave?.map((val) => {
                                                                  return (
                                                                       <div className="text-capitalize d-flex align-items-center" key={val._id}>
-                                                                           <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} target="_blank">
-                                                                                {/* <img className="profile-action-icon text-center" src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/storage/${val.user?.profile_image}`} alt="Profile_image" /> */}
-                                                                                <Avatar alt={val.user?.first_name} src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user?.profile_image}`} sx={{ width: 34, height: 34 }} />
+                                                                           <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/${val.user?.profile_image}`} target="_blank">
+                                                                                <Avatar alt={val.user?.first_name} src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user?.profile_image}`} sx={{ width: 34, height: 34 }} />
                                                                            </NavLink>
                                                                            {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus />}
                                                                       </div>

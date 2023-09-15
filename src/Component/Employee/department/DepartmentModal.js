@@ -88,7 +88,6 @@ function DepartmentModal({ data, getuser, permission, records }) {
                             setId('');
                         }
                     }).catch((error) => {
-                        console.log("🚀 ~ file: DepartmentModal.js:97 ~ getPage ~ error:", error)
                         setloader(false);
                         if (!error.response) {
                             toast.error(error.message);
@@ -123,7 +122,6 @@ function DepartmentModal({ data, getuser, permission, records }) {
                     seterror("")
                 }
             }).catch((error) => {
-                console.log(error)
                 if (!error.response) {
                     toast.error(error.message);
                 } else {

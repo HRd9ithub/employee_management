@@ -11,6 +11,9 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import { GetLocalStorage } from '../../service/StoreLocalStorage'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
+import Error403 from '../error_pages/Error403'
+import { AppProvider } from '../context/RouteContext'
+import { useContext } from 'react'
 
 const Leave = () => {
     const [show, setShow] = useState(false);
@@ -19,10 +22,12 @@ const Leave = () => {
     const [permission, setpermission] = useState("");
     const [leaveRecord, setleaveRecord] = useState([]);
     const [leaveRecordFilter, setleaveRecordFilter] = useState([]);
-    const [Loading, setLoading] = useState(false);
+    const [Loading, setLoading] = useState(true);
     const [subLoading, setsubLoading] = useState(false);
 
     let { getCommonApi } = GlobalPageRedirect();
+
+    let { getLeaveNotification } = useContext(AppProvider)
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -48,6 +53,7 @@ const Leave = () => {
                 setleaveRecordFilter(res.data.data)
                 setleaveRecord(res.data.data)
                 setpermission(res.data.permissions)
+                getLeaveNotification()
             }
         } catch (error) {
             if (!error.response) {
@@ -198,16 +204,15 @@ const Leave = () => {
                     let data = leaveRecordFilter.find((val) => {
                         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
                     })
-                    if(data){
+                    if (data) {
                         return true
-                    }else{
+                    } else {
                         return false
                     }
                 } else {
                     let data = leaveRecordFilter.find((val) => {
                         return val.status === "Pending" || val.status === "Read"
                     })
-                    console.log(data)
                     if (data) {
                         return true
                     }
@@ -219,187 +224,191 @@ const Leave = () => {
         // eslint-disable-next-line
     }, [leaveRecordFilter]);
 
-    console.log(actionToggle, "actionToggle")
 
     return (
         <>
-            <motion.div
-                className="box"
-                initial={{ opacity: 0, transform: 'translateY(-20px)' }}
-                animate={{ opacity: 1, transform: 'translateY(0px)' }}
-                transition={{ duration: 0.5 }}
-            >
-                <div className=" container-fluid pt-4">
-                    <div className="background-wrapper bg-white pt-2">
-                        <div className=''>
-                            <div className='row justify-content-end align-items-center row-std m-0'>
-                                <div className="col-12 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <NavLink className="path-header">Leave</NavLink>
-                                        <ul id="breadcrumb" className="mb-0">
-                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
-                                        </ul>
-                                    </div>
-                                    <div className="d-flex" id="two">
-                                        <div className="search-full">
-                                            <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
-                                            <i className="fas fa-search"></i>
+            {!Loading ?
+                <motion.div
+                    className="box"
+                    initial={{ opacity: 0, transform: 'translateY(-20px)' }}
+                    animate={{ opacity: 1, transform: 'translateY(0px)' }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {(permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1))) ?
+                        <div className=" container-fluid pt-4">
+                            <div className="background-wrapper bg-white pt-2">
+                                <div className=''>
+                                    <div className='row justify-content-end align-items-center row-std m-0'>
+                                        <div className="col-12 d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <NavLink className="path-header">Leave</NavLink>
+                                                <ul id="breadcrumb" className="mb-0">
+                                                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                                    <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
+                                                </ul>
+                                            </div>
+                                            <div className="d-flex" id="two">
+                                                <div className="search-full">
+                                                    <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                                    <i className="fas fa-search"></i>
+                                                </div>
+                                                <div className="search-box mr-3">
+                                                    <form name="search-inner">
+                                                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                                    </form>
+                                                    <i className="fas fa-search"></i>
+                                                </div>
+                                                <LeaveModal getLeave={getLeave} permission={permission} />
+                                            </div>
                                         </div>
-                                        <div className="search-box mr-3">
-                                            <form name="search-inner">
-                                                <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
-                                            </form>
-                                            <i className="fas fa-search"></i>
-                                        </div>
-                                        <LeaveModal getLeave={getLeave} permission={permission} />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* table */}
-                        <div>
-                            <TableContainer >
-                                <Table className="common-table-section">
-                                    <TableHead className="common-header">
-                                        <TableRow>
-                                            <TableCell>
-                                                Id
-                                            </TableCell>
-                                            <TableCell>
-                                                Profile
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                    Employee
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "leaveType"} direction={orderBy === "leaveType" ? order : "asc"} onClick={() => handleRequestSort("leaveType")}>
-                                                    Leave Type
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "from_date"} direction={orderBy === "from_date" ? order : "asc"} onClick={() => handleRequestSort("from_date")}>
-                                                    from
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "to_date"} direction={orderBy === "to_date" ? order : "asc"} onClick={() => handleRequestSort("to_date")}>
-                                                    To
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "duration"} direction={orderBy === "duration" ? order : "asc"} onClick={() => handleRequestSort("duration")}>
-                                                    Duration
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "leave_for"} direction={orderBy === "leave_for" ? order : "asc"} onClick={() => handleRequestSort("leave_for")}>
-                                                    Leave For
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
-                                                    Reason
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                Status
-                                            </TableCell>
-                                            {actionToggle &&
-                                                <TableCell>
-                                                    Action
-                                                </TableCell>}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                            return (
-                                                <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
-                                                    <TableCell>{val.user &&
-                                                        <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} target="_blank">
-                                                            <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                        </NavLink>}</TableCell>
+                                {/* table */}
+                                <div>
+                                    <TableContainer >
+                                        <Table className="common-table-section">
+                                            <TableHead className="common-header">
+                                                <TableRow>
                                                     <TableCell>
-                                                        {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
+                                                        Id
                                                     </TableCell>
-                                                    <TableCell>{val.leaveType ? val.leaveType : <HiOutlineMinus />}</TableCell>
-                                                    <TableCell>{val.from_date}</TableCell>
-                                                    <TableCell>{val.to_date}</TableCell>
-                                                    <TableCell>{val.duration}</TableCell>
-                                                    <TableCell>{val.leave_for}</TableCell>
-                                                    <TableCell>{val.reason}</TableCell>
+                                                    {(permission && permission.name?.toLowerCase() === "admin") && <>
+                                                        <TableCell>
+                                                            Profile
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                                Employee
+                                                            </TableSortLabel>
+                                                        </TableCell>
+                                                    </>}
                                                     <TableCell>
-                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
+                                                        <TableSortLabel active={orderBy === "leaveType"} direction={orderBy === "leaveType" ? order : "asc"} onClick={() => handleRequestSort("leaveType")}>
+                                                            Leave Type
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "from_date"} direction={orderBy === "from_date" ? order : "asc"} onClick={() => handleRequestSort("from_date")}>
+                                                            from
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "to_date"} direction={orderBy === "to_date" ? order : "asc"} onClick={() => handleRequestSort("to_date")}>
+                                                            To
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "duration"} direction={orderBy === "duration" ? order : "asc"} onClick={() => handleRequestSort("duration")}>
+                                                            Duration
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "leave_for"} direction={orderBy === "leave_for" ? order : "asc"} onClick={() => handleRequestSort("leave_for")}>
+                                                            Leave For
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
+                                                            Reason
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        Status
                                                     </TableCell>
                                                     {actionToggle &&
                                                         <TableCell>
-                                                            <div className='action'>
-                                                                {/* eslint-disable-next-line no-mixed-operators */}
-                                                                {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
-                                                                !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
-                                                                <LeaveModal data={val} getLeave={getLeave} permission={permission} />}
-                                                            </div>
+                                                            Action
                                                         </TableCell>}
                                                 </TableRow>
-                                            )
-                                        }) :
-                                            <TableRow>
-                                                <TableCell colSpan={11} align="center">
-                                                    No Records Found
-                                                </TableCell>
-                                            </TableRow>
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
-                                count={leaveRecordFilter.length}
-                                page={page}>
-                            </TablePagination>
-                        </div>
-                    </div >
-                </div >
-                {/* status changes modal * */}
-                <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
-                    <Modal.Header className='small-modal'>
-                        <Modal.Title>Status Change</Modal.Title>
-                        <p className='close-modal' onClick={handleshideModal}><i className="fa-solid fa-xmark"></i></p>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className=" grid-margin stretch-card mb-lg-0">
-                            <div className="card">
-                                <div className="card-body">
-                                    <form className="forms-sample">
-                                        <div className="form-group">
-                                            <label htmlFor="status" className='mt-3'>Status</label>
-                                            <select className="form-control " id="status" name='status' value={status} onChange={(e) => setstatus(e.target.value)} >
-                                                <option value="Pending"> Pending</option>
-                                                <option value="Read">Read</option>
-                                                <option value="Approved"> Approved</option>
-                                                <option value="Declined"> Declined</option>
-                                            </select>
-                                        </div>
-                                        <div className='d-flex justify-content-end modal-button'>
-                                            <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleStatus}>Save</button>
-                                            <button className="btn btn-light" onClick={handleshideModal}>Cancel</button>
-                                        </div>
-                                    </form>
+                                            </TableHead>
+                                            <TableBody>
+                                                {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                                    return (
+                                                        <TableRow key={ind}>
+                                                            <TableCell>{ind + 1}</TableCell>
+                                                            {(permission && permission.name?.toLowerCase() === "admin") && <>
+                                                                <TableCell>{val.user &&
+                                                                    <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} target="_blank">
+                                                                        <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                    </NavLink>}</TableCell>
+                                                                <TableCell>
+                                                                    {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
+                                                                </TableCell>
+                                                            </>}
+                                                            <TableCell>{val.leaveType ? val.leaveType : <HiOutlineMinus />}</TableCell>
+                                                            <TableCell>{val.from_date}</TableCell>
+                                                            <TableCell>{val.to_date}</TableCell>
+                                                            <TableCell>{val.duration}</TableCell>
+                                                            <TableCell>{val.leave_for}</TableCell>
+                                                            <TableCell>{val.reason}</TableCell>
+                                                            <TableCell>
+                                                                <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
+                                                            </TableCell>
+                                                            {actionToggle &&
+                                                                <TableCell>
+                                                                    <div className='action'>
+                                                                        {/* eslint-disable-next-line no-mixed-operators */}
+                                                                        {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
+                                                                            !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
+                                                                            <LeaveModal data={val} getLeave={getLeave} permission={permission} />}
+                                                                    </div>
+                                                                </TableCell>}
+                                                        </TableRow>
+                                                    )
+                                                }) :
+                                                    <TableRow>
+                                                        <TableCell colSpan={11} align="center">
+                                                            No Records Found
+                                                        </TableCell>
+                                                    </TableRow>
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                        component="div"
+                                        onPageChange={onChangePage}
+                                        onRowsPerPageChange={onChangeRowsPerPage}
+                                        rowsPerPage={count}
+                                        count={leaveRecordFilter.length}
+                                        page={page}>
+                                    </TablePagination>
+                                </div>
+                            </div >
+                        </div > : <Error403/>}
+                    {/* status changes modal * */}
+                    <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+                        <Modal.Header className='small-modal'>
+                            <Modal.Title>Status Change</Modal.Title>
+                            <p className='close-modal' onClick={handleshideModal}><i className="fa-solid fa-xmark"></i></p>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className=" grid-margin stretch-card mb-lg-0">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <form className="forms-sample">
+                                            <div className="form-group">
+                                                <label htmlFor="status" className='mt-3'>Status</label>
+                                                <select className="form-control " id="status" name='status' value={status} onChange={(e) => setstatus(e.target.value)} >
+                                                    <option value="Pending"> Pending</option>
+                                                    <option value="Read">Read</option>
+                                                    <option value="Approved"> Approved</option>
+                                                    <option value="Declined"> Declined</option>
+                                                </select>
+                                            </div>
+                                            <div className='d-flex justify-content-end modal-button'>
+                                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleStatus}>Save</button>
+                                                <button className="btn btn-light" onClick={handleshideModal}>Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Modal.Body>
-                    {subLoading && <Spinner />}
-                </Modal>
-            </motion.div>
-            {Loading && <Spinner />}
+                        </Modal.Body>
+                        {subLoading && <Spinner />}
+                    </Modal>
+                </motion.div> : <Spinner />}
         </>
     )
 }

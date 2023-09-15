@@ -55,7 +55,6 @@ const LeaveModal = (props) => {
     // modal show function
     const handleShow = () => {
         if (data) {
-            console.log(data)
             setleave({ leave_type_id: data.leave_type_id })
             setStatus({ leave_status: data.leave_for, status: data.status })
             setReason({ description: data.reason })
@@ -189,7 +188,7 @@ const LeaveModal = (props) => {
                         Authorization: `Bearer ${token}`
                     },
                 }
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leavetype/`, request)
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leavetype?key="leave"`, request)
                 if (res.data.success) {
                     setleaveTypeDetail(res.data.data)
                 }
@@ -221,12 +220,10 @@ const LeaveModal = (props) => {
                 const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
 
                 if (res.data.success) {
-                    console.log(res.data)
                     let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
                     setUser(data);
                 }
             } catch (error) {
-                console.log(error, "error");
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -344,7 +341,6 @@ const LeaveModal = (props) => {
             setReason({ ...reason, description_error: '' })
         }
     }
-    console.log(permission)
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>

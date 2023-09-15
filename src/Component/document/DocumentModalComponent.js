@@ -27,7 +27,6 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     // modal show function
     const handleShow = () => {
         if (data) {
-            console.log(data)
             setDoument({
                 name: data.name,
                 description: data.description,

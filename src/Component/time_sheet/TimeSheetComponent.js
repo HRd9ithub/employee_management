@@ -15,13 +15,14 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
+import Error403 from "../error_pages/Error403";
 
 const TimeSheetComponent = () => {
     let date_today = new Date();
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
-    const [Loader, setLoader] = useState(true);
+    const [Loader, setLoader] = useState(false);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
     const [endDate, setendtDate] = useState(new Date());
     const [userName, setUserName] = useState([]);
@@ -64,7 +65,9 @@ const TimeSheetComponent = () => {
                 }
             }
         } finally {
-            setLoader(false)
+            setTimeout(() => {
+                setLoader(false)
+            },500)
         }
     };
 
@@ -80,11 +83,9 @@ const TimeSheetComponent = () => {
             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
 
             if (res.data.success) {
-                console.log(res.data)
                 setUserName(res.data.data);
             }
         } catch (error) {
-            console.log(error, "error");
             if (!error.response) {
                 toast.error(error.message);
             } else {
@@ -97,13 +98,15 @@ const TimeSheetComponent = () => {
                 }
             }
         } finally {
-            setLoader(false)
+            setTimeout(() => {
+                setLoader(false)
+            },500)
         }
     };
 
     useEffect(() => {
-        getTimesheet();
         get_username();
+        getTimesheet();
         // eslint-disable-next-line
     }, []);
 
@@ -114,11 +117,11 @@ const TimeSheetComponent = () => {
 
         const list = data.filter((val, ind) => {
             return (
-                permission && permission.name.toLowerCase() === "admin" && val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
-                val.date.includes(value) ||
-                val.login_time?.includes(value) ||
-                val.logout_time?.includes(value) ||
-                val.total?.includes(value)
+                permission && permission.name.toLowerCase() === "admin" && (val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
+                    val.date.includes(value) ||
+                    val.login_time?.includes(value) ||
+                    val.logout_time?.includes(value) ||
+                    val.total?.includes(value))
             );
         });
         if (value) {
@@ -205,12 +208,14 @@ const TimeSheetComponent = () => {
     ]
 
     let csvdata = dataFilter.map((val, ind) => {
-        return { id: ind + 1, name :val.user.first_name.concat(" ", val.user.last_name) , Date: val.date, Day: moment(val.date).format('dddd'),login_time : val.login_time, logout_time:val.logout_time, Hours: val.total }
+        return { id: ind + 1, name: val.user.first_name.concat(" ", val.user.last_name), Date: val.date, Day: moment(val.date).format('dddd'), login_time: val.login_time, logout_time: val.logout_time, Hours: val.total }
     })
 
-    return (
-        <>
-            <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+    if (Loader) {
+        return <Spinners />
+    } else if (permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1))) {
+        return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
                 <div className=" container-fluid pt-4">
                     <div className="background-wrapper bg-white pt-2">
                         <div className=''>
@@ -235,9 +240,9 @@ const TimeSheetComponent = () => {
                                             <i className="fas fa-search"></i>
                                         </div>
                                         {dataFilter.length >= 1 &&
-                                        <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
-                                            <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank" ><AiOutlineDownload />&nbsp;CSV</CSVLink>
-                                        </div>}
+                                            <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
+                                                <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank" ><AiOutlineDownload />&nbsp;CSV</CSVLink>
+                                            </div>}
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +264,7 @@ const TimeSheetComponent = () => {
                                     <div className='col-6'>
                                         <div className="form-group mb-0 position-relative">
                                             <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
-                                        <i className="fa-regular fa-calendar range_icon"></i>
+                                            <i className="fa-regular fa-calendar range_icon"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -311,7 +316,7 @@ const TimeSheetComponent = () => {
                                                         <TableCell>
                                                             <NavLink className='pr-3 d-flex align-items-center name_col'>
                                                                 {val.user ? <>
-                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
                                                                     {val.user.first_name.concat(" ", val.user.last_name)}
                                                                 </> : <HiOutlineMinus />
                                                                 }
@@ -343,12 +348,11 @@ const TimeSheetComponent = () => {
                             </TablePagination>
                         </div>
                     </div>
-                </div>
-            </motion.div >
-            {(Loader) && <Spinners />
-            }
-        </>
-    );
+                </div>}
+        </motion.div >)
+    } else {
+        return <Error403 />
+    }
 };
 
 export default TimeSheetComponent;

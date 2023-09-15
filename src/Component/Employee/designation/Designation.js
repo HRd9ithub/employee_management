@@ -1,13 +1,14 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Spinner from "../../common/Spinner"
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import DesignationModal from "./DesignationModal";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import axios from "axios";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
+import Error403 from "../../error_pages/Error403"
 
 const Designation = () => {
   const [loader, setloader] = useState(false);
@@ -31,18 +32,17 @@ const Designation = () => {
       setloader(true);
       let config = {
         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GetLocalStorage('token')}`
         },
-    }
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`,config);
+      }
+      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`, config);
       if (res.data.success) {
         setPermission(res.data.permissions)
         setRecords(res.data.data);
         setRecordsFilter(res.data.data);
       }
     } catch (error) {
-      console.log("🚀 ~ file: Designation.js:122 ~ getdesignation ~ error:", error);
       if (!error.response) {
         toast.error(error.message)
       } else {
@@ -119,96 +119,98 @@ const Designation = () => {
 
   return (
     <>
-      <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=" container-fluid pt-4">
-          <div className="background-wrapper bg-white pt-2">
-            <div className=''>
-              <div className='row justify-content-end align-items-center row-std m-0'>
-                <div className="col-12 d-flex justify-content-between align-items-center">
-                  <div>
-                    <NavLink className="path-header">Designation</NavLink>
-                    <ul id="breadcrumb" className="mb-0">
-                      <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/designation" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Designation</NavLink></li>
-                    </ul>
-                  </div>
-                  <div className="d-flex" id="two">
-                    <div className="search-full">
-                      <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter}/>
-                      <i className="fas fa-search"></i>
+      {!loader ?
+        <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
+            <div className=" container-fluid pt-4">
+              <div className="background-wrapper bg-white pt-2">
+                <div className=''>
+                  <div className='row justify-content-end align-items-center row-std m-0'>
+                    <div className="col-12 d-flex justify-content-between align-items-center">
+                      <div>
+                        <NavLink className="path-header">Designation</NavLink>
+                        <ul id="breadcrumb" className="mb-0">
+                          <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                          <li><NavLink to="/designation" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Designation</NavLink></li>
+                        </ul>
+                      </div>
+                      <div className="d-flex" id="two">
+                        <div className="search-full">
+                          <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                          <i className="fas fa-search"></i>
+                        </div>
+                        <div className="search-box mr-3">
+                          <form name="search-inner">
+                            <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                          </form>
+                          <i className="fas fa-search"></i>
+                        </div>
+                        <DesignationModal getdesignation={getdesignation} ecords={records} permission={permission && permission} />
+                      </div>
                     </div>
-                    <div className="search-box mr-3">
-                      <form name="search-inner">
-                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
-                      </form>
-                      <i className="fas fa-search"></i>
-                    </div>
-                    <DesignationModal getdesignation={getdesignation} ecords={records} permission={permission && permission}/>
                   </div>
                 </div>
+                  <div>
+                    {/* table */}
+                    <TableContainer >
+                      <Table className="common-table-section">
+                        <TableHead className="common-header">
+                          <TableRow>
+                            <TableCell>
+                              Id
+                            </TableCell>
+                            <TableCell>
+                              <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                Designation
+                              </TableSortLabel>
+                            </TableCell>
+                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                              <TableCell>
+                                Action
+                              </TableCell>}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                            return (
+                              <TableRow key={ind}>
+                                <TableCell>{ind + 1}</TableCell>
+                                <TableCell>{val.name}</TableCell>
+                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                  <TableCell>
+                                    <div className='action'>
+                                      <DesignationModal
+                                        data={val}
+                                        getdesignation={getdesignation}
+                                      />
+                                      {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
+                                    </div>
+                                  </TableCell>}
+                              </TableRow>
+                            )
+                          }) :
+                            <TableRow>
+                              <TableCell colSpan={3} align="center">
+                                No Records Found
+                              </TableCell>
+                            </TableRow>
+                          }
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                      component="div"
+                      onPageChange={onChangePage}
+                      onRowsPerPageChange={onChangeRowsPerPage}
+                      rowsPerPage={count}
+                      count={recordsFilter.length}
+                      page={page}>
+                    </TablePagination>
+                  </div> 
               </div>
-            </div>
-
-            {/* table */}
-            <TableContainer >
-              <Table className="common-table-section">
-                <TableHead className="common-header">
-                  <TableRow>
-                    <TableCell>
-                      Id
-                    </TableCell>
-                    <TableCell>
-                      <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                        Designation
-                      </TableSortLabel>
-                    </TableCell>
-                    {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                      <TableCell>
-                        Action
-                      </TableCell>}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                    return (
-                      <TableRow key={ind}>
-                        <TableCell>{ind + 1}</TableCell>
-                        <TableCell>{val.name}</TableCell>
-                        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                          <TableCell>
-                            <div className='action'>
-                              <DesignationModal
-                                data={val}
-                                getdesignation={getdesignation}
-                              />
-                              {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
-                            </div>
-                          </TableCell>}
-                      </TableRow>
-                    )
-                  }) :
-                    <TableRow>
-                      <TableCell colSpan={3} align="center">
-                        No Records Found
-                      </TableCell>
-                    </TableRow>
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-              component="div"
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-              rowsPerPage={count}
-              count={recordsFilter.length}
-              page={page}>
-            </TablePagination>
-          </div>
-        </div>
-      </motion.div >
-      {loader && <Spinner />
-      }
+            </div>}
+        </motion.div>:<Spinner />}
+        {!loader && !permission && <Error403/>}
     </>
   );
 };

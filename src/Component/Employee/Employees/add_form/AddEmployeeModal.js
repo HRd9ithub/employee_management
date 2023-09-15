@@ -74,7 +74,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     setUserRole(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "error");
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -99,7 +98,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     setDepartment(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "error");
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -124,7 +122,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     setDesignations(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "error");
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -146,11 +143,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                 const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`,{},config);
 
                 if (res.data.success) {
-                    console.log(res.data)
                     setUserName(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "error");
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -261,7 +256,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     setemailError("")
                 }
             }).catch((error) => {
-                console.log('error :>> ', error);
                 if (!error.response) {
                     toast.error(error.message);
                 } else if (error.response.status === 401) {
@@ -289,7 +283,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     setEmployeeIdError("")
                 }
             }).catch((error) => {
-                console.log('error :>> ', error.response);
                 if (!error.response) {
                     toast.error(error.message);
                 } else if (error.response.status === 401) {
@@ -421,9 +414,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         handleJoinDatevalidation();
         reportValidation();
 
-        let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, department_id, status, confirmPassword, employee_id, profile_image, reporting_by } = employee;
+        let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, department_id, status, confirmPassword, employee_id, reporting_by } = employee;
 
-        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id || !department_id) {
+        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id || !department_id || !reporting_by) {
             return false;
         } else if (firstNameError || lastNameError || emailError || phoneError || joningDateError || passwordError.length !== 0 || roleError || designationError || departmentError || confirmPasswordError || EmployeeIdError || reportToerror) {
             return false;
@@ -469,7 +462,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     getAlluser();
                 }
             } catch (error) {
-                console.log('error', error)
                 if (!error.response) {
                     toast.error(error.message);
                 } else if (error.response.status === 401) {

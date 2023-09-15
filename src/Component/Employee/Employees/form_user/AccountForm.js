@@ -138,7 +138,6 @@ const AccountForm = (props) => {
                     toast.success(response.data.message)
                 }
             } catch (error) {
-                console.log("🚀 ~ file: AccountForm.js:183 ~ HandleSubmit ~ error:", error)
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {

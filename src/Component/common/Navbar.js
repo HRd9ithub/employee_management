@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useLayoutEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { AppProvider } from '../context/RouteContext';
 import moment from 'moment';
@@ -18,7 +18,7 @@ import Avatar from '@mui/material/Avatar';
 
 const Navbar = () => {
   let { handleLogout, loader } = Globalcomponent()
-  let { UserData, leaveNotification, getLeaveNotification, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { UserData, leaveNotification, getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
   const [sidebar, setsidebar] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,14 +34,19 @@ const Navbar = () => {
     let data = localStorage.getItem("sidebarToggle")
 
     if (!data || data === 'false') {
-      document.body.classList.add('sidebar-icon-only');
-      setlogoToggle(false)
-    } else {
       document.body.classList.remove('sidebar-icon-only');
       setlogoToggle(true)
+    } else {
+      document.body.classList.add('sidebar-icon-only');
+      setlogoToggle(false)
     }
     // eslint-disable-next-line
   }, [sidebar])
+
+  useLayoutEffect(() => {
+    getUserData();
+    // eslint-disable-next-line
+  }, [])
 
   // get leave notification
   useEffect(() => {
@@ -67,7 +72,6 @@ const Navbar = () => {
       const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/leave/${id}`, { status: "Read" }, request)
       if (res.data.success) {
         setLoading(false)
-        getLeaveNotification();
         history('/leave')
       }
     } catch (error) {
@@ -96,7 +100,6 @@ const Navbar = () => {
       }
       const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
       if (res.data.success) {
-        getLeaveNotification();
         history('/leave')
         setLoading(false)
       }
@@ -169,7 +172,7 @@ const Navbar = () => {
                                       <div className="preview-icon bg-success">
                                         {elem.user && elem.user.profile_image &&
                                           // eslint-disable-next-line
-                                          <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
+                                          <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
                                       </div>
                                     </div>
                                     <div className="preview-item-content d-flex align-items-start flex-column justify-content-center">
@@ -217,8 +220,7 @@ const Navbar = () => {
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link" >
                 <div className="nav-profile-img">
-                  {/* {UserData && <img src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${UserData.profile_image}`} alt="user" />} */}
-                  {UserData && <Avatar alt={UserData.first_name} className='text-capitalize' src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/uploads/${UserData.profile_image}`} sx={{ width: 30, height: 30 }} />}
+                  {UserData && <Avatar alt={UserData.first_name} className='text-capitalize' src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`} sx={{ width: 30, height: 30 }} />}
                   <span className="availability-status online"></span>
                 </div>
                 <div className="nav-profile-text">

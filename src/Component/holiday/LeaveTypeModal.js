@@ -114,12 +114,10 @@ const LeaveTypeModal = (props) => {
                 },
             }
             axios.post(`${process.env.REACT_APP_API_KEY}/leavetype/name`, { name, id }, config).then((response) => {
-                console.log(response)
                 if (response.data.success) {
                     setError("")
                 }
             }).catch((error) => {
-                console.log(error)
                 if (!error.response) {
                     toast.error(error.message);
                 } else {

@@ -50,7 +50,6 @@ const ResetPassword = () => {
           setExpireError("")
         }
       }).catch((error) => {
-        console.log('error', error);
         setLoader(false)
         if (!error.response) {
           toast.error(error.msessage);
@@ -63,6 +62,7 @@ const ResetPassword = () => {
       })
     }
     checkLink()
+    // eslint-disable-next-line
   }, [])
 
   // onchange function 
@@ -99,7 +99,6 @@ const ResetPassword = () => {
           setLoader(false);
         }
       }).catch((error) => {
-        console.log('error', error);
         setLoader(false)
         if (!error.response) {
           toast.error(error.msessage);
