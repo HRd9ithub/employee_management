@@ -95,7 +95,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     setUserRole(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -116,7 +115,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     setDepartment(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -137,7 +135,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     setDesignations(res.data.data);
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -158,7 +155,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     setallRecords(res.data.data)
                 }
             } catch (error) {
-                console.log(error, "esjrihewaiu");
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -215,7 +211,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let { first_name, last_name, email, phone, leaveing_date, report_by, joining_date, _id, age, maried_status, employee_id, profile_image, role_id, confirmPassword, designation_id, password, department_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
+        let { first_name, last_name, email, phone, leaveing_date, report_by, joining_date, _id, age, maried_status, employee_id, role_id, confirmPassword, designation_id, department_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
         firstNameValidation();
         lastNameValidation();
         if (!emailError) {
@@ -312,7 +308,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 setLoader(false)
             }
         } catch (error) {
-            console.log("error", error);
             setLoader(false)
             if (!error.response) {
                 toast.error(error.message);
@@ -372,7 +367,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     setemailError("")
                 }
             }).catch((error) => {
-                console.log('error :>> ', error);
                 if (!error.response) {
                     toast.error(error.message);
                 } else if (error.response.status === 401) {

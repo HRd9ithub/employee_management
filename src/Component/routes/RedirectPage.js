@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
-const RedirectPage = ({ Component }) => {
+const RedirectPage = ({ children }) => {
 
     let navigate = useNavigate();
 
@@ -13,9 +13,7 @@ const RedirectPage = ({ Component }) => {
         // eslint-disable-next-line
     }, [])
 
-    return (
-        <Component />
-    )
+    return children  
 }
 
 export default RedirectPage

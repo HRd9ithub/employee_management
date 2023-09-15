@@ -27,6 +27,7 @@ const Sidebar = () => {
   let leaveref = useRef(null);
   let settingref = useRef(null);
 
+  // eslint-disable-next-line
   useEffect(() => {
     if (window.innerWidth < 992) {
       document.body.classList.remove('sidebar-icon-only');
@@ -60,7 +61,6 @@ const Sidebar = () => {
         setMenu(data)
       }
     } catch (error) {
-      console.log(error, " <<< ==== error ");
       if (!error.response) {
         toast.error(error.message)
       } else if (error.response.status === 401) {
@@ -94,6 +94,7 @@ const Sidebar = () => {
         }
       });
     });
+    // eslint-disable-next-line
   }, [])
 
   // submenu togle in click
@@ -164,6 +165,7 @@ const Sidebar = () => {
         })
       }
       return response
+      // eslint-disable-next-line
     }, [menu])
   
     // leave drop down display or not 
@@ -178,6 +180,7 @@ const Sidebar = () => {
         })
       }
       return response
+      // eslint-disable-next-line
     }, [menu])
   
     // leave drop down display or not 
@@ -192,6 +195,7 @@ const Sidebar = () => {
         })
       }
       return response
+      // eslint-disable-next-line
     }, [menu])
 
 

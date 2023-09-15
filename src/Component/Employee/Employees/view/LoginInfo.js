@@ -15,7 +15,6 @@ const LoginInfo = ({ userId }) => {
 
     let { getCommonApi } = GlobalPageRedirect();
     const [loader, setLoader] = useState(false)
-    const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
     const [endDate, setendtDate] = useState(new Date());
@@ -40,7 +39,6 @@ const LoginInfo = ({ userId }) => {
             const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/loginInfo`, { id: userId ,startDate : start || startDate,endDate : end || endDate}, config);
 
             if (response.data.success) {
-                setData(response.data.data)
                 setDataFilter(response.data.data)
             }
         } catch (error) {
@@ -59,7 +57,8 @@ const LoginInfo = ({ userId }) => {
     }
 
     useEffect(() => {
-        getLoginInfo()
+        getLoginInfo();
+        // eslint-disable-next-line
     }, [])
 
     // pagination function

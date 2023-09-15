@@ -176,7 +176,6 @@ const EductionForm = (props) => {
                 }
             }
         } catch (error) {
-            console.log("🚀 ~ file: EductionForm.js:183 ~ HandleSubmit ~ error:", error)
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.status === 401) {

@@ -87,7 +87,6 @@ function DesignationModal({ data, getdesignation, permission, records }) {
         setId('');
       }
     }).catch((error) => {
-      console.log("🚀 ~ file: DepartmentModal.js:97 ~ getPage ~ error:", error)
       if (!error.response) {
         toast.error(error.message);
       } else {
@@ -116,12 +115,10 @@ function DesignationModal({ data, getdesignation, permission, records }) {
         },
     }
       axios.post(`${process.env.REACT_APP_API_KEY}/designation/name`, { name, id },config).then((response) => {
-        console.log(response)
         if (response.data.success) {
           setNameError("")
         }
       }).catch((error) => {
-        console.log(error)
         if (!error.response) {
           toast.error(error.message);
         } else {

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-// import { toast } from 'react-toastify'
 // import { browserName,mobileModel } from "react-device-detect";
 import DeviceDetector from "device-detector-js";
 import GlobalPageRedirect from './GlobalPageRedirect';
@@ -33,7 +32,6 @@ export const Globalcomponent = () => {
                 setpageToggle(true)
             }
         } catch (error) {
-            console.log('error', error);
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.data.message) {
@@ -75,7 +73,6 @@ export const Globalcomponent = () => {
                 navigate('/')
             }
         } catch (error) {
-            console.log('error', error)
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.data.message) {
@@ -110,7 +107,6 @@ export const Globalcomponent = () => {
             }
         }).catch((error) => {
             setLoader(false)
-            console.log('error', error)
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.status === 401) {

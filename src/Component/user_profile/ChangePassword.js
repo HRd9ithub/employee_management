@@ -97,7 +97,6 @@ const ChangePassword = () => {
                     })
                 } 
             } catch (error) {
-                console.log('UserProfile change password api >>> ', error)
                 setList({
                     newpassword: '',
                     renewpassword: "",

@@ -14,6 +14,7 @@ import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
+import Error403 from "../../error_pages/Error403";
 
 const Employee = ({ HandleProgress }) => {
   const [records, setRecords] = useState([]);
@@ -55,7 +56,6 @@ const Employee = ({ HandleProgress }) => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log("error", error);
       if (!error.response) {
         toast.error(error.message)
       } else {
@@ -100,16 +100,15 @@ const Employee = ({ HandleProgress }) => {
         }
       }
     }).catch((error) => {
-      console.log("error", error);
       setloader(false);
-      if(!error.response){
+      if (!error.response) {
         toast.error(error.message)
-      }else if (error.response.status === 401) {
+      } else if (error.response.status === 401) {
         getCommonApi();
       } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
-        } 
+        }
       }
     })
   };
@@ -152,7 +151,6 @@ const Employee = ({ HandleProgress }) => {
         setRecordsFilter(data);
       }
     } catch (error) {
-      console.log(error, " <<< ==== error ");
       if (!error.response) {
         toast.error(error.message);
       } else {
@@ -180,7 +178,6 @@ const Employee = ({ HandleProgress }) => {
   }
 
   const onChangeRowsPerPage = (e) => {
-    console.log(e.target.value)
     setCount(e.target.value)
   }
 
@@ -249,152 +246,152 @@ const Employee = ({ HandleProgress }) => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=" container-fluid pt-4">
-          <div className="background-wrapper bg-white pt-2">
-            <div className=''>
-              <div className='row justify-content-end align-items-center row-std m-0'>
-                <div className="col-12 d-flex justify-content-between align-items-center">
-                  <div>
-                    <NavLink className="path-header">Employee</NavLink>
-                    <ul id="breadcrumb" className="mb-0">
-                      <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
-                    </ul>
-                  </div>
-                  <div className="d-flex" id="two">
-                    <div className="search-full">
-                      <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
-                      <i className="fas fa-search"></i>
+        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
+          <div className=" container-fluid pt-4">
+            <div className="background-wrapper bg-white pt-2">
+              <div className=''>
+                <div className='row justify-content-end align-items-center row-std m-0'>
+                  <div className="col-12 d-flex justify-content-between align-items-center">
+                    <div>
+                      <NavLink className="path-header">Employee</NavLink>
+                      <ul id="breadcrumb" className="mb-0">
+                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                        <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                      </ul>
                     </div>
-                    <div className="search-box mr-3">
-                      <form name="search-inner">
-                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
-                      </form>
-                      <i className="fas fa-search"></i>
+                    <div className="d-flex" id="two">
+                      <div className="search-full">
+                        <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                        <i className="fas fa-search"></i>
+                      </div>
+                      <div className="search-box mr-3">
+                        <form name="search-inner">
+                          <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                        </form>
+                        <i className="fas fa-search"></i>
+                      </div>
+                      <AddEmployeeModal getAlluser={getAlluser} permission={permission} />
                     </div>
-                    <AddEmployeeModal getAlluser={getAlluser} permission={permission} />
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* table */}
-            <div>
-              <TableContainer >
-                <Table className="common-table-section">
-                  <TableHead className="common-header">
-                    <TableRow>
-                      <TableCell align="center" >
-                        <TableSortLabel active={orderBy === "employee_id"} direction={orderBy === "employee_id" ? order : "asc"} onClick={() => handleRequestSort("employee_id")}>
-                          Employee Id
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        Profile
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                          Name
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "email"} direction={orderBy === "email" ? order : "asc"} onClick={() => handleRequestSort("email")}>
-                          Email Address
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
-                          Contact No.
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
-                          Role
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "report"} direction={orderBy === "report" ? order : "asc"} onClick={() => handleRequestSort("report")}>
-                          Report To
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        Status
-                      </TableCell>
-                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
-                        <TableCell>
-                          Action
-                        </TableCell>}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                      return (
-                        <TableRow key={ind}>
-                          <TableCell align="center">{val.employee_id}</TableCell>
-                          <TableCell>  <NavLink className='pr-3 name_col' to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.profile_image}`} target="_blank">
-                            {val.profile_image &&
-                              <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.profile_image}`} sx={{ width: 30, height: 30 }} />}
-                          </NavLink></TableCell>
-                          <TableCell>
-                            <div>
-                              {val.first_name.concat(" ", val.last_name)}
-                            </div>
-                          </TableCell>
-                          <TableCell>{val.email}</TableCell>
-                          <TableCell>{val.phone}</TableCell>
-                          <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
-                          <TableCell>
-                            <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.report.profile_image}`} target="_blank">
-                              {val.report ? <>
-                                <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/uploads/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                {val?.report?.first_name.concat(" ", val.report.last_name)}
-                              </> : <HiOutlineMinus />
-                              }
-                            </NavLink>
-                          </TableCell>
-                          <TableCell>
-                            <Switch color="success"
-                              checked={val.status === "Active" ? true : false}
-                              onChange={() => handleStatus(val)}
-                              disabled={
-                                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                UserData && UserData._id === val._id
-                              }
-                            />
-                          </TableCell>
-                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
-                            <TableCell>
-                              <div className='action'>
-                                <i className="fa-solid fa-eye" onClick={() => history('/employees/view/' + val._id)}></i>
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                  <i className="fa-solid fa-pen-to-square" onClick={() => history('/employees/edit/' + val._id)}></i>}
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
-                                  <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
-                              </div>
-                            </TableCell>}
-                        </TableRow>
-                      )
-                    }) :
+              {/* table */}
+              <div>
+                <TableContainer >
+                  <Table className="common-table-section">
+                    <TableHead className="common-header">
                       <TableRow>
-                        <TableCell colSpan={9} align="center">
-                          No Records Found
+                        <TableCell align="center" >
+                          <TableSortLabel active={orderBy === "employee_id"} direction={orderBy === "employee_id" ? order : "asc"} onClick={() => handleRequestSort("employee_id")}>
+                            Employee Id
+                          </TableSortLabel>
                         </TableCell>
+                        <TableCell>
+                          Profile
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                            Name
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel active={orderBy === "email"} direction={orderBy === "email" ? order : "asc"} onClick={() => handleRequestSort("email")}>
+                            Email Address
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
+                            Contact No.
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
+                            Role
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          <TableSortLabel active={orderBy === "report"} direction={orderBy === "report" ? order : "asc"} onClick={() => handleRequestSort("report")}>
+                            Report To
+                          </TableSortLabel>
+                        </TableCell>
+                        <TableCell>
+                          Status
+                        </TableCell>
+                        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                          <TableCell>
+                            Action
+                          </TableCell>}
                       </TableRow>
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                component="div"
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                rowsPerPage={count}
-                count={recordsFilter.length}
-                page={page}>
-              </TablePagination>
+                    </TableHead>
+                    <TableBody>
+                      {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                        return (
+                          <TableRow key={ind}>
+                            <TableCell align="center">{val.employee_id}</TableCell>
+                            <TableCell>  <NavLink className='pr-3 name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} target="_blank">
+                              {val.profile_image &&
+                                <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />}
+                            </NavLink></TableCell>
+                            <TableCell>
+                              <div>
+                                {val.first_name.concat(" ", val.last_name)}
+                              </div>
+                            </TableCell>
+                            <TableCell>{val.email}</TableCell>
+                            <TableCell>{val.phone}</TableCell>
+                            <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
+                            <TableCell>
+                              <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} target="_blank">
+                                {val.report ? <>
+                                  <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                  {val?.report?.first_name.concat(" ", val.report.last_name)}
+                                </> : <HiOutlineMinus />
+                                }
+                              </NavLink>
+                            </TableCell>
+                            <TableCell>
+                              <Switch color="success"
+                                checked={val.status === "Active" ? true : false}
+                                onChange={() => handleStatus(val)}
+                                disabled={
+                                  permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                  UserData && UserData._id === val._id
+                                }
+                              />
+                            </TableCell>
+                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                              <TableCell>
+                                <div className='action'>
+                                  <i className="fa-solid fa-eye" onClick={() => history('/employees/view/' + val._id)}></i>
+                                  {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                    <i className="fa-solid fa-pen-to-square" onClick={() => history('/employees/edit/' + val._id)}></i>}
+                                  {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
+                                    <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                </div>
+                              </TableCell>}
+                          </TableRow>
+                        )
+                      }) :
+                        <TableRow>
+                          <TableCell colSpan={9} align="center">
+                            No Records Found
+                          </TableCell>
+                        </TableRow>
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                  component="div"
+                  onPageChange={onChangePage}
+                  onRowsPerPageChange={onChangeRowsPerPage}
+                  rowsPerPage={count}
+                  count={recordsFilter.length}
+                  page={page}>
+                </TablePagination>
+              </div>
             </div>
-          </div>
-        </div>
+          </div> : !loader && <Error403/>}
       </motion.div >
       {loader && <Spinner />
       }

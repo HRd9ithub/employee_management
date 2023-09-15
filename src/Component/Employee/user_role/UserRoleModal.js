@@ -49,9 +49,13 @@ function UserRoleModal({ data, getuserRole, permission }) {
     };
 
     useEffect(() => {
+        if(data){
+            setId(data._id)
+        }
         if (show) {
             getPageData()
         }
+
         // eslint-disable-next-line
     }, [show])
 
@@ -83,7 +87,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
                         return val.permissions
                     })
                     setPage(data)
-                    console.log(page)
                     setName(res.data.data[0].name)
                     setId(res.data.data[0]._id)
                 } else {
@@ -91,7 +94,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
                 }
             }
         } catch (error) {
-            console.log(error, "<<< === user role page  get api")
             if (!error.response) {
                 toast.error(error.message)
             } else {
@@ -132,7 +134,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
                     setId("")
                 }
             }).catch((error) => {
-                console.log(error);
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -153,7 +154,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
     const handleChange = (e, id, name) => {
         let changeData = page.map((val) => {
             if (val.menuId === id) {
-                return { ...val, [name]: e.target.checked === true ? "1" : "0" }
+                return { ...val, [name]: e.target.checked === true ? 1 : 0 }
             }
             return val
         })
@@ -172,12 +173,10 @@ function UserRoleModal({ data, getuserRole, permission }) {
                 },
             }
             axios.post(`${process.env.REACT_APP_API_KEY}/role/name`, { name, id }, config).then((response) => {
-                console.log(response)
                 if (response.data.success) {
                     seterror("")
                 }
             }).catch((error) => {
-                console.log(error)
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -231,10 +230,10 @@ function UserRoleModal({ data, getuserRole, permission }) {
                                                 return (
                                                     <tr key={val.menuId}>
                                                         <td className="">{val.name}</td>
-                                                        <td className=""><Switch id={val.menuId} checked={val.list == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "list")} /></td>
-                                                        <td className=""><Switch id={val.menuId} checked={val.create == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "create")} /></td>
-                                                        <td className=""><Switch id={val.menuId} checked={val.update == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "update")} /></td>
-                                                        <td className=""><Switch id={val.menuId} checked={val.delete == 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "delete")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.list === 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "list")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.create === 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "create")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.update === 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "update")} /></td>
+                                                        <td className=""><Switch id={val.menuId} checked={val.delete === 1 ? true : false} onChange={(e) => handleChange(e, val.menuId, "delete")} /></td>
                                                     </tr>
                                                 )
                                             })}

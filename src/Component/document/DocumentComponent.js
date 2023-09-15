@@ -10,9 +10,10 @@ import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import Error403 from "../error_pages/Error403"
 
 const DocumentComponent = () => {
-    const [permission, setpermission] = useState([]);
+    const [permission, setpermission] = useState("");
     const [documentData, setDocumentData] = useState([]);
     const [documentDataFilter, setDocumentDataFilter] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -57,12 +58,12 @@ const DocumentComponent = () => {
                             toast.error(error.response.data.message)
                         }
                     }
-                }) 
+                })
         }
         getDocument();
         // eslint-disable-next-line
     }, [toggle]);
-    
+
     // delete function
     const handleDelete = (id) => {
         let token = GetLocalStorage('token');
@@ -88,7 +89,7 @@ const DocumentComponent = () => {
                 if (res.data.success) {
                     setToggle(!toggle)
                     toast.success(res.data.message)
-                } 
+                }
             }
         }).catch((error) => {
             setLoading(false)
@@ -101,7 +102,7 @@ const DocumentComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        }) 
+        })
     }
 
     // search function
@@ -109,7 +110,7 @@ const DocumentComponent = () => {
         let data = event.target.value;
         let filter_data = documentData.filter((val) => {
             return val.name.toLowerCase().includes(data.toLowerCase()) ||
-                val.description.toLowerCase().includes(data.toLowerCase()) 
+                val.description.toLowerCase().includes(data.toLowerCase())
         })
         setDocumentDataFilter(filter_data)
     }
@@ -161,108 +162,109 @@ const DocumentComponent = () => {
 
     return (
         <>
-            <motion.div className="box" initial={{ opacity: 0, transform: 'translateY(-20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: 0.5 }}>
-                <div className=" container-fluid pt-4">
-                    <div className="background-wrapper bg-white pt-2">
-                        <div className=''>
-                            <div className='row justify-content-end align-items-center row-std m-0'>
-                                <div className="col-12 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <NavLink className="path-header">Documents</NavLink>
-                                        <ul id="breadcrumb" className="mb-0">
-                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Documents</NavLink></li>
-                                        </ul>
-                                    </div>
-                                    <div className="d-flex" id="two">
-                                        <div className="search-full">
-                                            <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
-                                            <i className="fas fa-search"></i>
+            {!loading ?
+                <motion.div className="box" initial={{ opacity: 0, transform: 'translateY(-20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: 0.5 }}>
+                    {permission && (permission?.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
+                        <div className=" container-fluid pt-4">
+                            <div className="background-wrapper bg-white pt-2">
+                                <div className=''>
+                                    <div className='row justify-content-end align-items-center row-std m-0'>
+                                        <div className="col-12 d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <NavLink className="path-header">Documents</NavLink>
+                                                <ul id="breadcrumb" className="mb-0">
+                                                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                                    <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Documents</NavLink></li>
+                                                </ul>
+                                            </div>
+                                            <div className="d-flex" id="two">
+                                                <div className="search-full">
+                                                    <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                                    <i className="fas fa-search"></i>
+                                                </div>
+                                                <div className="search-box mr-3">
+                                                    <form name="search-inner">
+                                                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                                    </form>
+                                                    <i className="fas fa-search"></i>
+                                                </div>
+                                                <DocumentModalComponent setToggle={setToggle} toggle={toggle} permission={permission} />
+                                            </div>
                                         </div>
-                                        <div className="search-box mr-3">
-                                            <form name="search-inner">
-                                                <input type="text" className="input-search" name="txt" onChange={HandleFilter}/>
-                                            </form>
-                                            <i className="fas fa-search"></i>
-                                        </div>
-                                        <DocumentModalComponent setToggle={setToggle} toggle={toggle} permission={permission} />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {/* {table} */}
-                        <div>
-                            <TableContainer >
-                                <Table className="common-table-section">
-                                    <TableHead className="common-header">
-                                        <TableRow>
-                                            <TableCell>Id</TableCell>
-                                            <TableCell>File</TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                    File Name
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
-                                                    Description
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1 || permission.permissions.update === 1)) &&
-                                                <TableCell>
-                                                    Action
-                                                </TableCell>}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                            return (
-                                                <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
+                                {/* {table} */}
+                                <div>
+                                    <TableContainer >
+                                        <Table className="common-table-section">
+                                            <TableHead className="common-header">
+                                                <TableRow>
+                                                    <TableCell>Id</TableCell>
+                                                    <TableCell>File</TableCell>
                                                     <TableCell>
-                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
-                                                            <img
-                                                                className='mt-1 profile-action-icon'
-                                                                style={{ width: '70px', height: '70px' }}
-                                                                src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf" )?`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` :val.image.split(".").pop() === 'doc' ? '/images/doc.png' :'/images/pdf.png' }
-                                                                alt="file"
-                                                            />
-                                                        </NavLink>
+                                                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                            File Name
+                                                        </TableSortLabel>
                                                     </TableCell>
-                                                    <TableCell>{val.name}</TableCell>
-                                                    <TableCell>{val.description}</TableCell>
-                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1 || permission.permissions.update === 1)) &&
+                                                    <TableCell>
+                                                        <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
+                                                            Description
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.delete === 1 || permission.permissions.update === 1))) &&
                                                         <TableCell>
-                                                            <div className='action'>
-                                                                {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1 )) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle}  />}
-                                                                {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1 )) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>} 
-                                                            </div>
+                                                            Action
                                                         </TableCell>}
                                                 </TableRow>
-                                            )
-                                        }) :
-                                            <TableRow>
-                                                <TableCell colSpan={5} align="center">
-                                                    No Records Found
-                                                </TableCell>
-                                            </TableRow>
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
-                                count={documentDataFilter.length}
-                                page={page}>
-                            </TablePagination>
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-            {loading && <Spinner />}
+                                            </TableHead>
+                                            <TableBody>
+                                                {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                                    return (
+                                                        <TableRow key={ind}>
+                                                            <TableCell>{ind + 1}</TableCell>
+                                                            <TableCell>
+                                                                <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
+                                                                    <img
+                                                                        className='mt-1 profile-action-icon'
+                                                                        style={{ width: '70px', height: '70px' }}
+                                                                        src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` : val.image.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                        alt="file"
+                                                                    />
+                                                                </NavLink>
+                                                            </TableCell>
+                                                            <TableCell>{val.name}</TableCell>
+                                                            <TableCell>{val.description}</TableCell>
+                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.delete === 1 || permission.permissions.update === 1))) &&
+                                                                <TableCell>
+                                                                    <div className='action'>
+                                                                        {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
+                                                                        {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                                                    </div>
+                                                                </TableCell>}
+                                                        </TableRow>
+                                                    )
+                                                }) :
+                                                    <TableRow>
+                                                        <TableCell colSpan={5} align="center">
+                                                            No Records Found
+                                                        </TableCell>
+                                                    </TableRow>
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                        component="div"
+                                        onPageChange={onChangePage}
+                                        onRowsPerPageChange={onChangeRowsPerPage}
+                                        rowsPerPage={count}
+                                        count={documentDataFilter.length}
+                                        page={page}>
+                                    </TablePagination>
+                                </div>
+                            </div>
+                        </div> : <Error403/> }
+                </motion.div> : <Spinner />}
         </>
     )
 }

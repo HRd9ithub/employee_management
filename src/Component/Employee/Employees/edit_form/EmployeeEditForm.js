@@ -16,19 +16,21 @@ import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage";
 import axios from "axios";
 import LoginInfo from "../view/LoginInfo";
+import Error403 from "../../../error_pages/Error403";
 
 const EmployeeEditForm = () => {
   let config = {
     headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${GetLocalStorage('token')}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${GetLocalStorage('token')}`
     },
-}
+  }
 
   const [value, setValue] = React.useState('Personal');
   const [userId, setUserId] = useState("");
   const [userDetail, setUserDetail] = useState("");
-  const [loader, setLoader] = useState(false);
+  const [permission, setpermission] = useState("");
+  const [loader, setLoader] = useState(true);
 
   // drop down tab onchange function
   const handleChanges = (newValue) => {
@@ -48,15 +50,15 @@ const EmployeeEditForm = () => {
   // get employee data for single
   const getEmployeeDetail = async () => {
     try {
-      let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`,config)
+      let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`, config)
 
       if (res.data.success) {
         let result = await res.data.data;
+        setpermission(res.data.permissions)
         setUserDetail(result);
         setUserId(result._id);
       }
     } catch (error) {
-      console.log(error, "esjrihewaiu");
       if (!error.response) {
         toast.error(error.message)
       } else if (error.response.status === 401) {
@@ -76,84 +78,86 @@ const EmployeeEditForm = () => {
     // eslint-disable-next-line
   }, [id])
 
-  return (
-    <>
-      <div className="container-fluid px-4">
+  if (loader) {
+    return <Spinner />
+  } else if (permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1))) {
+    return (
+      <>
+        <div className="container-fluid px-4">
+          <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4">
+            <div className="card modal-content">
+              {/* ............................Header one.......................... */}
+              <div className="modal-header employee-form">
+                <Tabs
+                  value={value}
+                  onChange={changeTab}
+                  aria-label="secondary tabs example"
+                >
+                  <Tab value="Personal" label="Personal Information" />
+                  <Tab value="Account" label="Account Information" />
+                  <Tab value="Education" label="Education Information" />
+                  <Tab value="Document" label="Document Information" />
+                  <Tab value="Emergency" label="Emergency Contact Information" />
+                  <Tab value="login" label="Login Information" />
+                </Tabs>
+              </div>
 
-        <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4">
-          <div className="card modal-content">
-            {/* ............................Header one.......................... */}
-            <div className="modal-header employee-form">
-              <Tabs
-                value={value}
-                onChange={changeTab}
-                aria-label="secondary tabs example"
-              >
-                <Tab value="Personal" label="Personal Information" />
-                <Tab value="Account" label="Account Information" />
-                <Tab value="Education" label="Education Information" />
-                <Tab value="Document" label="Document Information" />
-                <Tab value="Emergency" label="Emergency Contact Information" />
-                <Tab value="login" label="Login Information" />
-              </Tabs>
-            </div>
-
-            {/* ............................Header two.......................... */}
-            <div className="modal-header-none">
-              <div className="dropdown">
-                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {/* eslint-disable-next-line no-useless-concat */}
-                  {value && value + " " + "Information"} <i className="fa-solid fa-chevron-down"></i>
-                </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
-                  <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("login")}>Login Information</NavLink>
+              {/* ............................Header two.......................... */}
+              <div className="modal-header-none">
+                <div className="dropdown">
+                  <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {/* eslint-disable-next-line no-useless-concat */}
+                    {value && value + " " + "Information"} <i className="fa-solid fa-chevron-down"></i>
+                  </button>
+                  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
+                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("login")}>Login Information</NavLink>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="card-body">
-              {value === "Personal" ?
-                <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
-                : value === "Account" ?
-                  <AccountForm
-                    userDetail={userDetail}
-                    userId={userId}
-                    getEmployeeDetail={getEmployeeDetail}
-                  />
-                  : value === "Education" ?
-                    <EductionForm
+              <div className="card-body">
+                {value === "Personal" ?
+                  <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
+                  : value === "Account" ?
+                    <AccountForm
                       userDetail={userDetail}
-                      getEmployeeDetail={getEmployeeDetail}
                       userId={userId}
-                    /> :
-                    value === "Document" ?
-                      <UserDoumentForm
+                      getEmployeeDetail={getEmployeeDetail}
+                    />
+                    : value === "Education" ?
+                      <EductionForm
                         userDetail={userDetail}
                         getEmployeeDetail={getEmployeeDetail}
-                        userId={userId} />
-                      : value === "login" ? 
-                      <LoginInfo userId={userId} />
-                      :
-                      <EmergencyForm
-                        userDetail={userDetail}
-                        getEmployeeDetail={getEmployeeDetail}
-                        userId={userId} />
-              }
+                        userId={userId}
+                      /> :
+                      value === "Document" ?
+                        <UserDoumentForm
+                          userDetail={userDetail}
+                          getEmployeeDetail={getEmployeeDetail}
+                          userId={userId} />
+                        : value === "login" ?
+                          <LoginInfo userId={userId} />
+                          :
+                          <EmergencyForm
+                            userDetail={userDetail}
+                            getEmployeeDetail={getEmployeeDetail}
+                            userId={userId} />
+                }
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {loader && <Spinner />}
-
-    </>
-  );
+      </>
+    );
+  } else {
+   return <Error403/>
+  }
 }
 
 export default EmployeeEditForm;

@@ -13,6 +13,7 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { subDays } from "date-fns";
 import { NavLink } from 'react-router-dom';
+import Error403 from '../error_pages/Error403';
 
 const Calendar = () => {
   let DateRef = useRef();
@@ -48,6 +49,10 @@ const Calendar = () => {
   // name onchange function and validation
   const inputChangeHandler = (event) => {
     setlist({ ...list, [event.target.name]: event.target.value })
+
+    if(event.target.name === "date"){
+      event.target.value ? setdateError("") : setdateError('Please select date.')
+    }
   }
 
   const handlenameValidate = () => {
@@ -223,134 +228,135 @@ const Calendar = () => {
 
   return (
     <>
-      <motion.div
-        className="box"
-        initial={{ opacity: 0, transform: 'translateY(-20px)' }}
-        animate={{ opacity: 1, transform: 'translateY(0px)' }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className='bg-white pb-5'>
-          <div className="col-12 d-flex justify-content-between align-items-center py-2">
-            <div>
-              <NavLink className="path-header">Calender</NavLink>
-              <ul id="breadcrumb" className="mb-0">
-                <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                <li><NavLink to="/holiday" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
-              </ul>
-            </div>
-          </div>
-          <div className="row px-4 pb-5">
-            <div className="col-md-7 grid-margin stretch-card calender-wrapper employee-side-calender">
-              <div className="card">
-                <div className="card-body p-0 d-flex">
-                  <div className="dashboard-custom-date-picker">
-                    {(() => {
-                      let highlight = [];
-
-                      for (let index = 0; index < holidayDetailfilter.length; index++) {
-                        highlight.push(subDays(new Date(`${holidayDetailfilter[index].date}`), 0));
-                      }
-                      return (
-                        <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} />
-                      );
-                    })()}
-                  </div>
+      {!loader ?
+        <motion.div
+          className="box"
+          initial={{ opacity: 0, transform: 'translateY(-20px)' }}
+          animate={{ opacity: 1, transform: 'translateY(0px)' }}
+          transition={{ duration: 0.5 }}
+        >
+          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
+            <div className='bg-white pb-5'>
+              <div className="col-12 d-flex justify-content-between align-items-center py-2">
+                <div>
+                  <NavLink className="path-header">Calender</NavLink>
+                  <ul id="breadcrumb" className="mb-0">
+                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                    <li><NavLink to="/holiday" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
+                  </ul>
                 </div>
               </div>
-            </div>
-            <div className="col-md-5 grid-margin stretch-card standard-wrapper employee-side">
-              <div className="card calender">
-                <div className="card-body">
-                  {permission && permission.name.toLowerCase() === "admin" &&
-                    <form className="add-items d-flex justify-content-between" onSubmit={addTodo}>
-                      <div className='me-5 w-100'>
-                        <input
-                          type="text"
-                          className="form-control h-auto"
-                          placeholder="Enter holiday name"
-                          value={list.name}
-                          name='name'
-                          onChange={inputChangeHandler}
-                          onKeyUp={handlenameValidate}
-                          onBlur={handlenameValidate}
-                          autoComplete='off'
-                        />
-                        {nameError && <div className='error'>{nameError}</div>}
-                      </div>
-                      <div className='me-5 w-100 position-relative'>
-                        <input type="date"
-                          className="form-control"
-                          name='date'
-                          value={list.date || ''}
-                          ref={DateRef}
-                          onChange={inputChangeHandler}
-                          onBlur={handledateValidate}
-                          autoComplete='off'
-                          onClick={() => { DateRef.current.showPicker(); handledateValidate(); }}
-                        />
-                        <CalendarMonthIcon className='calendar-icon-holiday' onClick={() => { DateRef.current.showPicker(); }} />
-                        {dateError && <div className='error'>{dateError}</div>}
-                      </div>
-                      {!editToggle ?
-                        <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold" >Add</button> :
-                        <>
-                          <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Update</button>
-                          <button className=' delete action-icon' onClick={() => {
-                            setlist({
-                              name: '',
-                              date: ""
-                            })
-                            seteditToggle(false)
-                          }}>
-                            <i className={`remove mdi mdi-close-circle-outline`} ></i>
-                          </button>
-                        </>}
-                    </form>}
-                  <div className="list-wrapper">
-                    <ol>
-                      {errorb.map((val) => {
-                        return <li className='error' key={val}>{val}</li>
-                      })}
-                    </ol>
+              <div className="row px-4 pb-5">
+                <div className="col-md-7 grid-margin stretch-card calender-wrapper employee-side-calender">
+                  <div className="card">
+                    <div className="card-body p-0 d-flex">
+                      <div className="dashboard-custom-date-picker">
+                        {(() => {
+                          let highlight = [];
 
-                    <ul className="d-flex flex-column todo-list">
-                      {holidayDetail.map((elem, index) => {
-                        return (
-                          <li key={elem._id}>
-                            <div className="form-check">
-                              <label htmlFor="" className="form-check-label m-0" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{elem.day}&nbsp;&nbsp;{elem.name}
-                                <i className="input-helper"></i>
-                              </label>
-                            </div>
-                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                              <button className='edit action-icon' onClick={() => editHoliday(elem._id)} >
-                                <i className="fa-solid fa-pen-to-square" ></i>
-                              </button>}
-                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
-                              <button className=' delete action-icon' onClick={() => removeTodo(elem._id)} >
+                          for (let index = 0; index < holidayDetailfilter.length; index++) {
+                            highlight.push(subDays(new Date(`${holidayDetailfilter[index].date}`), 0));
+                          }
+                          return (
+                            <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} />
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-5 grid-margin stretch-card standard-wrapper employee-side">
+                  <div className="card calender">
+                    <div className="card-body">
+                      {permission && permission.name.toLowerCase() === "admin" &&
+                        <form className="add-items d-flex justify-content-between" onSubmit={addTodo}>
+                          <div className='me-5 w-100'>
+                            <input
+                              type="text"
+                              className="form-control h-auto"
+                              placeholder="Enter holiday name"
+                              value={list.name}
+                              name='name'
+                              onChange={inputChangeHandler}
+                              onKeyUp={handlenameValidate}
+                              onBlur={handlenameValidate}
+                              autoComplete='off'
+                            />
+                            {nameError && <div className='error'>{nameError}</div>}
+                          </div>
+                          <div className='me-5 w-100 position-relative'>
+                            <input type="date"
+                              className="form-control"
+                              name='date'
+                              value={list.date || ''}
+                              ref={DateRef}
+                              onChange={inputChangeHandler}
+                              onBlur={handledateValidate}
+                              autoComplete='off'
+                              onClick={() => { DateRef.current.showPicker(); handledateValidate(); }}
+                            />
+                            <CalendarMonthIcon className='calendar-icon-holiday' onClick={() => { DateRef.current.showPicker(); }} />
+                            {dateError && <div className='error'>{dateError}</div>}
+                          </div>
+                          {!editToggle ?
+                            <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold" >Add</button> :
+                            <>
+                              <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Update</button>
+                              <button className=' delete action-icon' onClick={() => {
+                                setlist({
+                                  name: '',
+                                  date: ""
+                                })
+                                seteditToggle(false)
+                              }}>
                                 <i className={`remove mdi mdi-close-circle-outline`} ></i>
-                              </button>}
-                          </li>
-                        )
-                      })}
-                      {holidayDetail.length === 0 && <div className='text-center my-4 text-muted'><h4>No Records Found</h4></div>}
-                    </ul>
-                    {startDate && !datetoggle &&
-                      <div className='text-center text-md-right my-2'>
-                        <button className='btn btn-light' disabled={holidayDetailfilter.length === 0} onClick={() => {
-                          setstartDate("")
-                          setHolidayDetail(holidayDetailfilter)
-                        }}>View all</button>
-                      </div>}
+                              </button>
+                            </>}
+                        </form>}
+                      <div className="list-wrapper">
+                        <ol>
+                          {errorb.map((val) => {
+                            return <li className='error' key={val}>{val}</li>
+                          })}
+                        </ol>
+
+                        <ul className="d-flex flex-column todo-list">
+                          {holidayDetail.map((elem, index) => {
+                            return (
+                              <li key={elem._id}>
+                                <div className="form-check">
+                                  <label htmlFor="" className="form-check-label m-0" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{elem.day}&nbsp;&nbsp;{elem.name}
+                                    <i className="input-helper"></i>
+                                  </label>
+                                </div>
+                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                  <button className='edit action-icon' onClick={() => editHoliday(elem._id)} >
+                                    <i className="fa-solid fa-pen-to-square" ></i>
+                                  </button>}
+                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
+                                  <button className=' delete action-icon' onClick={() => removeTodo(elem._id)} >
+                                    <i className={`remove mdi mdi-close-circle-outline`} ></i>
+                                  </button>}
+                              </li>
+                            )
+                          })}
+                          {holidayDetail.length === 0 && <div className='text-center my-4 text-muted'><h4>No Records Found</h4></div>}
+                        </ul>
+                        {startDate && !datetoggle &&
+                          <div className='text-center text-md-right my-2'>
+                            <button className='btn btn-light' disabled={holidayDetailfilter.length === 0} onClick={() => {
+                              setstartDate("")
+                              setHolidayDetail(holidayDetailfilter)
+                            }}>View all</button>
+                          </div>}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-        </div>
-      </motion.div>
-      {loader && <Spinner />}
+            </div> : <Error403/>}
+        </motion.div> : <Spinner />}
     </>
   )
 }

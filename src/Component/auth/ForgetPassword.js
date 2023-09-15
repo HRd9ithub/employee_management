@@ -53,7 +53,6 @@ const ForgetPassword = () => {
           setEmail("");
         }
       }).catch((error) => {
-        console.log("error", error);
         setLoader(false)
         if (!error.response) {
           toast.error(error.message);
@@ -91,6 +90,7 @@ const ForgetPassword = () => {
                       value={email}
                       onChange={handleChangeEmail}
                       onKeyUp={handleVlaidateEmail}
+                      onBlur={handleVlaidateEmail}
                       autoComplete="off"
                     />
                     <Form.Text className="error">{error}</Form.Text>

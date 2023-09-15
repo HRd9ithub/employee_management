@@ -105,7 +105,6 @@ const UserDoumentForm = (props) => {
                     }
                 }
             } catch (error) {
-                console.log("🚀 ~ file: AccountForm.js:111 ~ HandleSubmit ~ error:", error)
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
