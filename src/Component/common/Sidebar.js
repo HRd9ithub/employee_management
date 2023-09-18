@@ -157,7 +157,7 @@ const Sidebar = () => {
     let employee = useMemo(() => {
       let submenu = ['employees', 'department', 'designation']
       let response = ""
-      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
         response = true
       } else {
         response = menu.some((val) => {
@@ -172,7 +172,7 @@ const Sidebar = () => {
     let leave = useMemo(() => {
       let submenu = ['holiday', 'leavetype', 'leaves']
       let response = ""
-      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
         response = true
       } else {
         response = menu.some((val) => {
@@ -187,7 +187,7 @@ const Sidebar = () => {
     let setting = useMemo(() => {
       let submenu = ['user role']
       let response = ""
-      if (UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') {
+      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
         response = true
       } else {
         response = menu.some((val) => {
@@ -202,7 +202,7 @@ const Sidebar = () => {
   useEffect(() => {
     const toggleSidebars = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target)) {
-         if(UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin'){
+         if(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin'){
           menuref.current && !menuref.current.contains(e.target) &&  settingref.current && !settingref.current.contains(e.target) && setSidebarToggle(false);  
         } else {
           if (employee && menuref.current && !menuref.current.contains(e.target)) {

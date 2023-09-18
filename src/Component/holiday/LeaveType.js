@@ -187,7 +187,6 @@ const LeaveType = () => {
                                                                 <TableCell>
                                                                     <div className='action'>
                                                                         <LeaveTypeModal data={val} getLeaveType={getLeaveType} />
-                                                                        {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
                                                                     </div>
                                                                 </TableCell>
                                                             }

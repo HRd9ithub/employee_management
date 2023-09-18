@@ -291,7 +291,6 @@ const Calendar = () => {
                               value={list.date || ''}
                               ref={DateRef}
                               onChange={inputChangeHandler}
-                              onBlur={handledateValidate}
                               autoComplete='off'
                               onClick={() => { DateRef.current.showPicker(); handledateValidate(); }}
                             />

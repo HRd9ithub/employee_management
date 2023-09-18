@@ -183,7 +183,6 @@ const Designation = () => {
                                         data={val}
                                         getdesignation={getdesignation}
                                       />
-                                      {/* {(UserData && UserData.role.name.toLowerCase() !== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
                                     </div>
                                   </TableCell>}
                               </TableRow>

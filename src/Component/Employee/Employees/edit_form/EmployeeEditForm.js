@@ -113,7 +113,6 @@ const EmployeeEditForm = () => {
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Information</NavLink>
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
                     <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("login")}>Login Information</NavLink>

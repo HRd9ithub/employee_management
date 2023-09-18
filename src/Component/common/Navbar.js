@@ -135,7 +135,7 @@ const Navbar = () => {
         <ul className="navbar-nav navbar-nav-right">
 
           {/* notification drop drown */}
-          {(UserData && UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === 'admin') &&
+          {(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') &&
             <li className="nav-item">
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link count-indicator">
