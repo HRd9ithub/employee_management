@@ -22,13 +22,14 @@ export const Globalcomponent = () => {
 
 
     // login function
-    const onSubmit = async (data) => {
+    const onSubmit = async (data,socket) => {
         setError([]);
         try {
             setLoader(true)
             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/auth/login`, data)
             if (res.data.success) {
                 toast.success(res.data.message)
+                socket.emit('login',{userId:res.data.data});
                 setpageToggle(true)
             }
         } catch (error) {

@@ -90,8 +90,8 @@ const Dashboard = () => {
           // datefilter(new Date());
           const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
           const endOfMonth = moment().endOf('month').format('YYYY-MM-DD');
-          const startOfDate = moment().startOf('month').format('DD-MM');
-          const endOfDate = moment().endOf('month').format('DD-MM');
+          // const startOfDate = moment().startOf('month').format('DD-MM');
+          // const endOfDate = moment().endOf('month').format('DD-MM');
           if (holidayfilter.length !== 0) {
                let data = holidayfilter.filter((val) => {
                     return val.date >= startOfMonth &&  val.date <= endOfMonth

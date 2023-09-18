@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { motion } from 'framer-motion'
 
-const Login = () => {
+const Login = ({socket}) => {
   // eslint-disable-next-line
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -40,7 +40,7 @@ const Login = () => {
     if (emailError || passwordError) {
       return false
     } else {
-      onSubmit(data)
+      onSubmit(data,socket)
     }
   }
 
