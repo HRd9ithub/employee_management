@@ -42,6 +42,7 @@ const Dashboard = () => {
      const handleChange = date => {
           setstartDate(date);
           datefilter(date)
+          birthFilter(date)
      };
 
      useEffect(() => {
@@ -89,8 +90,8 @@ const Dashboard = () => {
           // datefilter(new Date());
           const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
           const endOfMonth = moment().endOf('month').format('YYYY-MM-DD');
-          const startOfDate = moment().startOf('month').format('DD-MM');
-          const endOfDate = moment().endOf('month').format('DD-MM');
+          // const startOfDate = moment().startOf('month').format('DD-MM');
+          // const endOfDate = moment().endOf('month').format('DD-MM');
           if (holidayfilter.length !== 0) {
                let data = holidayfilter.filter((val) => {
                     return val.date >= startOfMonth &&  val.date <= endOfMonth
@@ -98,10 +99,11 @@ const Dashboard = () => {
                setHoliday(data)
           }
           if(birthDay.length !== 0){
-               let birth = birthDay.filter((val) => {
-                    return moment(val.date_of_birth).format("DD-MM") >= startOfDate && moment(val.date_of_birth).format("DD-MM") <= endOfDate
-               })
-               setBirthDayFilter(birth)
+               // let birth = birthDay.filter((val) => {
+               //      return moment(val.date_of_birth).format("DD-MM") >= startOfDate && moment(val.date_of_birth).format("DD-MM") <= endOfDate
+               // })
+               // setBirthDayFilter(birth)
+               birthFilter(new Date())
           }
           // eslint-disable-next-line
      }, [holidayfilter])
@@ -110,10 +112,14 @@ const Dashboard = () => {
           let data = holidayfilter.filter((val) => {
                return val.date === moment(date).format("YYYY-MM-DD")
           })
+      
+          setHoliday(data)
+     }
+
+     const birthFilter = (date) => {
           let birth = birthDay.filter((val) => {
                return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM")
           })
-          setHoliday(data)
           setBirthDayFilter(birth)
      }
 
@@ -127,9 +133,9 @@ const Dashboard = () => {
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
                               </div>
-                              {UserData && UserData?.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && <>
+                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
                                    <div className="row mt-3">
-                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" && navigate("/employees")}>
+                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -150,7 +156,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => navigate("/timesheet")}>
+                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -160,7 +166,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Present Today</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-2 position-relative box-dashboard ${UserData.role.length !== 0 && UserData.role[0].name.toLowerCase() === "admin" ? "col-lg-3 col-md-6" : "col-md-4"}`} onClick={() => navigate("/leave")}>
+                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -173,7 +179,7 @@ const Dashboard = () => {
                                    </div>
                               </>}
 
-                              {UserData && UserData?.role.length !== 0 && UserData.role[0].name.toLowerCase() !== "admin" &&
+                              {UserData && UserData?.role && UserData.role.name.toLowerCase() !== "admin" &&
                                    reportBy.length !== 0 &&
                                    <div className={`mb-2 position-relative box-dashboard col-md-4`} >
                                         <div className="common-box-dashboard total-employee nav-link">

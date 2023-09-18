@@ -21,13 +21,13 @@ import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewCompon
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
 import RedirectPage from './RedirectPage';
 
-const AppRoute = () => {
+const AppRoute = ({socket}) => {
 
     return (
         <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
-                <Route exact path='/login' element={<RedirectPage><Login/></RedirectPage>}></Route>
+                <Route exact path='/login' element={<RedirectPage ><Login socket={socket}/></RedirectPage>}></Route>
                 <Route exact path='/password' element={<RedirectPage ><ForgetPassword/></RedirectPage>}></Route>
                 <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword/></RedirectPage>}></Route>
                 {/* dashboard */}
@@ -35,7 +35,7 @@ const AppRoute = () => {
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 {/* employee route */}
-                <Route exact path='/employees' element={<ProtectedRoute><Employee /></ProtectedRoute>}></Route>
+                <Route exact path='/employees' element={<ProtectedRoute><Employee socket={socket}/></ProtectedRoute>}></Route>
                 <Route exact path='/employees/edit/:id' element={<ProtectedRoute><EmployeeEditForm /></ProtectedRoute>}></Route>
                 <Route exact path='/employees/view/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/department' element={<ProtectedRoute><Department /></ProtectedRoute>}></Route>

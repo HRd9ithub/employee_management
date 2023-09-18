@@ -90,7 +90,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const get_role = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`,config);
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`, config);
                 if (res.data.success) {
                     setUserRole(res.data.data);
                 }
@@ -109,8 +109,8 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const get_Department = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department`,config);
-                
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department`, config);
+
                 if (res.data.success) {
                     setDepartment(res.data.data);
                 }
@@ -129,8 +129,8 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const get_Designations = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation`,config);
-                
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation`, config);
+
                 if (res.data.success) {
                     setDesignations(res.data.data);
                 }
@@ -150,7 +150,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const getAlluser = async () => {
             setLoader(true);
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`,{},config);
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, config);
                 if (res.data.success) {
                     setallRecords(res.data.data)
                 }
@@ -164,7 +164,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         toast.error(error.response.data.message)
                     }
                 }
-            }finally{setLoader(false)}
+            } finally { setLoader(false) }
         };
         if (!value) {
             getAlluser();
@@ -195,7 +195,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         var birthDate = new Date(date);
         var age_now = today.getFullYear() - birthDate.getFullYear();
         setEmployee({ ...employee, age: age_now, date_of_birth: date });
-        if (age_now === 0 && !date) {
+        if (age_now === 0 || !date) {
             setdateofbirthError("Please select date of birth.");
         } else if (age_now <= 18) {
             setdateofbirthError("Please select a valid date of birth.");
@@ -292,7 +292,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 confirmPassword,
                 leaveing_date,
                 report_by
-            },config);
+            }, config);
             if (response.data.success) {
                 if (userDetail._id === GetLocalStorage('user_id') && (pathname.toLocaleLowerCase().includes('/employees') || value === "Profile")) {
                     getUserData()
@@ -607,7 +607,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">Country</label>
-                                <select className="form-control" name="country" value={employee.country} onChange={InputEvent} onClick={countryValidation}>
+                                <select className="form-control" name="country" value={employee.country} onChange={(e) => {
+                                    InputEvent(e);
+                                    if (!e.target.value || e.target.value === "country") {
+                                        setcountryError("Please select Country.");
+                                    } else {
+                                        setcountryError("")
+                                    }
+                                }} onClick={countryValidation}>
                                     <option value="country">Select country</option>
                                     {country.map((elem, ind) => {
                                         return (
@@ -705,7 +712,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputgender">Gender</label>
-                                <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={InputEvent} onClick={genderValidation}>
+                                <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={(e) => {
+                                    InputEvent(e);
+                                    if (!e.target.value || e.target.value === "Select Gender") {
+                                        setgenderError("Please select gender.");
+                                    } else {
+                                        setgenderError("");
+                                    }
+                                }} onClick={genderValidation}>
                                     <option value="Select Gender">Select Gender</option>
                                     <option value="Male"> Male</option>
                                     <option value="Female">Female</option>
@@ -745,7 +759,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControldepartment">Department</label>
-                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={InputEvent} onClick={departmentValidation} >
+                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
+                                    InputEvent(e);
+                                    if (e.target.value && e.target.value !== "department") {
+                                        setdepartmentError("");
+                                    } else {
+                                        setdepartmentError("Please select a department.");
+                                    }
+                                }} onClick={departmentValidation} >
                                     <option value="department">Select Department</option>
                                     {Department.map((val) => {
                                         return (
@@ -762,7 +783,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControldesignation">Designation</label>
-                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={InputEvent} onClick={designationValidation} >
+                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={(e) => {
+                                    InputEvent(e);
+                                    if (e.target.value && e.target.value !== "designation") {
+                                        setdesignationError("");
+                                    } else {
+                                        setdesignationError("Please select a designation.");
+                                    }
+                                }} onClick={designationValidation} >
                                     <option value="designation">Select Designation </option>
                                     {Designations.map((val) => {
                                         return (
@@ -780,7 +808,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             <Form.Group>
                                 <label htmlFor="exampleFormControlUser">User Role</label>
                                 {/* eslint-disable-next-line eqeqeq */}
-                                <select className="form-control" id="exampleFormControlUser" disabled={userDetail.id == GetLocalStorage("user_id")} name="role_id" value={employee.role_id} onChange={InputEvent} onClick={roleValidation}>
+                                <select className="form-control" id="exampleFormControlUser" disabled={userDetail.id == GetLocalStorage("user_id")} name="role_id" value={employee.role_id} onChange={(e) => {
+                                    InputEvent(e);
+                                    if (e.target.value && e.target.value !== "role") {
+                                        setroleError("");
+                                    } else {
+                                        setroleError("Please select user role.");
+                                    }
+                                }} onClick={roleValidation}>
                                     <option value="role">Select user role</option>
                                     {userRole.map((val) => {
                                         return (
@@ -806,7 +841,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="reportby">Report To</label>
-                                <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={InputEvent} onClick={reportValidation}>
+                                <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={(e) => {
+                                    InputEvent(e)
+                                    if (e.target.value && e.target.value !== "report") {
+                                        setreporttoError("");
+                                    } else {
+                                        setreporttoError("Please select report to.");
+                                    }
+                                }} onClick={reportValidation}>
                                     <option value="report">Select Report To</option>
                                     {allRecords.map((val) => {
                                         return (

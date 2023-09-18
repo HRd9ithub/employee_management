@@ -198,7 +198,7 @@ const EmployeeViewComponent = () => {
                                                     <div className="col-md-5 col-lg-6 col-12 ">
                                                         <div className="profile-info-left">
                                                             <h3 className="user-name m-t-0 mb-0">{data.first_name && data.first_name.concat(" ", data.last_name)}</h3>
-                                                            <small className="text-muted">{data && data.designation.length !== 0 ? data.designation[0].name : <AiOutlineMinus />}</small>
+                                                            <small className="text-muted">{data && data.designation ? data.designation.name : <AiOutlineMinus />}</small>
                                                             <div className="small doj text-muted">Date of Join :  {moment(data.joining_date).format("DD")}
                                                                 <sup> {dateHandle(data.joining_date)} </sup>
                                                                 {moment(data.joining_date).format("MMM YYYY")}</div>
@@ -417,15 +417,15 @@ const EmployeeViewComponent = () => {
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="title">Department</div>
-                                                                                    <div className="text">{data?.department.length !== 0 ? data.department[0].name : <AiOutlineMinus />}</div>
+                                                                                    <div className="text">{data?.department ? data.department.name : <AiOutlineMinus />}</div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="title">Designation</div>
-                                                                                    <div className="text">{data?.designation.length !== 0 ? data.designation[0].name : <AiOutlineMinus />}</div>
+                                                                                    <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="title">User Role</div>
-                                                                                    <div className="text">{data?.role.length !== 0 ? data.role[0].name : <AiOutlineMinus />}</div>
+                                                                                    <div className="text">{data?.role ? data.role.name : <AiOutlineMinus />}</div>
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="title">Status</div>

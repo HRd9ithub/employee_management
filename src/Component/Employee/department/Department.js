@@ -182,7 +182,6 @@ const Department = () => {
                                 <TableCell>
                                   <div className='action'>
                                     <DepartmentModal data={val} getuser={getuser} />
-                                    {/* {(UserData && UserData.role.name.toLowerCa!== "admin") && (accessData.length !== 0 && accessData[0].delete === "0") ? "" : <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val.id)}></i>} */}
                                   </div>
                                 </TableCell>}
                             </TableRow>

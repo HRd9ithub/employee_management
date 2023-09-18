@@ -587,7 +587,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControldepartment">Department</label>
-                                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={handleChange} onClick={departmentValidation} >
+                                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
+                                                    handleChange(e);
+                                                    if(e.target.value && e.target.value !== "department"){
+                                                        setdepartmentError("");
+                                                    }else{
+                                                        setdepartmentError("Please select a department.");
+                                                    }
+                                                    }} onClick={departmentValidation} >
                                                     <option value="department">Select Department</option>
                                                     {Department.map((val) => {
                                                         return (
@@ -604,7 +611,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControldesignation">Designation</label>
-                                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={handleChange} onClick={designationValidation} >
+                                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={(e) => {
+                                                    handleChange(e);
+                                                    if(e.target.value && e.target.value !== "designation"){
+                                                        setdesignationError("");
+                                                    }else{
+                                                        setdesignationError("Please select a designation.");
+                                                    }
+                                                    }} onClick={designationValidation} >
                                                     <option value="designation">Select Designation </option>
                                                     {Designations.map((val) => {
                                                         return (
@@ -621,7 +635,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControlUser">User Role</label>
-                                                <select className="form-control" id="exampleFormControlUser" name="role_id" value={employee.role_id} onChange={handleChange} onClick={roleValidation}>
+                                                <select className="form-control" id="exampleFormControlUser" name="role_id" value={employee.role_id} onChange={(e) => {
+                                                    handleChange(e);
+                                                    if(e.target.value && e.target.value !== "role"){
+                                                        setroleError("");
+                                                    }else{
+                                                        setroleError("Please select user role.");
+                                                    }
+                                                    }} onClick={roleValidation}>
                                                     <option value="role">Select user role</option>
                                                     {userRole.map((val) => {
                                                         return (
@@ -646,7 +667,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="frer">Report To</label>
-                                                <select className="form-control" id="frer" name="reporting_by" value={employee.reporting_by || ""} onChange={handleChange} onClick={reportValidation}>
+                                                <select className="form-control" id="frer" name="reporting_by" value={employee.reporting_by || ""} onChange={(e) => {
+                                                    handleChange(e);
+                                                    if(e.target.value && e.target.value !== "report"){
+                                                        setreporttoError("");
+                                                    }else{
+                                                        setreporttoError("Please select report to.");
+                                                    }
+                                                    }} onClick={reportValidation}>
                                                     <option value="report">Select Report To</option>
                                                     {userName.map((val) => {
                                                         return (

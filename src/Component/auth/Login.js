@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { motion } from 'framer-motion'
 
-const Login = () => {
+const Login = ({socket}) => {
   // eslint-disable-next-line
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -40,7 +40,7 @@ const Login = () => {
     if (emailError || passwordError) {
       return false
     } else {
-      onSubmit(data)
+      onSubmit(data,socket)
     }
   }
 
@@ -139,13 +139,13 @@ const Login = () => {
                   <Form className="pt-2" onSubmit={handleSubmit}>
                     <Form.Group className=" search-field">
                       <div>
-                        <Form.Control type="text" placeholder="Enter email address" size="lg" className="h-auto" name='email' value={data.email} onChange={HandleChange} onKeyUp={handleNameVlidate} autoComplete='off' autoFocus />
+                        <Form.Control type="text" placeholder="Enter email address" size="lg" className="h-auto" name='email' value={data.email} onChange={HandleChange} onKeyUp={handleNameVlidate} onBlur={handleNameVlidate} autoComplete='off' autoFocus />
                         {emailError && <Form.Text className='error'>{emailError}</Form.Text>}
                       </div>
                     </Form.Group>
                     <Form.Group className=" search-field position-relative">
                       <div>
-                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onKeyUp={handlePasswordVlidate} autoComplete='off' />
+                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onBlur={handlePasswordVlidate}  onKeyUp={handlePasswordVlidate} autoComplete='off' />
                         {passwordError && <Form.Text className='error'>{passwordError}</Form.Text>}
                         {IconToggle ? <span className='eye-icon' onClick={() => setIconToggle(false)}><VisibilityIcon /></span> :
                           <span className='eye-icon' onClick={() => setIconToggle(true)}><VisibilityOffIcon /></span>}

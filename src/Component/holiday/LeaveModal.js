@@ -84,14 +84,18 @@ const LeaveModal = (props) => {
     //leave type  onchange function
     const InputEvent = (e) => {
         let value = e.target.value;
-        setleave({ ...leave, leave_type_id: value })
-        let data = leaveTypeDetail.find((val) => val._id === value)
-        if (data?.name.toLowerCase() === "casual leave") {
-            let date = new Date();
-            date.setDate(date.getDate() + 4);
-            setleaveType(moment(date).format("YYYY-MM-DD"))
-        } else {
-            setleaveType("");
+        if(value && value !== "0"){
+            setleave({ ...leave, leave_type_id: value,leave_type_id_error: '' })
+            let data = leaveTypeDetail.find((val) => val._id === value)
+            if (data?.name.toLowerCase() === "casual leave") {
+                let date = new Date();
+                date.setDate(date.getDate() + 4);
+                setleaveType(moment(date).format("YYYY-MM-DD"))
+            } else {
+                setleaveType("");
+            }
+        }else{
+            setleave({ ...leave, leave_type_id_error: "Please select the option." ,leave_type_id: value})
         }
     }
 
@@ -365,7 +369,13 @@ const LeaveModal = (props) => {
                                         <div className="form-group">
                                             <label htmlFor="1" className='mt-3'>User</label>
                                             <select className="form-control " id="user" name='user' disabled={data} value={info
-                                                .user_id} onChange={(e) => setinfo({ ...info, user_id: e.target.value })} onClick={userValidation} >
+                                                .user_id} onChange={(e) => {
+                                                    if(e.target.value && e.target.value !== "0"){
+                                                        setinfo({ ...info, user_id: e.target.value,user_id_error :"" })
+                                                    }else{
+                                                        setinfo({ ...info, user_id_error: "Please select user.",user_id: e.target.value })
+                                                    }}
+                                                    } onClick={userValidation} >
                                                 <option value='0'>Select User </option>
                                                 {user.map((val) => {
                                                     return (
@@ -436,7 +446,12 @@ const LeaveModal = (props) => {
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave status</label>
                                         <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
-                                        } onChange={(e) => setStatus({ ...status_info, leave_status: e.target.value })} onClick={leaveStatusValidation} >
+                                        } onChange={(e) => {
+                                            if(e.target.value && e.target.value !== "0"){
+                                                setStatus({ ...status_info, leave_status: e.target.value,leave_status_error:"" })
+                                            }else{
+                                                setStatus({ ...status_info, leave_status_error: "Please select a leave status.", leave_status: e.target.value })
+                                            }}} onClick={leaveStatusValidation} >
                                             <option value='0'>Select Leave Status </option>
                                             <option value='Full'>Full</option>
                                             <option value='Half' disabled={day > 1}>Half</option>
@@ -447,7 +462,7 @@ const LeaveModal = (props) => {
 
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'>Leave Reason</label>
-                                        <Form.Control as="textarea" placeholder="Leave Reason .  .  ." onChange={reasonChange} value={reason.description} onKeyUp={descriptionValidate} />
+                                        <Form.Control as="textarea" placeholder="Leave Reason .  .  ." onChange={reasonChange} value={reason.description} onKeyUp={descriptionValidate} onBlur={descriptionValidate} />
                                         {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
                                     </div>
 

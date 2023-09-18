@@ -202,12 +202,12 @@ return (
                                 {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                 <div className="form-group">
                                     <label htmlFor="1" className='mt-3'>File Name</label>
-                                    <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} />
+                                    <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} onBlur={validationName} />
                                     {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="2" className='mt-3'>Description</label>
-                                    <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} />
+                                    <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} onBlur={validationDescription}/>
                                     {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
                                 </div>
                                 <ol>
