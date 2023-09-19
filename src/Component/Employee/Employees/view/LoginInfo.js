@@ -9,9 +9,12 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import moment from 'moment';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginInfo = ({ userId }) => {
     let date_today = new Date();
+    let history = useNavigate();
+
 
     let { getCommonApi } = GlobalPageRedirect();
     const [loader, setLoader] = useState(false)
@@ -192,6 +195,9 @@ const LoginInfo = ({ userId }) => {
                     page={page}>
                 </TablePagination>
             </div>
+            <div className="submit-section d-flex justify-content-between py-3">
+                    <button className="btn btn-light" onClick={() => history("/employees")}>Back</button>
+                </div>
             {loader && <Spinner />}
         </div>
     )

@@ -34,7 +34,7 @@ function App() {
           {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Sidebar />}
         </div>
         <div className='sidebar-inner'>
-          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar />}
+          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar socket={socket} />}
           <div className="main-panel">
             <div className="content-wrapper">
               {/* route file */}
