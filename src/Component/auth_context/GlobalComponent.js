@@ -22,14 +22,14 @@ export const Globalcomponent = () => {
 
 
     // login function
-    const onSubmit = async (data,socket) => {
+    const onSubmit = async (data, socket) => {
         setError([]);
         try {
             setLoader(true)
             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/auth/login`, data)
             if (res.data.success) {
                 toast.success(res.data.message)
-                socket.emit('login',{userId:res.data.data});
+                socket.emit('login', { userId: res.data.data });
                 setpageToggle(true)
             }
         } catch (error) {
@@ -118,13 +118,38 @@ export const Globalcomponent = () => {
         })
     }
 
+    // resend code 
+    const HandleResend = async (email) => {
+        setError([]);
+        try {
+            setLoader(true)
+            const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/auth/resendOtp`, {email})
+            if (res.data.success) {
+                toast.success(res.data.message)
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.data.message) {
+                toast.error(error.response.data.message)
+            } else {
+                if (error.response.data.error) {
+                    setError(error.response.data.error)
+                }
+            }
+        } finally {
+            setLoader(false)
+        }
+    }
+
     return {
         pageToggle,
         onSubmit,
         loader,
         onSubmitOtp,
         handleLogout,
-        Error
+        Error,
+        HandleResend
     }
 }
 

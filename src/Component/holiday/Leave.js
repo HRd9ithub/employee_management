@@ -14,6 +14,7 @@ import Avatar from '@mui/material/Avatar';
 import Error403 from '../error_pages/Error403'
 import { AppProvider } from '../context/RouteContext'
 import { useContext } from 'react'
+import moment from 'moment'
 
 const Leave = () => {
     const [show, setShow] = useState(false);
@@ -314,6 +315,11 @@ const Leave = () => {
                                                         </TableSortLabel>
                                                     </TableCell>
                                                     <TableCell>
+                                                        <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
+                                                            Applied on
+                                                        </TableSortLabel>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         Status
                                                     </TableCell>
                                                     {actionToggle &&
@@ -342,6 +348,7 @@ const Leave = () => {
                                                             <TableCell>{val.duration}</TableCell>
                                                             <TableCell>{val.leave_for}</TableCell>
                                                             <TableCell>{val.reason}</TableCell>
+                                                            <TableCell>{moment(val.createdAt).format("YYYY-MM-DD")}</TableCell>
                                                             <TableCell>
                                                                 <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
                                                             </TableCell>

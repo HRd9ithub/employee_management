@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { motion } from 'framer-motion'
 
-const Login = ({socket}) => {
+const Login = ({ socket }) => {
   // eslint-disable-next-line
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -20,7 +20,7 @@ const Login = ({socket}) => {
   const [IconToggle, setIconToggle] = useState(false)
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [Otperror, setOtperror] = useState('');
-  let { pageToggle, onSubmit, loader, onSubmitOtp, Error } = Globalcomponent();
+  let { pageToggle, onSubmit, loader, onSubmitOtp, Error, HandleResend } = Globalcomponent();
 
   //onchange function
   const HandleChange = (event) => {
@@ -40,7 +40,7 @@ const Login = ({socket}) => {
     if (emailError || passwordError) {
       return false
     } else {
-      onSubmit(data,socket)
+      onSubmit(data, socket)
     }
   }
 
@@ -84,8 +84,6 @@ const Login = ({socket}) => {
   const handlePasswordVlidate = () => {
     if (!data.password) {
       setpasswordError('Please enter a Password.')
-    } else if (data.password.trim().length < 8) {
-      setpasswordError('Please enter a valid Password.')
     } else {
       setpasswordError('')
     }
@@ -116,6 +114,7 @@ const Login = ({socket}) => {
     }
   }
 
+
   return (
     <>
       <motion.div
@@ -145,7 +144,7 @@ const Login = ({socket}) => {
                     </Form.Group>
                     <Form.Group className=" search-field position-relative">
                       <div>
-                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onBlur={handlePasswordVlidate}  onKeyUp={handlePasswordVlidate} autoComplete='off' />
+                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onBlur={handlePasswordVlidate} onKeyUp={handlePasswordVlidate} autoComplete='off' />
                         {passwordError && <Form.Text className='error'>{passwordError}</Form.Text>}
                         {IconToggle ? <span className='eye-icon' onClick={() => setIconToggle(false)}><VisibilityIcon /></span> :
                           <span className='eye-icon' onClick={() => setIconToggle(true)}><VisibilityOffIcon /></span>}
@@ -190,13 +189,14 @@ const Login = ({socket}) => {
                     </Form.Group>
                     <ol>
                       {Error.map((val) => {
-                        return <li className='error'>{val}</li>
+                        return <li className='error' key={val}>{val}</li>
                       })}
                     </ol>
                     <div className="my-3 password-btn">
                       <button className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" >
                         Verify</button>
                     </div>
+                    <Form.Label>Didn't receive a OTP? <NavLink onClick={() => HandleResend(data.email)}>Resend OTP</NavLink></Form.Label>
                   </Form>
                 </div>
               }

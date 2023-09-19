@@ -852,7 +852,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     <option value="report">Select Report To</option>
                                     {allRecords.map((val) => {
                                         return (
-                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                            val._id !== employee._id && <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
                                         );
                                     })}
                                 </select>

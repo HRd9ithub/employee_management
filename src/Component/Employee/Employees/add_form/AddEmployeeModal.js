@@ -475,6 +475,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                 }
             } finally {
                 setLoader(false);
+                setPage(false);
             }
         }
     }
