@@ -209,10 +209,10 @@ const Employee = ({ socket }) => {
       }
       return 0
     } else if (orderBy === "report") {
-      if (b[orderBy].first_name?.concat(" ", b.last_name) < a[orderBy].first_name?.concat(" ", a.last_name)) {
+      if (b[orderBy]?.first_name?.concat(" ", b.last_name) < a[orderBy]?.first_name?.concat(" ", a.last_name)) {
         return -1
       }
-      if (b[orderBy].first_name?.concat(" ", b.last_name) > a[orderBy].first_name?.concat(" ", a.last_name)) {
+      if (b[orderBy]?.first_name?.concat(" ", b.last_name) > a[orderBy]?.first_name?.concat(" ", a.last_name)) {
         return 1
       }
       return 0
@@ -342,7 +342,7 @@ const Employee = ({ socket }) => {
                             <TableCell>{val.phone}</TableCell>
                             <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
                             <TableCell>
-                              <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} target="_blank">
+                              <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.report?.profile_image}`} target="_blank">
                                 {val.report ? <>
                                   <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
                                   {val?.report?.first_name.concat(" ", val.report.last_name)}
