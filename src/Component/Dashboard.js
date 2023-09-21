@@ -94,11 +94,11 @@ const Dashboard = () => {
           // const endOfDate = moment().endOf('month').format('DD-MM');
           if (holidayfilter.length !== 0) {
                let data = holidayfilter.filter((val) => {
-                    return val.date >= startOfMonth &&  val.date <= endOfMonth
+                    return val.date >= startOfMonth && val.date <= endOfMonth
                })
                setHoliday(data)
           }
-          if(birthDay.length !== 0){
+          if (birthDay.length !== 0) {
                // let birth = birthDay.filter((val) => {
                //      return moment(val.date_of_birth).format("DD-MM") >= startOfDate && moment(val.date_of_birth).format("DD-MM") <= endOfDate
                // })
@@ -112,7 +112,7 @@ const Dashboard = () => {
           let data = holidayfilter.filter((val) => {
                return val.date === moment(date).format("YYYY-MM-DD")
           })
-      
+
           setHoliday(data)
      }
 
@@ -126,15 +126,15 @@ const Dashboard = () => {
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    <div className=''>
+                    {!loader && <div className=''>
                          <div className='container-fluid inner-pages py-3'>
                               <div className='row p-3 align-items-center row-std'>
                                    <div className='col-12 employee-path px-2' id="one">
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
                               </div>
-                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
-                                   <div className="row mt-3">
+                              <div className="row mt-3">
+                                   {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
                                         <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
@@ -145,7 +145,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink>
                                         </div>
-                                        <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
+                                        {/* <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -155,7 +155,7 @@ const Dashboard = () => {
                                                   </div>
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
-                                        </div>
+                                        </div> */}
                                         <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
@@ -176,23 +176,22 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Absent Today</h4>
                                              </NavLink>
                                         </div>
-                                   </div>
-                              </>}
+                                   </>}
 
-                              {UserData && UserData?.role && UserData.role.name.toLowerCase() !== "admin" &&
-                                   reportBy.length !== 0 &&
-                                   <div className={`mb-2 position-relative box-dashboard col-md-4`} >
-                                        <div className="common-box-dashboard total-employee nav-link">
-                                             <h4 className="mt-2">Report By</h4>
-                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <ol className="common-info-dashboard d-flex flex-column">
-                                                  {reportBy.map((val) => {
-                                                       return <li key={val._id} style={{ fontSize: "15px" }}>{val.first_name?.concat(" ", val.last_name)}</li>
-                                                  })}
-                                             </ol>
-                                        </div>
-                                   </div>
-                              }
+                                   {reportBy.length !== 0 &&
+                                        <div className={`mb-2 position-relative box-dashboard col-md-3`} >
+                                             <div className="common-box-dashboard employee-active nav-link">
+                                                  <h4 className="mt-2">Report By</h4>
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <ol className="common-info-dashboard d-flex flex-column">
+                                                       {reportBy.map((val) => {
+                                                            return <li key={val._id} style={{ fontSize: "15px" }}>{val.first_name?.concat(" ", val.last_name)}</li>
+                                                       })}
+                                                  </ol>
+                                             </div>
+                                        </div>}
+                              </div>
+
 
                               <div className='row'>
                                    <div className='col-md-5 mt-3 box-dashboard'>
@@ -256,7 +255,7 @@ const Dashboard = () => {
                                    </div>
                               </div>
                          </div>
-                    </div>
+                    </div>}
                </motion.div>
                {loader && <Spinner />}
           </>
