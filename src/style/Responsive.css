@@ -308,11 +308,6 @@
         height: 90%;
     }
 
-    .css-jsexje-MuiSwitch-thumb {
-        width: 17px !important;
-        height: 17px !important;
-    }
-
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         bottom: 1px !important;
     }
@@ -728,14 +723,6 @@
         bottom: 3px !important;
     }
 
-    .css-jsexje-MuiSwitch-thumb {
-        width: 15px !important;
-        height: 15px !important;
-    }
-
-    /* .css-1yjjitx-MuiSwitch-track {
-                height: 89%;
-                width: 97%;} */
     /* calender */
     .calender-wrapper {
         padding-right: 0px;
@@ -2062,11 +2049,6 @@
         padding-bottom: 15px !important;
     }
 
-    .css-jsexje-MuiSwitch-thumb {
-        width: 12px !important;
-        height: 12px !important;
-    }
-
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
     }
@@ -3026,11 +3008,6 @@
 
         .swal2-actions {
             margin: 0em auto 0 !important;
-        }
-
-        .css-jsexje-MuiSwitch-thumb {
-            width: 10px !important;
-            height: 10px !important;
         }
 
         .css-1yjjitx-MuiSwitch-track {

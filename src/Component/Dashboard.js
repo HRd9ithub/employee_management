@@ -23,6 +23,7 @@ const Dashboard = () => {
      const [loader, setLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState("");
+     // eslint-disable-next-line
      const [leaveRequest, setleaveRequest] = useState("");
      const [presentToday, setpresentToday] = useState("");
      const [todayLeave, settodayLeave] = useState([]);

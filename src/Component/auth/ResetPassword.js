@@ -43,6 +43,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     const checkLink = async () => {
+      setLoader(true)
       axios.get(`${process.env.REACT_APP_API_KEY}/auth/checklink`, request).then((response) => {
 
         if (response.data.success) {
@@ -141,6 +142,7 @@ const ResetPassword = () => {
         animate={{ opacity: 1, transform: "translateY(0px)" }}
         transition={{ duration: 0.5 }}
       >
+        {!loader && <>
         <div className="d-flex align-items-center auth px-0">
           {!expire ?
             <div className=" w-100 mx-0">
@@ -218,6 +220,7 @@ const ResetPassword = () => {
             </div>
           }
         </div>
+        </>}
       </motion.div>
       {loader && <Spinner />}
     </>
