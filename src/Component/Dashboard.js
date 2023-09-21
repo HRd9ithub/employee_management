@@ -144,6 +144,14 @@ const Dashboard = () => {
                                                   </div>
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink>
+                                             {/* <NavLink className="common-box-dashboard total-employee nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h2>{totalEmployee}</h2>
+                                                       <FaUsers />
+                                                  </div>
+                                                  <h4 className="mt-2">Total Employees</h4>
+                                             </NavLink> */}
                                         </div>
                                         {/* <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
