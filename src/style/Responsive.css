@@ -177,6 +177,10 @@
     .css-1ex1afd-MuiTableCell-root {
         font-size: 15px !important;
     }
+
+    .my-chart-head {
+        padding: 2rem 1rem;
+    }
 }
 
 @media (max-width: 1880px) {}

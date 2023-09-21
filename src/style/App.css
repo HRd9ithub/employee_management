@@ -292,7 +292,7 @@ span.eye-icon {
   margin-bottom: 16px;
 }
 
-.form-control {
+/* .form-control {
   padding: 13px 15px;
   width: 100%;
   overflow: hidden;
@@ -302,18 +302,18 @@ span.eye-icon {
   border-radius: 0;
   box-shadow: 1px 2px 2px #00000029;
   border: 1px solid #d6d6d6;
-}
+} */
 
 /* .form-control.serch_table {
     height: 40px;
     padding: 4px 15px;
     min-height: 40px;
 } */
-.form-control,
+/* .form-control,
 .swal2-modal .swal2-content .swal2-input {
   border: none;
   padding: 0.86rem 1.375rem;
-}
+} */
 
 .btn-add {
   height: 49.5px !important;
@@ -436,18 +436,18 @@ span.eye-icon {
   border-radius: 0px !important;
 }
 
-.inner-pages .form-control {
+/* .inner-pages .form-control {
   border-radius: 0px !important;
-}
+} */
 
-.inner-pages .form-control:focus {
+/* .inner-pages .form-control:focus {
   color: #000;
   border-color: #80bdff;
   border: 1px solid #80bdff;
   outline: 0;
   background-color: #fff;
   box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, .1);
-}
+} */
 
 .css-194a1fa-MuiSelect-select-MuiInputBase-input.css-194a1fa-MuiSelect-select-MuiInputBase-input.css-194a1fa-MuiSelect-select-MuiInputBase-input {
   border: 1px solid #00000094;
@@ -2157,11 +2157,11 @@ svg {
 
 /* ===================================== Employee profile view ======================================== */
 
-.profile-box {
+/* .profile-box {
   border: 1px solid lightblue;
   background-color: #fff;
   box-shadow: 1px 2px 6px 1px rgb(0 0 0 / 11%);
-}
+} */
 
 .profile-info {
   padding: 0rem 3rem !important;
@@ -2624,7 +2624,6 @@ svg {
 
 .react-datepicker__month-container {
   border-radius: 10px;
-
 }
 
 .box-dashboard .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
@@ -3265,9 +3264,136 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 
-/* link expired css*/
 
-.link_expire i.fa-regular.fa-circle-xmark {
-  font-size: 9rem;
-  color: #cc1f1f;
+
+/* ----------------- ======== jd ======= -------------------- */
+
+/* link expired css*/
+.link_expire {
+  background-color: white;
+  box-shadow: 8px 8px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 0.4rem;
+}
+.link_expire img {
+  width: 150px;
+  animation: shakealert 1s ease infinite;
+}
+@keyframes shakealert {
+    0%, 100% {
+        transform: translateY(0px);
+        transform: rotate(0deg);
+    }
+    30% {
+        transform: translateY(-8px);
+        transform: rotate(10deg);
+    }
+    60% {
+        transform: translateY(-8px);
+        transform: rotate(-5deg);
+    }
+    85% {
+        transform: translateY(0px);
+        transform: rotate(0deg);
+    }
+}
+.link_expire .link-expire-content {
+  font-size: 35px;
+  font-weight: bolder;
+}
+
+/* form-control style */
+.form-control {
+  padding: 2px 5px !important;
+  width: 100%;
+  overflow: hidden;
+  align-items: center;
+  color: #000;
+  min-height: 45px !important;
+  border-radius: 0px !important;
+  border-bottom: 1px solid #0a4a92 !important;
+  margin-bottom: 5px;
+  box-shadow: none;
+}
+.form-control:focus {
+  color: #000;
+  border-bottom: 2px solid #0a4a92 !important;
+  outline: 1px solid transparent !important;
+  background-color: #fff;
+}
+.search-field.form-group .form-control:focus {
+  color: #000;
+  border-bottom: 2px solid #0a4a92 !important;
+  outline: 1px solid transparent !important;
+  background-color: #fff;
+}
+select.form-control {
+  outline: transparent;
+  padding: 2px 1px !important;
+  border-bottom: 1px solid #0a4a92;
+}
+select.form-control:focus {
+  border-bottom: 1px solid #0a4a92;
+}
+.form-control,
+.swal2-modal .swal2-content .swal2-input {
+  border: none;
+  padding: 0.2rem 0.8rem;
+}
+.form-control.border-red-600, .search-field.form-group .form-control.border-red-600 {
+  border-color: red !important;
+}
+
+/* Employee profile view */
+.profile-box {
+  border: 1px solid lightblue;
+  background-color: #fff;
+  box-shadow: 1px 2px 6px 1px rgb(0 0 0 / 11%);
+  border-radius: 5px;
+}
+
+/* login page */
+.auth form .form-group .form-control, .auth form .form-group .swal2-modal .swal2-content .swal2-input, .swal2-modal .swal2-content .auth form .form-group .swal2-input {
+  border-bottom: 1px solid #0a4a92 !important;
+}
+
+ /* .auth-form-light {
+  position: relative;
+  overflow: hidden;
+  z-index: 100 !important;
+}
+.auth-form-light > * {
+  position: relative;
+  z-index: 100 !important;
+} */
+/* .content-wrapper .login-wrapper {
+  background-image: none;
+  background-color: #0a4a92;
+} */
+/* .auth-form-light::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110%;
+  height: 110%;
+  border-radius: 50px;
+  background-color: #0a4a92;
+  transform: translateY(-60%) rotate(80deg);
+} */
+/* .auth-form-light::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  background-color: gray;
+  transform: translateX(-180px) rotate(125deg);
+} */
+
+/* dashboard design */
+.react-datepicker__month-container {
+  border-radius: 10px;
+  overflow: hidden;
 }

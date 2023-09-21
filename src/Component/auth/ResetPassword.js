@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
@@ -198,10 +198,23 @@ const ResetPassword = () => {
               </div>
             </div>
             :
-            <div className="link_expire text-center">
-              <i class="fa-regular fa-circle-xmark"></i>
-              <h2 style={{ color: "#cc1f1f" }}>Link Expired</h2>
-              <h3 className="my-3">{expireError}</h3>
+            <div className="row align-items-center px-0 py-4 link_expire">
+              <div className="col-4 text-center">
+                <img src="./Images/warning-orange.png" alt="img"/>
+              </div>
+              <div className="col-8">
+                <h2 className="link-expire-content">
+                    The link you followed has expired.
+                </h2>
+                <p className="my-3">
+                  {expireError}
+                </p>
+                <div className="">
+                  <NavLink to="/login" className="btn btn-primary btn-md font-weight-medium auth-form-btn">
+                    Back To Login
+                  </NavLink>
+                </div>
+              </div>
             </div>
           }
         </div>
