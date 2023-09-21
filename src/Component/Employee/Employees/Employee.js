@@ -40,6 +40,7 @@ const Employee = ({ socket }) => {
 
   // status update function
   const handleStatus = async (row) => {
+     // eslint-disable-next-line
     let { _id,email } = row;
     setloader(true);
     let config = {
@@ -54,7 +55,7 @@ const Employee = ({ socket }) => {
       if (res.data.success) {
         setToggle(!toggle);
         toast.success(res.data.message);
-        socket.emit('status',{userId:email});
+        // socket.emit('status',{userId:email});
       }
     } catch (error) {
       if (!error.response) {

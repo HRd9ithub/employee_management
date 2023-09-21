@@ -139,6 +139,7 @@ const EmployeeViewComponent = () => {
                     getUserData();
                 }
             } catch (error) {
+                setLoader(false)
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -148,7 +149,7 @@ const EmployeeViewComponent = () => {
                         toast.error(error.response.data.message)
                     }
                 }
-            } finally { setLoader(false) }
+            } 
         }
     }
 
