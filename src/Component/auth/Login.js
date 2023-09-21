@@ -196,7 +196,7 @@ const Login = ({ socket }) => {
                       <button className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" >
                         Verify</button>
                     </div>
-                    <Form.Label>Didn't receive a OTP? <NavLink onClick={() => HandleResend(data.email)}>Resend OTP</NavLink></Form.Label>
+                    <Form.Label>Didn't receive? <NavLink onClick={() => HandleResend(data.email)}>Resend OTP</NavLink></Form.Label>
                   </Form>
                 </div>
               }
