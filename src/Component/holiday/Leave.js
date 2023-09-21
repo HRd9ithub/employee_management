@@ -266,7 +266,7 @@ const Leave = () => {
                                 </div>
 
                                 {/* table */}
-                                <div>
+                                <div className="mx-4">
                                     <TableContainer >
                                         <Table className="common-table-section">
                                             <TableHead className="common-header">

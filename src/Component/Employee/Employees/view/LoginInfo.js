@@ -118,7 +118,7 @@ const LoginInfo = ({ userId }) => {
 
             {/* table */}
             <div>
-                <div className='col-6'>
+                <div className='col-6 ml-auto pr-0'>
                     <div className="form-group mb-0 position-relative">
                         <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
                         <i className="fa-regular fa-calendar range_icon"></i>

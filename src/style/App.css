@@ -1978,7 +1978,7 @@ select.status-select {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 999999 !important;
+  z-index: 999999999999 !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1991,7 +1991,7 @@ select.status-select {
 
 .spinner-box {
   position: relative;
-  z-index: 999999 !important;
+  z-index: 999999999999999 !important;
 }
 
 .dot-one {
@@ -3396,4 +3396,23 @@ select.form-control:focus {
 .react-datepicker__month-container {
   border-radius: 10px;
   overflow: hidden;
+}
+.submit-section {
+  margin-top: 0;
+  width: 100%;
+}
+
+.submit-section .btn-gradient-primary {
+  padding: 0.775rem 2.5rem !important;
+}
+/* table scrollar */
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar {
+  height: 7px;
+}
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-thumb {
+  background: #bfbfbf;
+  border-radius: 5px;
 }

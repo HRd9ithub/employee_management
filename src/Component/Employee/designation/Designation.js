@@ -150,7 +150,7 @@ const Designation = () => {
                     </div>
                   </div>
                 </div>
-                  <div>
+                  <div className="mx-4">
                     {/* table */}
                     <TableContainer >
                       <Table className="common-table-section">
