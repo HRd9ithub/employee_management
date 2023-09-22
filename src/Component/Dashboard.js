@@ -16,7 +16,8 @@ import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
 import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from './common/Spinner';
-import Avatar from '@mui/material/Avatar';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import ApprovalIcon from '@mui/icons-material/Approval';
 
 
 const Dashboard = () => {
@@ -136,7 +137,7 @@ const Dashboard = () => {
                               </div>
                               <div className="row mt-3">
                                    {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
-                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
+                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -154,18 +155,17 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink> */}
                                         </div>
-                                        {/* <div className="col-lg-3 col-md-6  mb-2 position-relative box-dashboard" onClick={() => navigate("/leave")}>
+                                        <div className="mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{leaveRequest}</h2>
-                                                       <i className="fa-solid fa-image-portrait"></i>
-
+                                                       <ApprovalIcon/>
                                                   </div>
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
-                                        </div> */}
-                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
+                                        </div>
+                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -175,35 +175,21 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Present Today</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
+                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{todayLeave.length}</h2>
-                                                       <i className="fa-solid fa-bookmark"></i>
+                                                       <BookmarkIcon/>
                                                   </div>
                                                   <h4 className="mt-2">Absent Today</h4>
                                              </NavLink>
                                         </div>
                                    </>}
-
-                                   {reportBy.length !== 0 &&
-                                        <div className={`mb-2 position-relative box-dashboard col-md-3`} >
-                                             <div className="common-box-dashboard employee-active nav-link">
-                                                  <h4 className="mt-2">Report By</h4>
-                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                                  <ol className="common-info-dashboard d-flex flex-column">
-                                                       {reportBy.map((val) => {
-                                                            return <li key={val._id} style={{ fontSize: "15px" }}>{val.first_name?.concat(" ", val.last_name)}</li>
-                                                       })}
-                                                  </ol>
-                                             </div>
-                                        </div>}
                               </div>
 
-
                               <div className='row'>
-                                   <div className='col-md-5 mt-3 box-dashboard'>
+                                   <div className='col-md-6 mt-3 box-dashboard'>
                                         <div className="dashboard-custom-date-picker shadow">
                                              {(() => {
                                                   let highlight = [];
@@ -217,48 +203,53 @@ const Dashboard = () => {
                                              })()}
                                         </div>
                                    </div>
-                                   <div className='col-md-7 pl-md-0 box-dashboard'>
-                                        <div className='col-md-12 px-0 mt-3 d-flex align-items-center justify-content-center'>
-                                             <div className='my-chart'>
-                                                  <div className='my-chart-head text-center'>List of Holiday</div>
-                                                  <div className='p-3'>
-
-                                                       <ul>
-                                                            {holiday.map((val) => {
-                                                                 return <li key={val._id} className='my-2'>{val.name}</li>
-                                                            })}
-                                                            {birthDayFilter.map((val) => {
-                                                                 return <li key={val._id} className='my-2'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</li>
-                                                            })}
-                                                       </ul>
-                                                       {holiday.length === 0 && birthDayFilter.length === 0 &&
-                                                            <ul>
-                                                                 No Holiday !
-                                                            </ul>}
-                                                  </div>
+                                   <div className='col-md-6 mt-3 box-dashboard'>
+                                        <div className='my-chart'>
+                                             <div className='my-chart-head text-center'>List of Holiday</div>
+                                             <div className='p-3'>
+                                                  <ul>
+                                                       {holiday.map((val) => {
+                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{val.name}</h4></li>
+                                                       })}
+                                                       {birthDayFilter.map((val) => {
+                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
+                                                       })}
+                                                  </ul>
+                                                  {holiday.length === 0 && birthDayFilter.length === 0 &&
+                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
                                              </div>
                                         </div>
-                                        <div className='col-md-12 px-0 mt-3 d-flex align-items-center justify-content-center'>
-                                             <div className='my-chart'>
-                                                  <div className='my-chart-head text-center'>On Leave Today</div>
-                                                  <div className='p-3'>
-                                                       <ul>
-                                                            {todayLeave?.map((val) => {
-                                                                 return (
-                                                                      <div className="text-capitalize d-flex align-items-center" key={val._id}>
-                                                                           <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/${val.user?.profile_image}`} target="_blank">
-                                                                                <Avatar alt={val.user?.first_name} src={val.user?.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user?.profile_image}`} sx={{ width: 34, height: 34 }} />
-                                                                           </NavLink>
-                                                                           {val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus />}
-                                                                      </div>
-                                                                 )
-                                                            })}
-                                                       </ul>
-                                                       {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
-                                                            <ul>
-                                                                 <li> Wow! Everyone is Present Today.</li>
-                                                            </ul>}
-                                                  </div>
+                                   </div>
+                              </div>
+
+                              <div className="row mt-3">
+                                   <div className='col-md-6 mt-3 d-flex align-items-center justify-content-center box-dashboard'>
+                                        <div className='my-chart'>
+                                             <div className='my-chart-head text-center'>On Leave Today</div>
+                                             <div className='p-3'>
+                                                  <ul>
+                                                       {todayLeave.map((val) => {
+                                                            return <li key={val._id}><h4 className='my-1'>{val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus />}</h4></li>
+                                                       })}
+                                                  </ul>
+                                                  {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
+                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>Wow! Everyone is Present Today.</h3>}
+                                                  {todayLeave.length === 0 &&
+                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div className='col-md-6 mt-3 d-flex align-items-center justify-content-center box-dashboard'>
+                                        <div className='my-chart'>
+                                             <div className='my-chart-head text-center'>Reported By</div>
+                                             <div className='p-3'>
+                                                  <ul>
+                                                       {reportBy.map((val) => {
+                                                            return <li key={val._id}><h4 className='my-1'>{val.first_name?.concat(" ", val.last_name)}</h4></li>
+                                                       })}
+                                                  </ul>
+                                                  {reportBy.length === 0 &&
+                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
                                              </div>
                                         </div>
                                    </div>

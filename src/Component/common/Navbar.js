@@ -192,7 +192,7 @@ const Navbar = ({ socket }) => {
                             })}
                             {leaveNotification.length === 0 &&
                               <div className='d-flex align-items-center justify-content-center'>
-                                <label>No data avilable</label>
+                                <label>No Records Found</label>
                               </div>}
                           </div>
                         </div>

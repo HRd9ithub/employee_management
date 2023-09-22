@@ -194,9 +194,9 @@ return (
                                             <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
                                             <label className="custom-file-label" htmlFor="customFileLang2">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
                                         </div>
-                                        <button disabled={!document.imageName || document.image} className='custom-file-btn'>
+                                        {data && <button disabled={!document.imageName || document.image} className='custom-file-btn'>
                                             <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
-                                        </button>
+                                        </button>}
                                     </div>
                                 </div>
                                 {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
