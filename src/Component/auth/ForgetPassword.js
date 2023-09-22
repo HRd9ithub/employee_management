@@ -77,7 +77,7 @@ const ForgetPassword = () => {
               <div className="auth-form-light text-left py-2 px-sm-4">
                 <div className="company-logo check-email-icon">
                   <i className="fa-solid fa-user-lock"></i>
-                  <h4>Forget Password</h4>
+                  <h4>Forgot Password</h4>
                 </div>
                 <Form className="pt-1" onSubmit={HandleSubmit}>
                   <Form.Label>{`Enter your Email and we'll send you a link to reset your password `}</Form.Label>
