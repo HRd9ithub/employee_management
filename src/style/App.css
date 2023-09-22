@@ -436,6 +436,8 @@ span.eye-icon {
   border-radius: 0px !important;
 }
 
+/* uncomment it if remove changes --------------- ====== jd design ====== -------------------- */
+
 /* .inner-pages .form-control {
   border-radius: 0px !important;
 } */
@@ -896,7 +898,7 @@ span.eye-icon {
   background: #ffffff;
   /* border-radius: 0 0 5px 0; */
   position: absolute;
-  left: 70px;
+  left: 68px;
   width: 165px;
   z-index: 7;
 }
@@ -1066,6 +1068,7 @@ span.eye-icon {
   font-weight: 500;
   margin: 0;
   z-index: 100 !important;
+  left: 68px;
 }
 
 .sidebar .nav .nav-item.nav-profile .nav-link .nav-profile-badge {
@@ -2152,6 +2155,7 @@ svg {
 
 /* ===================================== Employee profile view ======================================== */
 
+/* uncomment it if remove changes --------------- ====== jd design ====== -------------------- */
 /* .profile-box {
   border: 1px solid lightblue;
   background-color: #fff;
@@ -2449,6 +2453,7 @@ svg {
   color: #ffff;
   overflow: hidden;
   padding: 22px;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
 .common-box-dashboard img {
@@ -2516,7 +2521,7 @@ svg {
 }
 
 .my-chart {
-  height: 183px;
+  height: 100%;
   width: 100% !important;
   border-radius: 7px;
   margin-bottom: 0px !important;
@@ -2541,6 +2546,7 @@ svg {
   padding: 5px;
   font-size: 14px;
   border-radius: 15px;
+  margin-bottom: 5px;
   width: 81%;
 }
 
@@ -2610,7 +2616,6 @@ svg {
 
 .react-datepicker__month-container {
   background: #fff;
-
 }
 
 .dashboard-custom-date-picker {
@@ -3109,7 +3114,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .react-datepicker__month-text--highlighted,
 .react-datepicker__quarter-text--highlighted,
 .react-datepicker__year-text--highlighted {
-  border-radius: 50% !important;
+  border-radius: 50px !important;
   background-color: red !important;
   color: #fff;
   width: 30px;
@@ -3261,7 +3266,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 
-/* ----------------- ======== jd ======= -------------------- */
+/* -------------- design changes css --------------- ====== jd design ====== -------------------- */
 
 /* link expired css*/
 .link_expire {
@@ -3396,11 +3401,51 @@ select.form-control:focus {
   margin-top: 0;
   width: 100%;
 }
-
 .submit-section .btn-gradient-primary {
   padding: 0.775rem 2.5rem !important;
 }
-/* table scrollar */
+.my-chart-head {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.my-chart ul li {
+  background-color: #32aff3;
+  color: white;
+}
+
+/* dashboard above card design */
+.common-info-dashboard svg, .common-info-dashboard i {
+  font-size: 5rem;
+  padding: 15px 15px;
+  border-radius: 5px;
+  transform: translateY(-35px);
+  fill: white;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+.common-info-dashboard {
+  align-items: flex-start !important;
+}
+.common-box-dashboard {
+  overflow: visible;
+}
+.common-box-dashboard.total-employee .common-info-dashboard svg{
+  background: #f7c975;
+}
+.common-box-dashboard.employee-active .common-info-dashboard svg{
+  background: #69ced9;
+}
+.common-box-dashboard.Present .common-info-dashboard svg{
+  background: #abc95be6;
+}
+.common-box-dashboard.Today .common-info-dashboard svg{
+  background: #dfab99;
+}
+.common-box-dashboard:hover .common-info-dashboard svg {
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+/* data table horizontal scrollbar responsive purpose */
 .css-rorn0c-MuiTableContainer-root::-webkit-scrollbar {
   height: 7px;
 }
@@ -3410,4 +3455,53 @@ select.form-control:focus {
 .css-rorn0c-MuiTableContainer-root::-webkit-scrollbar-thumb {
   background: #bfbfbf;
   border-radius: 5px;
+}
+/* table white-space wrap design */
+table.common-table-section thead tr th, table.common-table-section tbody tr td{
+  white-space: nowrap !important;
+}
+
+/* button animation */
+/* .btn-animated {
+  position: relative;
+  overflow: hidden;
+  z-index: 100 !important;
+  color: #004392;
+  border: 1px solid #004392;
+  padding: 5px 10px;
+  background-color: white;
+}
+.btn-animated > * {
+  position: relative;
+  z-index: 100 !important;
+}
+.btn-animated::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: #004392;
+  z-index: 98;
+}
+.btn-animated:hover {
+  color: white;
+  transition: all 0.4s ease;
+}
+.btn-animated:hover::after {
+  width: 100%;
+  height: 100%;
+  transition: all 0.4s ease;
+} */
+
+/* date picker selected date highlight design */
+.react-datepicker__day--highlighted,
+.react-datepicker__month-text--highlighted,
+.react-datepicker__quarter-text--highlighted,
+.react-datepicker__year-text--highlighted {
+  border-radius: 5px !important;
+}
+.react-datepicker__day--today::before {
+  border-radius: 5px !important;
 }

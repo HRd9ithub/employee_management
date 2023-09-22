@@ -126,7 +126,7 @@ const Designation = () => {
               <div className="background-wrapper bg-white pt-2">
                 <div className=''>
                   <div className='row justify-content-end align-items-center row-std m-0'>
-                    <div className="col-12 d-flex justify-content-between align-items-center">
+                    <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                       <div>
                         <NavLink className="path-header">Designation</NavLink>
                         <ul id="breadcrumb" className="mb-0">
@@ -134,19 +134,19 @@ const Designation = () => {
                           <li><NavLink to="/designation" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Designation</NavLink></li>
                         </ul>
                       </div>
-                      <div className="d-flex" id="two">
-                        <div className="search-full">
-                          <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
-                          <i className="fas fa-search"></i>
-                        </div>
-                        <div className="search-box mr-3">
-                          <form name="search-inner">
-                            <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
-                          </form>
-                          <i className="fas fa-search"></i>
-                        </div>
-                        <DesignationModal getdesignation={getdesignation} ecords={records} permission={permission && permission} />
+                    </div>
+                    <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
+                      <div className="search-full">
+                        <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                        <i className="fas fa-search"></i>
                       </div>
+                      <div className="search-box mr-3">
+                        <form name="search-inner">
+                          <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                        </form>
+                        <i className="fas fa-search"></i>
+                      </div>
+                      <DesignationModal getdesignation={getdesignation} ecords={records} permission={permission && permission} />
                     </div>
                   </div>
                 </div>

@@ -162,7 +162,7 @@ const EmployeeViewComponent = () => {
                 <div className="background-wrapper bg-white py-2">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
-                            <div className="col-12 d-flex justify-content-between align-items-center p-0">
+                            <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
                                 <div>
                                     <NavLink className="path-header">Profile</NavLink>
                                     <ul id="breadcrumb" className="mb-0">
@@ -171,12 +171,12 @@ const EmployeeViewComponent = () => {
                                         <li><NavLink to={`/employees/view/${data._id}`} className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
                                     </ul>
                                 </div>
-                                <div className="d-flex" id="two">
-                                    {!pathname.toLocaleLowerCase().match('/profile') &&
-                                        <div>
-                                            <button className='btn-gradient-primary' onClick={() => navigate("/employees")}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
-                                        </div>}
-                                </div>
+                            </div>
+                            <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
+                                {!pathname.toLocaleLowerCase().match('/profile') &&
+                                    <div>
+                                        <button className='btn-gradient-primary' onClick={() => navigate("/employees")}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
+                                    </div>}
                             </div>
                         </div>
                         <div className="profile-box mb-0">
