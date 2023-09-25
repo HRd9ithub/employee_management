@@ -99,7 +99,6 @@ const Sidebar = () => {
 
   // submenu togle in click
   const toggleMenuState = (menuState) => {
-    console.warn("clicked");
     const iconValue = document.getElementsByClassName('sidebar-icon-only');
     if (iconValue.length === 0) {
       if (data[menuState]) {
@@ -133,6 +132,7 @@ const Sidebar = () => {
 
   const toggleSidebar = () => {
     document.querySelector('.sidebar-offcanvas').classList.remove('active')
+    setSidebarToggle(!sidebarToggle)
   }
 
 

@@ -9,6 +9,7 @@ import AppRoute from './Component/routes/AppRoute';
 import socketIO from "socket.io-client";
 import { useEffect } from 'react';
 import GlobalPageRedirect from './Component/auth_context/GlobalPageRedirect';
+import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
 const socket = socketIO.connect(process.env.REACT_APP_IMAGE_API);
 
 
@@ -19,7 +20,6 @@ function App() {
 
   useEffect(() => {
     socket.on("receive", (data) => {
-      console.log(data)
       if (data.isAuth) {
         getCommonApi()
       }
@@ -30,6 +30,7 @@ function App() {
   return (
     <>
       <div className='wrapper-container d-flex'>
+        <IdleTimeOutHandler/>
         <div className='sidebar-wrap'>
           {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Sidebar />}
         </div>
