@@ -981,6 +981,10 @@
     .common-info-dashboard svg {
         font-size: 3.5rem;
     }
+    /* navbar contents - right side */
+    .navbar .navbar-menu-wrapper {
+        justify-content: end !important;
+    }
 }
 
 @media (max-width:980px) {
@@ -1134,8 +1138,8 @@
         padding-right: 20px;
         padding-bottom: 20px;
     }
-
-
+    
+    
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
         font-size: 3rem;
@@ -1368,6 +1372,14 @@
 
     .my-chart-head {
         padding: 1.5rem 1rem;
+    }
+
+    /* remove below if revert changes --------------- ====== jd design ====== -------------------- */
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text {
+        display: block;
+    }
+    .nav-item.nav-profile button, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link {
+        margin-left: 0px !important;
     }
 }
 
@@ -2640,6 +2652,11 @@
     /* .calender */
     .calender-wrapper {
         padding-bottom: 12px;
+    }
+    /* calender - date picker icon */
+    .calendar-icon-holiday {
+        width: 0.8em;
+        height: 0.8em;
     }
 
     /* 

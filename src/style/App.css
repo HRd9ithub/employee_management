@@ -863,6 +863,7 @@ span.eye-icon {
   /* height: 100vh; */
   /* overflow: auto; */
   width: 225px;
+  z-index: 10000;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link:before {
@@ -2745,7 +2746,7 @@ svg {
 }
 
 .standard-wrapper {
-  padding: 0px 12px;
+  padding: 0px 20px;
 }
 
 #error-page {
@@ -3500,14 +3501,59 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
 
 /* date picker selected date highlight design */
 .react-datepicker__day--highlighted,
+.react-datepicker__day--selected,
 .react-datepicker__month-text--highlighted,
 .react-datepicker__quarter-text--highlighted,
-.react-datepicker__year-text--highlighted {
-  border-radius: 5px !important;
-}
-.react-datepicker__day--today::before {
-  border-radius: 5px !important;
-}
+.react-datepicker__year-text--highlighted,
+.react-datepicker__day--today::before,
+.react-datepicker__day--highlighted::before,
 .react-datepicker__day--selected::before {
+  border-radius: 5px !important;
+}
+.react-datepicker__day--highlighted::before {
   background-color: red !important;
+}
+
+/* breadcrumb - current page - non clickable */
+#breadcrumb li:last-child a {
+  cursor: default;
+}
+#breadcrumb li:last-child a:hover {
+  color: #0a4a92;
+}
+
+/* new notification bell animation */
+.count-indicator.new-notification i {
+  animation: bellShaking 0.7s ease 2;
+}
+@keyframes bellShaking {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(-20deg);
+  }
+}
+.count-indicator.new-notification span.badge {
+  animation: showupbadge 1.4s ease 1;
+}
+@keyframes showupbadge {
+  0%, 90% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* calender date picker icon */
+.calendar-icon-holiday {
+  top: 12px;
+  right: 6px;
 }
