@@ -11,7 +11,7 @@ export class Error403 extends Component {
         animate={{ opacity: 1, transform: 'translateY(0px)' }}
         transition={{ duration: 0.5 }}
       >
-        <div id="error-page">
+        <div id="error-page" className="mx-4 my-3">
           <div className="content">
             <h2 className="header" data-text="403">
               403

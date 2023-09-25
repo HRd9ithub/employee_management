@@ -236,7 +236,7 @@ const Calendar = () => {
           transition={{ duration: 0.5 }}
         >
           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
-            <div className='bg-white pb-5'>
+            <div className='container-fluid p-0 bg-white overflow-hidden'>
               <div className="col-12 d-flex justify-content-between align-items-center py-2">
                 <div>
                   <NavLink className="path-header">Calender</NavLink>
@@ -247,7 +247,7 @@ const Calendar = () => {
                 </div>
               </div>
               <div className="row px-4 pb-5">
-                <div className="col-md-7 grid-margin stretch-card calender-wrapper employee-side-calender">
+                <div className="col-md-7 grid-margin stretch-card calender-wrapper employee-side-calender pb-3 pb-md-0 pb-lg-0 pb-xl-0">
                   <div className="card">
                     <div className="card-body p-0 d-flex">
                       <div className="dashboard-custom-date-picker">

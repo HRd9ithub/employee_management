@@ -122,7 +122,7 @@ const Navbar = ({ socket }) => {
     <nav className="navbar default-layout-navbar sticky-top">
       <div className="navbar-menu-wrapper d-flex align-items-stretch">
         {/* <img src='/Images/d9_logo_black.png' className='logo-none' alt="logo" /> */}
-        <button className="navbar-toggler navbar-toggler align-self-center" type="button" >
+        <button className="navbar-toggler navbar-toggler align-self-center text-white" type="button" >
           <span className="mdi mdi-menu" onClick={() => {
             let data = localStorage.getItem("sidebarToggle")
             if (!data || data === 'false') {
@@ -139,7 +139,7 @@ const Navbar = ({ socket }) => {
           {(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') &&
             <li className="nav-item">
               <Dropdown alignRight>
-                <Dropdown.Toggle className="nav-link count-indicator">
+                <Dropdown.Toggle className="nav-link count-indicator new-notification">
                   <i className="fa-solid fa-bell nav-icons"></i>
                   <span className="badge badge-light">{leaveNotification.length}</span>
                 </Dropdown.Toggle>
@@ -247,7 +247,7 @@ const Navbar = ({ socket }) => {
             </Dropdown>
           </li>
         </ul>
-        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" ref={sidebarRef} type="button" onClick={toggleOffcanvas}>
+        <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center text-white" ref={sidebarRef} type="button" onClick={toggleOffcanvas}>
           <span className="mdi mdi-menu sider-menu"></span>
         </button>
       </div>
