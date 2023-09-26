@@ -180,6 +180,8 @@ const Calendar = () => {
 
   // edit function
   const editHoliday = (id) => {
+    setnameError('');
+    setdateError('');
     let single_detail = holidayDetail.find((elem) => {
       return elem._id === id
     })
@@ -237,7 +239,7 @@ const Calendar = () => {
         >
           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
             <div className='container-fluid p-0 bg-white overflow-hidden'>
-              <div className="col-12 d-flex justify-content-between align-items-center py-2">
+              <div className="col-12 d-flex justify-content-between align-items-center pt-3 pb-2">
                 <div>
                   <NavLink className="path-header">Calender</NavLink>
                   <ul id="breadcrumb" className="mb-0">
@@ -269,7 +271,7 @@ const Calendar = () => {
                   <div className="card calender">
                     <div className="card-body">
                       {permission && permission.name.toLowerCase() === "admin" &&
-                        <form className="add-items d-flex justify-content-between" onSubmit={addTodo}>
+                        <form className="add-items d-flex justify-content-between align-items-center" onSubmit={addTodo}>
                           <div className='me-5 w-100'>
                             <input
                               type="text"
@@ -297,10 +299,8 @@ const Calendar = () => {
                             <CalendarMonthIcon className='calendar-icon-holiday' onClick={() => { DateRef.current.showPicker(); }} />
                             {dateError && <div className='error'>{dateError}</div>}
                           </div>
-                          {!editToggle ?
-                            <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold" >Add</button> :
-                            <>
-                              <button type="submit" className="btn btn-gradient-primary font-weight-bold px-lg-4 px-3">Update</button>
+                            <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold" >{!editToggle ? 'Add' : 'Update'}</button>
+                          {editToggle &&
                               <button className=' delete action-icon' onClick={() => {
                                 setlist({
                                   name: '',
@@ -310,7 +310,7 @@ const Calendar = () => {
                               }}>
                                 <i className={`remove mdi mdi-close-circle-outline`} ></i>
                               </button>
-                            </>}
+                            }
                         </form>}
                       <div className="list-wrapper">
                         <ol>
@@ -320,7 +320,9 @@ const Calendar = () => {
                         </ol>
 
                         <ul className="d-flex flex-column todo-list">
-                          {holidayDetail.map((elem, index) => {
+                        {holidayDetail.sort(function (a, b) {
+                              return new Date(a.date) - new Date(b.date)
+                            }).map((elem, index) => {
                             return (
                               <li key={elem._id}>
                                 <div className="form-check">

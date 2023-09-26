@@ -189,6 +189,9 @@
     .my-chart-head {
         padding: 2.5rem 1rem;
     }
+    .btn-add {
+        height: 32px !important;
+    }
 }
 
 @media (max-width: 1880px) {}
@@ -753,6 +756,11 @@
     .common-info-dashboard svg {
         font-size: 3.5rem;
     }
+    /* user-role page radio button */
+    .MuiSwitch-thumb.css-jsexje-MuiSwitch-thumb {
+        width: 18px !important;
+        height: 18px !important;
+    }
 }
 
 @media (max-width: 1152px) {
@@ -780,6 +788,11 @@
     .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
         font-size: 13px;
     }
+
+    /* sidebar hover active effect responsive --------------- ====== jd design ====== -------------------- */
+    .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
+        padding: 10px 79% 10px 10px;
+    }  
 }
 
 @media (max-width: 1067px) {
@@ -1273,7 +1286,7 @@
 
     .profile-view .profile-basic .profile-info-left {
         border-right: none;
-        border-bottom: 2px dashed #ccc;
+        border-bottom: 2px dashed transparent;
         padding: 0 0 20px;
     }
 
@@ -2345,6 +2358,11 @@
     .row-std-time .path {
         padding-bottom: 15px;
     }
+
+    /* user-role page radio button */
+    .MuiSwitch-root.MuiSwitch-sizeMedium.css-julti5-MuiSwitch-root .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 0px !important;
+    }
 }
 
 @media (max-width:480px) {
@@ -3153,6 +3171,27 @@
     .personal-info li .text {
         width: 200px;
     }
+
+    /* remove below if revarte changes --------------- ====== jd design ====== -------------------- */
+    /* radio button */
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 1px !important;
+        left: 1px !important;
+    }
+    .css-1yjjitx-MuiSwitch-track {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    /* sidebar hover-active */
+    .sidebar .nav .nav-item {
+        padding-left: 10px !important;
+    }
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.5rem 2rem 0.5rem 2.4rem;
+    }
+    .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
+        padding: 10px 75% 10px 10px;
+    }  
 }
 
 @media (max-width:360px) {

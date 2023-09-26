@@ -455,6 +455,7 @@ span.eye-icon {
   border: 1px solid #00000094;
   border-radius: 4px;
   padding-right: 23px;
+  padding-left: 6px !important;
   min-width: 26px;
 }
 
@@ -883,14 +884,16 @@ span.eye-icon {
 
   background: #0078ce52;
   border-right: 2px solid #074a98;
-  padding: 10px 100px 10px 10px;
+  /* padding: 10px 100px 10px 10px; */
+  padding: 10px 83% 10px 10px;
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
 
   background: #7ee69b52 !important;
   border-right: 2px solid #074a98;
-  padding: 10px 100px 10px 10px;
+  /* padding: 10px 100px 10px 10px; */
+  padding: 10px 83% 10px 10px;
 }
 
 .sidebar-icon-only .sidebar .nav .nav-item.hover-open .collapse,
@@ -3142,6 +3145,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-weight: 800;
   /* font-family: 'font_main_semi'; */
   color: #004b8f;
+  cursor: default;
+}
+.path-header:hover {
+  text-decoration: none;
+  color: #0a4a92;
 }
 
 #breadcrumb {
@@ -3556,4 +3564,11 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
 .calendar-icon-holiday {
   top: 12px;
   right: 6px;
+}
+
+/* modal corner remove white spot */
+.modal-content {
+  background-color: transparent !important;
+  border: none !important;
+  overflow: hidden;
 }
