@@ -195,7 +195,7 @@ const EmployeeViewComponent = () => {
                                                 </div>
                                             </div>
                                             <div className="profile-basic">
-                                                <div className="row">
+                                                <div className="row align-items-center">
                                                     <div className="col-md-5 col-lg-6 col-12 ">
                                                         <div className="profile-info-left">
                                                             <h3 className="user-name m-t-0 mb-0">{data.first_name && data.first_name.concat(" ", data.last_name)}</h3>
@@ -208,7 +208,7 @@ const EmployeeViewComponent = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-md-7 col-lg-6 col-12 p-0">
-                                                        <ul className="personal-info info-main">
+                                                        <ul className="personal-info info-main mb-0">
                                                             <li>
                                                                 <div className="title">Phone:</div>
                                                                 <div className="text"><a href={`tel:${data.phone}`}>{data.phone}</a></div>
