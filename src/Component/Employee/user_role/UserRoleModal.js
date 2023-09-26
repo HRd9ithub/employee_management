@@ -113,7 +113,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
     // submit data function
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.warn(page)
         !error && handlenameValidate();
         setError([])
         let url = "";
