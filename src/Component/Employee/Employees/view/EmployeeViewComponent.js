@@ -416,10 +416,10 @@ const EmployeeViewComponent = () => {
                                                                                     <div className="title">Employee Id</div>
                                                                                     <div className="text">{data.employee_id}</div>
                                                                                 </li>
-                                                                                <li>
+                                                                                {/* <li>
                                                                                     <div className="title">Department</div>
                                                                                     <div className="text">{data?.department ? data.department.name : <AiOutlineMinus />}</div>
-                                                                                </li>
+                                                                                </li> */}
                                                                                 <li>
                                                                                     <div className="title">Designation</div>
                                                                                     <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>

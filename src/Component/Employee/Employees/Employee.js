@@ -255,7 +255,7 @@ const Employee = ({ socket }) => {
                 <div className='row justify-content-end align-items-center row-std m-0'>
                   <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                     <div>
-                      <NavLink className="path-header">Employee</NavLink>
+                      {/* <NavLink className="path-header">Employee</NavLink> */}
                       <ul id="breadcrumb" className="mb-0">
                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                         <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>

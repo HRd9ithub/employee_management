@@ -67,15 +67,15 @@ const EductionForm = (props) => {
 
     // degree name validation
     const handleDegreeValidate = (ind) => {
-        if (!eduction[ind].degree || eduction[ind].degree.trim().length < 0) {
+        if (!eduction[ind].degree || eduction[ind].degree.trim().length <= 0) {
             setdegree_error([...degree_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Degree field is required.", id: ind }]);
+            }), { name: "Degree is a required field.", id: ind }]);
 
         } else if (!eduction[ind].degree.match(/^[a-zA-Z. ]*$/)) {
             setdegree_error([...degree_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Please enter a valid degree.", id: ind }])
+            }), { name: "Degree must be an alphabet,dot and space only.", id: ind }])
         } else {
             let temp = degree_error.filter((elem) => {
                 return elem.id !== ind
@@ -88,12 +88,12 @@ const EductionForm = (props) => {
         if (!eduction[ind].university_name) {
             setuniversity_name_error([...university_name_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "University name field is required.", id: ind }]);
+            }), { name: "University name is a required field.", id: ind }]);
 
         } else if (!eduction[ind].university_name.match(/^[a-zA-Z. ]*$/) || !eduction[ind].university_name.trim()) {
             setuniversity_name_error([...university_name_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Please enter a valid University name.", id: ind }])
+            }), { name: "University name must be an alphabet,dot and space only.", id: ind }])
         } else {
             let temp = university_name_error.filter((elem) => {
                 return elem.id !== ind
@@ -106,16 +106,16 @@ const EductionForm = (props) => {
         if (!eduction[ind].year) {
             setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Year field is required.", id: ind }]);
-
+            }), { name: "Year is a required field.", id: ind }]);
+ 
         } else if (!eduction[ind].year.toString().match(/^[0-9]*$/) || eduction[ind].year > new Date().getFullYear()) {
             setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Please enter a valid year.", id: ind }])
+            }), { name: "Year must be a number.", id: ind }])
         } else if (eduction[ind].year.toString().length < 4) {
             setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Please enter at least 4 characters.", id: ind }])
+            }), { name: "Your year must be 4 characters.", id: ind }])
         } else {
             let temp = year_error.filter((elem) => {
                 return elem.id !== ind
@@ -130,12 +130,12 @@ const EductionForm = (props) => {
         if (!eduction[ind].percentage) {
             setpercentage_error([...percentage_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Percentage field is required.", id: ind }]);
+            }), { name: "Percentage is a required field.", id: ind }]);
 
         } else if (!eduction[ind].percentage.match(/(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/)) {
             setpercentage_error([...percentage_error.filter((val) => {
                 return val.id !== ind
-            }), { name: "Please enter a valid percentage.", id: ind }])
+            }), { name: "Percentage must be a valid.", id: ind }])
         } else {
             let temp = percentage_error.filter((elem) => {
                 return elem.id !== ind
@@ -265,7 +265,7 @@ return (
                         </div>}
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>University Name</label>
-                            <input type="text" className="form-control" id="2" placeholder="Enter university name" name='university_name' onChange={(event) => InputEvent(event, ind)} value={val.university_name} onKeyUp={() => handleuniversityValidate(ind)} onBlur={() => handleuniversityValidate(ind)} autoComplete='off' />
+                            <input type="text" className="form-control" id="2" placeholder="Enter university name" name='university_name' onChange={(event) => InputEvent(event, ind)} value={val.university_name} onBlur={() => handleuniversityValidate(ind)} autoComplete='off' />
                             {/* eslint-disable-next-line */}
                             {university_name_error.map((val) => {
                                 if (val.id === ind) {
@@ -276,7 +276,7 @@ return (
                         </div>
                         <div className="form-group">
                             <label htmlFor="3" className='mt-3'>Degree</label>
-                            <input type="text" className="form-control" id="3" placeholder="Enter degree" name='degree' onChange={(event) => InputEvent(event, ind)} value={val.degree} onKeyUp={() => handleDegreeValidate(ind)} onBlur={() => handleDegreeValidate(ind)} autoComplete='off' />
+                            <input type="text" className="form-control" id="3" placeholder="Enter degree" name='degree' onChange={(event) => InputEvent(event, ind)} value={val.degree}  onBlur={() => handleDegreeValidate(ind)} autoComplete='off' />
                             {/* eslint-disable-next-line */}
                             {degree_error.map((val) => {
                                 if (val.id === ind) {
@@ -286,7 +286,7 @@ return (
                         </div>
                         <div className="form-group">
                             <label htmlFor="1" className='mt-3'>Percentage</label>
-                            <input type="text" className="form-control" id="1" placeholder="Enter percentage" name='percentage' onChange={(event) => InputEvent(event, ind)} value={val.percentage} onKeyUp={() => handlepercentageValidate(ind)} onBlur={() => handlepercentageValidate(ind)} autoComplete='off' />
+                            <input type="text" className="form-control" id="1" placeholder="Enter percentage" name='percentage' onChange={(event) => InputEvent(event, ind)} value={val.percentage}  onBlur={() => handlepercentageValidate(ind)} autoComplete='off' />
                             {/* eslint-disable-next-line */}
                             {percentage_error.map((val) => {
                                 if (val.id === ind) {
@@ -296,7 +296,7 @@ return (
                         </div>
                         <div className="form-group">
                             <label htmlFor="6" className='mt-3'>Year</label>
-                            <input type="text" className="form-control" id="6" placeholder="Enter year" name='year' onChange={(event) => InputEvent(event, ind)} value={val.year} onBlur={() => handleYearValidate(ind)} onKeyUp={() => handleYearValidate(ind)} maxLength={4} autoComplete='off' />
+                            <input type="text" className="form-control" id="6" placeholder="Enter year" name='year' onChange={(event) => InputEvent(event, ind)} value={val.year} onBlur={() => handleYearValidate(ind)}  maxLength={4} autoComplete='off' />
                             {/* eslint-disable-next-line */}
                             {year_error.map((val) => {
                                 if (val.id === ind) {

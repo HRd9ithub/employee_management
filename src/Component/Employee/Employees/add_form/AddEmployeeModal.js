@@ -47,7 +47,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     });
     const [loader, setLoader] = useState(false);
     const [userRole, setUserRole] = useState([]);
-    const [Department, setDepartment] = useState([]);
     const [userName, setUserName] = useState([]);
     const [Designations, setDesignations] = useState([]);
     const [firstNameError, setfirstNameError] = useState('');
@@ -69,33 +68,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_role = async () => {
             setLoader(true);
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/`,config);
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/`, config);
                 if (res.data.success) {
                     setUserRole(res.data.data);
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
-                    }
-                }
-            } finally {
-                setLoader(false)
-            }
-        };
-        const get_Department = async () => {
-            try {
-                setLoader(true)
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department/`,config);
-
-                if (res.data.success) {
-                    setDepartment(res.data.data);
                 }
             } catch (error) {
                 if (!error.response) {
@@ -116,7 +91,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_Designations = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`,config);
+                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`, config);
 
                 if (res.data.success) {
                     setDesignations(res.data.data);
@@ -140,7 +115,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_username = async () => {
             setLoader(true)
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`,{},config);
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, config);
 
                 if (res.data.success) {
                     setUserName(res.data.data);
@@ -163,7 +138,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         };
         if (page) {
             get_role();
-            get_Department();
             get_Designations();
             get_username();
         }
@@ -217,9 +191,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // first name validation 
     const firstNameValidation = () => {
         if (!employee.first_name) {
-            setfirstNameError("Please enter First name.");
+            setfirstNameError("First Name is a required field.");
         } else if (!employee.first_name.match(/^[A-Za-z]+$/)) {
-            setfirstNameError("Please enter only alphabet.");
+            setfirstNameError("First Name must be alphabetic.");
         } else {
             setfirstNameError("");
         }
@@ -227,9 +201,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // last name validation 
     const lastNameValidation = () => {
         if (!employee.last_name) {
-            setlastNameError("Please enter Last name.");
+            setlastNameError("Last Name is a required field.");
         } else if (!employee.last_name.match(/^[A-Za-z]+$/)) {
-            setlastNameError("Please enter only alphabet.");
+            setlastNameError("Last Name must be alphabetic.");
         } else {
             setlastNameError("");
         }
@@ -237,9 +211,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // email validation 
     const emailValidation = () => {
         if (!employee.email) {
-            setemailError("Please enter email address.");
+            setemailError("Email is a required field.");
         } else if (!employee.email.match(mailformat)) {
-            setemailError("Please enter a valid email address");
+            setemailError("Email must be a valid email.");
         } else {
             setemailError("");
         }
@@ -247,11 +221,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
     // email check in database
     const checkEmail = async () => {
-        !employee.email && emailValidation();
-        if (!emailError && employee.email) {
+        if (!employee.email) {
+            setemailError("Email is a required field.");
+        } else if (!employee.email.match(mailformat)) {
+            setemailError("Email must be a valid email.");
+        } else {
             setLoader(true)
-          
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email },config).then((response) => {
+
+            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }, config).then((response) => {
                 if (response.data.success) {
                     setemailError("")
                 }
@@ -275,10 +252,13 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
     // employee id  check in database
     const checkEmployeeId = async () => {
-        !employee.employee_id && employeeIdValidation();
-        if (!EmployeeIdError && employee.employee_id) {
+        if (!employee.employee_id) {
+            setEmployeeIdError("Employee id is a required field.");
+        } else if (!employee.employee_id.match(/^[A-Za-z0-9-]+$/)) {
+            setEmployeeIdError("Please enter valid employee id.");
+        } else {
             setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/employeeId`, { employee_id: employee.employee_id },config).then((response) => {
+            axios.post(`${process.env.REACT_APP_API_KEY}/user/employeeId`, { employee_id: employee.employee_id }, config).then((response) => {
                 if (response.data.success) {
                     setEmployeeIdError("")
                 }
@@ -303,19 +283,19 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // phone validation
     const phoneValidation = () => {
         if (!employee.mobile_no) {
-            setphoneError("Please enter a mobile number.");
-        } else if (!employee.mobile_no.match(/^[0-9]+$/)) {
-            setphoneError("Please enter a valid mobile number.");
+            setphoneError("Mobile number is a required field.");
+        } else if (!employee.mobile_no.match(/^[0-9]+$/ )) {
+            setphoneError("Mobile number must be a number.");
         } else if (employee.mobile_no.length !== 10) {
-            setphoneError("Please enter a valid mobile number.");
-        } else {
+            setphoneError("Your mobile number must be 10 characters.");
+        }else {
             setphoneError("");
         }
     }
     // password validation
     const passwordValidation = () => {
         if (!employee.password) {
-            setpasswordError("Please enter password.");
+            setpasswordError("Password is a required field.");
         } else if (!employee.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
             setpasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
@@ -326,7 +306,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // confirm password validation
     const confirmPasswordValidation = () => {
         if (!employee.confirmPassword.trim()) {
-            setconfirmPasswordError("Please enter a confirm Password.");
+            setconfirmPasswordError("Confirm Password is a required field.");
         } else if (employee.password !== employee.confirmPassword) {
             setconfirmPasswordError("Password do not match.");
         } else {
@@ -335,20 +315,20 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     }
 
     // department validation
-    const departmentValidation = () => {
-        if (Department.length !== 0) {
-            if (!employee.department_id || employee.department_id === "department") {
-                setdepartmentError("Please select a department.");
-            } else {
-                setdepartmentError("")
-            }
-        }
-    }
+    // const departmentValidation = () => {
+    //     if (Department.length !== 0) {
+    //         if (!employee.department_id || employee.department_id === "department") {
+    //             setdepartmentError("Please select a department.");
+    //         } else {
+    //             setdepartmentError("")
+    //         }
+    //     }
+    // }
     // DESIGNATION validation
     const designationValidation = () => {
         if (Designations.length !== 0) {
             if (!employee.designation_id || employee.designation_id === "designation") {
-                setdesignationError("Please select a designation.");
+                setdesignationError("Designation is a required field.");
             } else {
                 setdesignationError("")
             }
@@ -358,7 +338,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // role validation
     const roleValidation = () => {
         if (!employee.role_id || employee.role_id === "role") {
-            setroleError("Please select user role.");
+            setroleError("User role is a required field.");
         } else {
             setroleError("")
         }
@@ -367,7 +347,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // report to validation
     const reportValidation = () => {
         if (!employee.reporting_by || employee.reporting_by === "report") {
-            setreporttoError("Please select report to.");
+            setreporttoError("Report to is a required field.");
         } else {
             setreporttoError("")
         }
@@ -376,8 +356,8 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // employee id validation
     const employeeIdValidation = () => {
         if (!employee.employee_id) {
-            setEmployeeIdError("Please enter employee id.");
-        } else if (!employee.employee_id.match(/^[A-Za-z0-9-]+$/)) {
+            setEmployeeIdError("Employee id is a required field.");
+        } else if (!employee.employee_id.trim().match(/^[A-Za-z0-9-]+$/)) {
             setEmployeeIdError("Please enter valid employee id.");
         } else {
             setEmployeeIdError("")
@@ -387,7 +367,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // joinig date validation
     const handleJoinDatevalidation = () => {
         if (!employee.join_date) {
-            setjoningDateError("Please select joining date");
+            setjoningDateError("Joining date is a required field.");
         } else {
             setjoningDateError("");
         }
@@ -405,7 +385,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         phoneValidation();
         passwordValidation();
         confirmPasswordValidation();
-        departmentValidation();
         designationValidation();
         roleValidation();
         if (!EmployeeIdError) {
@@ -414,9 +393,9 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         handleJoinDatevalidation();
         reportValidation();
 
-        let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, department_id, status, confirmPassword, employee_id, reporting_by } = employee;
+        let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, status, confirmPassword, employee_id, reporting_by } = employee;
 
-        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id || !department_id || !reporting_by) {
+        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id  || !reporting_by) {
             return false;
         } else if (firstNameError || lastNameError || emailError || phoneError || joningDateError || passwordError.length !== 0 || roleError || designationError || departmentError || confirmPasswordError || EmployeeIdError || reportToerror) {
             return false;
@@ -433,12 +412,11 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     password,
                     role_id,
                     designation_id,
-                    department_id,
                     status,
                     confirmPassword,
                     employee_id,
                     report_by: reporting_by
-                },config);
+                }, config);
 
                 if (response.data.success) {
                     setModalShow(false)
@@ -452,7 +430,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                         password: "",
                         role_id: "",
                         designation_id: "",
-                        department_id: "",
                         status: "Active",
                         confirmPassword: "",
                         employee_id: "",
@@ -514,49 +491,49 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputfname">First Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onKeyUp={firstNameValidation} onBlur={firstNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{firstNameError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onKeyUp={lastNameValidation} onBlur={lastNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{lastNameError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputEmail1">Email Address</label>
-                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" onChange={handleChange} value={employee.email} onBlur={checkEmail}  onKeyUp={emailValidation} autoComplete='off' />
+                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" onChange={handleChange} value={employee.email} onBlur={checkEmail} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{emailError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputmobile_no">Mobile No.</label>
-                                                <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" onChange={handleChange} value={employee.mobile_no} onKeyUp={phoneValidation} onBlur={phoneValidation} autoComplete='off' inputMode='numeric' />
+                                                <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" onChange={handleChange} value={employee.mobile_no} onBlur={phoneValidation} autoComplete='off' inputMode='numeric' />
                                                 <small id="emailHelp" className="form-text error">{phoneError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="password">Password</label>
-                                                <input type="password" className="form-control" id="password" placeholder="Enter password" name="password" autocompleted="password" value={employee.password} onChange={handleChange} onKeyUp={passwordValidation} autoComplete='off' onBlur={passwordValidation} />
+                                                <input type="password" className="form-control" id="password" placeholder="Enter password" name="password" autocompleted="password" value={employee.password} onChange={handleChange} autoComplete='off' onBlur={passwordValidation} />
                                                 <small id="emailHelp" className="form-text error">{passwordError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="cpassword">Confirm Password</label>
-                                                <input type="password" className="form-control" id="cpassword" placeholder="Enter confirm password" name="confirmPassword" autocompleted="confirmPassword" value={employee.confirmPassword} onChange={handleChange} onKeyUp={confirmPasswordValidation} onBlur={confirmPasswordValidation} autoComplete='off' />
+                                                <input type="password" className="form-control" id="cpassword" placeholder="Enter confirm password" name="confirmPassword" autocompleted="confirmPassword" value={employee.confirmPassword} onChange={handleChange} onBlur={confirmPasswordValidation} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{confirmPasswordError}</small>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="employeeId">Employee ID</label>
-                                                <input type="text" className="form-control" id="employeeId" placeholder="Enter employee id" name="employee_id" value={employee.employee_id} onChange={handleChange} onKeyUp={employeeIdValidation} onBlur={checkEmployeeId} autoComplete='off' />
+                                                <input type="text" className="form-control" id="employeeId" placeholder="Enter employee id" name="employee_id" value={employee.employee_id} onChange={handleChange} onBlur={checkEmployeeId} autoComplete='off' />
                                                 <small id="emailHelp" className="form-text error">{EmployeeIdError}</small>
                                             </div>
                                         </div>
@@ -571,31 +548,26 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     ref={DateRef}
                                                     onChange={(e) => {
                                                         setEmployee({ ...employee, join_date: e.target.value })
-                                                        if (!e.target.value) {
-                                                            setjoningDateError("Please select joining date");
-                                                        } else {
-                                                            setjoningDateError("");
-                                                        }
                                                     }}
                                                     autoComplete='off'
-                                                    onClick={() => { DateRef.current.showPicker(); handleJoinDatevalidation(); }}
+                                                    onClick={() => { DateRef.current.showPicker();}}
                                                     onBlur={() => handleJoinDatevalidation()}
                                                 />
-                                                <CalendarMonthIcon className='calendar-icon' />
+                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { DateRef.current.showPicker();}} />
                                                 <small id="emailHelp" className="form-text error">{joningDateError}</small>
                                             </div>
                                         </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                        {/* <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControldepartment">Department</label>
                                                 <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
                                                     handleChange(e);
-                                                    if(e.target.value && e.target.value !== "department"){
+                                                    if (e.target.value && e.target.value !== "department") {
                                                         setdepartmentError("");
-                                                    }else{
+                                                    } else {
                                                         setdepartmentError("Please select a department.");
                                                     }
-                                                    }} onClick={departmentValidation} >
+                                                }} onClick={departmentValidation} >
                                                     <option value="department">Select Department</option>
                                                     {Department.map((val) => {
                                                         return (
@@ -606,20 +578,12 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     })}
                                                 </select>
                                                 <small id="emailHelp" className="form-text error">{departmentError}</small>
-                                                {Department.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one department.</small>}
                                             </Form.Group>
-                                        </div>
+                                        </div> */}
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControldesignation">Designation</label>
-                                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={(e) => {
-                                                    handleChange(e);
-                                                    if(e.target.value && e.target.value !== "designation"){
-                                                        setdesignationError("");
-                                                    }else{
-                                                        setdesignationError("Please select a designation.");
-                                                    }
-                                                    }} onClick={designationValidation} >
+                                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={handleChange} onBlur={designationValidation} >
                                                     <option value="designation">Select Designation </option>
                                                     {Designations.map((val) => {
                                                         return (
@@ -630,20 +594,12 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     })}
                                                 </select>
                                                 <small id="emailHelp" className="form-text error">{designationError}</small>
-                                                {Designations.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one designation.</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControlUser">User Role</label>
-                                                <select className="form-control" id="exampleFormControlUser" name="role_id" value={employee.role_id} onChange={(e) => {
-                                                    handleChange(e);
-                                                    if(e.target.value && e.target.value !== "role"){
-                                                        setroleError("");
-                                                    }else{
-                                                        setroleError("Please select user role.");
-                                                    }
-                                                    }} onClick={roleValidation}>
+                                                <select className="form-control" id="exampleFormControlUser" name="role_id" value={employee.role_id} onChange={handleChange} onBlur={roleValidation}>
                                                     <option value="role">Select user role</option>
                                                     {userRole.map((val) => {
                                                         return (
@@ -653,7 +609,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     })}
                                                 </select>
                                                 <small id="emailHelp" className="form-text error">{roleError}</small>
-                                                {userRole.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user role.</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -665,17 +620,10 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                 </select>
                                             </Form.Group>
                                         </div>
-                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="frer">Report To</label>
-                                                <select className="form-control" id="frer" name="reporting_by" value={employee.reporting_by || ""} onChange={(e) => {
-                                                    handleChange(e);
-                                                    if(e.target.value && e.target.value !== "report"){
-                                                        setreporttoError("");
-                                                    }else{
-                                                        setreporttoError("Please select report to.");
-                                                    }
-                                                    }} onClick={reportValidation}>
+                                                <select className="form-control" id="frer" name="reporting_by" value={employee.reporting_by || ""} onChange={handleChange} onBlur={reportValidation}>
                                                     <option value="report">Select Report To</option>
                                                     {userName.map((val) => {
                                                         return (
@@ -684,7 +632,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     })}
                                                 </select>
                                                 <small id="emailHelp" className="form-text error">{reportToerror}</small>
-                                                {userName.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one employee.</small>}
                                             </Form.Group>
                                         </div>
                                     </div>
