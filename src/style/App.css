@@ -112,9 +112,8 @@ h6,
 
 
 .error {
-  color: red;
+  color: #e50914;
   font-size: 13px;
-
 }
 
 input::-webkit-outer-spin-button,
@@ -3578,4 +3577,18 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
   background-color: transparent !important;
   border: none !important;
   overflow: hidden;
+}
+
+.card.modal-content .card-body {
+  background-color: white ;
+}
+
+
+/* .css-i4bv87-MuiSvgIcon-root{
+  cursor: pointer;
+} */
+
+input[type="date"], .css-i4bv87-MuiSvgIcon-root{
+  user-select: none !important;
+  cursor: pointer;
 }

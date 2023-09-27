@@ -26,6 +26,7 @@ const ProtectedRoute = ({ children, name }) => {
         setInterval(async() => {
             if (currDate !== new Date().getDate()) {
                 getCommonApi(); 
+                 // eslint-disable-next-line
                 currDate = new Date().getDate()
             } else {
                 currDate = new Date().getDate()

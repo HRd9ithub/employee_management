@@ -99,9 +99,9 @@ const EmergencyForm = (props) => {
     // # validation for name 
     const nameValidation = () => {
         if (!emergency.name) {
-            setNameError("Please enter name.");
+            setNameError("Name is a required field.");
         } else if (!emergency.name.match(/^[A-Za-z ]+$/) || emergency.name.trim().length === 0) {
-            setNameError("Please enter valid name.");
+            setNameError("Name must be an alphabet and space only.");
         } else {
             setNameError("");
         }
@@ -112,9 +112,9 @@ const EmergencyForm = (props) => {
         // eslint-disable-next-line
         var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!emergency.email) {
-            setemailError("Please enter email address.");
+            setemailError("Email is a required field.");
         } else if (!emergency.email.match(mailformat)) {
-            setemailError("Please enter a valid email address");
+            setemailError("Email must be a valid email.");
         } else {
             setemailError("")
         }
@@ -123,10 +123,12 @@ const EmergencyForm = (props) => {
     // # validation phone number
     const phoneVlidation = () => {
         if (!emergency.phone) {
-            setphoneError("Please enter a mobile number.");
-        } else if (emergency.phone.length !== 10 || !emergency.phone.match(/^[0-9]+$/)) {
-            setphoneError("Please enter a valid mobile number.");
-        } else {
+            setphoneError("Mobile number is a required field.");
+        } else if (!emergency.phone.match(/^[0-9]+$/)) {
+            setphoneError("Mobile number must be a number");
+        } else if(emergency.phone.length !== 10){
+            setphoneError("Your mobile number must be 10 characters.")
+        }else {
             setphoneError("")
         }
     }
@@ -134,9 +136,9 @@ const EmergencyForm = (props) => {
     // # validation for address
     const relationshipValidtion = () => {
         if (!emergency.relationship) {
-            setrelationshipError("Please enter a relation ship.");
+            setrelationshipError("Relation ship is a required field.");
         } else if (!emergency.relationship.match(/^[A-Za-z]+$/)) {
-            setrelationshipError("Please enter a valid relation ship.");
+            setrelationshipError("Relation ship must be alphabetic.");
         } else {
             setrelationshipError("")
         }
@@ -144,7 +146,7 @@ const EmergencyForm = (props) => {
     // # validation for address
     const addressValidtion = () => {
         if (!emergency.address) {
-            setaddressError("Please enter a address.");
+            setaddressError("Address is a required field.");
         } else if (!emergency.address.trim()) {
             setaddressError("Please enter a valid address.");
         } else {
@@ -170,14 +172,14 @@ const EmergencyForm = (props) => {
                     <div className='col-md-6'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Name</label>
-                            <input type="text" className="form-control text-capitalize" id="2" placeholder="Enter name" name='name' onChange={InputEvent} value={emergency.name} autoComplete='off' onKeyUp={nameValidation} onBlur={nameValidation} />
+                            <input type="text" className="form-control text-capitalize" id="2" placeholder="Enter name" name='name' onChange={InputEvent} value={emergency.name} autoComplete='off' onBlur={nameValidation} />
                             {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                         </div>
                     </div>
                     <div className='col-md-6'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Email</label>
-                            <input type="text" className="form-control" id="2" placeholder="Enter email address" name='email' onChange={InputEvent} value={emergency.email} autoComplete='off' onKeyUp={emailValidation} onBlur={emailValidation} />
+                            <input type="text" className="form-control" id="2" placeholder="Enter email address" name='email' onChange={InputEvent} value={emergency.email} autoComplete='off' onBlur={emailValidation} />
                             {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                         </div>
                     </div>
@@ -186,21 +188,21 @@ const EmergencyForm = (props) => {
                     <div className='col-md-6'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Mobile Number</label>
-                            <input type="text" className="form-control" id="2" maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off' onKeyUp={phoneVlidation}  onBlur={phoneVlidation}/>
+                            <input type="text" className="form-control" id="2" maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off'  onBlur={phoneVlidation}/>
                             {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                         </div>
                     </div>
                     <div className='col-md-6'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>relationship</label>
-                            <input type="text" className="form-control  text-capitalize" id="2" placeholder="Enter relationship" name='relationship' onChange={InputEvent} value={emergency.relationship} autoComplete='off' onKeyUp={relationshipValidtion} onBlur={relationshipValidtion}  />
+                            <input type="text" className="form-control  text-capitalize" id="2" placeholder="Enter relationship" name='relationship' onChange={InputEvent} value={emergency.relationship} autoComplete='off' onBlur={relationshipValidtion}  />
                             {relationshipError && <small id="emailHelp" className="form-text error">{relationshipError}</small>}
                         </div>
                     </div>
                     <div className='col-md-12'>
                         <div className="form-group">
                             <label htmlFor="ADDREESS" className='mt-3'>Address</label>
-                            <input type="text" className="form-control" id="ADDRESS" placeholder="Enter address" name='address' onChange={InputEvent} value={emergency.address} autoComplete='off' onKeyUp={addressValidtion} onBlur={addressValidtion} />
+                            <input type="text" className="form-control" id="ADDRESS" placeholder="Enter address" name='address' onChange={InputEvent} value={emergency.address} autoComplete='off' onBlur={addressValidtion} />
                             {addressError && <small id="emailHelp" className="form-text error">{addressError}</small>}
                         </div>
                     </div>

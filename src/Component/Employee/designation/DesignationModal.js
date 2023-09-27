@@ -12,7 +12,7 @@ function DesignationModal({ data, getdesignation, permission, records }) {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [id, setId] = useState("");
-  const [error, setError] = useState([]);
+  const [error, setError] = useState("");
   let toggleButton = false;
 
   let { getCommonApi } = GlobalPageRedirect();
@@ -40,14 +40,15 @@ function DesignationModal({ data, getdesignation, permission, records }) {
     let { value } = e.target;
 
     setName(value);
+    setError("")
   };
 
   // designation name field validation function
   const handlenameValidate = () => {
     if (!name) {
-      setNameError("Designation name is required.");
+      setNameError("Designation name is a required field.");
     } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
-      setNameError("Please enter a valid designation name.");
+      setNameError("Designation name must be an alphabet and space only..");
     } else {
       setNameError("");
     }
@@ -59,7 +60,7 @@ function DesignationModal({ data, getdesignation, permission, records }) {
     if (!nameError) {
       handlenameValidate();
     }
-    setError([]);
+    setError("");
     let url = "";
 
     if (!name || nameError) {
@@ -178,16 +179,10 @@ function DesignationModal({ data, getdesignation, permission, records }) {
                       name="name"
                       value={name}
                       onChange={InputEvent}
-                      onKeyUp={handlenameValidate}
-                      onBlur={checkDesignation}
+                      onBlur={handlenameValidate}
                     />
-                    {nameError && (<small id="emailHelp" className="form-text error">{nameError}</small>)}
+                    {(nameError || error) && (<small id="emailHelp" className="form-text error">{nameError || error}</small>)}
                   </div>
-                  <ol>
-                    {error.map((val) => {
-                      return <li className="error" key={val}>{val}</li>
-                    })}
-                  </ol>
                   <div className="d-flex justify-content-end modal-button">
                     <button
                       type="submit"

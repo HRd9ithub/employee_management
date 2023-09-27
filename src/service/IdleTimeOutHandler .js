@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { GetLocalStorage } from './StoreLocalStorage';
 // import { Globalcomponent } from '../Component/auth_context/GlobalComponent';
 import GlobalPageRedirect from "../Component/auth_context/GlobalPageRedirect"
@@ -47,6 +47,7 @@ const IdleTimeOutHandler = () => {
     //
     useEffect(() => {
         addEvents();
+         // eslint-disable-next-line
     }, [])
 }
 

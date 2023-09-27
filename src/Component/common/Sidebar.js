@@ -260,9 +260,9 @@ const Sidebar = () => {
                   {menu.map((elem) => {
                     return (
                       <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item" onClick={toggleSidebar} > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item"  > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
                       </div>
                     )
                   })}
@@ -282,9 +282,9 @@ const Sidebar = () => {
                   {menu.map((elem) => {
                     return (
                       <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" > <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" > <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
                       </div>
                     )
                   })}
@@ -329,7 +329,7 @@ const Sidebar = () => {
                   {menu.map((elem) => {
                     return (
                       <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
                         {/* {elem.name.toLowerCase().replace(/\s/g, '') === 'email' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/email">{elem.name}</NavLink></li>} */}
                       </div>)
                   })}
