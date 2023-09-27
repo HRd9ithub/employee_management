@@ -20,6 +20,7 @@ import ResetPassword from '../auth/ResetPassword';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
 import RedirectPage from './RedirectPage';
+import LoginNew from '../auth/LoginNew';
 
 const AppRoute = ({socket}) => {
 
@@ -27,7 +28,7 @@ const AppRoute = ({socket}) => {
         <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
-                <Route exact path='/login' element={<RedirectPage ><Login socket={socket}/></RedirectPage>}></Route>
+                <Route exact path='/login' element={<RedirectPage ><LoginNew socket={socket}/></RedirectPage>}></Route>
                 <Route exact path='/password' element={<RedirectPage ><ForgetPassword/></RedirectPage>}></Route>
                 <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword/></RedirectPage>}></Route>
                 {/* dashboard */}

@@ -4,6 +4,7 @@
         font-size: 19px;
         margin: 0 !important;
     }
+
     .sidebar {
         width: 280px;
     }
@@ -185,6 +186,19 @@
         font-size: 15px !important;
     }
 
+    .login-wrap {
+        width: 50%;
+        height: 425px;
+    }
+
+    .login-left .side-img {
+        width: 500px;
+    }
+
+    .login-page-logo img {
+        width: 200px;
+    }
+
     /* design changes --------------- ====== jd design ====== -------------------- */
     .my-chart-head {
         padding: 2.5rem 1rem;
@@ -210,6 +224,10 @@
     .info-left {
         font-size: 19px;
     }
+
+    .login-left .side-img {
+        padding-top: 20px;
+    }
 }
 
 @media (max-width: 1600px) {
@@ -218,6 +236,7 @@
         /* overflow: auto; */
         width: 250px;
     }
+
     .kIaWtg {
         font-size: 15px;
     }
@@ -319,6 +338,10 @@
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         bottom: 1px !important;
     }
+
+    .login-wrap {
+        height: 390px;
+    }
 }
 
 @media (max-width: 1525px) {
@@ -352,6 +375,10 @@
         width: 510px !important;
         padding-top: 25px;
         margin: auto !important;
+    }
+
+    .login-wrap {
+        width: 55%;
     }
 }
 
@@ -387,6 +414,7 @@
     #two .form-control-lg {
         height: 2.5rem;
     }
+
     /* 
     .btn-gradient-primary {
         padding: 12px 0px !important;
@@ -402,9 +430,11 @@
         font-size: 15px !important;
         padding: 9px 0px;
     }
+
     .sidebar {
         width: 225px;
     }
+
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.862rem;
     }
@@ -565,12 +595,22 @@
     .apexcharts-canvas {
         width: 450px !important;
     }
+
+    .login-left .side-img {
+        padding-top: 30px;
+    }
+
+    .login-wrap {
+        width: 60%;
+    }
 }
 
 @media (max-width: 1330px) {
-    /* .btn-gradient-primary {
-        padding: 11px 0px !important;
+    /* .login-wrap {
+        width: 80%;
     } */
+
+
 }
 
 @media (max-width: 1200px) {
@@ -683,7 +723,7 @@
     }
 
     .employee-content .row-std {
-        padding: 0.8rem 1rem 0.5rem 0rem !important;
+        padding: 0.8rem 1rem 0.5rem 0rem !important
     }
 
     #two .form-control-lg {
@@ -739,6 +779,21 @@
         bottom: 3px !important;
     }
 
+    .login-left .side-img {
+        padding-left: 0px;
+        padding-top: 0px;
+    }
+
+    .login-wrap {
+        width: 75%;
+    }
+
+    .login-page-logo img {
+        padding: 10px 20px 0px 20px;
+    }
+
+
+
     /* calender */
     .calender-wrapper {
         padding-right: 0px;
@@ -780,6 +835,13 @@
     .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
         font-size: 13px;
     }
+
+    /* .login-wrap {
+        height: 425px;
+        width: 60%;
+    } */
+
+
 }
 
 @media (max-width: 1067px) {
@@ -874,8 +936,17 @@
     .inner-pages .form-control {
         padding: 0.86rem 0.5rem;
     }
+
     .my-chart-head {
         padding: 2rem 1rem;
+    }
+
+    /* .login-wrap {
+        height: 425px;
+    } */
+
+    .login-left {
+        padding-right: 0px;
     }
 }
 
@@ -907,6 +978,7 @@
     .profile-standard .nav-pills .nav-link {
         padding: 0.5rem 0.7rem;
     }
+
     /* uncomment it if remove changes --------------- ====== jd design ====== -------------------- */
     /* .css-i4bv87-MuiSvgIcon-root {
         width: 0.7em;
@@ -950,6 +1022,10 @@
         padding: 15px;
     }
 
+    .login-button button {
+        padding: 10px 42px;
+        margin-right: 15px;
+    }
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
@@ -981,6 +1057,7 @@
     .common-info-dashboard svg {
         font-size: 3.5rem;
     }
+
     /* navbar contents - right side */
     .navbar .navbar-menu-wrapper {
         justify-content: end !important;
@@ -1133,13 +1210,49 @@
         overflow-x: hidden;
     }
 
+    .login-page-logo-none img {
+        margin: auto;
+        display: block;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        text-align: center;
+        padding: 0px 20px !important;
+    }
+
+    .login-right h2 {
+        padding-top: 10px;
+        font-weight: 800;
+        font-size: 26px;
+    }
+
+    .login-wrap {
+        width: 45%;
+    }
+
+    .login-right h5 {
+        color: #aeb1b9;
+        padding-bottom: 15px;
+        font-size: 18px;
+    }
+
+    .login-wrap {
+        height: 415px;
+        width: 35%;
+    }
+    
+
     /* calender */
     .calender-wrapper {
         padding-right: 20px;
         padding-bottom: 20px;
     }
-    
-    
+
+
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
         font-size: 3rem;
@@ -1262,6 +1375,21 @@
         font-size: 12px;
     }
 
+    .login-wrap {
+        width: 90%;
+    }
+
+    .login-right h5 {
+        padding-bottom: 10px;
+    }
+
+    .login-button {
+        padding-top: 30px;
+    }
+
+    .login-wrap {
+        height: 350px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1378,7 +1506,9 @@
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text {
         display: block;
     }
-    .nav-item.nav-profile button, .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link {
+
+    .nav-item.nav-profile button,
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link {
         margin-left: 0px !important;
     }
 }
@@ -1548,7 +1678,8 @@
 
     .btn-gradient-primary {
         font-size: 12px;
-    } 
+    }
+
     .add-employee-btn i {
         font-size: 12px !important;
     }
@@ -2324,7 +2455,7 @@
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.75rem;
     }
-    
+
     .sidebar .nav .nav-item .nav-link {
         padding: 0.35rem 0 0.35rem 0;
     }
@@ -2653,6 +2784,7 @@
     .calender-wrapper {
         padding-bottom: 12px;
     }
+
     /* calender - date picker icon */
     .calendar-icon-holiday {
         width: 0.8em;
@@ -3654,6 +3786,7 @@
         border-width: 17px 8px;
         left: -16px;
     }
+
     /* uncomment it if remove changes ------------- ======== jd design ======== ---------------- */
     /* #breadcrumb a {
         margin-right: 21px;
