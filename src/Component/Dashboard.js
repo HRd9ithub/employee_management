@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaUsers, FaUserAlt } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
+import CoPresentIcon from '@mui/icons-material/CoPresent';
 import DatePickers from "react-datepicker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
@@ -16,8 +17,9 @@ import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
 import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from './common/Spinner';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ApprovalIcon from '@mui/icons-material/Approval';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
 const Dashboard = () => {
@@ -125,6 +127,25 @@ const Dashboard = () => {
           setBirthDayFilter(birth)
      }
 
+
+     //Ordinal  add in date
+     const dateHandle = (date) => {
+          let day = new Date(date).getDate();
+          var b = day % 10;
+
+          if ((day % 100) / 10 === 1) {
+               return "th";
+          } else if (b === 1) {
+               return "st";
+          } else if (b === 2) {
+               return "nd";
+          } else if (b === 3) {
+               return "rd";
+          } else {
+               return "th";
+          }
+     };
+
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
@@ -137,7 +158,7 @@ const Dashboard = () => {
                               </div>
                               <div className="row mt-3">
                                    {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
-                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -155,37 +176,52 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink> */}
                                         </div>
-                                        <div className="mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leave")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{leaveRequest}</h2>
-                                                       <ApprovalIcon/>
+                                                       <ApprovalIcon />
                                                   </div>
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{presentToday}</h2>
-                                                       <FaUserAlt />
+                                                       <CoPresentIcon />
                                                   </div>
                                                   <h4 className="mt-2">Present Today</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{todayLeave.length}</h2>
-                                                       <BookmarkIcon/>
+                                                       <NoAccountsIcon />
                                                   </div>
                                                   <h4 className="mt-2">Absent Today</h4>
                                              </NavLink>
                                         </div>
                                    </>}
+                                   <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
+                                        <NavLink className="common-box-dashboard on-leave-today nav-link">
+                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                             <div className="common-info-dashboard">
+                                                  <h4>On Leave Today</h4>
+                                                  <FactCheckIcon />
+                                             </div>
+
+                                             <div className='d-flex justify-content-start align-items-center flex-wrap mt-3'>
+                                                  {todayLeave.map((val, ind) => {
+                                                       return <h5 className='mr-4' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</h5>
+                                                  })}
+                                             </div>
+                                        </NavLink>
+                                   </div>
                               </div>
 
                               <div className='row'>
@@ -209,47 +245,16 @@ const Dashboard = () => {
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
-                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{val.name}</h4></li>
+                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{moment(val.date).format("DD")}
+                                                                 <sup> {dateHandle(val.date)} </sup>
+                                                                 {moment(val.date).format("MMM YYYY")} - {val.name}</h4></li>
                                                        })}
                                                        {birthDayFilter.map((val) => {
                                                             return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
                                                        })}
                                                   </ul>
                                                   {holiday.length === 0 && birthDayFilter.length === 0 &&
-                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
-                                             </div>
-                                        </div>
-                                   </div>
-                              </div>
-
-                              <div className="row mt-3">
-                                   <div className='col-md-6 mt-3 d-flex align-items-center justify-content-center box-dashboard'>
-                                        <div className='my-chart'>
-                                             <div className='my-chart-head text-center'>On Leave Today</div>
-                                             <div className='p-3'>
-                                                  <ul>
-                                                       {todayLeave.map((val) => {
-                                                            return <li key={val._id}><h4 className='my-1'>{val.user ? val.user?.first_name.concat(" ", val.user?.last_name) : <HiOutlineMinus />}</h4></li>
-                                                       })}
-                                                  </ul>
-                                                  {todayLeave.length === 0 && totalEmployee !== 0 && presentToday === totalEmployee &&
-                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>Wow! Everyone is Present Today.</h3>}
-                                                  {todayLeave.length === 0 &&
-                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
-                                             </div>
-                                        </div>
-                                   </div>
-                                   <div className='col-md-6 mt-3 d-flex align-items-center justify-content-center box-dashboard'>
-                                        <div className='my-chart'>
-                                             <div className='my-chart-head text-center'>Reported By</div>
-                                             <div className='p-3'>
-                                                  <ul>
-                                                       {reportBy.map((val) => {
-                                                            return <li key={val._id}><h4 className='my-1'>{val.first_name?.concat(" ", val.last_name)}</h4></li>
-                                                       })}
-                                                  </ul>
-                                                  {reportBy.length === 0 &&
-                                                  <h3 className='text-center' style={{'color': '#a3aab1'}}>No Records Found !</h3>}
+                                                       <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No Records Found !</h3>}
                                              </div>
                                         </div>
                                    </div>

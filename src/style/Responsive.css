@@ -138,12 +138,12 @@
     }
 
     .common-box-dashboard img {
-        width: 150px;
+        height: 100%;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 183px;
-    }
+    } */
 
     .common-box-dashboard h4 {
         font-size: 25px;
@@ -291,9 +291,9 @@
         font-size: 23px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 160px;
-    }
+    } */
 
     .common-info-dashboard {
         font-size: 30px;
@@ -443,9 +443,9 @@
         font-size: 20px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 149px;
-    }
+    } */
 
     .common-info-dashboard h1,
     .common-info-dashboard svg,
@@ -481,7 +481,8 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 4.5rem;
+        /* font-size: 4.5rem; */
+        font-size: 2rem;
     }
 }
 
@@ -721,9 +722,9 @@
         font-size: 18px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 126px;
-    }
+    } */
 
     .common-info-dashboard h2 {
         font-size: 1.5rem;
@@ -753,9 +754,9 @@
 
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         font-size: 3.5rem;
-    }
+    } */
     /* user-role page radio button */
     .MuiSwitch-thumb.css-jsexje-MuiSwitch-thumb {
         width: 18px !important;
@@ -812,13 +813,13 @@
         font-size: 16px;
     }
 
-    .common-box-dashboard img {
+    /* .common-box-dashboard img {
         width: 103px;
-    }
+    } */
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 116px;
-    }
+    } */
 
     .common-box-dashboard {
         padding: 18px;
@@ -965,11 +966,11 @@
 
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         transform: translateY(-25px);
         font-size: 3rem;
         padding: 10px 10px;
-    }
+    } */
 }
 
 @media (max-width: 1023px) {
@@ -992,7 +993,8 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 3.5rem;
+        /* font-size: 3.5rem; */
+        font-size: 2rem;
     }
     /* navbar contents - right side */
     .navbar .navbar-menu-wrapper {
@@ -1154,9 +1156,9 @@
     
     
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         font-size: 3rem;
-    }
+    } */
 }
 
 @media (max-width:800px) {
@@ -1809,9 +1811,9 @@
         font-size: 1.5rem;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 101px;
-    }
+    } */
 
     .common-info-dashboard h1,
     .common-info-dashboard svg,
@@ -1901,7 +1903,8 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 3rem;
+        /* font-size: 3rem; */
+        font-size: 1.9rem;
     }
 }
 
@@ -2977,6 +2980,11 @@
 
     .sidebar-offcanvas {
         left: -85%;
+    }
+
+    /* list of holiday responsive changes --------------- ====== jd design ====== -------------------- */
+    .my-chart ul li h4 {
+        font-size: 14px !important;
     }
 }
 

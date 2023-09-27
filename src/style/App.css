@@ -2455,7 +2455,7 @@ svg {
 .common-box-dashboard {
   border-radius: 5px;
   color: #ffff;
-  overflow: hidden;
+  overflow: hidden !important;
   padding: 22px;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
@@ -3426,7 +3426,7 @@ select.form-control:focus {
 }
 
 /* dashboard above card design */
-.common-info-dashboard svg, .common-info-dashboard i {
+/* .common-info-dashboard svg, .common-info-dashboard i {
   font-size: 5rem;
   padding: 15px 15px;
   border-radius: 5px;
@@ -3455,6 +3455,13 @@ select.form-control:focus {
 .common-box-dashboard:hover .common-info-dashboard svg {
   transform: translateY(0);
   transition: all 0.4s ease;
+} */
+.on-leave-today {
+  background: linear-gradient(45deg, #6b59d4d0 0%, #856fbcbd 100%);
+}
+.on-leave-today:hover {
+  background: linear-gradient(45deg,  #6c59d4 0%, #856fbc 100%);
+  box-shadow: 1px 2px 3px grey;
 }
 
 /* data table horizontal scrollbar responsive purpose */
