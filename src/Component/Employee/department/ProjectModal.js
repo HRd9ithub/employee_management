@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 
-function DepartmentModal({ data, getuser, permission, records }) {
+function ProjectModal({ data, getuser, permission, records }) {
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [error, seterror] = useState('');
@@ -149,7 +149,7 @@ function DepartmentModal({ data, getuser, permission, records }) {
             {/* Department Name * */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                 <Modal.Header className='small-modal'>
-                    <Modal.Title>{data ? 'Edit Department' : 'Add Department'}
+                    <Modal.Title>{data ? 'Edit Project' : 'Add Project'}
                     </Modal.Title>
                     <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
                 </Modal.Header>
@@ -159,8 +159,8 @@ function DepartmentModal({ data, getuser, permission, records }) {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="form-group">
-                                        <label htmlFor="exampleInputfname" className='mt-3'> Department Name</label>
-                                        <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Department name" name='name' value={name} onChange={handleChange} onKeyUp={handleValidate} onBlur={checkDepartment} />
+                                        <label htmlFor="exampleInputfname" className='mt-3'>Project Name</label>
+                                        <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onKeyUp={handleValidate} onBlur={checkDepartment} />
                                         {error && <small id="emailHelp" className="form-text error">{error}</small>}
                                     </div>
                                     <ol>
@@ -183,4 +183,4 @@ function DepartmentModal({ data, getuser, permission, records }) {
     );
 }
 
-export default DepartmentModal
+export default ProjectModal

@@ -484,6 +484,10 @@
         /* font-size: 4.5rem; */
         font-size: 2rem;
     }
+    .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title::before {
+        border-top: 27px solid transparent;
+        border-bottom: 27px solid transparent;
+    }
 }
 
 @media (max-width: 1366px) {
@@ -761,6 +765,10 @@
     .MuiSwitch-thumb.css-jsexje-MuiSwitch-thumb {
         width: 18px !important;
         height: 18px !important;
+    }
+    .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title::before {
+        border-top: 25px solid transparent;
+        border-bottom: 25px solid transparent;
     }
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import DepartmentModal from './DepartmentModal'
+import ProjectModal from './ProjectModal'
 import Spinner from '../../common/Spinner';
 import { toast } from 'react-hot-toast'
 import { motion } from 'framer-motion'
@@ -130,10 +130,9 @@ const Department = () => {
                   <div className='row justify-content-end align-items-center row-std m-0'>
                     <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                       <div>
-                        <NavLink className="path-header">Department</NavLink>
                         <ul id="breadcrumb" className="mb-0">
                           <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                          <li><NavLink to="/department" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Department</NavLink></li>
+                          <li><NavLink to="/department" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Project</NavLink></li>
                         </ul>
                       </div>
                     </div>
@@ -148,7 +147,7 @@ const Department = () => {
                         </form>
                         <i className="fas fa-search"></i>
                       </div>
-                      <DepartmentModal getuser={getuser} permission={permission && permission} />
+                      <ProjectModal getuser={getuser} permission={permission && permission} />
                     </div>
                   </div>
                 </div>
@@ -163,7 +162,7 @@ const Department = () => {
                           </TableCell>
                           <TableCell>
                             <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                              Department
+                              Project Name
                             </TableSortLabel>
                           </TableCell>
                           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
@@ -181,7 +180,7 @@ const Department = () => {
                               {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
                                 <TableCell>
                                   <div className='action'>
-                                    <DepartmentModal data={val} getuser={getuser} />
+                                    <ProjectModal data={val} getuser={getuser} />
                                   </div>
                                 </TableCell>}
                             </TableRow>
