@@ -81,7 +81,6 @@
         padding: 9px 0px;
     }
 
-
     .page-title {
         font-size: 31px;
     }
@@ -191,12 +190,8 @@
         height: 425px;
     }
 
-    .login-left .side-img {
-        width: 500px;
-    }
-
     .login-page-logo img {
-        width: 200px;
+        width: 170px;
     }
 
     /* design changes --------------- ====== jd design ====== -------------------- */
@@ -208,7 +203,6 @@
 @media (max-width: 1880px) {}
 
 @media (max-width: 1787px) {
-
     .profile-wrapper img {
         width: 170px;
         height: 170px;
@@ -223,10 +217,6 @@
 
     .info-left {
         font-size: 19px;
-    }
-
-    .login-left .side-img {
-        padding-top: 20px;
     }
 }
 
@@ -375,10 +365,6 @@
         width: 510px !important;
         padding-top: 25px;
         margin: auto !important;
-    }
-
-    .login-wrap {
-        width: 55%;
     }
 }
 
@@ -595,22 +581,6 @@
     .apexcharts-canvas {
         width: 450px !important;
     }
-
-    .login-left .side-img {
-        padding-top: 30px;
-    }
-
-    .login-wrap {
-        width: 60%;
-    }
-}
-
-@media (max-width: 1330px) {
-    /* .login-wrap {
-        width: 80%;
-    } */
-
-
 }
 
 @media (max-width: 1200px) {
@@ -785,14 +755,8 @@
     }
 
     .login-wrap {
-        width: 75%;
+        width: 60%;
     }
-
-    .login-page-logo img {
-        padding: 10px 20px 0px 20px;
-    }
-
-
 
     /* calender */
     .calender-wrapper {
@@ -835,13 +799,6 @@
     .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
         font-size: 13px;
     }
-
-    /* .login-wrap {
-        height: 425px;
-        width: 60%;
-    } */
-
-
 }
 
 @media (max-width: 1067px) {
@@ -941,15 +898,7 @@
         padding: 2rem 1rem;
     }
 
-    /* .login-wrap {
-        height: 425px;
-    } */
-
-    .login-left {
-        padding-right: 0px;
-    }
 }
-
 
 @media (max-width: 1028px) {
 
@@ -1022,10 +971,10 @@
         padding: 15px;
     }
 
-    .login-button button {
+    /* .login-button button {
         padding: 10px 42px;
         margin-right: 15px;
-    }
+    } */
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
@@ -1061,6 +1010,43 @@
     /* navbar contents - right side */
     .navbar .navbar-menu-wrapper {
         justify-content: end !important;
+    }
+
+    .login-page-logo-none img {
+        margin: auto;
+        display: block;
+    }
+
+    .login-page-logo-none img {
+        padding: 0;
+        width: 90px;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        text-align: center;
+        padding: 0px 20px !important;
+    }
+
+    .login-right h2 {
+        font-size: 26px;
+    }
+
+    .login-wrap {
+        width: 45%;
+    }
+
+    .login-right h5 {
+        color: #aeb1b9;
+        font-size: 18px;
+    }
+
+    .login-wrap {
+        height: auto;
+        width: 40%;
     }
 }
 
@@ -1210,48 +1196,11 @@
         overflow-x: hidden;
     }
 
-    .login-page-logo-none img {
-        margin: auto;
-        display: block;
-    }
-
-    .login-left {
-        display: none;
-    }
-
-    .login-right {
-        text-align: center;
-        padding: 0px 20px !important;
-    }
-
-    .login-right h2 {
-        padding-top: 10px;
-        font-weight: 800;
-        font-size: 26px;
-    }
-
-    .login-wrap {
-        width: 45%;
-    }
-
-    .login-right h5 {
-        color: #aeb1b9;
-        padding-bottom: 15px;
-        font-size: 18px;
-    }
-
-    .login-wrap {
-        height: 415px;
-        width: 35%;
-    }
-    
-
     /* calender */
     .calender-wrapper {
         padding-right: 20px;
         padding-bottom: 20px;
     }
-
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
@@ -1376,19 +1325,7 @@
     }
 
     .login-wrap {
-        width: 90%;
-    }
-
-    .login-right h5 {
-        padding-bottom: 10px;
-    }
-
-    .login-button {
-        padding-top: 30px;
-    }
-
-    .login-wrap {
-        height: 350px;
+        width: 50%;
     }
 }
 
@@ -1750,17 +1687,12 @@
         margin-bottom: 16px;
     }
 
-    /* calender */
-    /* .react-date-picker__inputGroup__year {
-        width: 32px !important;
-    } */
-    /* 
-    .react-date-picker__inputGroup__month {
-        width: 23px !important;
-    } */
-
     .personal-info li .title {
         margin-right: 17px;
+    }
+
+    .login-wrap {
+        width: 60%;
     }
 }
 
@@ -2016,13 +1948,11 @@
         left: 31%;
     }
 
-
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
         font-size: 3rem;
     }
 }
-
 
 @media (max-width:568px) {
 
@@ -2160,12 +2090,6 @@
     .personal-info li .title {
         margin-right: 32px;
     }
-
-    /* 
-    .close-btn {
-        display: none;
-        transition: all 0.5s ease;
-    } */
 
     .inner-pages .form-control {
         padding: 0rem 0.5rem;
@@ -2475,6 +2399,14 @@
 
     .row-std-time .path {
         padding-bottom: 15px;
+    }
+
+    .login-right .input-group .input-group-prepend + .form-control {
+        margin-top: 0 !important;
+    }
+
+    .login-wrap {
+        width: 80%;
     }
 }
 
@@ -3092,6 +3024,10 @@
     .sidebar-offcanvas {
         left: -85%;
     }
+
+    .login-inner-text {
+        padding: 0.3rem !important;
+    }
 }
 
 @media (max-width:375px) {
@@ -3446,6 +3382,10 @@
 
     .row-std-time #one {
         margin-right: 22px;
+    }
+
+    .login-right .input-group-text {
+        padding: 0.875rem 0.8rem !important;
     }
 
 }

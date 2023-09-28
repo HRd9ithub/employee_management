@@ -31,10 +31,10 @@ function App() {
     <>
       <div className='wrapper-container d-flex'>
         <div className='sidebar-wrap'>
-          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Sidebar />}
+          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' || location.pathname === '/otp'? '' : <Sidebar />}
         </div>
         <div className='sidebar-inner'>
-          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar socket={socket} />}
+          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password'  || location.pathname === '/otp'? '' : <Navbar socket={socket} />}
           <div className="main-panel">
             <div className="content-wrapper">
               {/* route file */}

@@ -1,7 +1,8 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from 'react';
+import {NavLink} from 'react-router-dom';
 
-const LoginNew = () => {
+const ForgotPassword = () => {
+
   return (
     <div className='login-page'>
       <div className="login-wrap container">
@@ -10,7 +11,7 @@ const LoginNew = () => {
             <div className="login-page-logo text-center">
               <img src='Images/d9_logo_black.png' alt="logo" />
             </div>
-            <img src="./Images/hello_dribble.png" className='img-fluid side-img mx-auto' alt=""/>
+            <img src="./Images/forgot-password.png" className='img-fluid side-img mx-auto' alt=""/>
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
             <div className="row">
@@ -20,36 +21,26 @@ const LoginNew = () => {
                 </div>
               </div>
               <div className="col-12">
-                <h2 className='mt-2 mt-lg-4 mt-xl-4'>Welcome Back!</h2>
+                <h2 className='mt-2 mt-lg-4 mt-xl-4'>Forgot Password!</h2>
               </div>
               <div className="col-12">
-                <h5>Login To Continue</h5>
+                <h5>Enter your Email and we'll send you a link to reset your password</h5>
               </div>
               <div className="col-12">
-                <div className="input-group mb-3 mt-4">
+              <div className="input-group mb-3 mt-4">
                   <div className="input-group-prepend">
                     <div className="input-group-text">
-                      <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
+                    <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
                   <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email'/>
                 </div>
               </div>
-              <div className="col-12">
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <div className="input-group-text">
-                      <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
-                    </div>
-                  </div>
-                  <input type="text" className="form-control" aria-label="Text input with radio button" placeholder='Password'/>
-                </div>
-              </div>
-              <div className="col-12 text-right my-3">
-                <NavLink to="/password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
-              </div>
               <div className="col-12 login-button">
-                <button className='d-block w-100 mb-3'>Log In</button>
+                <button className='d-block w-100'>Reset Password</button>
+              </div>
+              <div className="col-12 text-center my-3">
+                <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
               </div>
             </div>
           </div>
@@ -59,4 +50,4 @@ const LoginNew = () => {
   )
 }
 
-export default LoginNew
+export default ForgotPassword
