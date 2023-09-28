@@ -136,9 +136,9 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
 // file name field vlidation
 const validationName = () => {
     if (!document.name) {
-        setNameError('Please enter file name.')
+        setNameError('File name is a required field.')
     } else if (!document.name.trim() || !document.name.match(/^[a-zA-Z0-9 ]*$/)) {
-        setNameError('Please enter a valid file name.')
+        setNameError('File name must be a number or alphabetic or space.')
     } else {
         setNameError('')
     }
@@ -146,12 +146,9 @@ const validationName = () => {
 
 // descrption field validation
 const validationDescription = () => {
-    if (!document.description) {
-        setDescriptioneError('Please enter description.')
-    } else if (!document.description.trim()) {
-        setDescriptioneError('Please enter a valid description.')
-    }
-    else {
+    if (!document.description.trim()) {
+        setDescriptioneError('Description is a required field.')
+    }  else {
         setDescriptioneError('');
     }
 }
@@ -159,7 +156,7 @@ const validationDescription = () => {
 // image validation
 const validationImage = () => {
     if (!document.imageName) {
-        setImagerror('Please select file.')
+        setImagerror('File is a required field.')
     } else {
         setImagerror('');
     }
@@ -202,12 +199,12 @@ return (
                                 {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                 <div className="form-group">
                                     <label htmlFor="1" className='mt-3'>File Name</label>
-                                    <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onKeyUp={validationName} onBlur={validationName} />
+                                    <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name}  onBlur={validationName} />
                                     {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="2" className='mt-3'>Description</label>
-                                    <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onKeyUp={validationDescription} onBlur={validationDescription}/>
+                                    <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onBlur={validationDescription}/>
                                     {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
                                 </div>
                                 <ol>

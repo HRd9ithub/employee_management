@@ -72,7 +72,7 @@ const Login = ({ socket }) => {
   // email validation
   const handleNameVlidate = () => {
     if (!data.email) {
-      setEmailError('Please enter an Email Address.')
+      setEmailError('Email is a required field.')
     } else if (!data.email.match(mailformat)) {
       setEmailError('Please enter a valid Email Address.')
     } else {
@@ -138,13 +138,13 @@ const Login = ({ socket }) => {
                   <Form className="pt-2" onSubmit={handleSubmit}>
                     <Form.Group className=" search-field">
                       <div>
-                        <Form.Control type="text" placeholder="Enter email address" size="lg" className="h-auto" name='email' value={data.email} onChange={HandleChange} onKeyUp={handleNameVlidate} onBlur={handleNameVlidate} autoComplete='off' autoFocus />
+                        <Form.Control type="text" placeholder="Enter email address" size="lg" className="h-auto" name='email' value={data.email} onChange={HandleChange} onBlur={handleNameVlidate} autoComplete='off' autoFocus />
                         {emailError && <Form.Text className='error'>{emailError}</Form.Text>}
                       </div>
                     </Form.Group>
                     <Form.Group className=" search-field position-relative">
                       <div>
-                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onBlur={handlePasswordVlidate} onKeyUp={handlePasswordVlidate} autoComplete='off' />
+                        <Form.Control type={`${IconToggle ? 'text' : 'password'}`} placeholder="Password" size="lg" className="h-auto" name='password' value={data.password} onChange={HandleChange} onBlur={handlePasswordVlidate} autoComplete='off' />
                         {passwordError && <Form.Text className='error'>{passwordError}</Form.Text>}
                         {IconToggle ? <span className='eye-icon' onClick={() => setIconToggle(false)}><VisibilityIcon /></span> :
                           <span className='eye-icon' onClick={() => setIconToggle(true)}><VisibilityOffIcon /></span>}

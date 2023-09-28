@@ -15,7 +15,6 @@ import moment from 'moment';
 import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
-import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from './common/Spinner';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -34,7 +33,7 @@ const Dashboard = () => {
      const [holidayfilter, setHolidayfilter] = useState([])
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
-     const [reportBy, setreportBy] = useState([])
+     // const [reportBy, setreportBy] = useState([])
 
      let { getCommonApi } = GlobalPageRedirect();
 
@@ -63,14 +62,14 @@ const Dashboard = () => {
                     const res = await axios.get(`${process.env.REACT_APP_API_KEY}/dashboard`, request);
 
                     if (res.data.success) {
-                         let { totalEmployee, leaveRequest, presentToday, absentToday, holidayDay, birthDay, reportBy } = res.data
+                         let { totalEmployee, leaveRequest, presentToday, absentToday, holidayDay, birthDay } = res.data
                          settotalEmployee(totalEmployee)
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
                          setBirthDay(birthDay);
                          setHolidayfilter(holidayDay)
                          setleaveRequest(leaveRequest)
-                         setreportBy(reportBy)
+                         // setreportBy(reportBy)
                     }
                } catch (error) {
                     if (!error.response) {

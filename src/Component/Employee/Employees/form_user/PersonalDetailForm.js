@@ -43,7 +43,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         report_by: ""
     });
     const [userRole, setUserRole] = useState([]);
-    const [Department, setDepartment] = useState([]);
     const [Designations, setDesignations] = useState([]);
 
     const [loader, setLoader] = useState(false);
