@@ -878,21 +878,19 @@ span.eye-icon {
   font-size: .75rem;
 }
 
-.sidebar .nav.sub-menu .nav-item .nav-link:hover::before {
-
+/* uncomment it if revert changes ----------======= jd design ========-------------- */
+/* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before {
   background: #0078ce52;
   border-right: 2px solid #074a98;
-  /* padding: 10px 100px 10px 10px; */
   padding: 10px 83% 10px 10px;
-}
+} */
 
-.sidebar .nav.sub-menu .nav-item .nav-link.active::before {
-
+/* uncomment it if revert changes ----------======= jd design ========-------------- */
+/* .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
   background: #7ee69b52 !important;
   border-right: 2px solid #074a98;
-  /* padding: 10px 100px 10px 10px; */
   padding: 10px 83% 10px 10px;
-}
+} */
 
 .sidebar-icon-only .sidebar .nav .nav-item.hover-open .collapse,
 .sidebar-icon-only .sidebar .nav .nav-item.hover-open .collapsing {
@@ -931,11 +929,12 @@ span.eye-icon {
   color: #fff !important;
 }
 
-.sidebar .nav.sub-menu .nav-item .nav-link {
+/* uncomment it if revert changes ----------======= jd design ========-------------- */
+/* .sidebar .nav.sub-menu .nav-item .nav-link {
   padding: 0.75rem 2rem 0.75rem 2rem;
   font-size: 1rem;
   color: #000 !important;
-}
+} */
 
 .brand-logo img {
   height: 47px;
@@ -3600,11 +3599,32 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   padding: 4px 12px !important;
 }
 /* sidebar style */
-/* .sidebar .nav.sub-menu .nav-item .nav-link {
-  padding: 0.80rem 2rem 0.80rem 2rem;
-  background-color: #004392;
+.sidebar .nav .nav-item {
+  padding: 0 0 0 1rem !important;
 }
-.sidebar .nav.sub-menu .nav-item .nav-link::before {
-  content: "" !important;
-  background-color: transparent;
+.sidebar .item-hover:hover, .sidebar .item-hover.active {
+  border: none !important;
+} 
+.sidebar .item-hover.active {
+  background-color: #33aff1 !important;
+} 
+.sidebar .item-hover.active .menu-title {
+  color: white !important;
+}
+.sidebar .nav.sub-menu .nav-item .nav-link {
+  color: white !important;
+  font-size: 1rem;
+}
+.sidebar-icon-only .sidebar .nav.sub-menu .nav-item .nav-link {
+  color: unset !important;
+  font-size: 1rem;
+}
+.sidebar-icon-only .sidebar .nav.sub-menu .nav-item .nav-link:hover {
+  color: unset !important;
+  background-color: #004392;
+  font-size: 1rem;
+}
+/* .sidebar .menu-expanded + .nav.sub-menu .nav-item .nav-link:hover {
+  background-color: green;
+  color: white !important;
 } */
