@@ -49,15 +49,11 @@ const Calendar = () => {
   // name onchange function and validation
   const inputChangeHandler = (event) => {
     setlist({ ...list, [event.target.name]: event.target.value })
-
-    if(event.target.name === "date"){
-      event.target.value ? setdateError("") : setdateError('Please select date.')
-    }
   }
 
   const handlenameValidate = () => {
     if (!list.name) {
-      setnameError('Please enter holiday name.')
+      setnameError('Name is a required field.')
     } else if (!list.name.trim() || !list.name.match(/^[A-Za-z ]+$/)) {
       setnameError('Please enter a valid holiday name.')
     } else {
@@ -66,9 +62,9 @@ const Calendar = () => {
   }
   const handledateValidate = () => {
     if (!list.date) {
-      setdateError('Please select date.')
+      setdateError('Date is a required field.');
     } else {
-      setdateError("")
+      setdateError("");
     }
   }
 
@@ -241,7 +237,6 @@ const Calendar = () => {
             <div className='container-fluid p-0 bg-white overflow-hidden'>
               <div className="col-12 d-flex justify-content-between align-items-center pt-3 pb-2">
                 <div>
-                  <NavLink className="path-header">Calender</NavLink>
                   <ul id="breadcrumb" className="mb-0">
                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                     <li><NavLink to="/holiday" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
@@ -280,7 +275,6 @@ const Calendar = () => {
                               value={list.name}
                               name='name'
                               onChange={inputChangeHandler}
-                              onKeyUp={handlenameValidate}
                               onBlur={handlenameValidate}
                               autoComplete='off'
                             />
@@ -294,7 +288,8 @@ const Calendar = () => {
                               ref={DateRef}
                               onChange={inputChangeHandler}
                               autoComplete='off'
-                              onClick={() => { DateRef.current.showPicker(); handledateValidate(); }}
+                              onClick={() => { DateRef.current.showPicker()}}
+                              onBlur={handledateValidate}
                             />
                             <CalendarMonthIcon className='calendar-icon-holiday' onClick={() => { DateRef.current.showPicker(); }} />
                             {dateError && <div className='error'>{dateError}</div>}

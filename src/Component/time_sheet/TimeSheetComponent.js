@@ -16,6 +16,8 @@ import { CSVLink } from "react-csv";
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
+import { useRef } from "react";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const TimeSheetComponent = () => {
     let date_today = new Date();
@@ -37,6 +39,9 @@ const TimeSheetComponent = () => {
     // sort state
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
+
+    let dateRangePickerRef = useRef(null)
+    console.log(dateRangePickerRef.current, "dateRangePickerRef")
 
     // get timesheet data
     const getTimesheet = async (id, start, end) => {
@@ -67,7 +72,7 @@ const TimeSheetComponent = () => {
         } finally {
             setTimeout(() => {
                 setLoader(false)
-            },500)
+            }, 500)
         }
     };
 
@@ -100,8 +105,28 @@ const TimeSheetComponent = () => {
         } finally {
             setTimeout(() => {
                 setLoader(false)
-            },500)
+            }, 500)
         }
+    };
+
+    // calcendar option
+    const ranges = {
+        Today: [moment(), moment()],
+        Yesterday: [
+            moment().subtract(1, "days"),
+            moment().subtract(1, "days")
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+            moment()
+                .subtract(1, "month")
+                .startOf("month"),
+            moment()
+                .subtract(1, "month")
+                .endOf("month")
+        ]
     };
 
     useEffect(() => {
@@ -222,7 +247,6 @@ const TimeSheetComponent = () => {
                             <div className='row justify-content-end align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                                     <div>
-                                        <NavLink className="path-header">Time Sheet</NavLink>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                             <li><NavLink to="/timesheet" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
@@ -263,8 +287,10 @@ const TimeSheetComponent = () => {
                                         </div>}
                                     <div className='col-6 ml-auto'>
                                         <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
-                                            <i className="fa-regular fa-calendar range_icon"></i>
+                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
+                                                <input className="form-control mt-3" />
+                                            </DateRangePicker>
+                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
                                 </div>

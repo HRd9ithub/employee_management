@@ -3592,3 +3592,11 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   user-select: none !important;
   cursor: pointer;
 }
+
+.swal2-modal .swal2-content .swal2-input:disabled, .form-control[readonly], .swal2-modal .swal2-content .swal2-input[readonly]{
+  background-color: transparent;
+}
+
+.daterangepicker .ranges li {
+  padding: 4px 12px !important;
+}
