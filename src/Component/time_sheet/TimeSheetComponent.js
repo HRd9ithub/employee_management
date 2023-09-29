@@ -273,7 +273,7 @@ const TimeSheetComponent = () => {
                             <div className='container-fluid'>
                                 <div className='row'>
                                     {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className='col-6'>
+                                        <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
                                             <div className="form-group mb-0">
                                                 <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
                                                     <option value=''>All</option>
@@ -285,7 +285,7 @@ const TimeSheetComponent = () => {
                                                 </select>
                                             </div>
                                         </div>}
-                                    <div className='col-6 ml-auto'>
+                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                         <div className="form-group mb-0 position-relative">
                                             <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
                                                 <input className="form-control mt-3" />

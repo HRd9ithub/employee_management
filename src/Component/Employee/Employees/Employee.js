@@ -84,13 +84,13 @@ const Employee = ({ socket }) => {
     };
     Swal.fire({
       title: "Delete Employee",
-      text: "Are you sure want to delete?",
+      text: "Are you sure you want to delete?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#1bcfb4",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
       width: "450px",
     }).then(async (result) => {
       if (result.isConfirmed) {

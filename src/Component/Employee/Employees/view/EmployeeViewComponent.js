@@ -185,13 +185,12 @@ const EmployeeViewComponent = () => {
                                 <div className="row m-0">
                                     <div className="col-md-12">
                                         <div className="profile-view col-12">
-                                            <div className="profile-img-wrap ">
-                                                <div className="profile-img" >
+                                            <div className="profile-img-wrap">
+                                                <div className="profile-img w-100 h-100">
                                                     <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
-                                                    {pathname.toLocaleLowerCase().match('/profile') && <label className="profile-edit-icon">
-                                                        <i className="fa-solid fa-pencil"></i>
+                                                    {pathname.toLocaleLowerCase().match('/profile') && 
                                                         <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
-                                                    </label>}
+                                                    }
                                                 </div>
                                             </div>
                                             <div className="profile-basic">
