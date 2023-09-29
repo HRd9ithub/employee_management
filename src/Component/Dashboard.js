@@ -185,7 +185,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/timesheet")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">

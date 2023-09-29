@@ -3608,3 +3608,22 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   content: "" !important;
   background-color: transparent;
 } */
+
+.department-modal.modal_Section .modal-dialog{
+  max-width:  700px !important;
+}
+
+
+
+/* work report compinent style */
+
+
+.Holiday_column{
+  color:  orange !important;
+}
+.Leave_column{
+  color:  red !important;
+}
+.table_section table{
+  border: 1px solid red;
+}

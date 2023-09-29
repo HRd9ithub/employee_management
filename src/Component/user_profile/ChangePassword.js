@@ -23,12 +23,12 @@ const ChangePassword = () => {
     const [passwordError, setpasswordError] = useState("")
     const [newPasswordError, setnewPasswordError] = useState("")
     const [renewpasswordError, setrenewpasswordError] = useState("");
-    const [loader, setLoader] = React.useState(false);
+    const [loading, setloading] = React.useState(false);
     const [error, setError] = React.useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { handleLogout } = Globalcomponent();
+    let { handleLogout, loader } = Globalcomponent();
 
     // ******** change password functionality part  *********
     // onchange function
@@ -83,9 +83,9 @@ const ChangePassword = () => {
         if (!password || !newpassword || !renewpassword || passwordError || newPasswordError || renewpasswordError) {
             return false;
         } else {
-            setLoader(true)
+            setloading(true)
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword },config);
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword }, config);
 
                 if (response.data.success) {
                     toast.success(response.data.message);
@@ -95,7 +95,7 @@ const ChangePassword = () => {
                         renewpassword: "",
                         password: ""
                     })
-                } 
+                }
             } catch (error) {
                 setList({
                     newpassword: '',
@@ -118,7 +118,7 @@ const ChangePassword = () => {
                     }
                 }
             } finally {
-                setLoader(false)
+                setloading(false)
             }
 
         }
@@ -129,7 +129,7 @@ const ChangePassword = () => {
             <div className="row mb-3">
                 <div className="col-md-4 pr-md-1">
                     <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
-                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent}  onBlur={handlepasswordValidate} />
+                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
                     <small className="error">{passwordError}</small>
                 </div>
 
@@ -140,7 +140,7 @@ const ChangePassword = () => {
                 </div>
                 <div className="col-md-4 pl-md-2">
                     <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
-                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent}  onBlur={handleRepeatnewPasswordValidate} />
+                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
                     <small className="error">{renewpasswordError}</small>
                 </div>
             </div>
@@ -150,9 +150,9 @@ const ChangePassword = () => {
                 })}
             </ol>
             <div className="submit-section pb-3">
-                <button type="submit" disabled={!list.password || !list.newpassword || !list.renewpassword || passwordError || newPasswordError || renewpasswordError} className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
+                <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>
-            {loader && <Spinner />}
+            {(loader || loading) && <Spinner />}
         </form>
     )
 }

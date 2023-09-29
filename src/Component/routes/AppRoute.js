@@ -6,7 +6,6 @@ import ProtectedRoute from '../ProtectedRoute';
 import Login from '../auth/Login';
 import Dashboard from '../Dashboard';
 import Employee from '../Employee/Employees/Employee';
-import Department from '../Employee/department/Project';
 import Designation from '../Employee/designation/Designation';
 import UserRole from '../Employee/user_role/UserRole';
 import Calendar from '../holiday/Calendar';
@@ -21,14 +20,15 @@ import ResetPassword from '../auth/ResetPassword';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
 import RedirectPage from './RedirectPage';
+import Project from "../Employee/department/Project"
 
-const AppRoute = ({socket}) => {
+const AppRoute = () => {
 
     return (
         <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
-                <Route exact path='/login' element={<RedirectPage ><Login socket={socket}/></RedirectPage>}></Route>
+                <Route exact path='/login' element={<RedirectPage ><Login /></RedirectPage>}></Route>
                 <Route exact path='/password' element={<RedirectPage ><ForgetPassword/></RedirectPage>}></Route>
                 <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword/></RedirectPage>}></Route>
                 {/* dashboard */}
@@ -36,10 +36,10 @@ const AppRoute = ({socket}) => {
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 {/* employee route */}
-                <Route exact path='/employees' element={<ProtectedRoute><Employee socket={socket}/></ProtectedRoute>}></Route>
+                <Route exact path='/employees' element={<ProtectedRoute><Employee /></ProtectedRoute>}></Route>
                 <Route exact path='/employees/edit/:id' element={<ProtectedRoute><EmployeeEditForm /></ProtectedRoute>}></Route>
                 <Route exact path='/employees/view/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/department' element={<ProtectedRoute><Department /></ProtectedRoute>}></Route>
+                <Route exact path='/project' element={<ProtectedRoute><Project/></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute><Designation /></ProtectedRoute>}></Route>
                 <Route exact path='/userrole' element={<ProtectedRoute><UserRole /></ProtectedRoute>}></Route>
                 {/* leave route */}

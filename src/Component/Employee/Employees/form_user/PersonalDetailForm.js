@@ -700,30 +700,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>}
                     {pathname.toLocaleLowerCase().includes('/employees') && <>
-                        {/* <div className="col-md-6">
-                            <Form.Group>
-                                <label htmlFor="exampleFormControldepartment">Department</label>
-                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (e.target.value && e.target.value !== "department") {
-                                        setdepartmentError("");
-                                    } else {
-                                        setdepartmentError("Please select a department.");
-                                    }
-                                }} onClick={departmentValidation} >
-                                    <option value="department">Select Department</option>
-                                    {Department.map((val) => {
-                                        return (
-                                            <option key={val._id} value={val._id}>
-                                                {val.name}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                                <small id="emailHelp" className="form-text error">{departmentError}</small>
-                                {Department.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one department.</small>}
-                            </Form.Group>
-                        </div> */}
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControldesignation">Designation</label>
@@ -809,12 +785,12 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     })}
                 </ol>
                 <div className="submit-section d-flex justify-content-between">
+                    <button className="btn btn-gradient-primary" type="submit" onClick={handleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>Back</button>
-                    <button className="btn btn-gradient-primary" onClick={handleSubmit}>Save</button>
                 </div>
             </form >
-
             {loader && <Spinner />}
+
         </>
     );
 }

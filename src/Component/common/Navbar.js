@@ -16,7 +16,7 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import Avatar from '@mui/material/Avatar';
 // import { Trans } from 'react-i18next';
 
-const Navbar = ({ socket }) => {
+const Navbar = () => {
   let { handleLogout, loader } = Globalcomponent()
   let { UserData, leaveNotification, getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
@@ -53,7 +53,6 @@ const Navbar = ({ socket }) => {
     if (GetLocalStorage("token") && UserData && UserData.role && UserData.role?.name.toLowerCase() === "admin") {
       getLeaveNotification();
     }
-    UserData && socket.emit('set', { userId: UserData.email });
     // eslint-disable-next-line
   }, [UserData])
 

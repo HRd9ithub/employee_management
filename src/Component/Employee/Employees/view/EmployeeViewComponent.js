@@ -168,7 +168,7 @@ const EmployeeViewComponent = () => {
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                        {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
-                                        <li><NavLink to={`/employees/view/${data._id}`} className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
+                                        <li><NavLink to={!pathname.toLocaleLowerCase().match('/profile') ?  `/employees/view/${data._id}` :  `/profile/${data._id}` } className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
                                     </ul>
                                 </div>
                             </div>
@@ -376,7 +376,7 @@ const EmployeeViewComponent = () => {
                                                                             <ul className="experience-list">
                                                                                 {data.education.map((val) => {
                                                                                     return (
-                                                                                        <li>
+                                                                                        <li key={val._id}>
                                                                                             <div className="experience-user">
                                                                                                 <div className="before-circle"></div>
                                                                                             </div>

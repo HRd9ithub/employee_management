@@ -105,7 +105,7 @@ const TimeSheetComponent = () => {
         } finally {
             setTimeout(() => {
                 setLoader(false)
-            }, 500)
+            }, 800)
         }
     };
 

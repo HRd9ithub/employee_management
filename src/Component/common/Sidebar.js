@@ -118,7 +118,7 @@ const Sidebar = () => {
 
   const HandleACtive = (name) => {
     if (name === 'employee') {
-      submenu = ['employees', 'department', 'designation', 'premission']
+      submenu = ['employees', 'project', 'designation', 'premission']
     } else if (name === 'leave') {
       submenu = ['holiday', 'leavetype', 'leave']
     } else if (name === "setting") {
@@ -155,7 +155,7 @@ const Sidebar = () => {
 
     // employee drop down display or not 
     let employee = useMemo(() => {
-      let submenu = ['employees', 'department', 'designation']
+      let submenu = ['employees', 'project', 'designation']
       let response = ""
       if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
         response = true
@@ -185,7 +185,7 @@ const Sidebar = () => {
   
     // leave drop down display or not 
     let setting = useMemo(() => {
-      let submenu = ['user role']
+      let submenu = ['user role',"work report"]
       let response = ""
       if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
         response = true
@@ -261,7 +261,7 @@ const Sidebar = () => {
                     return (
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item"  > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'department' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'project' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
                       </div>
                     )
@@ -329,8 +329,8 @@ const Sidebar = () => {
                   {menu.map((elem) => {
                     return (
                       <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name.slice(0, 4)} {elem.name.slice(4)}</NavLink></li>}
-                        {/* {elem.name.toLowerCase().replace(/\s/g, '') === 'email' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/email">{elem.name}</NavLink></li>} */}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/workreport">{elem.name}</NavLink></li>}
                       </div>)
                   })}
                 </ul>

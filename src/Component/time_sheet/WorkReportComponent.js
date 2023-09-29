@@ -8,14 +8,15 @@ import { HiOutlineMinus } from "react-icons/hi";
 import Spinners from "../common/Spinner";
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../service/StoreLocalStorage";
-import { AiOutlineDownload } from "react-icons/ai";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import { CSVLink } from "react-csv";
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
+import WorkReportModal from "./WorkReportModal";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import Modal from "react-bootstrap/Modal";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
@@ -27,28 +28,30 @@ const WorkReportComponent = () => {
     const [endDate, setendtDate] = useState(new Date());
     const [userName, setUserName] = useState([]);
     const [user_id, setuser_id] = useState("");
+    const [show,setShow] = useState(false)
+    const [description,setdescription] = useState("")
 
     let { getCommonApi } = GlobalPageRedirect()
 
     // pagination state
-    const [count, setCount] = useState(5)
+    const [count, setCount] = useState(10)
     const [page, setpage] = useState(0)
 
     // sort state
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
 
-    // get timesheet data
-    const getTimesheet = async (id, start, end) => {
+    // get report data
+    const getReport = async (id, start, end) => {
         setLoader(true)
         try {
             const request = {
-                params: { startDate: start || startDate, endDate: end || endDate, id },
+                params: { startDate: start || startDate, endDate: end || endDate, id: id || (userName.length !== 0 ? userName[0]._id : "") },
                 headers: {
                     Authorization: `Bearer ${GetLocalStorage("token")}`,
                 },
             };
-            const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timeSheet`, request);
+            const result = await axios.get(`${process.env.REACT_APP_API_KEY}/report`, request);
             if (result.data.success) {
                 setData(result.data.data);
                 setDataFilter(result.data.data);
@@ -67,7 +70,7 @@ const WorkReportComponent = () => {
         } finally {
             setTimeout(() => {
                 setLoader(false)
-            },500)
+            }, 500)
         }
     };
 
@@ -83,7 +86,9 @@ const WorkReportComponent = () => {
             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
 
             if (res.data.success) {
-                setUserName(res.data.data);
+                let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
+                setUserName(data);
+                getReport(data.length !== 0 ? data[0]._id : "");
             }
         } catch (error) {
             if (!error.response) {
@@ -100,36 +105,16 @@ const WorkReportComponent = () => {
         } finally {
             setTimeout(() => {
                 setLoader(false)
-            },500)
+            }, 800)
         }
     };
 
     useEffect(() => {
         get_username();
-        getTimesheet();
+        getReport();
         // eslint-disable-next-line
     }, []);
 
-
-    // Search filter
-    const HandleFilter = (event) => {
-        let { value } = event.target;
-
-        const list = data.filter((val, ind) => {
-            return (
-                permission && permission.name.toLowerCase() === "admin" && (val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
-                    val.date.includes(value) ||
-                    val.login_time?.includes(value) ||
-                    val.logout_time?.includes(value) ||
-                    val.total?.includes(value))
-            );
-        });
-        if (value) {
-            setDataFilter(list);
-        } else {
-            setDataFilter(data)
-        }
-    }
 
 
     // pagination function
@@ -156,6 +141,14 @@ const WorkReportComponent = () => {
                 return -1
             }
             if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+                return 1
+            }
+            return 0
+        } else if (orderBy === "project") {
+            if (b.project ? b.project?.name : b.project < a.project ? a.project.name : a.project) {
+                return -1
+            }
+            if (b.project ? b.project.name : b.project > a.project ? a.project.name : a.project) {
                 return 1
             }
             return 0
@@ -188,28 +181,44 @@ const WorkReportComponent = () => {
     // user change function
     const userChange = (e) => {
         setuser_id(e.target.value)
-        getTimesheet(e.target.value)
+        getReport(e.target.value)
     }
 
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d)
-        getTimesheet(user_id, start._d, end._d)
+        getReport(user_id, start._d, end._d)
     }
 
-    let header = [
-        { label: "Id", key: "id" },
-        { label: "Name", key: "name" },
-        { label: "Date", key: "Date" },
-        { label: "Day", key: "Day" },
-        { label: "Login Time", key: "login_time" },
-        { label: "Login Out", key: "logout_time" },
-        { label: "Total Hours", key: "Hours" },
-    ]
+    // calcendar option
+    const ranges = {
+        Today: [moment(), moment()],
+        Yesterday: [
+            moment().subtract(1, "days"),
+            moment().subtract(1, "days")
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+            moment()
+                .subtract(1, "month")
+                .startOf("month"),
+            moment()
+                .subtract(1, "month")
+                .endOf("month")
+        ]
+    };
 
-    let csvdata = dataFilter.map((val, ind) => {
-        return { id: ind + 1, name: val.user.first_name.concat(" ", val.user.last_name), Date: val.date, Day: moment(val.date).format('dddd'), login_time: val.login_time, logout_time: val.logout_time, Hours: val.total }
-    })
+    // modal show 
+    const handleShow = (val) => {
+        setShow(true)
+        setdescription(val)
+    }
+    // modal Hide 
+    const handleClose = () => {
+        setShow(false)
+    }
 
     if (Loader) {
         return <Spinners />
@@ -224,51 +233,32 @@ const WorkReportComponent = () => {
                                     <div>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/timesheet" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
+                                            <li><NavLink to="/workreport" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
-                                    <div className="search-full">
-                                        <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
-                                        <i className="fas fa-search"></i>
-                                    </div>
-                                    <div className="search-box mr-3">
-                                        <form name="search-inner">
-                                            <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
-                                        </form>
-                                        <i className="fas fa-search"></i>
-                                    </div>
-                                    {dataFilter.length >= 1 &&
-                                        <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
-                                            <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank" ><AiOutlineDownload />&nbsp;CSV</CSVLink>
-                                        </div>}
+                                    <WorkReportModal permission={permission && permission} getReport={getReport} />
                                 </div>
                             </div>
                             <div className='container-fluid'>
                                 <div className='row'>
-                                {permission && permission.name.toLowerCase() === "admin" &&
-                                    <div className='col-5'>
-                                        <div className="form-group mb-0">
-                                            <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
-                                                <option value=''>All</option>
-                                                {userName.map((val) => {
-                                                    return (
-                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>}
-                                    <div className='col-5 ml-auto'>
+                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                        <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                            <div className="form-group mb-0">
+                                                <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                    {userName.map((val) => {
+                                                        return (
+                                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>}
+                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                         <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
-                                            <i className="fa-regular fa-calendar range_icon"></i>
-                                        </div>
-                                    </div>
-                                    <div className='col-2 ml-auto'>
-                                        <div className="form-group mb-0 position-relative">
-
+                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
                                 </div>
@@ -295,45 +285,47 @@ const WorkReportComponent = () => {
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "login_time"} direction={orderBy === "login_time" ? order : "asc"} onClick={() => handleRequestSort("login_time")}>
+                                                <TableSortLabel active={orderBy === "hours"} direction={orderBy === "hours" ? order : "asc"} onClick={() => handleRequestSort("hours")}>
                                                     Hours
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "total"} direction={orderBy === "total" ? order : "asc"} onClick={() => handleRequestSort("total")}>
+                                                <TableSortLabel active={orderBy === "project"} direction={orderBy === "project" ? order : "asc"} onClick={() => handleRequestSort("project")}>
                                                     Project
                                                 </TableSortLabel>
                                             </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "logout_time"} direction={orderBy === "logout_time" ? order : "asc"} onClick={() => handleRequestSort("logout_time")}>
-                                                    Description
-                                                </TableSortLabel>
+                                            <TableCell align="center">
+                                                Description
                                             </TableCell>
-                                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                            {/* {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
                                             <TableCell>
                                                 Action
-                                            </TableCell>}
+                                            </TableCell>} */}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
-                                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                                    {!val.projectId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{val.date.concat(" - ", val.name)}</TableCell>}
+                                                    {!val.projectId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{val.date.concat(" - ", val.name)}</TableCell>}
+                                                    {val.projectId && <TableCell>{ind + 1}</TableCell>}
+                                                    {val.projectId && <TableCell>{val.date}</TableCell>}
+                                                    {val.projectId &&
+                                                        permission && permission.name.toLowerCase() === "admin" &&
                                                         <TableCell>
-                                                            <NavLink className='pr-3 d-flex align-items-center name_col'>
+                                                            <div className='pr-3 d-flex align-items-center name_col'>
                                                                 {val.user ? <>
                                                                     <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
                                                                     {val.user.first_name.concat(" ", val.user.last_name)}
                                                                 </> : <HiOutlineMinus />
                                                                 }
-                                                            </NavLink>
-                                                        </TableCell>}
-                                                    <TableCell>{val.date}</TableCell>
-                                                    <TableCell>{val.login_time}</TableCell>
-                                                    <TableCell>{val.logout_time ? val.logout_time : <HiOutlineMinus />}</TableCell>
-                                                    <TableCell>{val.total ? val.total : (<HiOutlineMinus />)}</TableCell>
+                                                            </div>
+                                                        </TableCell>
+                                                    }
+                                                    {val.projectId && <TableCell>{val.hours}</TableCell>}
+                                                    {val.projectId && <TableCell>{val.project.name}</TableCell>}
+                                                    {val.projectId && <TableCell align="center"><NavLink to="" onClick={() =>handleShow(val)}>View</NavLink></TableCell>}
                                                 </TableRow>
                                             )
                                         }) :
@@ -357,6 +349,35 @@ const WorkReportComponent = () => {
                         </div>
                     </div>
                 </div>}
+
+
+            <Modal
+                show={show}
+                animation={true}
+                size="md"
+                aria-labelledby="example-modal-sizes-title-sm"
+                className="small-modal department-modal"
+                centered
+            >
+                <Modal.Header className="small-modal">
+                    <Modal.Title>
+                       View Description
+                    </Modal.Title>
+                    <p className="close-modal" onClick={handleClose}>
+                        <i className="fa-solid fa-xmark"></i>
+                    </p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                        <div className="card">
+                            <div className="card-body table_section">
+                                <h4>{description?.project?.name}</h4>
+                                <div dangerouslySetInnerHTML={{__html : description?.description}}></div>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </motion.div >)
     } else {
         return <Error403 />
