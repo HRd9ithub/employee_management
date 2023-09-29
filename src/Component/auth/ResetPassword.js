@@ -49,6 +49,7 @@ const ResetPassword = () => {
         if (response.data.success) {
           setExpire(false)
           setExpireError("")
+          setLoader(false)
         }
       }).catch((error) => {
         setLoader(false)
