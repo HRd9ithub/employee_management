@@ -349,7 +349,7 @@ const WorkReportComponent = () => {
                                 page={page}>
                             </TablePagination>
                             </> : 
-                            <h5 className="text-center my-4">Please select employee first</h5>}
+                            <h4 class="no-data my-2">Please select employee first</h4>}
                         </div>
                     </div>
                 </div>}
