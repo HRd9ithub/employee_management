@@ -1,30 +1,64 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-import {NavLink} from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { NavLink, useNavigate } from "react-router-dom";
+import Spinner from '../common/Spinner';
 
 const ForgotPassword = () => {
-    // eslint-disable-next-line
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-   
-    //initialistate state
-    const [loader, setLoader] = useState(false);
-    const [email, setEmail] = useState("");
-    // error state
-    const [error, seterror] = useState("");
+  // eslint-disable-next-line
+  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    // onchange function
-    const handleChange = (event) => {
+  //initialistate state
+  const [loader, setLoader] = useState(false);
+  const [email, setEmail] = useState("");
+  // error state
+  const [error, setError] = useState("");
 
-    }
+  // redirect page
+  let history = useNavigate();
 
-      // email validation
+  // onchange function
+  const handleChange = (event) => {
+    setEmail(event.target.value);
+  }
+
+  // email validation
   const emailValidation = () => {
-    // if (!data.email) {
-    //   setEmailError('Email is a required field.')
-    // } else if (!mailformat.test(data.email)) {
-    //   setEmailError("Email must be a valid email.")
-    // } else {
-    //   setEmailError('')
-    // }
+    if (!email) {
+      setError('Email is a required field.');
+    } else if (!mailformat.test(email)) {
+      setError("Email must be a valid email.");
+    } else {
+      setError('');
+    }
+  }
+
+  // submit function 
+  const handleSubmit = () => {
+    emailValidation();
+
+    if (!email || error) {
+      return false;
+    } else {
+      setLoader(true)
+      axios.post(`${process.env.REACT_APP_API_KEY}/auth/forgotpassword`, { email }).then((response) => {
+        if (response.data.success) {
+          let { message } = response.data
+          history('/login');
+          setLoader(false);
+          toast.success(message);
+          setEmail("");
+        }
+      }).catch((error) => {
+        setEmail("");
+        setLoader(false)
+        if (!error.response) {
+          toast.error(error.message);
+        } else {
+          toast.error(error.response.data.message);
+        }
+      });
+    }
   }
 
   return (
@@ -35,7 +69,7 @@ const ForgotPassword = () => {
             <div className="login-page-logo text-center">
               <img src='Images/d9_logo_black.png' alt="logo" />
             </div>
-            <img src="./Images/forgot-password.png" className='img-fluid side-img mx-auto' alt=""/>
+            <img src="./Images/forgot-password.png" className='img-fluid side-img mx-auto' alt="" />
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
             <div className="row">
@@ -51,17 +85,18 @@ const ForgotPassword = () => {
                 <h5>Enter your Email and we'll send you a link to reset your password</h5>
               </div>
               <div className="col-12">
-              <div className="input-group mb-3 mt-4">
+                <div className="input-group mb-3 mt-4">
                   <div className="input-group-prepend">
                     <div className="input-group-text">
-                    <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
+                      <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
-                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off'/>
+                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off' />
                 </div>
+                {error && <small className="form-text error">{error}</small>}
               </div>
               <div className="col-12 login-button">
-                <button className='d-block w-100'>Reset Password</button>
+                <button className='d-block w-100' onClick={handleSubmit}>Reset Password</button>
               </div>
               <div className="col-12 text-center my-3">
                 <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
@@ -70,6 +105,7 @@ const ForgotPassword = () => {
           </div>
         </div>
       </div>
+      {loader && <Spinner />}
     </div>
   )
 }
