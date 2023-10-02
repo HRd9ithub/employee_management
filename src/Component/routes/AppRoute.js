@@ -34,13 +34,9 @@ const AppRoute = () => {
                 {/* login route */}
                 <Route exact path='/login' element={<RedirectPage ><LoginNew/></RedirectPage>}></Route>
                 <Route exact path='/otp' element={<OtpVerification />}></Route>
-                {/* <Route exact path='/password' element={<RedirectPage ><ForgetPassword /></RedirectPage>}></Route> */}
-                <Route exact path='/password' element={<RedirectPage ><ForgotPassword /></RedirectPage>}></Route>
+                <Route exact path='/forgot-password' element={<RedirectPage ><ForgotPassword /></RedirectPage>}></Route>
                 {/* <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword /></RedirectPage>}></Route> */}
                 <Route exact path='/set_new_password' element={<RedirectPage><SetNewPassword /></RedirectPage>}></Route>
-                <Route exact path='/login' element={<RedirectPage ><Login /></RedirectPage>}></Route>
-                <Route exact path='/password' element={<RedirectPage ><ForgetPassword/></RedirectPage>}></Route>
-                <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword/></RedirectPage>}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}

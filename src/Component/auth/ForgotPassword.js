@@ -2,6 +2,30 @@ import React, { useState } from 'react';
 import {NavLink} from 'react-router-dom';
 
 const ForgotPassword = () => {
+    // eslint-disable-next-line
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+   
+    //initialistate state
+    const [loader, setLoader] = useState(false);
+    const [email, setEmail] = useState("");
+    // error state
+    const [error, seterror] = useState("");
+
+    // onchange function
+    const handleChange = (event) => {
+
+    }
+
+      // email validation
+  const emailValidation = () => {
+    // if (!data.email) {
+    //   setEmailError('Email is a required field.')
+    // } else if (!mailformat.test(data.email)) {
+    //   setEmailError("Email must be a valid email.")
+    // } else {
+    //   setEmailError('')
+    // }
+  }
 
   return (
     <div className='login-page'>
@@ -33,7 +57,7 @@ const ForgotPassword = () => {
                     <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
-                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email'/>
+                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off'/>
                 </div>
               </div>
               <div className="col-12 login-button">
