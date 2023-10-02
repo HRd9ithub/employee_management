@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children, authentication }) => {
     useEffect(() => {
         getProtectedData()
         // eslint-disable-next-line
-    }, [location])
+    }, [])
 
     return children
 }

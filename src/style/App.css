@@ -827,6 +827,9 @@ span.eye-icon {
   height: auto;
   overflow-y: auto;
 }
+.notification-box .accordion .card .card-header button {
+  padding-right: 0px !important;
+}
 
 .notification-box::-webkit-scrollbar {
   width: 6px;
@@ -840,6 +843,7 @@ span.eye-icon {
 .leave-notification-body {
   padding: 0.25rem 0 !important;
   padding-bottom: 0 !important;
+  border: none !important;
 }
 
 .preview-list {
@@ -853,7 +857,7 @@ span.eye-icon {
   background: #fff;
   border: 1px solid var(--light-grey-80-color);
   box-shadow: 0 1px 4px rgba(9, 8, 61, .08);
-  /* border-right: 1px solid #0a4a92; */
+  border-right: 1px solid #0a4a92;
 }
 
 .sidebar-inner {
@@ -1686,7 +1690,7 @@ input[type="checkbox"] {
   width: 100%;
 }
 
-.submit-section .btn-gradient-primary {
+.submit-section .btn {
   /* width: 10% !important; */
   padding: 0.875rem 2.5rem !important;
 }
@@ -1759,31 +1763,6 @@ select.status-select {
 .list-wrapper .edit {
   color: #024290;
   font-size: 1rem;
-}
-
-@media (max-width : 575px) {
-
-  .add-employee-btn {
-    text-align: center !important;
-  }
-
-  .employee-path {
-    text-align: center !important;
-    justify-content: center;
-    transition: width 10s;
-  }
-
-  .forms-sample label {
-    font-size: 17px;
-  }
-
-  .forms-sample input {
-    font-size: 17px;
-  }
-
-  .error {
-    font-size: 17px;
-  }
 }
 
 /* =========================== Profie Page ========================== */
@@ -3381,8 +3360,8 @@ select.form-control:focus {
   margin-top: 0;
   width: 100%;
 }
-.submit-section .btn-gradient-primary {
-  padding: 0.775rem 2.5rem !important;
+.submit-section .btn {
+  padding: 0.75rem 2.3rem !important;
 }
 .my-chart-head {
   border-bottom-left-radius: 0;
@@ -3609,7 +3588,7 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
   /* padding-bottom: 30px; */
 }
 .forgot-password-link {
-  color: #054392;
+  color: #054392 !important;
   font-weight: 500;
   text-decoration: underline;
 }
@@ -3689,12 +3668,11 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
 .Holiday_column{
   color:  orange !important;
 }
+
 .Leave_column{
   color:  red !important;
 }
-.table_section table{
-  border: 1px solid red;
-}
+
 .sidebar .nav-item .nav.sub-menu {
   padding: 0.5rem 0.5rem 0.5rem 1.5rem;
   margin-bottom: 0;
@@ -3714,4 +3692,24 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
   width: 0.89em !important;
   height: 0.89em !important;
   fill: #054392 !important;
+}
+
+/* otp verification page resend button */
+.text-secondary-dark-200 {
+  color: #989ba5;
+}
+
+/* report section view modal style */
+.work-report-view-modal .card-body.table_section table tbody tr td, .work-report-view-modal .card-body.table_section table thead tr th {
+  border: 1px solid rgba(0, 0, 0, .2);
+  padding: 10px;
+}
+
+.work-report-view-modal .card-body.table_section table thead tr th {
+  background-color: #0a4a92;
+  color: white;
+}
+
+.work-report-view-modal .modal-dialog.modal-dialog-centered {
+  max-width: 45%;
 }

@@ -356,7 +356,7 @@ const WorkReportComponent = () => {
                 animation={true}
                 size="md"
                 aria-labelledby="example-modal-sizes-title-sm"
-                className="small-modal department-modal"
+                className="small-modal department-modal work-report-view-modal"
                 centered
             >
                 <Modal.Header className="small-modal">
@@ -372,6 +372,7 @@ const WorkReportComponent = () => {
                         <div className="card">
                             <div className="card-body table_section">
                                 <h4>{description?.project?.name}</h4>
+                                <hr />
                                 <div dangerouslySetInnerHTML={{__html : description?.description}}></div>
                             </div>
                         </div>
