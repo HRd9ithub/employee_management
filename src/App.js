@@ -6,26 +6,11 @@ import { useLocation} from 'react-router-dom';
 import Navbar from './Component/common/Navbar';
 import Sidebar from "./Component/common/Sidebar"
 import AppRoute from './Component/routes/AppRoute';
-import socketIO from "socket.io-client";
-import { useEffect } from 'react';
-import GlobalPageRedirect from './Component/auth_context/GlobalPageRedirect';
 import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
-const socket = socketIO.connect(process.env.REACT_APP_IMAGE_API);
-
 
 function App() {
 
-  let { getCommonApi } = GlobalPageRedirect();
   let location = useLocation();
-
-  useEffect(() => {
-    socket.on("receive", (data) => {
-      if (data.isAuth) {
-        getCommonApi()
-      }
-    })
-    // eslint-disable-next-line
-  }, [socket])
 
   return (
     <>
@@ -35,11 +20,11 @@ function App() {
           {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Sidebar />}
         </div>
         <div className='sidebar-inner'>
-          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar socket={socket} />}
+          {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar />}
           <div className="main-panel">
             <div className="content-wrapper">
               {/* route file */}
-              <AppRoute socket={socket} />
+              <AppRoute />
             </div>
           </div>
         </div>

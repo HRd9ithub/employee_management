@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
 
-const Employee = ({ socket }) => {
+const Employee = () => {
   const [records, setRecords] = useState([]);
   // eslint-disable-next-line
   const [value, setvalue] = useState("");
@@ -55,7 +55,6 @@ const Employee = ({ socket }) => {
       if (res.data.success) {
         setToggle(!toggle);
         toast.success(res.data.message);
-        // socket.emit('status',{userId:email});
       }
     } catch (error) {
       if (!error.response) {

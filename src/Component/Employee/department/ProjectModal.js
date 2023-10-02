@@ -6,13 +6,13 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 
-function ProjectModal({ data, getuser, permission, records }) {
+function ProjectModal({ data, getProject, permission, records }) {
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [error, seterror] = useState('');
     const [id, setId] = useState('')
     const [loader, setloader] = useState(false)
-    const [Error, setError] = useState([]);
+    const [Error, setError] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -31,7 +31,7 @@ function ProjectModal({ data, getuser, permission, records }) {
         setShow(false)
         setName('');
         seterror('');
-        setError([])
+        setError("")
         setId('')
     }
 
@@ -47,11 +47,11 @@ function ProjectModal({ data, getuser, permission, records }) {
     // form validation
     const handleValidate = () => {
         if (!name) {
-            seterror('Department name is required.')
+            seterror('Project name is a required field.')
         } else if (!name.trim()) {
-            seterror('Please enter a valid department name.')
+            seterror('Project name is a required field.')
         } else if (!name.match(/^[A-Za-z ]+$/)) {
-            seterror('Please enter a valid department name.')
+            seterror('Project name must be an alphabet and space only.')
         } else {
             seterror('')
         }
@@ -63,7 +63,7 @@ function ProjectModal({ data, getuser, permission, records }) {
         if(!error){
             handleValidate()
         }
-        setError([]);
+        setError("");
         let config = {
             headers: {
                 "Content-Type": "application/json",
@@ -72,9 +72,9 @@ function ProjectModal({ data, getuser, permission, records }) {
         }
         let url = "";
         if (id) {
-            url = axios.patch(`${process.env.REACT_APP_API_KEY}/department/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
+            url = axios.patch(`${process.env.REACT_APP_API_KEY}/project/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
         } else {
-            url = axios.post(`${process.env.REACT_APP_API_KEY}/department/`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
+            url = axios.post(`${process.env.REACT_APP_API_KEY}/project/`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
         }
         if (name && !error) {
                 setloader(true);
@@ -83,7 +83,7 @@ function ProjectModal({ data, getuser, permission, records }) {
                             toast.success(data.data.message)
                             setShow(false)
                             setloader(false);
-                            getuser()
+                            getProject()
                             setName('')
                             setId('');
                         }
@@ -103,37 +103,6 @@ function ProjectModal({ data, getuser, permission, records }) {
                             }
                         }
                     })
-        }
-    }
-
-    // check department
-    const checkDepartment = async () => {
-        !name && handleValidate();
-        if (name && !error) {
-            setloader(true)
-            let config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
-            axios.post(`${process.env.REACT_APP_API_KEY}/department/name`, { name,id },config).then((response) => {
-                if (response.data.success) {
-                    seterror("")
-                }
-            }).catch((error) => {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            seterror(error.response.data.message)
-                        }
-                    }
-                }
-            }).finally(() => setloader(false))
         }
     }
 
@@ -160,14 +129,9 @@ function ProjectModal({ data, getuser, permission, records }) {
                                 <form className="forms-sample">
                                     <div className="form-group">
                                         <label htmlFor="exampleInputfname" className='mt-3'>Project Name</label>
-                                        <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onKeyUp={handleValidate} onBlur={checkDepartment} />
-                                        {error && <small id="emailHelp" className="form-text error">{error}</small>}
+                                        <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onBlur={handleValidate} />
+                                        {(Error || error) &&  <small id="emailHelp" className="form-text error">{error || Error}</small>}
                                     </div>
-                                    <ol>
-                                        {Error.map((val) => {
-                                            return <li className='error' key={val} >{val}</li>
-                                        })}
-                                    </ol>
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}>{data ? 'Update' : 'Submit'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>

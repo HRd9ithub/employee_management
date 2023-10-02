@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { motion } from 'framer-motion'
 
-const Login = ({ socket }) => {
+const Login = () => {
   // eslint-disable-next-line
   var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -40,7 +40,7 @@ const Login = ({ socket }) => {
     if (emailError || passwordError) {
       return false
     } else {
-      onSubmit(data, socket)
+      onSubmit(data)
     }
   }
 
@@ -59,9 +59,9 @@ const Login = ({ socket }) => {
   // validation otp
   const otpVlidate = () => {
     if (!otp.join("")) {
-      setOtperror('Please enter OTP.')
+      setOtperror('OTP is a required field.')
     } else if (!otp.join("").match(/^[0-9]+$/)) {
-      setOtperror("Please enter only number")
+      setOtperror("OTP must be a number.")
     } else if (otp.join("").length !== 4) {
       setOtperror('OTP must be at least 4 characters.')
     } else {
@@ -74,7 +74,7 @@ const Login = ({ socket }) => {
     if (!data.email) {
       setEmailError('Email is a required field.')
     } else if (!data.email.match(mailformat)) {
-      setEmailError('Please enter a valid Email Address.')
+      setEmailError("Email must be a valid email.")
     } else {
       setEmailError('')
     }
@@ -83,7 +83,7 @@ const Login = ({ socket }) => {
   // password validation
   const handlePasswordVlidate = () => {
     if (!data.password) {
-      setpasswordError('Please enter a Password.')
+      setpasswordError("Password is a required field.")
     } else {
       setpasswordError('')
     }
@@ -100,7 +100,6 @@ const Login = ({ socket }) => {
 
   // otp keyup function
   const inputfocus = (elmnt, input, index) => {
-    otpVlidate();
     let inputs = document.querySelectorAll(".otp-input")
     if ((elmnt.key === "Delete" || elmnt.key === "Backspace") && index !== 0) {
       inputs[index].previousElementSibling.focus();
@@ -171,7 +170,7 @@ const Login = ({ socket }) => {
                     <h4>Otp Verification</h4>
                   </div>
                   <Form className="pt-1 text-center" onSubmit={handleOTP}>
-                    <Form.Label>{`For your security, we have sent the code to your email ${data.email.slice(0, 2)}******@gmail.com.`}</Form.Label>
+                    <Form.Label>{`For your security, we have sent the code to your email: ${data.email.slice(0, 2)}******@gmail.com.`}</Form.Label>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <div className='input-field'>
                         {otp.map((data, index) => {
@@ -180,6 +179,7 @@ const Login = ({ socket }) => {
                             onKeyUp={e => inputfocus(e, e.target, index)} className='otp-input'
                             autoFocus={index === 0}
                             inputMode='numeric'
+                            onBlur={otpVlidate}
                           />
                         })}
                       </div>

@@ -104,37 +104,6 @@ function DesignationModal({ data, getdesignation, permission, records }) {
     }).finally(() => setloader(false));
   };
 
-  // check designation
-  const checkDesignation = async () => {
-    !name && handlenameValidate();
-    if (name && !nameError) {
-      setloader(true)
-      let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
-      axios.post(`${process.env.REACT_APP_API_KEY}/designation/name`, { name, id },config).then((response) => {
-        if (response.data.success) {
-          setNameError("")
-        }
-      }).catch((error) => {
-        if (!error.response) {
-          toast.error(error.message);
-        } else {
-          if (error.response.status === 401) {
-            getCommonApi();
-          } else {
-            if (error.response.data.message) {
-              setNameError(error.response.data.message)
-            }
-          }
-        }
-      }).finally(() => setloader(false))
-    }
-  }
-
 
   return (
     <>
