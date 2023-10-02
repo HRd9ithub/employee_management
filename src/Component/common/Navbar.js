@@ -156,7 +156,6 @@ const Navbar = () => {
                             </button>
                           </h2>
                         </div>
-                        <div className="dropdown-divider"></div>
                         <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                           <div className={` leave-notification-body ${leaveNotification.length === 0 ? "mb-1" : "card-body"}`}>
                             {leaveNotification.sort(function (a, b) {
@@ -175,8 +174,8 @@ const Navbar = () => {
                                           <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
                                       </div>
                                     </div>
-                                    <div className="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                      <div className='d-flex justify-content-between' style={{ gap: "50px" }}>
+                                    <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
+                                      <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
                                         <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
                                         <small style={{ color: '#aaaa', marginTop: '3px' }}>{moment(elem.from_date).format("DD MMM")}</small>
                                       </div>
@@ -185,7 +184,6 @@ const Navbar = () => {
                                       </p>
                                     </div>
                                   </Dropdown.Item>
-                                  <div className="dropdown-divider"></div>
                                 </div>
                               )
                             })}

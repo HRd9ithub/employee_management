@@ -54,7 +54,6 @@ const OtpVerification = () => {
 
   // Back to login page
   const backToLogin = () => {
-    history.push('/login');
     RemoveLocalStorage("email")
   }
 
@@ -69,45 +68,51 @@ const OtpVerification = () => {
             <img src="./Images/otp-2.png" className='img-fluid side-img mx-auto' alt="" />
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
-            <div className="row">
-              <div className="col-12">
-                <div className="login-page-logo-none">
-                  <img src='Images/d9.png' alt="logo" />
-                </div>
-              </div>
-              <div className="col-12">
-                <h2 className='mt-2 mt-lg-4 mt-xl-4'>Otp Verification</h2>
-              </div>
-              <div className="col-12">
-                <h5>For your security, we have sent the code to your email {obscureEmail(email)}.</h5>
-              </div>
-              <div className="col-12">
-                <div className="input-group mb-3 mt-4">
-                  <div className="input-group-prepend">
-                    <div className="input-group-text">
-                      <i className="fa-solid fa-key" style={{ color: "#054392" }}></i>
-                    </div>
-                  </div>
-                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Verification Code' value={otp} name="otp" onChange={handleChange} onBlur={otpValidation} inputMode='numeric' maxLength={4} />
-                </div>
-                {Otperror && <small className="form-text error text-left mb-2">{Otperror}</small>}
-              </div>
-              {Error.length !== 0 &&
+            <form onSubmit={handleSubmit}>
+              <div className="row">
                 <div className="col-12">
-                  <ol className='mb-0 mt-1 text-left'>
-                    {Error.map((val) => {
-                      return <li className='error' key={val}>{val}</li>
-                    })}
-                  </ol>
+                  <div className="login-page-logo-none">
+                    <img src='Images/d9.png' alt="logo" />
+                  </div>
                 </div>
-              }
-              <div className="col-12 login-button">
-                <button className='d-block w-100' onClick={handleSubmit}>Verify</button>
+                <div className="col-12">
+                  <h2 className='mt-2 mt-lg-4 mt-xl-4'>Otp Verification</h2>
+                </div>
+                <div className="col-12">
+                  <h5>For your security, we have sent the code to your email {obscureEmail(email)}.</h5>
+                </div>
+                <div className="col-12">
+                  <div className="input-group mb-2 mt-4">
+                    <div className="input-group-prepend">
+                      <div className="input-group-text">
+                        <i className="fa-solid fa-key" style={{ color: "#054392" }}></i>
+                      </div>
+                    </div>
+                    <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Verification Code' value={otp} name="otp" onChange={handleChange} onBlur={otpValidation} inputMode='numeric' maxLength={4} />
+                  </div>
+                  {Otperror && <small className="form-text error text-left">{Otperror}</small>}
+                </div>
+                {Error.length !== 0 &&
+                  <div className="col-12">
+                    <ol className='mb-0 mt-1 text-left'>
+                      {Error.map((val) => {
+                        return <li className='error' key={val}>{val}</li>
+                      })}
+                    </ol>
+                  </div>
+                }
+                <div className="col-12 text-right mt-2 text-secondary-dark-200">
+                  Didn't Get? &nbsp;
+                  <NavLink className='forgot-password-link' onClick={() => HandleResend(email)}>Resend Code</NavLink>
+                </div>
+                <div className="col-12 login-button my-3">
+                  <button className='d-block w-100'>Verify</button>
+                </div>
+                <div className="col-12 text-center">
+                  <NavLink to="/login" className='back-to-login' onClick={backToLogin}>Back To Login</NavLink>
+                </div>
               </div>
-              <div className="col-12 text-center my-3">
-                <NavLink className='back-to-login' onClick={() => HandleResend(email)}>Resend Code</NavLink>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
