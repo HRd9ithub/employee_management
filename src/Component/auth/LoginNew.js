@@ -1,7 +1,74 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { Globalcomponent } from '../auth_context/GlobalComponent';
+import Spinner from '../common/Spinner';
 
 const LoginNew = () => {
+  // eslint-disable-next-line
+  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  //initialistate state
+  const [data, setData] = useState({
+    email: '',
+    password: ''
+  })
+  // error state
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setpasswordError] = useState('');
+  // toggle state
+  const [eyeToggle, setEyeToggle] = useState(false);
+
+  let { onSubmit, loader, Error } = Globalcomponent();
+
+
+  //onchange function
+  const HandleChange = (event) => {
+    let { name, value } = event.target;
+    setData({ ...data, [name]: value });
+  }
+
+  // email validation
+  const emailValidation = () => {
+    if (!data.email) {
+      setEmailError('Email is a required field.')
+    } else if (!mailformat.test(data.email)) {
+      setEmailError("Email must be a valid email.")
+    } else {
+      setEmailError('')
+    }
+  }
+
+  // password validation
+  const passwordValidation = () => {
+    if (!data.password) {
+      setpasswordError("Password is a required field.")
+    } else {
+      setpasswordError('')
+    }
+  }
+
+  // submit function
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    passwordValidation();
+    emailValidation();
+
+    if (!data.email || !data.password) {
+      return false
+    }
+    if (emailError || passwordError) {
+      return false
+    }
+
+    onSubmit(data)
+
+  }
+
+  // password show and hide 
+  const passwordToggle = () => {
+    setEyeToggle(!eyeToggle)
+  }
+
   return (
     <div className='login-page'>
       <div className="login-wrap container">
@@ -10,7 +77,7 @@ const LoginNew = () => {
             <div className="login-page-logo text-center">
               <img src='Images/d9_logo_black.png' alt="logo" />
             </div>
-            <img src="./Images/hello_dribble.png" className='img-fluid side-img mx-auto' alt=""/>
+            <img src="./Images/hello_dribble.png" className='img-fluid side-img mx-auto' alt="" />
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
             <div className="row">
@@ -32,8 +99,9 @@ const LoginNew = () => {
                       <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
-                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email'/>
+                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={data.email} onChange={HandleChange} autoComplete='off' onBlur={emailValidation} />
                 </div>
+                <small className="form-text error">{emailError}</small>
               </div>
               <div className="col-12">
                 <div className="input-group">
@@ -42,19 +110,26 @@ const LoginNew = () => {
                       <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
-                  <input type="text" className="form-control" aria-label="Text input with radio button" placeholder='Password'/>
+                  <input type={eyeToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Password' name="password" value={data.password} onChange={HandleChange} autoComplete='off' onBlur={passwordValidation} />
                 </div>
+                <small className="form-text error">{passwordError}</small>
               </div>
+              <ol>
+                {Error.map((val) => {
+                  return <li className='error' key={val}>{val}</li>
+                })}
+              </ol>
               <div className="col-12 text-right my-3">
-                <NavLink to="/password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
+                <NavLink to="/forgot-password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
               </div>
               <div className="col-12 login-button">
-                <button className='d-block w-100 mb-3'>Log In</button>
+                <button className='d-block w-100 mb-3' onClick={handleSubmit}>Log In</button>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {loader && <Spinner />}
     </div>
   )
 }
