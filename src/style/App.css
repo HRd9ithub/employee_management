@@ -2147,7 +2147,7 @@ svg {
   padding: 0px;
 }
 
-.profile-view .profile-img-wrap {
+.profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
   height: 100px;
   width: 100px;
   position: absolute;
@@ -2196,7 +2196,7 @@ svg {
   font-family: font_main_semi;
 }
 
-.profile-view .profile-img-wrap .img {
+.profile-view .profile-img-wrap .img, .profile-view .profile-img-wrap-view .img {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3714,4 +3714,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
   width: 0.89em !important;
   height: 0.89em !important;
   fill: #054392 !important;
+}
+
+.jodit-status-bar-link,.jodit-status-bar__item .jodit-xpath{
+  display: none;
 }

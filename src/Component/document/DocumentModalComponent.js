@@ -207,11 +207,11 @@ return (
                                     <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onBlur={validationDescription}/>
                                     {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
                                 </div>
-                                <ol>
+                                {Error.length !== 0 && <ol>
                                     {Error.map((val) => {
                                         return <li className='error' key={val}>{val}</li>
                                     })}
-                                </ol>
+                                </ol>}
                                 <div className='d-flex justify-content-end modal-button'>
                                     <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
                                     <button className="btn btn-light" onClick={handleClose}>Cancel</button>

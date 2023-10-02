@@ -229,7 +229,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             if (!first_name || !last_name || !email || !phone || !joining_date || !role_id || !designation_id || !report_by) {
                 return false
             }
-            if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError ) {
+            if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError) {
                 return false;
             }
         }
@@ -537,35 +537,35 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             <div className="form-group">
                                 <label htmlFor="exampleInputfname">First Name</label>
                                 <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onBlur={firstNameValidation} />
-                                <small id="emailHelp" className="form-text error">{firstNameError}</small>
+                                {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputlname">Last Name</label>
                                 <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onBlur={lastNameValidation} />
-                                <small id="emailHelp" className="form-text error">{lastNameError}</small>
+                                {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputEmail1">Email Address</label>
                                 <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value={employee.email || ""} onChange={InputEvent} onBlur={checkEmail} />
-                                <small id="emailHelp" className="form-text error">{emailError}</small>
+                                {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputphone">Mobile No.</label>
                                 <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onBlur={phoneValidation} inputMode="numeric" />
-                                <small id="emailHelp" className="form-text error">{phoneError}</small>
+                                {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputAddress">Address</label>
                                 <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onBlur={addressValidation} />
-                                <small id="emailHelp" className="form-text error">{addressError}</small>
+                                {addressError && <small id="emailHelp" className="form-text error">{addressError}</small>}
                             </div>
                         </div>
                     </>}
@@ -583,14 +583,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                         );
                                     })}
                                 </select>
-                                <small id="emailHelp" className="form-text error">{countryError}</small>
+                                {countryError && <small id="emailHelp" className="form-text error">{countryError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputState">State</label>
                                 <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onBlur={stateValidation} />
-                                <small id="emailHelp" className="form-text error">{stateError}</small>
+                                {stateError && <small id="emailHelp" className="form-text error">{stateError}</small>}
                             </div>
                         </div>
                     </>}
@@ -608,16 +608,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     onChange={InputEvent}
                                     onBlur={cityValidate}
                                 />
-                                <small id="emailHelp" className="form-text error">
-                                    {cityError}
-                                </small>
+                                {cityError && <small id="emailHelp" className="form-text error">{cityError}</small>}
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputPostcode">Postcode</label>
                                 <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onBlur={postcodeValidation} />
-                                <small id="emailHelp" className="form-text error">{postcodeError}</small>
+                                {postcodeError && <small id="emailHelp" className="form-text error">{postcodeError}</small>}
                             </div>
                         </div>
                     </>}
@@ -637,7 +635,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     />
                                     <CalendarMonthIcon className='calendar-icon' />
                                 </div>
-                                <small id="emailHelp" className="form-text error">{dateofbirthError}</small>
+                                {dateofbirthError && <small id="emailHelp" className="form-text error">{dateofbirthError}</small>}
                             </div>
                         </div>}
                     {pathname.toLocaleLowerCase().includes('/employees') &&
@@ -656,7 +654,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     />
                                     <CalendarMonthIcon className='calendar-icon' />
                                 </div>
-                                <small id="emailHelp" className="form-text error">{joningDateError}</small>
+                                {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                             </div>
                         </div>}
                     {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") && <>
@@ -668,7 +666,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     <option value="Male"> Male</option>
                                     <option value="Female">Female</option>
                                 </select>
-                                <small id="emailHelp" className="form-text error">{genderError}</small>
+                                {genderError && <small id="emailHelp" className="form-text error">{genderError}</small>}
                             </div>
                         </div>
                     </>}
@@ -683,7 +681,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             <div className="form-group">
                                 <label htmlFor="exampleInputBlood">Blood Group</label>
                                 <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onBlur={bloodgroupValidation} />
-                                <small id="emailHelp" className="form-text error">{bloodgroupError}</small>
+                                {bloodgroupError && <small id="emailHelp" className="form-text error">{bloodgroupError}</small>}
                             </div>
                         </div>
                     </>}
@@ -696,7 +694,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     <option value="Married">Married</option>
                                     <option value="Unmarried">Unmarried</option>
                                 </select>
-                                <small id="emailHelp" className="form-text error">{marritialError}</small>
+                                {marritialError && <small id="emailHelp" className="form-text error">{marritialError}</small>}
                             </div>
                         </div>}
                     {pathname.toLocaleLowerCase().includes('/employees') && <>
@@ -713,7 +711,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                         );
                                     })}
                                 </select>
-                                <small id="emailHelp" className="form-text error">{designationError}</small>
+                                {designationError && <small id="emailHelp" className="form-text error">{designationError}</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
@@ -729,7 +727,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                         );
                                     })}
                                 </select>
-                                <small id="emailHelp" className="form-text error">{roleError}</small>
+                                {roleError && <small id="emailHelp" className="form-text error">{roleError}</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
@@ -753,8 +751,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                         );
                                     })}
                                 </select>
-                                <small id="emailHelp" className="form-text error">{reportToerror}</small>
-                                {allRecords.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one employee.</small>}
+                                {reportToerror && <small id="emailHelp" className="form-text error">{reportToerror}</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
@@ -763,27 +760,27 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     Leaving Date
                                 </label>
                                 <div onClick={() => leaveDateRef.current.showPicker()}>
-                                <input type="date"
-                                    className="form-control"
-                                    value={employee.leaveing_date ? moment(employee.leaveing_date).format("YYYY-MM-DD") : ""}
-                                    ref={leaveDateRef}
-                                    onChange={(e) => {
-                                        setEmployee({ ...employee, leaveing_date: e.target.value })
-                                    }}
-                                    autoComplete='off'
-                                    min={moment(employee.joining_date).format("YYYY-MM-DD")}
-                                />
-                                <CalendarMonthIcon className='calendar-icon' />
+                                    <input type="date"
+                                        className="form-control"
+                                        value={employee.leaveing_date ? moment(employee.leaveing_date).format("YYYY-MM-DD") : ""}
+                                        ref={leaveDateRef}
+                                        onChange={(e) => {
+                                            setEmployee({ ...employee, leaveing_date: e.target.value })
+                                        }}
+                                        autoComplete='off'
+                                        min={moment(employee.joining_date).format("YYYY-MM-DD")}
+                                    />
+                                    <CalendarMonthIcon className='calendar-icon' />
                                 </div>
                             </div>
                         </div>
                     </>}
                 </div>
-                <ol>
+                {error.length !== 0 && <ol>
                     {error?.map((val) => {
                         return <li key={val} className="error">{val}</li>
                     })}
-                </ol>
+                </ol>}
                 <div className="submit-section d-flex justify-content-between">
                     <button className="btn btn-gradient-primary" type="submit" onClick={handleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>Back</button>

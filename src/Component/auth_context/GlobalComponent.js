@@ -8,7 +8,6 @@ import { GetLocalStorage, RemoveLocalStorage, SetLocalStorage } from '../../serv
 import { toast } from 'react-hot-toast';
 
 export const Globalcomponent = () => {
-    const [pageToggle, setpageToggle] = useState(false)
     const [loader, setLoader] = useState(false)
     const [Error, setError] = useState([]);
 
@@ -144,7 +143,6 @@ export const Globalcomponent = () => {
     }
 
     return {
-        pageToggle,
         onSubmit,
         loader,
         onSubmitOtp,
