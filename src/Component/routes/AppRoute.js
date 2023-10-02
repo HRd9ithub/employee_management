@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import Spinner from '../common/Spinner';
 import ProtectedRoute from '../ProtectedRoute';
@@ -27,37 +27,36 @@ import LoginNew from '../auth/LoginNew';
 import Project from "../Employee/department/Project"
 
 const AppRoute = () => {
-
     return (
         <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
-                <Route exact path='/login' element={<RedirectPage ><LoginNew/></RedirectPage>}></Route>
-                <Route exact path='/otp' element={<OtpVerification />}></Route>
-                <Route exact path='/forgot-password' element={<RedirectPage ><ForgotPassword /></RedirectPage>}></Route>
-                <Route exact path='/reset-password' element={<RedirectPage><SetNewPassword /></RedirectPage>}></Route>
+                <Route exact path='/login' element={<ProtectedRoute authentication={false}><LoginNew/></ProtectedRoute>}></Route>
+                <Route exact path='/otp' element={<ProtectedRoute authentication={false}><OtpVerification /></ProtectedRoute>}></Route>
+                <Route exact path='/forgot-password' element={<ProtectedRoute authentication={false} ><ForgotPassword /></ProtectedRoute>}></Route>
+                <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><SetNewPassword /></ProtectedRoute>}></Route>
                 {/* dashboard */}
-                <Route exact path='/' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}></Route>
+                <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}
-                <Route exact path='/profile/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/profile/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 {/* employee route */}
-                <Route exact path='/employees' element={<ProtectedRoute><Employee /></ProtectedRoute>}></Route>
-                <Route exact path='/employees/edit/:id' element={<ProtectedRoute><EmployeeEditForm /></ProtectedRoute>}></Route>
-                <Route exact path='/employees/view/:id' element={<ProtectedRoute><EmployeeViewComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/project' element={<ProtectedRoute><Project/></ProtectedRoute>}></Route>
-                <Route exact path='/designation' element={<ProtectedRoute><Designation /></ProtectedRoute>}></Route>
-                <Route exact path='/userrole' element={<ProtectedRoute><UserRole /></ProtectedRoute>}></Route>
+                <Route exact path='/employees' element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>}></Route>
+                <Route exact path='/employees/edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
+                <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project/></ProtectedRoute>}></Route>
+                <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
+                <Route exact path='/userrole' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 {/* leave route */}
-                <Route exact path='/holiday' element={<ProtectedRoute ><Calendar /></ProtectedRoute>}></Route>
-                <Route exact path='/leavetype' element={<ProtectedRoute ><LeaveType /></ProtectedRoute>}></Route>
-                <Route exact path='/leave' element={<ProtectedRoute ><Leave /></ProtectedRoute>}></Route>
+                <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><Calendar /></ProtectedRoute>}></Route>
+                <Route exact path='/leavetype' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
+                <Route exact path='/leave' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
                 {/* document component */}
-                <Route exact path='/documents' element={<ProtectedRoute ><DocumentComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
                 {/* timesheet component */}
-                <Route exact path='/timesheet' element={<ProtectedRoute ><TimeSheetComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/workreport' element={<ProtectedRoute ><WorkReportComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/timesheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/workreport' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
-                {/* <Route path="*" element={<Error404 />} /> */}
+                <Route path="*" element={<Error404 />} />
             </Routes>
         </Suspense>
     );

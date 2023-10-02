@@ -4,7 +4,7 @@ import { GetLocalStorage } from '../service/StoreLocalStorage';
 import GlobalPageRedirect from "../Component/auth_context/GlobalPageRedirect";
 
 
-const ProtectedRoute = ({ children, name }) => {
+const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
     let navigate = useNavigate();
     // get url of page
@@ -16,9 +16,15 @@ const ProtectedRoute = ({ children, name }) => {
 
     const getProtectedData = async () => {
         // get localstorage in token
-        if (!GetLocalStorage("token")) {
+        if (authentication && !GetLocalStorage("token")) {
             // redirect page
-            navigate('/login')
+            navigate('/login');
+        }else if(!authentication && GetLocalStorage("token") ){
+            navigate('/');
+        }else if(!authentication && !GetLocalStorage("email")){
+            navigate('/login');
+        }else if(!authentication && GetLocalStorage("email")){
+            navigate('/otp');
         }
     }
 
