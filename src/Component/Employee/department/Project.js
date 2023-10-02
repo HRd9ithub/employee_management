@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import DepartmentModal from './DepartmentModal'
+import ProjectModal from './ProjectModal'
 import Spinner from '../../common/Spinner';
 import { toast } from 'react-hot-toast'
 import { motion } from 'framer-motion'
@@ -9,11 +9,13 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 import axios from 'axios';
 import Error403 from "../../error_pages/Error403"
+import Error500 from '../../error_pages/Error500';
 
-const Department = () => {
+const Project = () => {
   const [loader, setloader] = useState(false);
   const [records, setRecords] = useState([]);
   const [recordsFilter, setRecordsFilter] = useState([]);
+  const [serverError, setServerError] = useState(false);
   const [permission, setPermission] = useState("");
 
   // pagination state
@@ -26,8 +28,8 @@ const Department = () => {
 
   let { getCommonApi } = GlobalPageRedirect();
 
-  // get data in department
-  const getuser = async () => {
+  // get data in project
+  const getProject = async () => {
     try {
       setloader(true)
       let token = GetLocalStorage('token');
@@ -37,7 +39,7 @@ const Department = () => {
           Authorization: `Bearer ${token}`
         },
       }
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department/`, request)
+      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/project`, request)
       if (res.data.success) {
         setPermission(res.data.permissions)
         setRecords(res.data.data)
@@ -50,6 +52,9 @@ const Department = () => {
         if (error.response.status === 401) {
           getCommonApi();
         } else {
+          if(error.response.status === 500){
+            setServerError(true)
+          }
           if (error.response.data.message) {
             toast.error(error.response.data.message)
           }
@@ -61,7 +66,7 @@ const Department = () => {
   }
 
   useEffect(() => {
-    getuser()
+    getProject()
     // eslint-disable-next-line
   }, [])
 
@@ -119,6 +124,8 @@ const Department = () => {
     return rowArray.map((el) => el[0])
   }
 
+
+
   return (
     <>
       {!loader ?
@@ -130,25 +137,24 @@ const Department = () => {
                   <div className='row justify-content-end align-items-center row-std m-0'>
                     <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                       <div>
-                        <NavLink className="path-header">Department</NavLink>
                         <ul id="breadcrumb" className="mb-0">
                           <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                          <li><NavLink to="/department" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Department</NavLink></li>
+                          <li><NavLink to="/project" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Project</NavLink></li>
                         </ul>
                       </div>
                     </div>
                     <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                       <div className="search-full">
-                        <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                        <input type="search" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
                         <i className="fas fa-search"></i>
                       </div>
                       <div className="search-box mr-3">
                         <form name="search-inner">
-                          <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                          <input type="search" className="input-search" name="txt" onChange={HandleFilter} />
                         </form>
                         <i className="fas fa-search"></i>
                       </div>
-                      <DepartmentModal getuser={getuser} permission={permission && permission} />
+                      <ProjectModal getProject={getProject} permission={permission && permission} />
                     </div>
                   </div>
                 </div>
@@ -163,7 +169,7 @@ const Department = () => {
                           </TableCell>
                           <TableCell>
                             <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                              Department
+                              Project Name
                             </TableSortLabel>
                           </TableCell>
                           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
@@ -181,7 +187,8 @@ const Department = () => {
                               {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
                                 <TableCell>
                                   <div className='action'>
-                                    <DepartmentModal data={val} getuser={getuser} />
+                                    {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                    <ProjectModal data={val} getProject={getProject} />}
                                   </div>
                                 </TableCell>}
                             </TableRow>
@@ -209,9 +216,10 @@ const Department = () => {
             </div>}
         </motion.div>
         : <Spinner />}
-      {!loader && !permission && <Error403/>}
+      {!loader && !permission  && !serverError && <Error403/>}
+      {!loader && serverError && <Error500/>}
     </>
   )
 }
 
-export default Department
+export default Project

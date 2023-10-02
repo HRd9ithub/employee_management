@@ -45,9 +45,9 @@ const LeaveTypeModal = (props) => {
     // form validation function
     const HandleValidate = () => {
         if (!name) {
-            setError('Please enter a leave type.')
+            setError('Leave type is a required field.')
         } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
-            setError('Please enter a valid leave type.');
+            setError('Leave type must be an alphabet and space only.');
         } else {
             setError("");
         }
@@ -102,36 +102,7 @@ const LeaveTypeModal = (props) => {
 
     }
 
-    // check leave type
-    const checkLeaveType = async () => {
-        !name && HandleValidate();
-        if (name && !error) {
-            setloader(true)
-            let config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
-            axios.post(`${process.env.REACT_APP_API_KEY}/leavetype/name`, { name, id }, config).then((response) => {
-                if (response.data.success) {
-                    setError("")
-                }
-            }).catch((error) => {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            setError(error.response.data.message)
-                        }
-                    }
-                }
-            }).finally(() => setloader(false))
-        }
-    }
+
 
     return (
         <>
@@ -155,7 +126,7 @@ const LeaveTypeModal = (props) => {
                                 <form className="forms-sample">
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave Type</label>
-                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={name} onChange={InputEvent} onKeyUp={HandleValidate} onBlur={checkLeaveType} />
+                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={name} onChange={InputEvent} onBlur={HandleValidate} />
                                         {error && <small id="emailHelp" className="form-text error">{error}</small>}
                                         {Backerror && <small id="emailHelp" className="form-text error">{Backerror}</small>}
                                     </div>

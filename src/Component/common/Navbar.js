@@ -16,7 +16,7 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import Avatar from '@mui/material/Avatar';
 // import { Trans } from 'react-i18next';
 
-const Navbar = ({ socket }) => {
+const Navbar = () => {
   let { handleLogout, loader } = Globalcomponent()
   let { UserData, leaveNotification, getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
@@ -53,7 +53,6 @@ const Navbar = ({ socket }) => {
     if (GetLocalStorage("token") && UserData && UserData.role && UserData.role?.name.toLowerCase() === "admin") {
       getLeaveNotification();
     }
-    UserData && socket.emit('set', { userId: UserData.email });
     // eslint-disable-next-line
   }, [UserData])
 
@@ -143,8 +142,8 @@ const Navbar = ({ socket }) => {
                   <i className="fa-solid fa-bell nav-icons"></i>
                   <span className="badge badge-light">{leaveNotification.length}</span>
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list " style={{ width: "26rem" }} >
-                  <h6 className="p-3 mb-0 new-message">Notifications</h6>
+                <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
+                  <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
                   <div className="dropdown-divider"></div>
                   <div className='notification-box'>
                     <div className="accordion" id="accordionExample">
@@ -159,7 +158,7 @@ const Navbar = ({ socket }) => {
                         </div>
                         <div className="dropdown-divider"></div>
                         <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                          <div className={` leave-notification-body ${leaveNotification.length === 0 ? "mb-3" : "card-body"}`}>
+                          <div className={` leave-notification-body ${leaveNotification.length === 0 ? "mb-1" : "card-body"}`}>
                             {leaveNotification.sort(function (a, b) {
                               return new Date(b.from_date) - new Date(a.from_date)
                             }).map((elem) => {
@@ -192,7 +191,7 @@ const Navbar = ({ socket }) => {
                             })}
                             {leaveNotification.length === 0 &&
                               <div className='d-flex align-items-center justify-content-center'>
-                                <label>No Records Found</label>
+                                <label className="my-2">No Records Found</label>
                               </div>}
                           </div>
                         </div>

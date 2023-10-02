@@ -74,13 +74,13 @@ const DocumentComponent = () => {
         }
         Swal.fire({
             title: 'Delete Document',
-            text: "Are you sure want to delete?",
+            text: "Are you sure you want to delete?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#1bcfb4',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
             width: '450px',
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -171,7 +171,6 @@ const DocumentComponent = () => {
                                     <div className='row justify-content-end align-items-center row-std m-0'>
                                         <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                                             <div>
-                                                <NavLink className="path-header">Documents</NavLink>
                                                 <ul id="breadcrumb" className="mb-0">
                                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                                     <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Documents</NavLink></li>

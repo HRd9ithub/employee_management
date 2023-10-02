@@ -138,12 +138,12 @@
     }
 
     .common-box-dashboard img {
-        width: 150px;
+        height: 100%;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 183px;
-    }
+    } */
 
     .common-box-dashboard h4 {
         font-size: 25px;
@@ -197,6 +197,9 @@
     /* design changes --------------- ====== jd design ====== -------------------- */
     .my-chart-head {
         padding: 2.5rem 1rem;
+    }
+    .btn-add {
+        height: 32px !important;
     }
 }
 
@@ -297,9 +300,9 @@
         font-size: 23px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 160px;
-    }
+    } */
 
     .common-info-dashboard {
         font-size: 30px;
@@ -366,6 +369,7 @@
         padding-top: 25px;
         margin: auto !important;
     }
+
 }
 
 @media (max-width: 1440px) {
@@ -456,9 +460,9 @@
         font-size: 20px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 149px;
-    }
+    } */
 
     .common-info-dashboard h1,
     .common-info-dashboard svg,
@@ -494,7 +498,19 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 4.5rem;
+        /* font-size: 4.5rem; */
+        font-size: 2rem;
+    }
+    .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title::before {
+        border-top: 27px solid transparent;
+        border-bottom: 27px solid transparent;
+    }
+
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.75rem 2rem 0.75rem 1.2rem;
+    }
+    .sidebar .nav.sub-menu .nav-item {
+        padding-left: 0px !important;
     }
 }
 
@@ -670,7 +686,7 @@
     }
 
     .sidebar .nav.sub-menu .nav-item .nav-link {
-        padding: 0.75rem 2rem 0.75rem 2.9rem;
+        padding: 0.75rem 2rem 0.75rem 1rem;
     }
 
     /* 
@@ -715,10 +731,6 @@
         font-size: 10px;
     }
 
-    .new-message {
-        padding: 11px 17px !important;
-    }
-
     .profile-standard .card .card-title {
         font-size: 19px !important;
         font-weight: 600 !important;
@@ -728,9 +740,9 @@
         font-size: 18px;
     }
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 126px;
-    }
+    } */
 
     .common-info-dashboard h2 {
         font-size: 1.5rem;
@@ -769,9 +781,21 @@
 
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         font-size: 3.5rem;
+    } */
+    /* user-role page radio button */
+    .MuiSwitch-thumb.css-jsexje-MuiSwitch-thumb {
+        width: 18px !important;
+        height: 18px !important;
     }
+    .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title::before {
+        border-top: 25px solid transparent;
+        border-bottom: 25px solid transparent;
+    }
+    /* .sidebar .nav.sub-menu .nav-item {
+        padding-left: 0px !important;
+    } */
 }
 
 @media (max-width: 1152px) {
@@ -799,6 +823,7 @@
     .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
         font-size: 13px;
     }
+
 }
 
 @media (max-width: 1067px) {
@@ -818,13 +843,13 @@
         font-size: 16px;
     }
 
-    .common-box-dashboard img {
+    /* .common-box-dashboard img {
         width: 103px;
-    }
+    } */
 
-    .common-box-dashboard {
+    /* .common-box-dashboard {
         height: 116px;
-    }
+    } */
 
     .common-box-dashboard {
         padding: 18px;
@@ -898,6 +923,11 @@
         padding: 2rem 1rem;
     }
 
+    /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
+    .modal-header-none .dropdown-menu {
+        height: 130px !important;
+        overflow: auto !important;
+    }
 }
 
 @media (max-width: 1028px) {
@@ -977,11 +1007,11 @@
     } */
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         transform: translateY(-25px);
         font-size: 3rem;
         padding: 10px 10px;
-    }
+    } */
 }
 
 @media (max-width: 1023px) {
@@ -1004,7 +1034,8 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 3.5rem;
+        /* font-size: 3.5rem; */
+        font-size: 2rem;
     }
 
     /* navbar contents - right side */
@@ -1047,6 +1078,11 @@
     .login-wrap {
         height: auto;
         width: 40%;
+    .sidebar-wrap {
+        border-right: none;
+    }
+    .sidebar-wrap .sidebar.sidebar-offcanvas {
+        border-right: 1px solid #0a4a92;
     }
 }
 
@@ -1072,7 +1108,7 @@
     }
 
     .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
-        padding-left: 6px;
+        padding-left: 10px;
         padding-right: 7px;
     }
 
@@ -1096,9 +1132,9 @@
         padding: 0 2rem;
     }
 
-    .sidebar .nav.sub-menu .nav-item .nav-link {
+    /* .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.55rem 2rem 0.55rem 2.9rem;
-    }
+    } */
 
     .navbar .navbar-menu-wrapper {
         justify-content: end;
@@ -1203,9 +1239,9 @@
     }
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
-    .common-info-dashboard svg {
+    /* .common-info-dashboard svg {
         font-size: 3rem;
-    }
+    } */
 }
 
 @media (max-width:800px) {
@@ -1213,11 +1249,6 @@
     /* navbar */
     .logo-none {
         height: 38px;
-    }
-
-    .new-message {
-        padding: 7px 17px !important;
-        font-size: 13px;
     }
 
     .sidebar {
@@ -1338,7 +1369,7 @@
 
     .profile-view .profile-basic .profile-info-left {
         border-right: none;
-        border-bottom: 2px dashed #ccc;
+        border-bottom: 2px dashed transparent;
         padding: 0 0 20px;
     }
 
@@ -1363,12 +1394,8 @@
         margin: 30px auto;
     }
 
-    .modal-header {
+    /* .modal-header {
         padding: 0.2rem 1rem;
-    }
-
-    /* .navbar .navbar-brand-wrapper .navbar-brand img {
-        width: 84%;
     } */
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .navbar-dropdown {
@@ -1377,11 +1404,6 @@
 
     .department-modal .card-body {
         padding: 1rem 2.5rem;
-    }
-
-    .profile-view .profile-img-wrap img {
-        height: 100px;
-        width: 100px;
     }
 
     .profile-view .profile-img-wrap {
@@ -1418,21 +1440,12 @@
         right: 61px !important;
     }
 
-    /* 
-    .box-dashboard {
-        margin-bottom: 15px !important;
-    } */
-
     .tab-view .card-body {
         padding: 1rem !important;
     }
 
     .my-chart {
         margin-bottom: 15px;
-    }
-
-    .profile-img .profile-edit-icon {
-        transform: translate(70px, -33px);
     }
 
     .my-chart-head {
@@ -1485,10 +1498,10 @@
         font-size: 1.6rem;
     }
 
-    .modal-button .btn {
+    /* .modal-button .btn {
         width: 29% !important;
         height: 35px !important;
-    }
+    } */
 
     .sidebar-offcanvas {
         left: -55%;
@@ -1504,20 +1517,8 @@
     }
 
     /* navbar */
-
-    /* .navbar .navbar-brand-wrapper {
-        width: 32%;
-    } */
-
     .navbar .navbar-brand-wrapper .navbar-brand img {
-        /* width: 84%; */
         height: 47px;
-    }
-
-    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
-        padding-left: 0px;
-        padding-right: 8px;
-        border-right: none;
     }
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
@@ -1530,9 +1531,9 @@
         height: 25px;
     }
 
-    .sidebar .nav.sub-menu .nav-item .nav-link {
+    /* .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.65rem 2rem 0.55rem 2.9rem;
-    }
+    } */
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-img .availability-status {
         width: 8px;
@@ -1635,10 +1636,6 @@
         border-bottom: 2px solid white !important;
     }
 
-    .modal-header {
-        padding: 0rem 1rem !important;
-    }
-
     .swal2-icon.swal2-warning.swal2-icon-show {
         font-size: 8px;
     }
@@ -1693,6 +1690,9 @@
 
     .login-wrap {
         width: 60%;
+    }
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-toggle {
+        margin-left: 2px !important;
     }
 }
 
@@ -1754,10 +1754,6 @@
         min-height: 52px;
     }
 
-    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
-        padding-right: 6px;
-    }
-
     .navbar .navbar-menu-wrapper {
         padding-left: 19px;
     }
@@ -1793,16 +1789,6 @@
         font-size: 12px;
     }
 
-    .employee-id {
-        width: 141px;
-        padding: 8px;
-    }
-
-    .employee-id h5 {
-        font-size: 12px;
-        margin: 0px;
-    }
-
 }
 
 @media (max-width:600px) {
@@ -1822,10 +1808,6 @@
     .navbar .navbar-menu-wrapper {
         height: 30px;
     }
-
-    /* .navbar .navbar-brand-wrapper {
-        height: 25%;
-    } */
 
     .modal-dialog {
         margin: 30px auto;
@@ -1857,10 +1839,6 @@
 
     .common-info-dashboard h2 {
         font-size: 1.5rem;
-    }
-
-    .common-box-dashboard {
-        height: 101px;
     }
 
     .common-info-dashboard h1,
@@ -1950,8 +1928,13 @@
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     .common-info-dashboard svg {
-        font-size: 3rem;
+        font-size: 1.9rem;
     }
+
+    .my-chart ul li h4 {
+        font-size: 14px !important;
+    }
+
 }
 
 @media (max-width:568px) {
@@ -1985,13 +1968,8 @@
     }
 
     div#one {
-        /* order: 1 !important; */
         text-align: start !important;
     }
-
-    /* .btn-gradient-primary {
-        padding: 9px 0px !important;
-    } */
 
     .forms-sample input {
         font-size: 12px;
@@ -2094,15 +2072,13 @@
     .inner-pages .form-control {
         padding: 0rem 0.5rem;
     }
+    
+    .employee-id h5 {
+        font-size: 12px;
+    }
 }
 
 @media (max-width:536px) {
-
-    /* Login */
-    /* .auth .brand-logo img {
-        width: 100px;
-    } */
-
     .brand-txt h4 {
         font-size: 16px;
     }
@@ -2147,10 +2123,6 @@
     }
 
     /* uncomment it if remove changes --------------- ====== jd design ====== -------------------- */
-    /* .css-i4bv87-MuiSvgIcon-root {
-        font-size: 18px !important;
-    } */
-
     .auth form .auth-link {
         font-size: 13px;
     }
@@ -2408,6 +2380,10 @@
     .login-wrap {
         width: 80%;
     }
+    /* user-role page radio button */
+    .MuiSwitch-root.MuiSwitch-sizeMedium.css-julti5-MuiSwitch-root .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 0px !important;
+    }
 }
 
 @media (max-width:480px) {
@@ -2454,10 +2430,6 @@
         padding: 3px 8px;
     }
 
-    .new-message {
-        font-size: 12px;
-    }
-
     .dropdown .dropdown-menu .dropdown-item {
         font-size: 11px;
     }
@@ -2476,10 +2448,6 @@
     .file-upload-section {
         height: 88px;
         font-size: 11px;
-    }
-
-    .small-modal {
-        padding: 5px 20px !important;
     }
 
     .user-modal .modal-content {
@@ -2522,15 +2490,11 @@
         top: 0px;
         left: 0px;
         will-change: transform;
+
     }
 
     .modal-button {
         justify-content: center !important;
-    }
-
-    .modal-button .btn {
-        margin: 3px !important;
-        height: 25px !important;
     }
 
     .modal-body .form-control,
@@ -2543,11 +2507,6 @@
     }
 
     /* navbar */
-
-    /* .navbar .navbar-brand-wrapper {
-        width: 41%;
-    } */
-
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link {
         margin-left: 11px;
         margin-right: 0px;
@@ -2559,11 +2518,6 @@
 
     .navbar-toggler {
         font-size: 14px;
-    }
-
-    .navbar .navbar-menu-wrapper .navbar-toggler.navbar-toggler-right {
-        padding-left: 0px;
-        padding-right: 0px;
     }
 
     .navbar .navbar-menu-wrapper .count-indicator .count-symbol {
@@ -2597,7 +2551,6 @@
     #breadcrumb a {
         height: 34px;
         line-height: 33px;
-        /* margin-right: 24px; */
     }
 
     #breadcrumb a:before {
@@ -2643,9 +2596,9 @@
         height: unset;
     }
 
-    .modal-header {
+    /* .modal-header {
         padding: 0.3rem 1rem;
-    }
+    } */
 
     #two .form-control {
         height: 29px;
@@ -2707,11 +2660,6 @@
 
     }
 
-    .employee-id {
-        width: 125px;
-        padding: 6px;
-    }
-
     /* .calender */
     .calender-wrapper {
         padding-bottom: 12px;
@@ -2723,12 +2671,6 @@
         height: 0.8em;
     }
 
-    /* 
-    .list-wrapper .edit {
-        width: 1rem;
-        height: 1rem;
-    } */
-
     .list-wrapper .remove {
         font-size: 1.238rem;
     }
@@ -2738,7 +2680,7 @@
     }
 
     .calender .form-control {
-        padding: 0.76rem 1.375rem !important;
+        padding: 0.76rem 0.2rem !important;
     }
 
     .apexcharts-canvas {
@@ -2767,6 +2709,10 @@
 
     .forms-sample a {
         font-size: 10px;
+    }
+
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-toggle {
+        margin-left: -2px !important;
     }
 }
 
@@ -2931,10 +2877,6 @@
         padding: 0px 11px;
     }
 
-    .calender .form-control {
-        padding: 0.62rem 1.375rem !important;
-    }
-
     .calender .btn-gradient-primary {
         width: 34% !important;
         height: 33.5px !important;
@@ -2973,9 +2915,9 @@
         padding: 0.65rem 0 0.5rem 0;
     }
 
-    .sidebar .nav.sub-menu .nav-item .nav-link {
-        padding: 0.5rem 2rem 0.5rem 2.9rem;
-    }
+    /* .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.5rem 2rem 0.5rem 1rem;
+    } */
 
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
@@ -3027,6 +2969,27 @@
 
     .login-inner-text {
         padding: 0.3rem !important;
+    }
+    /* list of holiday responsive changes --------------- ====== jd design ====== -------------------- */
+    .sidebar .nav.sub-menu .nav-item {
+        padding-left: 0px !important;
+    }
+    .MuiTablePagination-root.css-jtlhu6-MuiTablePagination-root .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar{
+        padding-left: 0;
+        /* justify-content: space-between !important; */
+    }
+    .MuiTablePagination-root.css-jtlhu6-MuiTablePagination-root .css-16c50h-MuiInputBase-root-MuiTablePagination-select{
+        margin-right: 10px;
+    }
+    .MuiTablePagination-root.css-jtlhu6-MuiTablePagination-root .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar .MuiTablePagination-actions{
+        margin-left: 0;
+    }
+    .MuiTablePagination-root.css-jtlhu6-MuiTablePagination-root .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar .MuiTablePagination-selectLabel.css-pdct74-MuiTablePagination-selectLabel{
+        display: none;
+    }
+
+    .standard-wrapper {
+        padding: 0 13px;
     }
 }
 
@@ -3183,10 +3146,6 @@
         font-size: 13px !important;
     } */
 
-    .calender .form-control {
-        padding: 0.5rem 0.4rem !important;
-    }
-
     .form-check .form-check-label {
         margin-left: 0.5rem;
 
@@ -3221,13 +3180,37 @@
     .personal-info li .text {
         width: 200px;
     }
+
+    /* remove below if revarte changes --------------- ====== jd design ====== -------------------- */
+    /* radio button */
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 1px !important;
+        left: 1px !important;
+    }
+    .css-1yjjitx-MuiSwitch-track {
+        height: 100% !important;
+        width: 100% !important;
+    }
+    /* sidebar hover-active */
+    .sidebar .nav .nav-item {
+        padding-left: 10px !important;
+    }
+    /* .sidebar .nav.sub-menu .nav-item .nav-link {
+        padding: 0.5rem 2rem 0.5rem 2.4rem;
+    } */
+    /* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
+        padding: 10px 75% 10px 10px;
+    }   */
+
+    /* profile view reponsive */
+    .personal-info li .title, .personal-info li .text {
+        margin-right: 0;
+        width: 100%;
+    }
+    
 }
 
 @media (max-width:360px) {
-    /* .modal-content {
-        height: 386px;
-    } */
-
     .path-title.active::before {
         padding-right: 0.3rem;
     }
@@ -3261,21 +3244,6 @@
         border-right: none;
     }
 
-    /* #two .form-control {
-        height: 29px;
-        font-size: 10px;
-        position: absolute;
-        top: 23px;
-        z-index: 8;
-        right: -39px;
-        width: 91px;
-    } */
-
-    /* .navbar .navbar-brand-wrapper {
-        width: 50%;
-        height: 30%;
-    } */
-
     .col-3,
     .tab-vertical-custom .nav-tabs {
         flex: 0 0 25%;
@@ -3288,11 +3256,6 @@
     .swal2-modal .swal2-actions .btn-fw.swal2-styled,
     .fc button.btn-fw {
         min-width: 62px;
-    }
-
-    .profile-view .profile-img-wrap img {
-        height: 90px;
-        width: 90px;
     }
 
     .profile-standard .nav-pills .nav-link {
@@ -3332,8 +3295,6 @@
         color: #00458f;
     }
 
-
-
     .calender-row .card-body {
         padding: 1rem 0.5rem;
     }
@@ -3341,10 +3302,6 @@
     .calender .btn-gradient-primary {
         width: 34% !important;
         height: 32.5px !important;
-    }
-
-    .calender .form-control {
-        padding: 0.63rem 0.4rem !important;
     }
 
     .calender .add-items .btn {
@@ -3371,21 +3328,15 @@
         left: 67% !important;
     }
 
-    .employee-id {
-        width: 106px;
-        padding: 6px;
-    }
-
-    .employee-id h5 {
-        font-size: 10px;
-    }
-
     .row-std-time #one {
         margin-right: 22px;
     }
 
     .login-right .input-group-text {
         padding: 0.875rem 0.8rem !important;
+    }
+    .my-chart ul li h4 {
+        font-size: 12px !important;
     }
 
 }
@@ -3430,11 +3381,6 @@
 
     .h4 {
         font-size: 0.8rem;
-    }
-
-    .modal-button .btn {
-        font-size: 10px;
-        width: 43% !important;
     }
 
     .file-upload-section {
@@ -3493,11 +3439,6 @@
         width: 12% !important;
     }
 
-    .profile-standard .profile-view .profile-img-wrap img {
-        height: 85px;
-        width: 85px;
-    }
-
     .profile-standard .profile-view .profile-img-wrap {
         height: 85px;
         width: 85px;
@@ -3544,11 +3485,6 @@
 
     .common-box-dashboard {
         height: 88px;
-    }
-
-    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
-        width: 230px !important;
-        height: 148px !important;
     }
 
     .swal2-modal .swal2-actions .swal2-styled,
@@ -3659,10 +3595,6 @@
         padding: 0px !important;
     }
 
-    .calender .form-control {
-        padding: 0.6rem 0.4rem !important;
-    }
-
     .calender .card-body {
         padding: 1rem 1rem;
     }
@@ -3692,11 +3624,6 @@
         padding-right: 0rem;
     }
 
-    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
-        width: 203px !important;
-        height: 142px !important;
-    }
-
     .swal2-title {
         padding: 0.5em 1em 0;
     }
@@ -3718,17 +3645,25 @@
         left: 63% !important;
     }
 
-    .personal-info li .title {
-        width: 30%;
-    }
-
     #breadcrumb a:before {
         border-width: 17px 8px;
         left: -16px;
     }
 
     /* uncomment it if remove changes ------------- ======== jd design ======== ---------------- */
-    /* #breadcrumb a {
-        margin-right: 21px;
-    } */
+
+}
+
+@media (max-width: 280px) {
+    .submit-section .btn {
+        width: 45% !important;
+        height: 35px;
+        padding: unset !important;
+    }
+    .search-full input {
+        width: 100%;
+    }
+    .btn-gradient-primary {
+        padding: 3px 3px !important;
+    }
 }

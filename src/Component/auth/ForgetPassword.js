@@ -26,9 +26,9 @@ const ForgetPassword = () => {
     // eslint-disable-next-line
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!email) {
-      seterror("Please enter an Email Address.");
+      seterror("Email is a required field.");
     } else if (!email.match(mailformat)) {
-      seterror("Please enter a valid Email Address.");
+      seterror("Email must be a valid email.");
     } else {
       seterror("");
     }
@@ -80,7 +80,7 @@ const ForgetPassword = () => {
                   <h4>Forgot Password</h4>
                 </div>
                 <Form className="pt-1" onSubmit={HandleSubmit}>
-                  <Form.Label>{`Enter your Email and we'll send you a link to reset your password `}</Form.Label>
+                  <Form.Label>Enter your email, and we'll send you a link to reset your password</Form.Label>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Control
                       type="text"
@@ -89,7 +89,6 @@ const ForgetPassword = () => {
                       autoFocus
                       value={email}
                       onChange={handleChangeEmail}
-                      onKeyUp={handleVlaidateEmail}
                       onBlur={handleVlaidateEmail}
                       autoComplete="off"
                     />

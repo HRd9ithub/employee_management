@@ -10,6 +10,8 @@ import moment from 'moment';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from 'react-router-dom';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 
 const LoginInfo = ({ userId }) => {
     let date_today = new Date();
@@ -112,7 +114,27 @@ const LoginInfo = ({ userId }) => {
         setendtDate(end._d)
         getLoginInfo(start._d, end._d)
     }
-
+    
+    // calcendar option
+    const ranges = {
+        Today: [moment(), moment()],
+        Yesterday: [
+          moment().subtract(1, "days"),
+          moment().subtract(1, "days")
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+          moment()
+            .subtract(1, "month")
+            .startOf("month"),
+          moment()
+            .subtract(1, "month")
+            .endOf("month")
+        ]
+      };
+      
     return (
         <div>
 
@@ -120,8 +142,8 @@ const LoginInfo = ({ userId }) => {
             <div>
                 <div className='col-6 ml-auto pr-0'>
                     <div className="form-group mb-0 position-relative">
-                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
-                        <i className="fa-regular fa-calendar range_icon"></i>
+                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate ,ranges: ranges}} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                        <CalendarMonthIcon className="range_icon"/>
                     </div>
                 </div>
                 <TableContainer >

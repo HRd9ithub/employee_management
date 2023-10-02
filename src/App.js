@@ -6,39 +6,26 @@ import { useLocation} from 'react-router-dom';
 import Navbar from './Component/common/Navbar';
 import Sidebar from "./Component/common/Sidebar"
 import AppRoute from './Component/routes/AppRoute';
-import socketIO from "socket.io-client";
-import { useEffect } from 'react';
-import GlobalPageRedirect from './Component/auth_context/GlobalPageRedirect';
-const socket = socketIO.connect(process.env.REACT_APP_IMAGE_API);
-
+import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
 
 function App() {
 
-  let { getCommonApi } = GlobalPageRedirect();
   let location = useLocation();
-
-  useEffect(() => {
-    socket.on("receive", (data) => {
-      console.log(data)
-      if (data.isAuth) {
-        getCommonApi()
-      }
-    })
-    // eslint-disable-next-line
-  }, [socket])
 
   return (
     <>
       <div className='wrapper-container d-flex'>
+        <IdleTimeOutHandler/>
         <div className='sidebar-wrap'>
           {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' || location.pathname === '/otp'? '' : <Sidebar />}
         </div>
         <div className='sidebar-inner'>
           {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password'  || location.pathname === '/otp'? '' : <Navbar socket={socket} />}
+          {/* {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar />} */}
           <div className="main-panel">
             <div className="content-wrapper">
               {/* route file */}
-              <AppRoute socket={socket} />
+              <AppRoute />
             </div>
           </div>
         </div>

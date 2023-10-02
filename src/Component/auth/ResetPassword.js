@@ -49,6 +49,7 @@ const ResetPassword = () => {
         if (response.data.success) {
           setExpire(false)
           setExpireError("")
+          setLoader(false)
         }
       }).catch((error) => {
         setLoader(false)
@@ -115,7 +116,7 @@ const ResetPassword = () => {
   // new password validation
   const handleValidateNewPassword = () => {
     if (!data.new_password) {
-      setnew_password_error('Please enter a password.')
+      setnew_password_error('Password is a required field.')
     } else if (!data.new_password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
       setnew_password_error("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
     } else {
@@ -126,7 +127,7 @@ const ResetPassword = () => {
   // confirm password validation
   const handleValidateConfirmPassword = () => {
     if (!data.confirm_password) {
-      setconfirm_password_error("Please enter a Confirm Password.");
+      setconfirm_password_error("Confirm Password is a required field.");
     } else if (data.confirm_password !== data.new_password) {
       setconfirm_password_error('Password do not match.');
     } else {
@@ -161,7 +162,6 @@ const ResetPassword = () => {
                         name="new_password"
                         value={data.new_password}
                         onChange={HandleChange}
-                        onKeyUp={handleValidateNewPassword}
                         onBlur={handleValidateNewPassword}
                         autoComplete="off"
                       />
@@ -177,7 +177,6 @@ const ResetPassword = () => {
                         name="confirm_password"
                         value={data.confirm_password}
                         onChange={HandleChange}
-                        onKeyUp={handleValidateConfirmPassword}
                         onBlur={handleValidateConfirmPassword}
                         autoComplete="off"
                       />

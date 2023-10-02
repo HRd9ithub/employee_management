@@ -49,7 +49,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
     };
 
     useEffect(() => {
-        if(data){
+        if (data) {
             setId(data._id)
         }
         if (show) {
@@ -62,9 +62,9 @@ function UserRoleModal({ data, getuserRole, permission }) {
     // form validation
     const handlenameValidate = () => {
         if (!name) {
-            seterror("User role is required.");
+            seterror("User role is a required field.");
         } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
-            seterror("Please enter a valid user role.");
+            seterror("User role name must be an alphabet and space only.");
         } else {
             seterror("");
         }
@@ -113,16 +113,15 @@ function UserRoleModal({ data, getuserRole, permission }) {
     // submit data function
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.warn(page)
-        !error && handlenameValidate();
+        handlenameValidate();
         setError([])
-        let url = "";
-        if (id) {
-            url = axios.put(`${process.env.REACT_APP_API_KEY}/role/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
-        } else {
-            url = axios.post(`${process.env.REACT_APP_API_KEY}/role/`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
-        }
         if (name && !error) {
+            let url = "";
+            if (id) {
+                url = axios.put(`${process.env.REACT_APP_API_KEY}/role/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+            } else {
+                url = axios.post(`${process.env.REACT_APP_API_KEY}/role/`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+            }
             setloader(true)
             url.then((response) => {
                 if (response.data.success) {
@@ -148,7 +147,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                     }
                 }
             }).finally(() => setloader(false))
-        }
+        } 
     };
 
     const handleChange = (e, id, name) => {
@@ -159,37 +158,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
             return val
         })
         setPage(changeData)
-    }
-
-    // check role
-    const checkRole = async () => {
-        !name && handlenameValidate();
-        if (name && !error) {
-            setloader(true)
-            let config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
-            axios.post(`${process.env.REACT_APP_API_KEY}/role/name`, { name, id }, config).then((response) => {
-                if (response.data.success) {
-                    seterror("")
-                }
-            }).catch((error) => {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            seterror(error.response.data.message)
-                        }
-                    }
-                }
-            }).finally(() => setloader(false))
-        }
     }
 
     return (
@@ -205,14 +173,14 @@ function UserRoleModal({ data, getuserRole, permission }) {
                         <i className="fa-solid fa-xmark"></i>
                     </p>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body id="modal-content">
                     <div className="grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample row">
                                     <div className="form-group col-12 ">
                                         <label htmlFor="1">User Role</label>
-                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter user role" name="name" value={name} onChange={InputEvent} onBlur={checkRole} onKeyUp={handlenameValidate} />
+                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter user role" name="name" value={name} onChange={InputEvent} onBlur={handlenameValidate} />
                                         {error && (<small id="emailHelp" className="form-text error">{error}</small>)}
                                     </div>
                                     <Table className="col-12" >

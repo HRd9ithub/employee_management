@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
 
-const Employee = ({ socket }) => {
+const Employee = () => {
   const [records, setRecords] = useState([]);
   // eslint-disable-next-line
   const [value, setvalue] = useState("");
@@ -55,7 +55,6 @@ const Employee = ({ socket }) => {
       if (res.data.success) {
         setToggle(!toggle);
         toast.success(res.data.message);
-        // socket.emit('status',{userId:email});
       }
     } catch (error) {
       if (!error.response) {
@@ -84,13 +83,13 @@ const Employee = ({ socket }) => {
     };
     Swal.fire({
       title: "Delete Employee",
-      text: "Are you sure want to delete?",
+      text: "Are you sure you want to delete?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#1bcfb4",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
       width: "450px",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -255,7 +254,7 @@ const Employee = ({ socket }) => {
                 <div className='row justify-content-end align-items-center row-std m-0'>
                   <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                     <div>
-                      <NavLink className="path-header">Employee</NavLink>
+                      {/* <NavLink className="path-header">Employee</NavLink> */}
                       <ul id="breadcrumb" className="mb-0">
                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                         <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>

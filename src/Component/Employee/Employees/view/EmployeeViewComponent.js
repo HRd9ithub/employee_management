@@ -168,7 +168,7 @@ const EmployeeViewComponent = () => {
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                        {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
-                                        <li><NavLink to={`/employees/view/${data._id}`} className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
+                                        <li><NavLink to={!pathname.toLocaleLowerCase().match('/profile') ?  `/employees/view/${data._id}` :  `/profile/${data._id}` } className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
                                     </ul>
                                 </div>
                             </div>
@@ -185,17 +185,16 @@ const EmployeeViewComponent = () => {
                                 <div className="row m-0">
                                     <div className="col-md-12">
                                         <div className="profile-view col-12">
-                                            <div className="profile-img-wrap ">
-                                                <div className="profile-img" >
+                                            <div className="profile-img-wrap">
+                                                <div className="profile-img w-100 h-100">
                                                     <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
-                                                    {pathname.toLocaleLowerCase().match('/profile') && <label className="profile-edit-icon">
-                                                        <i className="fa-solid fa-pencil"></i>
+                                                    {pathname.toLocaleLowerCase().match('/profile') && 
                                                         <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
-                                                    </label>}
+                                                    }
                                                 </div>
                                             </div>
                                             <div className="profile-basic">
-                                                <div className="row">
+                                                <div className="row align-items-center">
                                                     <div className="col-md-5 col-lg-6 col-12 ">
                                                         <div className="profile-info-left">
                                                             <h3 className="user-name m-t-0 mb-0">{data.first_name && data.first_name.concat(" ", data.last_name)}</h3>
@@ -208,7 +207,7 @@ const EmployeeViewComponent = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-md-7 col-lg-6 col-12 p-0">
-                                                        <ul className="personal-info info-main">
+                                                        <ul className="personal-info info-main mb-0">
                                                             <li>
                                                                 <div className="title">Phone:</div>
                                                                 <div className="text"><a href={`tel:${data.phone}`}>{data.phone}</a></div>
@@ -376,7 +375,7 @@ const EmployeeViewComponent = () => {
                                                                             <ul className="experience-list">
                                                                                 {data.education.map((val) => {
                                                                                     return (
-                                                                                        <li>
+                                                                                        <li key={val._id}>
                                                                                             <div className="experience-user">
                                                                                                 <div className="before-circle"></div>
                                                                                             </div>
@@ -416,10 +415,10 @@ const EmployeeViewComponent = () => {
                                                                                     <div className="title">Employee Id</div>
                                                                                     <div className="text">{data.employee_id}</div>
                                                                                 </li>
-                                                                                <li>
+                                                                                {/* <li>
                                                                                     <div className="title">Department</div>
                                                                                     <div className="text">{data?.department ? data.department.name : <AiOutlineMinus />}</div>
-                                                                                </li>
+                                                                                </li> */}
                                                                                 <li>
                                                                                     <div className="title">Designation</div>
                                                                                     <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>

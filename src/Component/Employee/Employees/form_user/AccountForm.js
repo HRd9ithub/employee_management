@@ -14,7 +14,7 @@ const AccountForm = (props) => {
             Authorization: `Bearer ${GetLocalStorage('token')}`
         },
     }
-    let { userDetail,  handleClose, getEmployeeDetail,getuser } = props;
+    let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
     const [account, setAccount] = useState({
         bank_name: '',
         account_number: '',
@@ -51,9 +51,9 @@ const AccountForm = (props) => {
     // bank name validation
     const handleBankNameValidate = () => {
         if (!account.bank_name) {
-            setBank_name_error("Bank name field is required.")
-        } else if (!account.bank_name.match(/^[a-zA-Z ]*$/) || account.bank_name.trim().length < 0) {
-            setBank_name_error("Please enter a valid bank name.")
+            setBank_name_error("Bank name is a required field.")
+        } else if (!account.bank_name.match(/^[a-zA-Z ]*$/) || account.bank_name.trim().length <= 0) {
+            setBank_name_error("Bank name must be an alphabet and space only.")
         } else {
             setBank_name_error('')
         }
@@ -61,9 +61,9 @@ const AccountForm = (props) => {
     //  name validation
     const handlenameValidate = () => {
         if (!account.name || !account.name.trim()) {
-            setname_error("Name field is required.")
+            setname_error("Name is a required field.")
         } else if (!account.name.match(/^[a-zA-Z ]*$/)) {
-            setname_error("Please enter a valid name.")
+            setname_error("Name must be an alphabet and space only.")
         } else {
             setname_error('')
         }
@@ -71,11 +71,11 @@ const AccountForm = (props) => {
     //account number validation
     const handleAccountNumberValidate = () => {
         if (!account.account_number) {
-            setaccount_number_error("Account number field is required.")
+            setaccount_number_error("Account number is a required field.")
         } else if (!account.account_number.toString().match(/^[0-9]*$/)) {
-            setaccount_number_error("Please enter a valid account number.")
+            setaccount_number_error("Account number must be a number.")
         } else if (account.account_number.toString().length < 12) {
-            setaccount_number_error("Please enter at least 12 characters.")
+            setaccount_number_error("Your account number must be 12 characters.")
         }
         else {
             setaccount_number_error('')
@@ -84,11 +84,11 @@ const AccountForm = (props) => {
     // ifsc code  validation
     const handleIfscCodeValidate = () => {
         if (!account.ifsc_code) {
-            setifsc_code_error("Ifsc code field is required.")
+            setifsc_code_error("Ifsc code is a required field.")
         } else if (!account.ifsc_code.match(/^[a-zA-Z0-9]*$/)) {
-            setifsc_code_error("Please enter a valid ifsc code.")
+            setifsc_code_error("Ifsc code must be a number or alphabetic.")
         } else if (account.ifsc_code.length < 11) {
-            setifsc_code_error("Please enter at least 11 characters.")
+            setifsc_code_error("Your Ifsc code must be 11 characters.")
         }
         else {
             setifsc_code_error('')
@@ -98,9 +98,9 @@ const AccountForm = (props) => {
     // branch name validation
     const handleBranchNameValidate = () => {
         if (!account.branch_name || !account.branch_name.trim()) {
-            setbranch_name_error("Branch name field is required.")
+            setbranch_name_error("Branch name is a required field.")
         } else if (!account.branch_name.match(/^[a-zA-Z ]*$/)) {
-            setbranch_name_error("Please enter a valid branch name.")
+            setbranch_name_error("Branch name must be an alphabet and space only.")
         } else {
             setbranch_name_error('')
         }
@@ -127,12 +127,12 @@ const AccountForm = (props) => {
             // edit data in mysql
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account`, { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name },config);
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account`, { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name }, config);
                 if (response.data.success) {
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();
                         handleClose();
-                    }else{
+                    } else {
                         getEmployeeDetail()
                     }
                     toast.success(response.data.message)
@@ -149,7 +149,7 @@ const AccountForm = (props) => {
                         setError(error.response.data.error);
                     }
                 }
-            }finally{setLoader(false)}
+            } finally { setLoader(false) }
         }
     }
 
@@ -169,27 +169,27 @@ const AccountForm = (props) => {
             <form className="forms-sample">
                 <div className="form-group">
                     <label htmlFor="2" className='mt-2'>Account Number</label>
-                    <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onKeyUp={handleAccountNumberValidate} onBlur={handleAccountNumberValidate} autoComplete='off' />
+                    <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
                     {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="3" className='mt-2'>IFSC Code</label>
-                    <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onKeyUp={handleIfscCodeValidate} onBlur={handleIfscCodeValidate} autoComplete='off' />
+                    <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
                     {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="1" className='mt-2'> Bank Name</label>
-                    <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onKeyUp={handleBankNameValidate} onBlur={handleBankNameValidate} autoComplete='off' />
+                    <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
                     {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="6" className='mt-2'> Branch Name</label>
-                    <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onKeyUp={handleBranchNameValidate} onBlur={handleBranchNameValidate} autoComplete='off' />
+                    <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
                     {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
                 </div>
                 <div className="form-group">
                     <label htmlFor="3" className='mt-2'>Account Holder Name</label>
-                    <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onKeyUp={handlenameValidate} onBlur={handlenameValidate} autoComplete='off' />
+                    <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
                     {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
                 </div>
                 <ol>
@@ -198,8 +198,8 @@ const AccountForm = (props) => {
                     })}
                 </ol>
                 <div className="submit-section d-flex justify-content-between pb-3">
+                    <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
-                    <button className=" btn btn-gradient-primary" onClick={HandleSubmit}>Save</button>
                 </div>
             </form>
             {loader && <Spinner />}

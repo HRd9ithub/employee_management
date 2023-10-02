@@ -74,7 +74,7 @@ const RouteContext = ({ children }) => {
                     Authorization: `Bearer ${token}`
                 },
             }
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/notification`,{}, request)
+            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/notification`, {}, request)
             if (res.data.success) {
                 dispatch({ type: "LEAVE_NOTIFICATION", payload: res.data.data })
             }
@@ -88,7 +88,7 @@ const RouteContext = ({ children }) => {
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
-                } 
+                }
             }
         }
     }

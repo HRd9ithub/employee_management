@@ -23,12 +23,12 @@ const ChangePassword = () => {
     const [passwordError, setpasswordError] = useState("")
     const [newPasswordError, setnewPasswordError] = useState("")
     const [renewpasswordError, setrenewpasswordError] = useState("");
-    const [loader, setLoader] = React.useState(false);
+    const [loading, setloading] = React.useState(false);
     const [error, setError] = React.useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { handleLogout } = Globalcomponent();
+    let { handleLogout, loader } = Globalcomponent();
 
     // ******** change password functionality part  *********
     // onchange function
@@ -41,7 +41,7 @@ const ChangePassword = () => {
     // password validation function
     const handlepasswordValidate = () => {
         if (!list.password) {
-            setpasswordError("Please enter password.");
+            setpasswordError("Password is a required field.");
         } else if (!list.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
             setpasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
@@ -51,7 +51,7 @@ const ChangePassword = () => {
     // new password validation function
     const handlenewPasswordValidate = () => {
         if (!list.newpassword) {
-            setnewPasswordError("Please enter new password.");
+            setnewPasswordError("New password is a required field.");
         } else if (!list.newpassword.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
             setnewPasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
@@ -61,7 +61,7 @@ const ChangePassword = () => {
     // repeat new password validation function
     const handleRepeatnewPasswordValidate = () => {
         if (!list.renewpassword) {
-            setrenewpasswordError("Please enter confirm Password.");
+            setrenewpasswordError("Confirm Password is a required field.");
         } else if (list.renewpassword !== list.newpassword) {
             setrenewpasswordError("New Password and Confirm Password does not match.");
         } else {
@@ -83,9 +83,9 @@ const ChangePassword = () => {
         if (!password || !newpassword || !renewpassword || passwordError || newPasswordError || renewpasswordError) {
             return false;
         } else {
-            setLoader(true)
+            setloading(true)
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword },config);
+                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword }, config);
 
                 if (response.data.success) {
                     toast.success(response.data.message);
@@ -95,7 +95,7 @@ const ChangePassword = () => {
                         renewpassword: "",
                         password: ""
                     })
-                } 
+                }
             } catch (error) {
                 setList({
                     newpassword: '',
@@ -118,7 +118,7 @@ const ChangePassword = () => {
                     }
                 }
             } finally {
-                setLoader(false)
+                setloading(false)
             }
 
         }
@@ -129,18 +129,18 @@ const ChangePassword = () => {
             <div className="row mb-3">
                 <div className="col-md-4 pr-md-1">
                     <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
-                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onKeyUp={handlepasswordValidate} onBlur={handlepasswordValidate} />
+                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
                     <small className="error">{passwordError}</small>
                 </div>
 
                 <div className="col-md-4 pr-md-1 pl-md-2">
                     <label htmlFor="newPassword" className="col-form-label">New Password</label>
-                    <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onKeyUp={handlenewPasswordValidate} onBlur={handlenewPasswordValidate} />
+                    <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onBlur={handlenewPasswordValidate} />
                     <small className="error">{newPasswordError}</small>
                 </div>
                 <div className="col-md-4 pl-md-2">
                     <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
-                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onKeyUp={handleRepeatnewPasswordValidate} onBlur={handleRepeatnewPasswordValidate} />
+                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
                     <small className="error">{renewpasswordError}</small>
                 </div>
             </div>
@@ -150,9 +150,9 @@ const ChangePassword = () => {
                 })}
             </ol>
             <div className="submit-section pb-3">
-                <button type="submit" disabled={!list.password || !list.newpassword || !list.renewpassword || passwordError || newPasswordError || renewpasswordError} className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
+                <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>
-            {loader && <Spinner />}
+            {(loader || loading) && <Spinner />}
         </form>
     )
 }

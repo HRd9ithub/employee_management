@@ -9,7 +9,6 @@ import { useRef } from 'react';
 import Spinner from "../../../common/Spinner.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
-import { MdCancel } from "react-icons/md";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import axios from "axios";
@@ -38,14 +37,12 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         joining_date: "",
         role_id: "",
         designation_id: "",
-        department_id: "",
         status: "Active",
         leaveing_date: "",
         maried_status: "",
         report_by: ""
     });
     const [userRole, setUserRole] = useState([]);
-    const [Department, setDepartment] = useState([]);
     const [Designations, setDesignations] = useState([]);
 
     const [loader, setLoader] = useState(false);
@@ -56,11 +53,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     const [lastNameError, setlastNameError] = useState('');
     const [emailError, setemailError] = useState('');
     const [phoneError, setphoneError] = useState('');
-    const [departmentError, setdepartmentError] = useState('');
+    // const [departmentError, setdepartmentError] = useState('');
     const [designationError, setdesignationError] = useState('');
     const [roleError, setroleError] = useState('');
     const [joningDateError, setjoningDateError] = useState('');
-    const [leaveingdateerror, setleaveingdateError] = useState('');
     const [addressError, setaddressError] = useState('');
     const [cityError, setcityError] = useState('');
     const [stateError, setstateError] = useState('');
@@ -93,26 +89,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`, config);
                 if (res.data.success) {
                     setUserRole(res.data.data);
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            } finally { setLoader(false) }
-        };
-        const get_Department = async () => {
-            setLoader(true)
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/department`, config);
-
-                if (res.data.success) {
-                    setDepartment(res.data.data);
                 }
             } catch (error) {
                 if (!error.response) {
@@ -169,7 +145,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         if (!value) {
             getAlluser();
             get_role();
-            get_Department();
             get_Designations();
         }
         // eslint-disable-next-line
@@ -195,13 +170,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         var birthDate = new Date(date);
         var age_now = today.getFullYear() - birthDate.getFullYear();
         setEmployee({ ...employee, age: age_now, date_of_birth: date });
-        if (age_now === 0 || !date) {
-            setdateofbirthError("Please select date of birth.");
-        } else if (age_now <= 18) {
-            setdateofbirthError("Please select a valid date of birth.");
-        } else {
-            setdateofbirthError("");
-        }
     };
 
 
@@ -211,14 +179,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let { first_name, last_name, email, phone, leaveing_date, report_by, joining_date, _id, age, maried_status, employee_id, role_id, confirmPassword, designation_id, department_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
+        let { first_name, last_name, email, phone, leaveing_date, report_by, joining_date, _id, age, maried_status, employee_id, role_id, designation_id, status, address, state, city, postcode, gender, blood_group, date_of_birth, country } = employee;
         firstNameValidation();
         lastNameValidation();
         if (!emailError) {
             emailValidation();
         }
         phoneValidation();
-        departmentValidation();
+        // departmentValidation();
         designationValidation();
         roleValidation();
         handleJoinDatevalidation();
@@ -258,10 +226,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         }
 
         if (value !== "Profile" && value !== "Personal") {
-            if (!first_name || !last_name || !email || !phone || !joining_date || !role_id || !designation_id || !department_id || !report_by) {
+            if (!first_name || !last_name || !email || !phone || !joining_date || !role_id || !designation_id || !report_by) {
                 return false
             }
-            if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError || departmentError) {
+            if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError ) {
                 return false;
             }
         }
@@ -287,9 +255,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 joining_date: joining_date,
                 role_id,
                 designation_id,
-                department_id,
                 status,
-                confirmPassword,
                 leaveing_date,
                 report_by
             }, config);
@@ -329,9 +295,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // first name validation 
     const firstNameValidation = () => {
         if (!employee.first_name) {
-            setfirstNameError("Please enter First name.");
+            setfirstNameError("First Name is a required field.");
         } else if (!employee.first_name.match(/^[A-Za-z]+$/)) {
-            setfirstNameError("Please enter only alphabet.");
+            setfirstNameError("First Name must be alphabetic.");
         } else {
             setfirstNameError("");
         }
@@ -339,9 +305,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // last name validation 
     const lastNameValidation = () => {
         if (!employee.last_name) {
-            setlastNameError("Please enter Last name.");
+            setlastNameError("Last Name is a required field.");
         } else if (!employee.last_name.match(/^[A-Za-z]+$/)) {
-            setlastNameError("Please enter only alphabet.");
+            setlastNameError("Last Name must be alphabetic.");
         } else {
             setlastNameError("");
         }
@@ -349,9 +315,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // email validation 
     const emailValidation = () => {
         if (!employee.email) {
-            setemailError("Please enter email address.");
+            setemailError("Email is a required field.");
         } else if (!employee.email.match(mailformat)) {
-            setemailError("Please enter a valid email address");
+            setemailError("Email must be a valid email.");
         } else {
             setemailError("");
         }
@@ -359,59 +325,67 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     // email check in database
     const checkEmail = async () => {
-        !employee.email && emailValidation();
-        if (!emailError && userDetail.email !== employee.email) {
-            setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }).then((response) => {
-                if (response.data.success) {
-                    setemailError("")
-                }
-            }).catch((error) => {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        setemailError(error.response.data.error);
+        if (!employee.email) {
+            setemailError("Email is a required field.");
+        } else if (!employee.email.match(mailformat)) {
+            setemailError("Email must be a valid email.");
+        } else {
+            console.log(userDetail.email)
+            if (userDetail.email === employee.email) {
+                setemailError("")
+            } else {
+                setLoader(true)
+                axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }, config).then((response) => {
+                    if (response.data.success) {
+                        setemailError("")
                     }
-                }
-            }).finally(() => {
-                setLoader(false)
-            })
+                }).catch((error) => {
+                    if (!error.response) {
+                        toast.error(error.message);
+                    } else if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        } else {
+                            setemailError(error.response.data.error);
+                        }
+                    }
+                }).finally(() => {
+                    setLoader(false)
+                })
+            }
         }
     }
 
     // phone validation
     const phoneValidation = () => {
         if (!employee.phone) {
-            setphoneError("Please enter a mobile number.");
+            setphoneError("Mobile number is a required field.");
         } else if (!employee.phone.toString().match(/^[0-9]+$/)) {
-            setphoneError("Please enter a valid mobile number.");
+            setphoneError("Mobile number must be a number");
         } else if (employee.phone.toString().length !== 10) {
-            setphoneError("Please enter a valid mobile number.");
+            setphoneError("Your mobile number must be 10 characters.");
         } else {
             setphoneError("");
         }
     }
 
     // department validation
-    const departmentValidation = () => {
-        if (Department.length !== 0) {
-            if (!employee.department_id || employee.department_id === "department") {
-                setdepartmentError("Please select a department.");
-            } else {
-                setdepartmentError("")
-            }
-        }
-    }
+    // const departmentValidation = () => {
+    //     if (Department.length !== 0) {
+    //         if (!employee.department_id || employee.department_id === "department") {
+    //             setdepartmentError("Please select a department.");
+    //         } else {
+    //             setdepartmentError("")
+    //         }
+    //     }
+    // }
     // DESIGNATION validation
     const designationValidation = () => {
         if (Designations.length !== 0) {
             if (!employee.designation_id || employee.designation_id === "designation") {
-                setdesignationError("Please select a designation.");
+                setdesignationError("Designation is a required field.");
             } else {
                 setdesignationError("")
             }
@@ -421,7 +395,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // report to validation
     const reportValidation = () => {
         if (!employee.report_by || employee.report_by === "report") {
-            setreporttoError("Please select report to.");
+            setreporttoError("Report to is a required field.");
         } else {
             setreporttoError("")
         }
@@ -430,7 +404,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // role validation
     const roleValidation = () => {
         if (!employee.role_id || employee.role_id === "role") {
-            setroleError("Please select user role.");
+            setroleError("User role is a required field.");
         } else {
             setroleError("")
         }
@@ -438,7 +412,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // country validation
     const countryValidation = () => {
         if (!employee.country || employee.country === "country") {
-            setcountryError("Please select Country.");
+            setcountryError("Country is a required field.");
         } else {
             setcountryError("")
         }
@@ -447,24 +421,16 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // joinig date validation
     const handleJoinDatevalidation = () => {
         if (!employee.joining_date) {
-            setjoningDateError("Please select joining date");
+            setjoningDateError("Joining date is a required field.");
         } else {
             setjoningDateError("");
-        }
-    }
-    // leaving  date validation
-    const handleleavingdateValidation = () => {
-        if (!employee.leaveing_date) {
-            setleaveingdateError("Please select leaving date");
-        } else {
-            setleaveingdateError("");
         }
     }
 
     // address validation
     const addressValidation = () => {
         if (!employee.address) {
-            setaddressError("Please enter address.")
+            setaddressError("Address is a required field.")
         } else if (!employee.address.trim()) {
             setaddressError("Please enter a valid address.")
         } else {
@@ -476,18 +442,18 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // city validation
     const cityValidate = () => {
         if (!employee.city) {
-            setcityError("Please enter city name.");
+            setcityError("City is a required field.");
         } else if (!employee.city.match(/^[A-Za-z]+$/)) {
-            setcityError("Please enter only alphabet.");
+            setcityError("City must be alphabetic.");
         } else { setcityError("") }
     }
 
     // state validation
     const stateValidation = () => {
         if (!employee.state) {
-            setstateError("Please enter state.");
+            setstateError("State is a required field.");
         } else if (!employee.state.match(/^[A-Za-z]+$/)) {
-            setstateError("Please enter only alphabet.");
+            setstateError("State must be alphabetic.");
         } else {
             setstateError("");
         }
@@ -496,9 +462,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // postcode validation
     const postcodeValidation = () => {
         if (!employee.postcode) {
-            setpostcodeError("Please enter postcode.");
+            setpostcodeError("Postcode is a required field.");
         } else if (!employee.postcode.toString().match(/^[0-9]+$/)) {
-            setpostcodeError("Please use only numbers.");
+            setpostcodeError("Postcode must be a number.");
         } else if (employee.postcode.toString().length !== 6) {
             setpostcodeError("Your postcode must be 6 characters.");
         } else {
@@ -509,7 +475,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // dateof birth validation
     const handleDateOfBorthValidation = () => {
         if (!employee.date_of_birth) {
-            setdateofbirthError("Please select date of birth.");
+            setdateofbirthError("Date of birth is a required field.");
         } else if (employee.age < 18) {
             setdateofbirthError("Please select a valid date of birth.");
         }
@@ -521,7 +487,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // gender validation 
     const genderValidation = () => {
         if (!employee.gender || employee.gender === "Select Gender") {
-            setgenderError("Please select gender.");
+            setgenderError("Gender is a required field.");
         } else {
             setgenderError("");
         }
@@ -529,7 +495,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // MARRITAL validation 
     const marritalvalidation = () => {
         if (!employee.maried_status || employee.maried_status === "0") {
-            setmeritialerror("Please select maritial status.");
+            setmeritialerror("Maritial status is a required field.");
         } else {
             setmeritialerror("");
         }
@@ -538,7 +504,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // blood group validation
     const bloodgroupValidation = () => {
         if (!employee.blood_group) {
-            setbloodgroupError("Please enter blood group.")
+            setbloodgroupError("Blood group is a required field.")
         } else if (!employee.blood_group.match(/^(A|B|AB|O)[-+]$/)) {
             setbloodgroupError("Please enter a valid blood group.")
         } else {
@@ -570,35 +536,35 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputfname">First Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onKeyUp={firstNameValidation} onBlur={firstNameValidation} />
+                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onBlur={firstNameValidation} />
                                 <small id="emailHelp" className="form-text error">{firstNameError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onKeyUp={lastNameValidation} onBlur={lastNameValidation} />
+                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onBlur={lastNameValidation} />
                                 <small id="emailHelp" className="form-text error">{lastNameError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputEmail1">Email Address</label>
-                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value={employee.email || ""} onChange={InputEvent} onKeyUp={emailValidation} onBlur={checkEmail} />
+                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value={employee.email || ""} onChange={InputEvent} onBlur={checkEmail} />
                                 <small id="emailHelp" className="form-text error">{emailError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputphone">Mobile No.</label>
-                                <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onKeyUp={phoneValidation} onBlur={phoneValidation} inputMode="numeric" />
+                                <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onBlur={phoneValidation} inputMode="numeric" />
                                 <small id="emailHelp" className="form-text error">{phoneError}</small>
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputAddress">Address</label>
-                                <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onKeyUp={addressValidation} onBlur={addressValidation} />
+                                <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onBlur={addressValidation} />
                                 <small id="emailHelp" className="form-text error">{addressError}</small>
                             </div>
                         </div>
@@ -607,14 +573,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">Country</label>
-                                <select className="form-control" name="country" value={employee.country} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (!e.target.value || e.target.value === "country") {
-                                        setcountryError("Please select Country.");
-                                    } else {
-                                        setcountryError("")
-                                    }
-                                }} onClick={countryValidation}>
+                                <select className="form-control" name="country" value={employee.country} onChange={InputEvent} onBlur={countryValidation}>
                                     <option value="country">Select country</option>
                                     {country.map((elem, ind) => {
                                         return (
@@ -630,7 +589,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputState">State</label>
-                                <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onKeyUp={stateValidation} onBlur={stateValidation} />
+                                <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onBlur={stateValidation} />
                                 <small id="emailHelp" className="form-text error">{stateError}</small>
                             </div>
                         </div>
@@ -647,7 +606,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     name="city"
                                     value={employee.city || ""}
                                     onChange={InputEvent}
-                                    onKeyUp={cityValidate}
                                     onBlur={cityValidate}
                                 />
                                 <small id="emailHelp" className="form-text error">
@@ -658,7 +616,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputPostcode">Postcode</label>
-                                <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onKeyUp={postcodeValidation} onBlur={postcodeValidation} />
+                                <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onBlur={postcodeValidation} />
                                 <small id="emailHelp" className="form-text error">{postcodeError}</small>
                             </div>
                         </div>
@@ -667,44 +625,37 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group position-relative">
                                 <label htmlFor="exampleInputDate">Date Of Birth</label>
-                                <input type="date"
-                                    className="form-control"
-                                    value={employee.date_of_birth ? moment(employee.date_of_birth).format("YYYY-MM-DD") : ""}
-                                    ref={birthDateRef}
-                                    onChange={(e) => {
-                                        handleagechange(e.target.value);
-                                    }}
-                                    autoComplete='off'
-                                    onClick={() => { birthDateRef.current.showPicker(); handleDateOfBorthValidation(); }}
-                                    max={moment(new Date()).format("YYYY-MM-DD")}
-                                />
-                                <CalendarMonthIcon className='calendar-icon' onClick={() => { birthDateRef.current.showPicker(); handleDateOfBorthValidation(); }} />
+                                <div onClick={() => { birthDateRef.current.showPicker(); }}>
+                                    <input type="date"
+                                        className="form-control"
+                                        value={employee.date_of_birth ? moment(employee.date_of_birth).format("YYYY-MM-DD") : ""}
+                                        ref={birthDateRef}
+                                        onChange={(e) => { handleagechange(e.target.value); }}
+                                        autoComplete='off'
+                                        onBlur={handleDateOfBorthValidation}
+                                        max={moment(new Date()).format("YYYY-MM-DD")}
+                                    />
+                                    <CalendarMonthIcon className='calendar-icon' />
+                                </div>
                                 <small id="emailHelp" className="form-text error">{dateofbirthError}</small>
                             </div>
                         </div>}
                     {pathname.toLocaleLowerCase().includes('/employees') &&
                         <div className="col-md-6">
                             <div className="form-group position-relative">
-                                <label htmlFor="exampleInputJoining">
-                                    Joining Date
-                                </label>
-                                <input type="date"
-                                    className="form-control"
-                                    value={employee.joining_date ? moment(employee.joining_date).format("YYYY-MM-DD") : ""}
-                                    ref={joinDateRef}
-                                    onChange={(e) => {
-                                        setEmployee({ ...employee, joining_date: e.target.value })
-                                        if (!e.target.value) {
-                                            setjoningDateError("Please select joining date");
-                                        } else {
-                                            setjoningDateError("");
-                                        }
-                                    }}
-                                    autoComplete='off'
-                                    onClick={() => { joinDateRef.current.showPicker(); handleJoinDatevalidation(); }}
-                                    max={moment(new Date()).format("YYYY-MM-DD")}
-                                />
-                                <CalendarMonthIcon className='calendar-icon' />
+                                <label htmlFor="exampleInputJoining">Joining Date</label>
+                                <div onClick={() => { joinDateRef.current.showPicker(); }}>
+                                    <input type="date"
+                                        className="form-control"
+                                        value={employee.joining_date ? moment(employee.joining_date).format("YYYY-MM-DD") : ""}
+                                        ref={joinDateRef}
+                                        onChange={(e) => { setEmployee({ ...employee, joining_date: e.target.value }) }}
+                                        autoComplete='off'
+                                        onBlur={handleJoinDatevalidation}
+                                        max={moment(new Date()).format("YYYY-MM-DD")}
+                                    />
+                                    <CalendarMonthIcon className='calendar-icon' />
+                                </div>
                                 <small id="emailHelp" className="form-text error">{joningDateError}</small>
                             </div>
                         </div>}
@@ -712,14 +663,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputgender">Gender</label>
-                                <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (!e.target.value || e.target.value === "Select Gender") {
-                                        setgenderError("Please select gender.");
-                                    } else {
-                                        setgenderError("");
-                                    }
-                                }} onClick={genderValidation}>
+                                <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={InputEvent} onBlur={genderValidation}>
                                     <option value="Select Gender">Select Gender</option>
                                     <option value="Male"> Male</option>
                                     <option value="Female">Female</option>
@@ -738,7 +682,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputBlood">Blood Group</label>
-                                <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onKeyUp={bloodgroupValidation} onBlur={bloodgroupValidation} />
+                                <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onBlur={bloodgroupValidation} />
                                 <small id="emailHelp" className="form-text error">{bloodgroupError}</small>
                             </div>
                         </div>
@@ -747,7 +691,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputMARIIT">Marital Status</label>
-                                <select className="form-control" id="exampleInputMARIIT" name="maried_status" value={employee.maried_status || ""} onChange={InputEvent} onClick={marritalvalidation}>
+                                <select className="form-control" id="exampleInputMARIIT" name="maried_status" value={employee.maried_status || ""} onChange={InputEvent} onBlur={marritalvalidation}>
                                     <option value="0">Select Marital Status</option>
                                     <option value="Married">Married</option>
                                     <option value="Unmarried">Unmarried</option>
@@ -758,39 +702,8 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     {pathname.toLocaleLowerCase().includes('/employees') && <>
                         <div className="col-md-6">
                             <Form.Group>
-                                <label htmlFor="exampleFormControldepartment">Department</label>
-                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (e.target.value && e.target.value !== "department") {
-                                        setdepartmentError("");
-                                    } else {
-                                        setdepartmentError("Please select a department.");
-                                    }
-                                }} onClick={departmentValidation} >
-                                    <option value="department">Select Department</option>
-                                    {Department.map((val) => {
-                                        return (
-                                            <option key={val._id} value={val._id}>
-                                                {val.name}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                                <small id="emailHelp" className="form-text error">{departmentError}</small>
-                                {Department.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one department.</small>}
-                            </Form.Group>
-                        </div>
-                        <div className="col-md-6">
-                            <Form.Group>
                                 <label htmlFor="exampleFormControldesignation">Designation</label>
-                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (e.target.value && e.target.value !== "designation") {
-                                        setdesignationError("");
-                                    } else {
-                                        setdesignationError("Please select a designation.");
-                                    }
-                                }} onClick={designationValidation} >
+                                <select className="form-control" id="exampleFormControldesignation" name="designation_id" value={employee.designation_id} onChange={InputEvent} onBlur={designationValidation} >
                                     <option value="designation">Select Designation </option>
                                     {Designations.map((val) => {
                                         return (
@@ -801,21 +714,13 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     })}
                                 </select>
                                 <small id="emailHelp" className="form-text error">{designationError}</small>
-                                {Designations.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one designation.</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControlUser">User Role</label>
                                 {/* eslint-disable-next-line eqeqeq */}
-                                <select className="form-control" id="exampleFormControlUser" disabled={userDetail.id == GetLocalStorage("user_id")} name="role_id" value={employee.role_id} onChange={(e) => {
-                                    InputEvent(e);
-                                    if (e.target.value && e.target.value !== "role") {
-                                        setroleError("");
-                                    } else {
-                                        setroleError("Please select user role.");
-                                    }
-                                }} onClick={roleValidation}>
+                                <select className="form-control" id="exampleFormControlUser" disabled={userDetail.id == GetLocalStorage("user_id")} name="role_id" value={employee.role_id} onChange={InputEvent} onBlur={roleValidation}>
                                     <option value="role">Select user role</option>
                                     {userRole.map((val) => {
                                         return (
@@ -825,7 +730,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                     })}
                                 </select>
                                 <small id="emailHelp" className="form-text error">{roleError}</small>
-                                {userRole.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user role.</small>}
                             </Form.Group>
                         </div>
                         <div className="col-md-6">
@@ -841,14 +745,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="reportby">Report To</label>
-                                <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={(e) => {
-                                    InputEvent(e)
-                                    if (e.target.value && e.target.value !== "report") {
-                                        setreporttoError("");
-                                    } else {
-                                        setreporttoError("Please select report to.");
-                                    }
-                                }} onClick={reportValidation}>
+                                <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={InputEvent} onBlur={reportValidation}>
                                     <option value="report">Select Report To</option>
                                     {allRecords.map((val) => {
                                         return (
@@ -865,26 +762,19 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 <label htmlFor="exampleInputJoining">
                                     Leaving Date
                                 </label>
+                                <div onClick={() => leaveDateRef.current.showPicker()}>
                                 <input type="date"
                                     className="form-control"
                                     value={employee.leaveing_date ? moment(employee.leaveing_date).format("YYYY-MM-DD") : ""}
                                     ref={leaveDateRef}
                                     onChange={(e) => {
                                         setEmployee({ ...employee, leaveing_date: e.target.value })
-                                        if (!e.target.value) {
-                                            setleaveingdateError("Please select leaving date");
-                                        } else {
-                                            setleaveingdateError("");
-                                        }
                                     }}
                                     autoComplete='off'
-                                    onClick={() => { leaveDateRef.current.showPicker(); handleleavingdateValidation(); }}
                                     min={moment(employee.joining_date).format("YYYY-MM-DD")}
                                 />
                                 <CalendarMonthIcon className='calendar-icon' />
-                                {employee.leaveing_date &&
-                                    <MdCancel className="cancel_leave" onClick={() => setEmployee({ ...employee, leaveing_date: "" })} />}
-                                <small id="emailHelp" className="form-text error">{leaveingdateerror}</small>
+                                </div>
                             </div>
                         </div>
                     </>}
@@ -895,12 +785,12 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     })}
                 </ol>
                 <div className="submit-section d-flex justify-content-between">
+                    <button className="btn btn-gradient-primary" type="submit" onClick={handleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>Back</button>
-                    <button className="btn btn-gradient-primary" onClick={handleSubmit}>Save</button>
                 </div>
             </form >
-
             {loader && <Spinner />}
+
         </>
     );
 }

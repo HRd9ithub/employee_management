@@ -84,8 +84,8 @@ const LeaveModal = (props) => {
     //leave type  onchange function
     const InputEvent = (e) => {
         let value = e.target.value;
-        if(value && value !== "0"){
-            setleave({ ...leave, leave_type_id: value,leave_type_id_error: '' })
+        if (value && value !== "0") {
+            setleave({ ...leave, leave_type_id: value })
             let data = leaveTypeDetail.find((val) => val._id === value)
             if (data?.name.toLowerCase() === "casual leave") {
                 let date = new Date();
@@ -94,8 +94,8 @@ const LeaveModal = (props) => {
             } else {
                 setleaveType("");
             }
-        }else{
-            setleave({ ...leave, leave_type_id_error: "Please select the option." ,leave_type_id: value})
+        } else {
+            setleave({ ...leave, leave_type_id: value })
         }
     }
 
@@ -147,7 +147,7 @@ const LeaveModal = (props) => {
         if (id) {
             url = axios.put(`${process.env.REACT_APP_API_KEY}/leave/${id}`, common, request)
         } else {
-           url = axios.post(`${process.env.REACT_APP_API_KEY}/leave/`, common, request)
+            url = axios.post(`${process.env.REACT_APP_API_KEY}/leave/`, common, request)
         }
         url.then(data => {
             if (data.data.success) {
@@ -256,7 +256,7 @@ const LeaveModal = (props) => {
     const userValidation = () => {
         if (user.length !== 0) {
             if (!info.user_id || info.user_id === '0') {
-                setinfo({ ...info, user_id_error: "Please select user." })
+                setinfo({ ...info, user_id_error: "Employee is a required field." })
                 return false
             } else {
                 setinfo({ ...info, user_id_error: '' })
@@ -267,7 +267,7 @@ const LeaveModal = (props) => {
     const leaveTypeValidation = () => {
         if (leaveTypeDetail.length !== 0) {
             if (!leave.leave_type_id || leave.leave_type_id === '0') {
-                setleave({ ...leave, leave_type_id_error: "Please select the option." })
+                setleave({ ...leave, leave_type_id_error: "Leave type is a required field." })
                 return false
             } else {
                 setleave({ ...leave, leave_type_id_error: '' })
@@ -277,7 +277,7 @@ const LeaveModal = (props) => {
     // from date validation
     const fromDateValidation = () => {
         if (!from.from_date) {
-            setFrom({ ...from, from_date_error: "Please select date." })
+            setFrom({ ...from, from_date_error: "From date is a required field." })
             return false
         } else {
             setFrom({ ...from, from_date_error: '' })
@@ -286,11 +286,7 @@ const LeaveModal = (props) => {
 
     // from date onchange function
     const fromDateChange = (e) => {
-        if (!e.target.value) {
-            setFrom({ ...from, from_date_error: "Please select date.", from_date: "" })
-        } else {
-            setFrom({ ...from, from_date: e.target.value, from_date_error: '' })
-        }
+        setFrom({ ...from, from_date: e.target.value })
         if (to.to_date) {
             if (e.target.value >= to.to_date) {
                 setTo({ ...to, to_date: "" })
@@ -302,7 +298,7 @@ const LeaveModal = (props) => {
     // to date validation
     const toDateValidation = () => {
         if (!to.to_date) {
-            setTo({ ...to, to_date_error: "Please select date." })
+            setTo({ ...to, to_date_error: "To date is a required field." })
             return false
         } else {
             setTo({ ...to, to_date_error: '' })
@@ -310,16 +306,13 @@ const LeaveModal = (props) => {
     }
     // to date onchange function
     const toDateChange = (e) => {
-        if (!e.target.value) {
-            setTo({ ...to, to_date_error: "Please select date.", to_date: "" })
-        } else {
-            setTo({ ...to, to_date: e.target.value, to_date_error: '' })
-        }
+        setTo({ ...to, to_date: e.target.value })
     }
+
     // leave status validation
     const leaveStatusValidation = () => {
         if (!status_info.leave_status || status_info.leave_status === '0') {
-            setStatus({ ...status_info, leave_status_error: "Please select a leave status." })
+            setStatus({ ...status_info, leave_status_error: "Leave status is a required field." })
             return false
         } else {
             setStatus({ ...status_info, leave_status_error: '' })
@@ -336,10 +329,11 @@ const LeaveModal = (props) => {
     const reasonChange = (e) => {
         setReason({ ...reason, description: e.target.value })
     }
+
     // reason validate
     const descriptionValidate = () => {
         if (!reason.description.trim()) {
-            setReason({ ...reason, description_error: 'Please enter a leave reason.' })
+            setReason({ ...reason, description_error: 'Leave Reason is a required field.' })
             // return false
         } else {
             setReason({ ...reason, description_error: '' })
@@ -348,7 +342,7 @@ const LeaveModal = (props) => {
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-                : permission &&  (permission.name?.toLowerCase() === "admin" || (permission?.permissions?.length !== 0 && permission?.permissions?.create === 1)) &&
+                : permission && (permission.name?.toLowerCase() === "admin" || (permission?.permissions?.length !== 0 && permission?.permissions?.create === 1)) &&
                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button>
@@ -367,16 +361,13 @@ const LeaveModal = (props) => {
                                 <form className="forms-sample">
                                     {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
                                         <div className="form-group">
-                                            <label htmlFor="1" className='mt-3'>User</label>
+                                            <label htmlFor="1" className='mt-3'>Employee</label>
                                             <select className="form-control " id="user" name='user' disabled={data} value={info
                                                 .user_id} onChange={(e) => {
-                                                    if(e.target.value && e.target.value !== "0"){
-                                                        setinfo({ ...info, user_id: e.target.value,user_id_error :"" })
-                                                    }else{
-                                                        setinfo({ ...info, user_id_error: "Please select user.",user_id: e.target.value })
-                                                    }}
-                                                    } onClick={userValidation} >
-                                                <option value='0'>Select User </option>
+                                                    setinfo({ ...info, user_id: e.target.value })
+                                                }
+                                                } onBlur={userValidation} >
+                                                <option value='0'>Select Employee </option>
                                                 {user.map((val) => {
                                                     return (
                                                         <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
@@ -384,13 +375,13 @@ const LeaveModal = (props) => {
                                                 })}
                                             </select>
                                             {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
-                                            {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>}
+                                            {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
                                         </div>}
 
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave Type</label>
                                         <select className="form-control text-capitalize " id="leaveType" name='leave_type_id' value={leave
-                                            .leave_type_id} onChange={InputEvent} onClick={leaveTypeValidation} >
+                                            .leave_type_id} onChange={InputEvent} onBlur={leaveTypeValidation} >
                                             <option value='0'>Select Leave Type </option>
                                             {leaveTypeDetail.map((val) => {
                                                 return (
@@ -399,7 +390,6 @@ const LeaveModal = (props) => {
                                             })}
                                         </select>
                                         {leave.leave_type_id_error && <small id="emailHelp" className="form-text error">{leave.leave_type_id_error}</small>}
-                                        {leaveTypeDetail.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one leave type.</small>}
                                     </div>
 
                                     <div className="form-group position-relative">
@@ -409,14 +399,15 @@ const LeaveModal = (props) => {
                                             className="form-control"
                                             value={from.from_date}
                                             name='date'
-                                            disabled={!leave.leave_type_id}
+                                            disabled={!leave.leave_type_id || leave.leave_type_id === "0"}
                                             min={leaveType && leaveType}
                                             ref={fromDateRef}
                                             onChange={fromDateChange}
                                             autoComplete='off'
-                                            onClick={() => { fromDateRef.current.showPicker(); fromDateValidation(); }}
+                                            onClick={() => { fromDateRef.current.showPicker(); }}
+                                            onBlur={fromDateValidation}
                                         />
-                                        <CalendarMonthIcon className='calendar-icon' />
+                                        <CalendarMonthIcon className='calendar-icon' onClick={() => {leave.leave_type_id && leave.leave_type_id !== "0" &&  fromDateRef.current.showPicker(); }} />
                                         {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
                                     </div>
 
@@ -431,10 +422,11 @@ const LeaveModal = (props) => {
                                             ref={toDateRef}
                                             onChange={toDateChange}
                                             autoComplete='off'
-                                            onClick={() => { toDateRef.current.showPicker(); toDateValidation(); }}
+                                            onClick={() => { toDateRef.current.showPicker(); }}
+                                            onBlur={toDateValidation}
                                             min={from.from_date || new Date()}
                                         />
-                                        <CalendarMonthIcon className='calendar-icon' />
+                                        <CalendarMonthIcon className='calendar-icon' onClick={() => {from.from_date !== "" &&  toDateRef.current.showPicker(); }} />
                                         {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
                                     </div>
 
@@ -446,23 +438,17 @@ const LeaveModal = (props) => {
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'> Leave status</label>
                                         <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
-                                        } onChange={(e) => {
-                                            if(e.target.value && e.target.value !== "0"){
-                                                setStatus({ ...status_info, leave_status: e.target.value,leave_status_error:"" })
-                                            }else{
-                                                setStatus({ ...status_info, leave_status_error: "Please select a leave status.", leave_status: e.target.value })
-                                            }}} onClick={leaveStatusValidation} >
+                                        } onChange={(e) => { setStatus({ ...status_info, leave_status: e.target.value }) }} onBlur={leaveStatusValidation} >
                                             <option value='0'>Select Leave Status </option>
                                             <option value='Full'>Full</option>
                                             <option value='Half' disabled={day > 1}>Half</option>
-
                                         </select>
                                         {status_info.leave_status_error && <small id="emailHelp" className="form-text error">{status_info.leave_status_error}</small>}
                                     </div>
 
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'>Leave Reason</label>
-                                        <Form.Control as="textarea" placeholder="Leave Reason .  .  ." onChange={reasonChange} value={reason.description} onKeyUp={descriptionValidate} onBlur={descriptionValidate} />
+                                        <Form.Control as="textarea" placeholder="Leave Reason .  .  ." onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
                                         {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
                                     </div>
 
