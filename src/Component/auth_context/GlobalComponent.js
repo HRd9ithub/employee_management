@@ -28,8 +28,9 @@ export const Globalcomponent = () => {
             setLoader(true)
             const res = await axios.post(`${process.env.REACT_APP_API_KEY}/auth/login`, data)
             if (res.data.success) {
-                toast.success(res.data.message)
-                setpageToggle(true)
+                toast.success(res.data.message);
+                SetLocalStorage("email" ,res.data.data);
+                navigate("/otp");
             }
         } catch (error) {
             if (!error.response) {
@@ -67,6 +68,7 @@ export const Globalcomponent = () => {
 
             if (res.data.success) {
                 let { message, id, token } = res.data;
+                RemoveLocalStorage("email")
                 SetLocalStorage("user_id", id)
                 SetLocalStorage("token", token)
                 toast.success(message);
