@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GetLocalStorage } from '../service/StoreLocalStorage';
-import GlobalPageRedirect from "../Component/auth_context/GlobalPageRedirect";
+import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
 
 const ProtectedRoute = ({ children, authentication }) => {

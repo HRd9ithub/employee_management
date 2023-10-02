@@ -259,6 +259,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'employees' || elem.name.toLowerCase().replace(/\s/g, '') === 'project' || elem.name.toLowerCase().replace(/\s/g, '') === 'designation' ) && 
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item"  > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'project' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
@@ -281,6 +282,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' || elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' ||  elem.name.toLowerCase().replace(/\s/g, '') === 'holiday') &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" > <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
@@ -328,6 +330,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' || elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' ) &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/workreport">{elem.name}</NavLink></li>}

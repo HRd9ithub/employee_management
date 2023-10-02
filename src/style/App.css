@@ -2126,7 +2126,7 @@ svg {
   padding: 0px;
 }
 
-.profile-view .profile-img-wrap {
+.profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
   height: 100px;
   width: 100px;
   position: absolute;
@@ -2175,7 +2175,7 @@ svg {
   font-family: font_main_semi;
 }
 
-.profile-view .profile-img-wrap .img {
+.profile-view .profile-img-wrap .img, .profile-view .profile-img-wrap-view .img {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3712,4 +3712,9 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 
 .work-report-view-modal .modal-dialog.modal-dialog-centered {
   max-width: 45%;
+}
+
+/* jodit text-editor design */
+.jodit-status-bar-link,.jodit-status-bar__item .jodit-xpath{
+  display: none;
 }

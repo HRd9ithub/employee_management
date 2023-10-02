@@ -192,11 +192,12 @@ const AccountForm = (props) => {
                     <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
                     {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
                 </div>
+                {error.length !== 0 && 
                 <ol>
                     {error.map((elem) => {
                         return <li className='error' key={elem}>{elem}</li>
                     })}
-                </ol>
+                </ol>}
                 <div className="submit-section d-flex justify-content-between pb-3">
                     <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>

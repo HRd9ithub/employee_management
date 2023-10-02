@@ -332,11 +332,12 @@ function WorkReportModal({ data, permission, getReport }) {
                                         <input type="text" className="form-control" id="hours" placeholder="Enter Working Hours" name='hours' value={work.hours} onChange={handleChange} maxLength={2} onBlur={hourValidation} />
                                         {hoursError && <small id="emailHelp" className="form-text error">{hoursError}</small>}
                                     </div>
+                                    {error.length !== 0 &&
                                     <ol>
                                         {error.map((val) => {
                                             return <li key={val}>{val}</li>
                                         })}
-                                    </ol>
+                                    </ol>}
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Submit'}</button>
                                         <button className="btn btn-light" onClick={handleHide}>Cancel</button>

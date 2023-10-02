@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 
 import Spinner from '../common/Spinner';
-import ProtectedRoute from '../ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 import Login from '../auth/Login';
 import OtpVerification from '../auth/OtpVerification';
 import ForgotPassword from '../auth/ForgotPassword';
@@ -17,13 +17,9 @@ import DocumentComponent from '../document/DocumentComponent';
 import TimeSheetComponent from '../time_sheet/TimeSheetComponent';
 import WorkReportComponent from '../time_sheet/WorkReportComponent';
 import Error404 from '../error_pages/Error404';
-import ForgetPassword from '../auth/ForgetPassword';
 import ResetPassword from '../auth/ResetPassword';
-import SetNewPassword from '../auth/SetNewPassword';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
-import RedirectPage from './RedirectPage';
-import LoginNew from '../auth/LoginNew';
 import Project from "../Employee/department/Project"
 
 const AppRoute = () => {
@@ -31,10 +27,10 @@ const AppRoute = () => {
         <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
-                <Route exact path='/login' element={<ProtectedRoute authentication={false}><LoginNew/></ProtectedRoute>}></Route>
+                <Route exact path='/login' element={<ProtectedRoute authentication={false}><Login/></ProtectedRoute>}></Route>
                 <Route exact path='/otp' element={<ProtectedRoute authentication={false}><OtpVerification /></ProtectedRoute>}></Route>
-                <Route exact path='/forgot-password' element={<ProtectedRoute authentication={false} ><ForgotPassword /></ProtectedRoute>}></Route>
-                <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><SetNewPassword /></ProtectedRoute>}></Route>
+                <Route exact path='/forgot-password' element={<ForgotPassword />}></Route>
+                <Route exact path='/reset-password' element={<ResetPassword />}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}

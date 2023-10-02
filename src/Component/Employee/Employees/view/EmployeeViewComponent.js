@@ -185,7 +185,7 @@ const EmployeeViewComponent = () => {
                                 <div className="row m-0">
                                     <div className="col-md-12">
                                         <div className="profile-view col-12">
-                                            <div className="profile-img-wrap">
+                                            <div className={pathname.toLocaleLowerCase().match('/profile') ? "profile-img-wrap" : "profile-img-wrap-view"}>
                                                 <div className="profile-img w-100 h-100">
                                                     <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
                                                     {pathname.toLocaleLowerCase().match('/profile') && 

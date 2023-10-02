@@ -1375,7 +1375,7 @@
 
 @media (max-width: 768px) {
 
-    .profile-view .profile-img-wrap {
+    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
         position: relative;
         margin: 0 auto;
     }
@@ -1419,7 +1419,7 @@
         padding: 1rem 2.5rem;
     }
 
-    .profile-view .profile-img-wrap {
+    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
         height: 100px;
         width: 100px;
     }
@@ -3341,7 +3341,7 @@
         padding: 0px 0 5px 0 !important;
     }
 
-    .profile-view .profile-img-wrap {
+    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
         left: 2%;
     }
 
@@ -3502,7 +3502,7 @@
         width: 12% !important;
     }
 
-    .profile-standard .profile-view .profile-img-wrap {
+    .profile-standard .profile-view .profile-img-wrap, .profile-standard .profile-view .profile-img-wrap-view {
         height: 85px;
         width: 85px;
     }
