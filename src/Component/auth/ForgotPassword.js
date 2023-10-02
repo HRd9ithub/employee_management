@@ -85,7 +85,7 @@ const ForgotPassword = () => {
                 <h5>Enter your Email and we'll send you a link to reset your password</h5>
               </div>
               <div className="col-12">
-                <div className="input-group mb-3 mt-4">
+                <div className="input-group mb-2 mt-4">
                   <div className="input-group-prepend">
                     <div className="input-group-text">
                       <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
@@ -93,9 +93,9 @@ const ForgotPassword = () => {
                   </div>
                   <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off' />
                 </div>
-                {error && <small className="form-text error">{error}</small>}
+                {error && <small className="form-text error text-left mt-2">{error}</small>}
               </div>
-              <div className="col-12 login-button">
+              <div className="col-12 login-button mt-3">
                 <button className='d-block w-100' onClick={handleSubmit}>Reset Password</button>
               </div>
               <div className="col-12 text-center my-3">

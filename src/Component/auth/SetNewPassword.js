@@ -176,30 +176,30 @@ const SetNewPassword = () => {
                   <h5>Use this awesome form for set your password</h5>
                 </div>
                 <div className="col-12">
-                  <div className="input-group mb-3 mt-4">
+                  <div className="input-group mb-2 mt-4">
                     <div className="input-group-prepend">
                       <div className="input-group-text">
                         <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
                       </div>
                     </div>
                     <input type={newPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='New Password' name="new_password" value={data.new_password} onChange={HandleChange} onBlur={newPassswordValidation} autoComplete="off" />
+                    {newPasswordIconToggle ? <span className='eye-icon' onClick={newPassswordToggle}><VisibilityIcon /></span> :
+                          <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
                   </div>
-                  {new_password_error && <small className="form-text error text-left">{new_password_error}</small>}
-                  {newPasswordIconToggle ? <span className='eye-icon' onClick={newPassswordToggle}><VisibilityIcon /></span> :
-                        <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
+                  {new_password_error && <small className="form-text error text-left mb-2">{new_password_error}</small>}
                 </div>
                 <div className="col-12">
-                  <div className="input-group mb-3">
+                  <div className="input-group mt-2">
                     <div className="input-group-prepend">
                       <div className="input-group-text">
                         <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
                       </div>
                     </div>
                     <input type={confirmPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Confirm Password' name="confirm_password" value={data.confirm_password} onChange={HandleChange} onBlur={confirmPasswordValidation} autoComplete="off" />
+                    {confirmPasswordIconToggle ? <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityIcon /></span> :
+                          <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
                   </div>
-                  {confirm_password_error && <small className="form-text error text-left">{confirm_password_error}</small>}
-                  {confirmPasswordIconToggle ? <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityIcon /></span> :
-                        <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
+                  {confirm_password_error && <small className="form-text error text-left mt-2">{confirm_password_error}</small>}
                 </div>
                 {error.length !== 0 &&
                   <div className="col-12">
@@ -210,7 +210,7 @@ const SetNewPassword = () => {
                     </ol>
                   </div>
                 }
-                <div className="col-12 login-button">
+                <div className="col-12 login-button mt-3">
                   <button className='d-block w-100' onClick={handleSubmit}>Set New Password</button>
                 </div>
                 <div className="col-12 text-center my-3">
@@ -222,17 +222,17 @@ const SetNewPassword = () => {
         </div>
         : !loader &&
         <div className="row align-items-center px-0 py-4 link_expire">
-          <div className="col-4 text-center">
+          <div className="col-12 col-md-4 col-lg-4 col-lg-4 col-xxl-4 text-center">
             <img src="./Images/warning-orange.png" alt="img" />
           </div>
-          <div className="col-8">
+          <div className="col-12 col-md-8 col-lg-8 col-lg-8 col-xxl-8">
             <h2 className="link-expire-content">
               The link you followed has expired.
             </h2>
             <p className="my-3">
               {expireError}
             </p>
-            <div className="">
+            <div className="back-to-login-link-expire">
               <NavLink to="/login" className="btn btn-primary btn-md font-weight-medium auth-form-btn">
                 Back To Login
               </NavLink>

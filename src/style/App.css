@@ -3251,7 +3251,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* link expired css*/
 .link_expire {
   background-color: white;
-  box-shadow: 8px 8px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   border-radius: 0.4rem;
 }
 .link_expire img {
@@ -3711,6 +3711,7 @@ span.eye-icon {
   z-index: 100;
 }
 span.eye-icon .css-i4bv87-MuiSvgIcon-root {
-  width: 0.9em;
-  height: 0.9em;
+  width: 0.89em !important;
+  height: 0.89em !important;
+  fill: #054392 !important;
 }
