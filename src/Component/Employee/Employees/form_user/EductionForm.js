@@ -308,11 +308,11 @@ return (
                 )
             })}
             <div className="mt-2"><NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink></div>
-            <ol>
+            {error.length !== 0 && <ol>
                 {error.map((val) => {
                     return <li className='error' key={val}>{val}</li>
                 })}
-            </ol>
+            </ol>}
             <div className="submit-section d-flex justify-content-between py-3">
                 <button className="btn btn-gradient-primary" disabled={disableBtn} type='submit' onClick={HandleSubmit}>Save</button>
                 <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>

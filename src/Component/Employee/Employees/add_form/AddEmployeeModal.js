@@ -284,11 +284,11 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const phoneValidation = () => {
         if (!employee.mobile_no) {
             setphoneError("Mobile number is a required field.");
-        } else if (!employee.mobile_no.match(/^[0-9]+$/ )) {
+        } else if (!employee.mobile_no.match(/^[0-9]+$/)) {
             setphoneError("Mobile number must be a number.");
         } else if (employee.mobile_no.length !== 10) {
             setphoneError("Your mobile number must be 10 characters.");
-        }else {
+        } else {
             setphoneError("");
         }
     }
@@ -395,7 +395,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
         let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, status, confirmPassword, employee_id, reporting_by } = employee;
 
-        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id  || !reporting_by) {
+        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id || !reporting_by) {
             return false;
         } else if (firstNameError || lastNameError || emailError || phoneError || joningDateError || passwordError.length !== 0 || roleError || designationError || departmentError || confirmPasswordError || EmployeeIdError || reportToerror) {
             return false;
@@ -492,49 +492,49 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputfname">First Name</label>
                                                 <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' />
-                                                <small id="emailHelp" className="form-text error">{firstNameError}</small>
+                                                {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputlname">Last Name</label>
                                                 <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' />
-                                                <small id="emailHelp" className="form-text error">{lastNameError}</small>
+                                                {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputEmail1">Email Address</label>
                                                 <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" onChange={handleChange} value={employee.email} onBlur={checkEmail} autoComplete='off' />
-                                                <small id="emailHelp" className="form-text error">{emailError}</small>
+                                                {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputmobile_no">Mobile No.</label>
                                                 <input type="tel" className="form-control" id="exampleInputmobile_no" maxLength="10" minLength="10" placeholder="Enter mobile number" name="mobile_no" onChange={handleChange} value={employee.mobile_no} onBlur={phoneValidation} autoComplete='off' inputMode='numeric' />
-                                                <small id="emailHelp" className="form-text error">{phoneError}</small>
+                                                {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="password">Password</label>
                                                 <input type="password" className="form-control" id="password" placeholder="Enter password" name="password" autocompleted="password" value={employee.password} onChange={handleChange} autoComplete='off' onBlur={passwordValidation} />
-                                                <small id="emailHelp" className="form-text error">{passwordError}</small>
+                                                {passwordError && <small id="emailHelp" className="form-text error">{passwordError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="cpassword">Confirm Password</label>
                                                 <input type="password" className="form-control" id="cpassword" placeholder="Enter confirm password" name="confirmPassword" autocompleted="confirmPassword" value={employee.confirmPassword} onChange={handleChange} onBlur={confirmPasswordValidation} autoComplete='off' />
-                                                <small id="emailHelp" className="form-text error">{confirmPasswordError}</small>
+                                                {confirmPasswordError && <small id="emailHelp" className="form-text error">{confirmPasswordError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="employeeId">Employee ID</label>
                                                 <input type="text" className="form-control" id="employeeId" placeholder="Enter employee id" name="employee_id" value={employee.employee_id} onChange={handleChange} onBlur={checkEmployeeId} autoComplete='off' />
-                                                <small id="emailHelp" className="form-text error">{EmployeeIdError}</small>
+                                                {EmployeeIdError && <small id="emailHelp" className="form-text error">{EmployeeIdError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -550,11 +550,11 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                         setEmployee({ ...employee, join_date: e.target.value })
                                                     }}
                                                     autoComplete='off'
-                                                    onClick={() => { DateRef.current.showPicker();}}
+                                                    onClick={() => { DateRef.current.showPicker(); }}
                                                     onBlur={() => handleJoinDatevalidation()}
                                                 />
-                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { DateRef.current.showPicker();}} />
-                                                <small id="emailHelp" className="form-text error">{joningDateError}</small>
+                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { DateRef.current.showPicker(); }} />
+                                                {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                                             </div>
                                         </div>
                                         {/* <div className="col-md-6 pr-md-2 pl-md-2">
@@ -593,7 +593,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                         );
                                                     })}
                                                 </select>
-                                                <small id="emailHelp" className="form-text error">{designationError}</small>
+                                                {designationError && <small id="emailHelp" className="form-text error">{designationError}</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -608,7 +608,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                         );
                                                     })}
                                                 </select>
-                                                <small id="emailHelp" className="form-text error">{roleError}</small>
+                                                {roleError && <small id="emailHelp" className="form-text error">{roleError}</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -631,15 +631,16 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                         );
                                                     })}
                                                 </select>
-                                                <small id="emailHelp" className="form-text error">{reportToerror}</small>
+                                                {reportToerror && <small id="emailHelp" className="form-text error">{reportToerror}</small>}
                                             </Form.Group>
                                         </div>
                                     </div>
-                                    <ol>
-                                        {error?.map((val) => {
-                                            return <li className='error'>{val}</li>
-                                        })}
-                                    </ol>
+                                    {error.length !== 0 &&
+                                        <ol>
+                                            {error?.map((val) => {
+                                                return <li className='error' key={val}>{val}</li>
+                                            })}
+                                        </ol>}
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} > Save</button>
                                         <button className="btn btn-light" onClick={onHideModal}>Cancel</button>

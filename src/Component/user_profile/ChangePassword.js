@@ -130,25 +130,26 @@ const ChangePassword = () => {
                 <div className="col-md-4 pr-md-1">
                     <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
                     <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
-                    <small className="error">{passwordError}</small>
+                    {passwordError && <small className="error">{passwordError}</small>}
                 </div>
 
                 <div className="col-md-4 pr-md-1 pl-md-2">
                     <label htmlFor="newPassword" className="col-form-label">New Password</label>
                     <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onBlur={handlenewPasswordValidate} />
-                    <small className="error">{newPasswordError}</small>
+                    {newPasswordError && <small className="error">{newPasswordError}</small>}
                 </div>
                 <div className="col-md-4 pl-md-2">
                     <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
                     <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
-                    <small className="error">{renewpasswordError}</small>
+                    {renewpasswordError && <small className="error">{renewpasswordError}</small>}
                 </div>
             </div>
+            {error.length !== 0 && 
             <ol>
                 {error.map((val) => {
                     return <li className='error' key={val} >{val}</li>
                 })}
-            </ol>
+            </ol>}
             <div className="submit-section pb-3">
                 <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>

@@ -207,11 +207,12 @@ const EmergencyForm = (props) => {
                         </div>
                     </div>
                 </div>
+                {error.length !== 0 &&
                 <ol>
                     {error.map((val) => {
                         return <li className='error' key={val}>{val}</li>
                     })}
-                </ol>
+                </ol>}
                 <div className="submit-section d-flex justify-content-between py-3">
                     <button className="btn btn-gradient-primary" type='submit' onClick={handleSubmit}>Save</button>
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>

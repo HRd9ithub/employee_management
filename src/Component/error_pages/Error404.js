@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import React, { Component } from 'react';
 import {  NavLink } from 'react-router-dom';
+import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 export class Error404 extends Component {
   render() {
@@ -23,7 +24,9 @@ export class Error404 extends Component {
                Sorry, the page you're looking for doesn't exist.
             </p>
             <div className="btns">
-               <NavLink to="/">return home</NavLink>
+               {GetLocalStorage("token") ? 
+               <NavLink to="/">Home</NavLink> :
+               <NavLink to="/login">Login</NavLink>}
             </div>
          </div>
       </div>

@@ -462,12 +462,12 @@ const LeaveModal = (props) => {
                                                 <option value='Declined'>Declined</option>
                                             </select>
                                         </div>}
-
+                                    {error.length !== 0 &&
                                     <ol>
                                         {error.map((val) => {
                                             return <li className='error' key={val} >{val}</li>
                                         })}
-                                    </ol>
+                                    </ol>}
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
