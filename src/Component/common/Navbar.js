@@ -143,7 +143,7 @@ const Navbar = () => {
                   <span className="badge badge-light">{leaveNotification.length}</span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
-                  <h6 className="p-3 mb-0 new-message">Notifications</h6>
+                  <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
                   <div className="dropdown-divider"></div>
                   <div className='notification-box'>
                     <div className="accordion" id="accordionExample">
