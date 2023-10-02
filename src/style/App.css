@@ -163,7 +163,7 @@ input:-webkit-autofill:active {
 }
 
 .delete {
-  margin-right: 14px;
+  /* margin-right: 14px; */
   color: rgb(223, 8, 51) !important;
   border: none;
   background: none;
@@ -1414,7 +1414,7 @@ span.eye-icon {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-add-items input[type="text"] {
+.add-items input[type="text"] {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   width: 95%;
@@ -1755,7 +1755,7 @@ select.status-select {
   background: #024290;
 }
 
-.list-wrapper .remove {
+.list-wrapper .remove, .add-update-button .delete .remove {
   color: #ff0005 !important;
   font-size: 1.2rem;
 }
@@ -3517,7 +3517,7 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
 /* calender date picker icon */
 .calendar-icon-holiday {
   top: 12px;
-  right: 6px;
+  right: 2px;
 }
 
 
@@ -3601,12 +3601,15 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
   color: #054392;
   font-weight: 600;
 }
+
 .back-to-login:hover {
   text-decoration: none;
 }
+
 .login-inner-text .login-left .side-img {
   animation: shakeimage 3s linear infinite;
 }
+
 @keyframes shakeimage {
   40% {
       transform: translateY(-5px)
@@ -3618,6 +3621,7 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
       transform: translateY(3px)
   }
 }
+
 /* modal corner remove white spot */
 .modal-content {
   background-color: transparent !important;
@@ -3662,9 +3666,7 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
 
 
 
-/* work report compinent style */
-
-
+/* work report component style */
 .Holiday_column{
   color:  orange !important;
 }
@@ -3678,7 +3680,7 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   margin-bottom: 0;
 }
 
-/* delet confirmation box */
+/* delete confirmation box */
 .swal2-popup.swal2-modal .swal2-actions {
   width: 100%;
   gap: 10px;
@@ -3715,6 +3717,16 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* jodit text-editor design */
-.jodit-status-bar-link,.jodit-status-bar__item .jodit-xpath{
+.jodit-status-bar-link, .jodit-status-bar__item .jodit-xpath {
   display: none;
+}
+
+/* calender add button */
+.card.calender .add-items button {
+  height: 32px !important;
+  margin-top: 10px;
+}
+
+.remove-side-margin {
+  margin: 0 -15px;
 }

@@ -1492,6 +1492,10 @@
     .work-report-view-modal .modal-dialog.modal-dialog-centered {
         max-width: unset;
     }
+
+    .remove-side-margin {
+        margin: unset;
+    }
 }
 
 @media (max-width:736px) {
@@ -1761,9 +1765,9 @@
         max-width: 450px !important;
     }
 
-    .delete {
+    /* .delete {
         margin-right: 20px;
-    }
+    } */
 
     /* department model */
 
@@ -1808,9 +1812,9 @@
     }
 
 
-    .delete {
+    /* .delete {
         margin-right: 12px;
-    }
+    } */
 
     .doc-modal i {
         left: 28%;
@@ -1973,21 +1977,37 @@
 @media (max-width: 575px) {
     .add-employee-btn {
         text-align: center !important;
-      }
-    
-      .employee-path {
+    }
+
+    .employee-path {
         text-align: center !important;
         justify-content: center;
         transition: width 10s;
-      }
-    
-      .forms-sample label {
+    }
+
+    .forms-sample label {
         font-size: 17px;
-      }
-    
-      .forms-sample input {
+    }
+
+    .forms-sample input {
         font-size: 17px;
-      }
+    }
+
+    /* calender add button */
+    .card.calender .add-items {
+        flex-direction: column;
+    }
+    .card.calender .add-items input {
+        width: 100%;
+    }
+    .card.calender .add-items .add-update-button {
+        justify-content: end !important;
+        width: 100%;
+    }
+
+    .delete.action-icon i {
+        font-size: 1.2rem;
+    }
 }
 
 @media (max-width:568px) {
@@ -2722,11 +2742,11 @@
 
     /* calender - date picker icon */
     .calendar-icon-holiday {
-        width: 0.8em;
-        height: 0.8em;
+        width: 0.8em !important;
+        height: 0.8em !important;
     }
 
-    .list-wrapper .remove {
+    .list-wrapper .remove, .add-update-button .delete .remove {
         font-size: 1.238rem;
     }
 
@@ -2890,9 +2910,9 @@
         padding: 9px 9px;
     }
 
-    .delete {
-        margin-right: 0px;
-    }
+    /* .delete {
+        margin-right: 0px !important;
+    } */
 
     /* calender */
 
@@ -3213,11 +3233,6 @@
     .react-date-picker__inputGroup__divider {
         padding: 0px 3px;
         white-space: pre;
-    }
-
-
-    .delete {
-        margin-right: 0px;
     }
 
     .edit {
@@ -3612,10 +3627,10 @@
         margin-left: 4px !important;
     }
 
-    .css-i4bv87-MuiSvgIcon-root {
+    /* .css-i4bv87-MuiSvgIcon-root {
         width: 0.9em !important;
         height: 0.9em !important;
-    }
+    } */
 
     .calcedar-field .react-date-picker__wrapper {
         padding: 8px 4px;
@@ -3670,8 +3685,8 @@
         font-size: 1rem;
     }
 
-    .list-wrapper .remove {
-        font-size: 1rem;
+    .list-wrapper .remove, .add-update-button .delete .remove {
+        font-size: 1.1rem;
     }
 
     .calender .form-check .form-check-label {
