@@ -35,8 +35,7 @@ const AppRoute = () => {
                 <Route exact path='/login' element={<RedirectPage ><LoginNew/></RedirectPage>}></Route>
                 <Route exact path='/otp' element={<OtpVerification />}></Route>
                 <Route exact path='/forgot-password' element={<RedirectPage ><ForgotPassword /></RedirectPage>}></Route>
-                {/* <Route exact path='/set_new_password' element={<RedirectPage><ResetPassword /></RedirectPage>}></Route> */}
-                <Route exact path='/set_new_password' element={<RedirectPage><SetNewPassword /></RedirectPage>}></Route>
+                <Route exact path='/reset-password' element={<RedirectPage><SetNewPassword /></RedirectPage>}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}
@@ -58,7 +57,7 @@ const AppRoute = () => {
                 <Route exact path='/timesheet' element={<ProtectedRoute ><TimeSheetComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/workreport' element={<ProtectedRoute ><WorkReportComponent /></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
-                <Route path="*" element={<ProtectedRoute ><Error404 /></ProtectedRoute>} />
+                {/* <Route path="*" element={<Error404 />} /> */}
             </Routes>
         </Suspense>
     );

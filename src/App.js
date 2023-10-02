@@ -17,10 +17,10 @@ function App() {
       <div className='wrapper-container d-flex'>
         <IdleTimeOutHandler/>
         <div className='sidebar-wrap'>
-          {location.pathname === '/login' || location.pathname === '/forgot-password' || location.pathname === '/set_new_password' || location.pathname === '/otp'? '' : <Sidebar />}
+          {location.pathname === '/login' || location.pathname === '/forgot-password' || location.pathname === '/reset-password' || location.pathname === '/otp'? '' : <Sidebar />}
         </div>
         <div className='sidebar-inner'>
-          {location.pathname === '/login' || location.pathname === '/forgot-password' || location.pathname === '/set_new_password'  || location.pathname === '/otp'? '' : <Navbar />}
+          {location.pathname === '/login' || location.pathname === '/forgot-password' || location.pathname === '/reset-password'  || location.pathname === '/otp'? '' : <Navbar />}
           {/* {location.pathname === '/login' || location.pathname === '/password' || location.pathname === '/set_new_password' ? '' : <Navbar />} */}
           <div className="main-panel">
             <div className="content-wrapper">
