@@ -3705,3 +3705,12 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   width: 100%;
   gap: 10px;
 }
+
+/* password hide/show - eye icon */
+span.eye-icon {
+  z-index: 100;
+}
+span.eye-icon .css-i4bv87-MuiSvgIcon-root {
+  width: 0.9em;
+  height: 0.9em;
+}

@@ -187,7 +187,7 @@
 
     .login-wrap {
         width: 50%;
-        height: 425px;
+        /* height: 425px; */
     }
 
     .login-page-logo img {
@@ -333,9 +333,9 @@
         bottom: 1px !important;
     }
 
-    .login-wrap {
+    /* .login-wrap {
         height: 390px;
-    }
+    } */
 }
 
 @media (max-width: 1525px) {

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import Spinner from '../common/Spinner';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const LoginNew = () => {
   // eslint-disable-next-line
@@ -93,7 +95,7 @@ const LoginNew = () => {
                 <h5>Login To Continue</h5>
               </div>
               <div className="col-12">
-                <div className="input-group mb-3 mt-4">
+                <div className="input-group mb-2 mt-4">
                   <div className="input-group-prepend">
                     <div className="input-group-text">
                       <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
@@ -101,24 +103,30 @@ const LoginNew = () => {
                   </div>
                   <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={data.email} onChange={HandleChange} autoComplete='off' onBlur={emailValidation} />
                 </div>
-                <small className="form-text error">{emailError}</small>
+                {emailError && <small className="form-text error text-left mb-2">{emailError}</small>}
               </div>
               <div className="col-12">
-                <div className="input-group">
+                <div className="input-group mt-2">
                   <div className="input-group-prepend">
                     <div className="input-group-text">
                       <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
                     </div>
                   </div>
                   <input type={eyeToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Password' name="password" value={data.password} onChange={HandleChange} autoComplete='off' onBlur={passwordValidation} />
+                  {eyeToggle ? <span className='eye-icon' onClick={passwordToggle}><VisibilityIcon /></span> :
+                          <span className='eye-icon' onClick={passwordToggle}><VisibilityOffIcon /></span>}
                 </div>
-                <small className="form-text error">{passwordError}</small>
+                {passwordError && <small className="form-text error text-left mt-2">{passwordError}</small>}
               </div>
-              <ol>
-                {Error.map((val) => {
-                  return <li className='error' key={val}>{val}</li>
-                })}
-              </ol>
+              {Error.length !== 0 &&
+              <div className="col-12">
+                <ol className='mb-0 mt-1 text-left'>
+                  {Error.map((val) => {
+                    return <li className='error' key={val}>{val}</li>
+                  })}
+                </ol>
+              </div>
+              }
               <div className="col-12 text-right my-3">
                 <NavLink to="/forgot-password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
               </div>
