@@ -4,6 +4,7 @@
         font-size: 19px;
         margin: 0 !important;
     }
+
     .sidebar {
         width: 280px;
     }
@@ -79,7 +80,6 @@
         font-size: 15px !important;
         padding: 9px 0px;
     }
-
 
     .page-title {
         font-size: 31px;
@@ -185,6 +185,15 @@
         font-size: 15px !important;
     }
 
+    .login-wrap {
+        width: 50%;
+        height: 425px;
+    }
+
+    .login-page-logo img {
+        width: 170px;
+    }
+
     /* design changes --------------- ====== jd design ====== -------------------- */
     .my-chart-head {
         padding: 2.5rem 1rem;
@@ -197,7 +206,6 @@
 @media (max-width: 1880px) {}
 
 @media (max-width: 1787px) {
-
     .profile-wrapper img {
         width: 170px;
         height: 170px;
@@ -221,6 +229,7 @@
         /* overflow: auto; */
         width: 250px;
     }
+
     .kIaWtg {
         font-size: 15px;
     }
@@ -322,6 +331,10 @@
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         bottom: 1px !important;
     }
+
+    .login-wrap {
+        height: 390px;
+    }
 }
 
 @media (max-width: 1525px) {
@@ -391,6 +404,7 @@
     #two .form-control-lg {
         height: 2.5rem;
     }
+
     /* 
     .btn-gradient-primary {
         padding: 12px 0px !important;
@@ -406,9 +420,11 @@
         font-size: 15px !important;
         padding: 9px 0px;
     }
+
     .sidebar {
         width: 225px;
     }
+
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.862rem;
     }
@@ -583,12 +599,6 @@
     }
 }
 
-@media (max-width: 1330px) {
-    /* .btn-gradient-primary {
-        padding: 11px 0px !important;
-    } */
-}
-
 @media (max-width: 1200px) {
 
     /* employee */
@@ -699,7 +709,7 @@
     }
 
     .employee-content .row-std {
-        padding: 0.8rem 1rem 0.5rem 0rem !important;
+        padding: 0.8rem 1rem 0.5rem 0rem !important
     }
 
     #two .form-control-lg {
@@ -749,6 +759,15 @@
 
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         bottom: 3px !important;
+    }
+
+    .login-left .side-img {
+        padding-left: 0px;
+        padding-top: 0px;
+    }
+
+    .login-wrap {
+        width: 60%;
     }
 
     /* calender */
@@ -899,6 +918,7 @@
     .inner-pages .form-control {
         padding: 0.86rem 0.5rem;
     }
+
     .my-chart-head {
         padding: 2rem 1rem;
     }
@@ -909,7 +929,6 @@
         overflow: auto !important;
     }
 }
-
 
 @media (max-width: 1028px) {
 
@@ -938,6 +957,7 @@
     .profile-standard .nav-pills .nav-link {
         padding: 0.5rem 0.7rem;
     }
+
     /* uncomment it if remove changes --------------- ====== jd design ====== -------------------- */
     /* .css-i4bv87-MuiSvgIcon-root {
         width: 0.7em;
@@ -981,6 +1001,10 @@
         padding: 15px;
     }
 
+    /* .login-button button {
+        padding: 10px 42px;
+        margin-right: 15px;
+    } */
 
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     /* .common-info-dashboard svg {
@@ -1013,10 +1037,47 @@
         /* font-size: 3.5rem; */
         font-size: 2rem;
     }
+
     /* navbar contents - right side */
     .navbar .navbar-menu-wrapper {
         justify-content: end !important;
     }
+
+    .login-page-logo-none img {
+        margin: auto;
+        display: block;
+    }
+
+    .login-page-logo-none img {
+        padding: 0;
+        width: 90px;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        text-align: center;
+        padding: 0px 20px !important;
+    }
+
+    .login-right h2 {
+        font-size: 26px;
+    }
+
+    .login-wrap {
+        width: 45%;
+    }
+
+    .login-right h5 {
+        color: #aeb1b9;
+        font-size: 18px;
+    }
+
+    .login-wrap {
+        height: auto;
+        width: 40%;
     .sidebar-wrap {
         border-right: none;
     }
@@ -1176,8 +1237,7 @@
         padding-right: 20px;
         padding-bottom: 20px;
     }
-    
-    
+
     /* dashboard above card design --------------- ====== jd design ====== -------------------- */
     /* .common-info-dashboard svg {
         font-size: 3rem;
@@ -1295,6 +1355,9 @@
         font-size: 12px;
     }
 
+    .login-wrap {
+        width: 50%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1392,6 +1455,11 @@
     /* remove below if revert changes --------------- ====== jd design ====== -------------------- */
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-text {
         display: block;
+    }
+
+    .nav-item.nav-profile button,
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link {
+        margin-left: 0px !important;
     }
 }
 
@@ -1548,7 +1616,8 @@
 
     .btn-gradient-primary {
         font-size: 12px;
-    } 
+    }
+
     .add-employee-btn i {
         font-size: 12px !important;
     }
@@ -1615,19 +1684,13 @@
         margin-bottom: 16px;
     }
 
-    /* calender */
-    /* .react-date-picker__inputGroup__year {
-        width: 32px !important;
-    } */
-    /* 
-    .react-date-picker__inputGroup__month {
-        width: 23px !important;
-    } */
-
     .personal-info li .title {
         margin-right: 17px;
     }
 
+    .login-wrap {
+        width: 60%;
+    }
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-toggle {
         margin-left: 2px !important;
     }
@@ -1873,7 +1936,6 @@
     }
 
 }
-
 
 @media (max-width:568px) {
 
@@ -2289,7 +2351,7 @@
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.75rem;
     }
-    
+
     .sidebar .nav .nav-item .nav-link {
         padding: 0.35rem 0 0.35rem 0;
     }
@@ -2311,6 +2373,13 @@
         padding-bottom: 15px;
     }
 
+    .login-right .input-group .input-group-prepend + .form-control {
+        margin-top: 0 !important;
+    }
+
+    .login-wrap {
+        width: 80%;
+    }
     /* user-role page radio button */
     .MuiSwitch-root.MuiSwitch-sizeMedium.css-julti5-MuiSwitch-root .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
@@ -2595,6 +2664,7 @@
     .calender-wrapper {
         padding-bottom: 12px;
     }
+
     /* calender - date picker icon */
     .calendar-icon-holiday {
         width: 0.8em;
@@ -2897,6 +2967,9 @@
         left: -85%;
     }
 
+    .login-inner-text {
+        padding: 0.3rem !important;
+    }
     /* list of holiday responsive changes --------------- ====== jd design ====== -------------------- */
     .sidebar .nav.sub-menu .nav-item {
         padding-left: 0px !important;
@@ -3259,6 +3332,9 @@
         margin-right: 22px;
     }
 
+    .login-right .input-group-text {
+        padding: 0.875rem 0.8rem !important;
+    }
     .my-chart ul li h4 {
         font-size: 12px !important;
     }
@@ -3573,6 +3649,7 @@
         border-width: 17px 8px;
         left: -16px;
     }
+
     /* uncomment it if remove changes ------------- ======== jd design ======== ---------------- */
 
 }

@@ -259,7 +259,7 @@ span.eye-icon {
   text-align: center;
 }
 
-.content-wrapper .login-wrapper {
+/* .content-wrapper .login-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,7 +268,7 @@ span.eye-icon {
   background-size: cover;
   background-repeat: no-repeat;
   height: 100vh;
-}
+} */
 
 
 .auth-form-btn:hover {
@@ -853,7 +853,7 @@ span.eye-icon {
   background: #fff;
   border: 1px solid var(--light-grey-80-color);
   box-shadow: 0 1px 4px rgba(9, 8, 61, .08);
-  border-right: 1px solid #0a4a92;
+  /* border-right: 1px solid #0a4a92; */
 }
 
 .sidebar-inner {
@@ -3541,6 +3541,104 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
   right: 6px;
 }
 
+
+/* login page new */
+.login-page{
+  background-image: url(../../public/Images/bg-new.jpg);
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-wrap{
+  margin: auto;
+  height: 450px;
+  width: 80%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+  background-color: white;
+}
+.login-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+.login-left .side-img{
+  width: 450px;
+}
+.login-page-logo img{
+  width: 170px;
+}
+.login-page-logo-none img{
+  width: 110px;
+  padding: 10px 0px 0px 0px;
+  display: none;
+}
+.login-right .input-group{
+  border-radius: 0px;
+  border: 1px solid #989ba5;
+  /* width: 90%; */
+}
+.login-right .input-group-text{
+  padding: 0.875rem 1.375rem!important;
+  background-color: #fff;
+}
+.login-right .form-control{
+  border-bottom: 0px!important;
+}
+.login-button{
+  /* padding-top: 50px; */
+  font-weight: 700;
+}
+.login-button button{
+  padding: 10px 30px;
+  border-radius: 4px;
+  background-color: #054392;
+  color: white;
+  /* border: 2px solid #054392; */
+  border: transparent;
+}
+.login-right h2{
+  /* padding-top: 50px; */
+  font-weight: 800;
+}
+.login-right h5{
+  color: #aeb1b9;
+  /* padding-bottom: 30px; */
+}
+.forgot-password-link {
+  color: #054392;
+  font-weight: 500;
+  text-decoration: underline;
+}
+.forgot-password-link:hover {
+  text-decoration: none;
+}
+
+/* forgot password page */
+.back-to-login {
+  color: #054392;
+  font-weight: 600;
+}
+.back-to-login:hover {
+  text-decoration: none;
+}
+.login-inner-text .login-left .side-img {
+  animation: shakeimage 3s linear infinite;
+}
+@keyframes shakeimage {
+  40% {
+      transform: translateY(-5px)
+  }
+  0%, 100% {
+      transform: translateY(0px)
+  }
+  80% {
+      transform: translateY(3px)
+  }
+}
 /* modal corner remove white spot */
 .modal-content {
   background-color: transparent !important;
