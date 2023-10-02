@@ -88,7 +88,7 @@ const WorkReportComponent = () => {
             if (res.data.success) {
                 let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
                 setUserName(data);
-                getReport(data.length !== 0 ? data[0]._id : "");
+                // getReport(data.length !== 0 ? data[0]._id : "");
             }
         } catch (error) {
             if (!error.response) {
@@ -229,7 +229,7 @@ const WorkReportComponent = () => {
                     <div className="background-wrapper bg-white pt-2">
                         <div className=''>
                             <div className='row justify-content-end align-items-center row-std m-0'>
-                                <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
+                                <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center">
                                     <div>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
@@ -237,7 +237,7 @@ const WorkReportComponent = () => {
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
+                                <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
                                     <WorkReportModal permission={permission && permission} getReport={getReport} />
                                 </div>
                             </div>
@@ -247,6 +247,7 @@ const WorkReportComponent = () => {
                                         <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
                                             <div className="form-group mb-0">
                                                 <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                    <option value="">Select employee</option>
                                                     {userName.map((val) => {
                                                         return (
                                                             <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
@@ -267,6 +268,7 @@ const WorkReportComponent = () => {
 
                         {/* table */}
                         <div className="mx-4">
+                            {permission.name.toLowerCase() !== "admin" || user_id ? <>
                             <TableContainer >
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
@@ -346,6 +348,8 @@ const WorkReportComponent = () => {
                                 count={dataFilter.length}
                                 page={page}>
                             </TablePagination>
+                            </> : 
+                            <h5 className="text-center my-4">Please select employee first</h5>}
                         </div>
                     </div>
                 </div>}

@@ -34,7 +34,8 @@ const ForgotPassword = () => {
   }
 
   // submit function 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     emailValidation();
 
     if (!email || error) {
@@ -72,36 +73,38 @@ const ForgotPassword = () => {
             <img src="./Images/forgot-password.png" className='img-fluid side-img mx-auto' alt="" />
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
-            <div className="row">
-              <div className="col-12">
-                <div className="login-page-logo-none">
-                  <img src='Images/d9.png' alt="logo" />
-                </div>
-              </div>
-              <div className="col-12">
-                <h2 className='mt-2 mt-lg-4 mt-xl-4'>Forgot Password!</h2>
-              </div>
-              <div className="col-12">
-                <h5>Enter your Email and we'll send you a link to reset your password</h5>
-              </div>
-              <div className="col-12">
-                <div className="input-group mb-2 mt-4">
-                  <div className="input-group-prepend">
-                    <div className="input-group-text">
-                      <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
-                    </div>
+            <form onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-12">
+                  <div className="login-page-logo-none">
+                    <img src='Images/d9.png' alt="logo" />
                   </div>
-                  <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off' />
                 </div>
-                {error && <small className="form-text error text-left mt-2">{error}</small>}
+                <div className="col-12">
+                  <h2 className='mt-2 mt-lg-4 mt-xl-4'>Forgot Password!</h2>
+                </div>
+                <div className="col-12">
+                  <h5>Enter your Email and we'll send you a link to reset your password</h5>
+                </div>
+                <div className="col-12">
+                  <div className="input-group mb-2 mt-4">
+                    <div className="input-group-prepend">
+                      <div className="input-group-text">
+                        <i className="fa-solid fa-envelope" style={{ color: "#054392" }}></i>
+                      </div>
+                    </div>
+                    <input type="text" className="form-control" aria-label="Text input with checkbox" placeholder='Email' name='email' value={email} onChange={handleChange} onBlur={emailValidation} autoComplete='off' />
+                  </div>
+                  {error && <small className="form-text error text-left mt-2">{error}</small>}
+                </div>
+                <div className="col-12 login-button my-3">
+                  <button className='d-block w-100'>Reset Password</button>
+                </div>
+                <div className="col-12 text-center mb-3">
+                  <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
+                </div>
               </div>
-              <div className="col-12 login-button mt-3">
-                <button className='d-block w-100' onClick={handleSubmit}>Reset Password</button>
-              </div>
-              <div className="col-12 text-center my-3">
-                <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

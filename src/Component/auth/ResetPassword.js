@@ -163,60 +163,62 @@ const ResetPassword = () => {
               <img src="./Images/new-password.png" className='img-fluid side-img mx-auto' alt="" />
             </div>
             <div className="login-right col-lg-6 col-12 pl-0">
-              <div className="row">
-                <div className="col-12">
-                  <div className="login-page-logo-none">
-                    <img src='Images/d9.png' alt="logo" />
-                  </div>
-                </div>
-                <div className="col-12">
-                  <h2 className='mt-2 mt-lg-4 mt-xl-4'>Set New Password</h2>
-                </div>
-                <div className="col-12">
-                  <h5>Use this awesome form for set your password</h5>
-                </div>
-                <div className="col-12">
-                  <div className="input-group mb-2 mt-4">
-                    <div className="input-group-prepend">
-                      <div className="input-group-text">
-                        <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
-                      </div>
-                    </div>
-                    <input type={newPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='New Password' name="new_password" value={data.new_password} onChange={HandleChange} onBlur={newPassswordValidation} autoComplete="off" />
-                    {newPasswordIconToggle ? <span className='eye-icon' onClick={newPassswordToggle}><VisibilityIcon /></span> :
-                          <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
-                  </div>
-                  {new_password_error && <small className="form-text error text-left mb-2">{new_password_error}</small>}
-                </div>
-                <div className="col-12">
-                  <div className="input-group mt-2">
-                    <div className="input-group-prepend">
-                      <div className="input-group-text">
-                        <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
-                      </div>
-                    </div>
-                    <input type={confirmPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Confirm Password' name="confirm_password" value={data.confirm_password} onChange={HandleChange} onBlur={confirmPasswordValidation} autoComplete="off" />
-                    {confirmPasswordIconToggle ? <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityIcon /></span> :
-                          <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
-                  </div>
-                  {confirm_password_error && <small className="form-text error text-left mt-2">{confirm_password_error}</small>}
-                </div>
-                {error.length !== 0 &&
+              <form onSubmit={handleSubmit}>
+                <div className="row">
                   <div className="col-12">
-                    <ol className='mb-0 mt-1 text-left'>
-                      {error.map((val) => {
-                        return <li className='error' key={val}>{val}</li>
-                      })}
-                    </ol>
+                    <div className="login-page-logo-none">
+                      <img src='Images/d9.png' alt="logo" />
+                    </div>
                   </div>
-                }
-                <div className="col-12 login-button mt-3">
-                  <button className='d-block w-100' onClick={handleSubmit}>Set New Password</button>
+                  <div className="col-12">
+                    <h2 className='mt-2 mt-lg-4 mt-xl-4'>Set New Password</h2>
+                  </div>
+                  <div className="col-12">
+                    <h5>Use this awesome form for set your password</h5>
+                  </div>
+                  <div className="col-12">
+                    <div className="input-group mb-2 mt-4">
+                      <div className="input-group-prepend">
+                        <div className="input-group-text">
+                          <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
+                        </div>
+                      </div>
+                      <input type={newPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='New Password' name="new_password" value={data.new_password} onChange={HandleChange} onBlur={newPassswordValidation} autoComplete="off" />
+                      {newPasswordIconToggle ? <span className='eye-icon' onClick={newPassswordToggle}><VisibilityIcon /></span> :
+                            <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
+                    </div>
+                    {new_password_error && <small className="form-text error text-left mb-2">{new_password_error}</small>}
+                  </div>
+                  <div className="col-12">
+                    <div className="input-group mt-2">
+                      <div className="input-group-prepend">
+                        <div className="input-group-text">
+                          <i className="fa-solid fa-lock" style={{ color: "#054392" }}></i>
+                        </div>
+                      </div>
+                      <input type={confirmPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Confirm Password' name="confirm_password" value={data.confirm_password} onChange={HandleChange} onBlur={confirmPasswordValidation} autoComplete="off" />
+                      {confirmPasswordIconToggle ? <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityIcon /></span> :
+                            <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
+                    </div>
+                    {confirm_password_error && <small className="form-text error text-left mt-2">{confirm_password_error}</small>}
+                  </div>
+                  {error.length !== 0 &&
+                    <div className="col-12">
+                      <ol className='mb-0 mt-1 text-left'>
+                        {error.map((val) => {
+                          return <li className='error' key={val}>{val}</li>
+                        })}
+                      </ol>
+                    </div>
+                  }
+                  <div className="col-12 login-button my-3">
+                    <button className='d-block w-100'>Set New Password</button>
+                  </div>
+                  <div className="col-12 text-center mb-3">
+                    <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
+                  </div>
                 </div>
-                <div className="col-12 text-center my-3">
-                  <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

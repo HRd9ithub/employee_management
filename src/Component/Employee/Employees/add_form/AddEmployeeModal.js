@@ -641,7 +641,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                 return <li className='error' key={val}>{val}</li>
                                             })}
                                         </ol>}
-                                    <div className='d-flex justify-content-end modal-button'>
+                                    <div className='d-flex justify-content-end modal-button remove-side-margin'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} > Save</button>
                                         <button className="btn btn-light" onClick={onHideModal}>Cancel</button>
                                     </div>

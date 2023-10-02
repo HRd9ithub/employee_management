@@ -218,7 +218,8 @@ const Dashboard = () => {
                                                   {todayLeave.map((val, ind) => {
                                                        return <h5 className='mr-4' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</h5>
                                                   })}
-                                                  {todayLeave.length == 0 && <h5 className='mr-4'>All present today</h5>}
+                                                  {todayLeave.length === 0 && totalEmployee !== 0 && <h5 className='mr-4'>All present today</h5>}
+                                                  {totalEmployee === 0  && <h5 className='mr-4'>No employee yet</h5>}
                                              </div>
                                         </NavLink>
                                    </div>
