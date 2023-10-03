@@ -1505,6 +1505,10 @@ input[type='email']:disabled {
   margin-bottom: 1rem;
 }
 
+.user-modal .modal-button button {
+  width: 10% !important;
+}
+
 .file-upload-section {
   position: relative;
 }
@@ -3730,4 +3734,10 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 
 .remove-side-margin {
   margin: 0 -15px;
+}
+
+/* csv button hover effect */
+.csv-button.btn-gradient-primary:hover a {
+  color: white !important;
+  text-decoration: none;
 }

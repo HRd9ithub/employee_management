@@ -265,8 +265,8 @@ const TimeSheetComponent = () => {
                                         <i className="fas fa-search"></i>
                                     </div>
                                     {dataFilter.length >= 1 &&
-                                        <div className=' btn btn-gradient-primary btn-rounded btn-fw text-center' >
-                                            <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank" ><AiOutlineDownload />&nbsp;CSV</CSVLink>
+                                        <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' >
+                                            <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
                                         </div>}
                                 </div>
                             </div>

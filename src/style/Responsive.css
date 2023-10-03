@@ -1097,6 +1097,10 @@
     .work-report-view-modal .modal-dialog.modal-dialog-centered {
         max-width: 70%;
     }
+
+    .user-modal .modal-button button {
+        width: 20% !important;
+    }
 }
 
 @media (max-width:980px) {
@@ -1255,6 +1259,11 @@
     /* .common-info-dashboard svg {
         font-size: 3rem;
     } */
+
+    .user-modal .modal-button button {
+        width: 12% !important;
+    }
+
 }
 
 @media (max-width:800px) {
@@ -1540,6 +1549,10 @@
 
     .sidebar-offcanvas {
         left: -55%;
+    }
+
+    .user-modal .modal-button button {
+        width: 15% !important;
     }
 }
 
@@ -2148,6 +2161,10 @@
 
     .employee-id h5 {
         font-size: 12px;
+    }
+
+    .user-modal .modal-button button {
+        width: 18% !important;
     }
 }
 
@@ -2789,6 +2806,10 @@
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-toggle {
         margin-left: -2px !important;
     }
+
+    .user-modal .modal-button button {
+        width: 22% !important;
+    }
 }
 
 @media (max-width:414px) {
@@ -3285,6 +3306,10 @@
         margin-right: 0;
         width: 100%;
     }
+
+    .user-modal .modal-button button {
+        width: 30% !important;
+    }
 }
 
 @media (max-width:360px) {
@@ -3731,11 +3756,19 @@
     .search-full input {
         width: 100%;
     }
+
+    .search-box + .btn{
+        padding: 8px 5px !important;
+    }
 }
 
 @media (max-width: 315px) {
     .login-right h5 {
         font-size: 15px;
+    }
+
+    .user-modal .modal-button button {
+        width: 32% !important;
     }
 }
 
