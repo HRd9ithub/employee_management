@@ -14,6 +14,8 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { subDays } from "date-fns";
 import { NavLink } from 'react-router-dom';
 import Error403 from '../error_pages/Error403';
+import Error500 from '../error_pages/Error500';
+
 
 const Calendar = () => {
   let DateRef = useRef();
@@ -32,6 +34,8 @@ const Calendar = () => {
   const [editToggle, seteditToggle] = useState(false);
   const [datetoggle, setdatetoggle] = useState(false);
   const [permission, setpermission] = useState("");
+  const [serverError, setServerError] = useState(false);
+
 
 
   let { getCommonApi } = GlobalPageRedirect();
@@ -209,6 +213,9 @@ const Calendar = () => {
         } else if (error.response.status === 401) {
           getCommonApi();
         } else {
+          if(error.response.status === 500){
+            setServerError(true)
+          }
           if (error.response.data.message) {
             toast.error(error.response.data.message)
           }
@@ -354,7 +361,7 @@ const Calendar = () => {
                   </div>
                 </div>
               </div>
-            </div> : <Error403/>}
+            </div> : !serverError ?  <Error403/> : <Error500/>}
         </motion.div> : <Spinner />}
     </>
   )
