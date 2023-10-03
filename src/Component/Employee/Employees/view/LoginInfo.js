@@ -159,6 +159,9 @@ const LoginInfo = ({ userId }) => {
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell>
+                                        Time
+                                </TableCell>
+                                <TableCell>
                                     <TableSortLabel active={orderBy === "ip"} direction={orderBy === "ip" ? order : "asc"} onClick={() => handleRequestSort("ip")}>
                                         IP
                                     </TableSortLabel>
@@ -191,6 +194,7 @@ const LoginInfo = ({ userId }) => {
                                     <TableRow key={ind}>
                                         <TableCell>{ind + 1}</TableCell>
                                         <TableCell>{moment(val.createdAt).format("DD-MM-YYYY")}</TableCell>
+                                        <TableCell>{moment(val.createdAt).format("hh:mm")}</TableCell>
                                         <TableCell>{val.ip}</TableCell>
                                         <TableCell>{val.device}</TableCell>
                                         <TableCell>{val.device_name ? val.device_name : "-"}</TableCell>
@@ -217,7 +221,7 @@ const LoginInfo = ({ userId }) => {
                     page={page}>
                 </TablePagination>
             </div>
-            <div className="submit-section d-flex justify-content-between py-3">
+            <div className="submit-section d-flex justify-content-end py-3">
                     <button className="btn btn-light" onClick={() => history("/employees")}>Back</button>
                 </div>
             {loader && <Spinner />}

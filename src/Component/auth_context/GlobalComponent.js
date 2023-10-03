@@ -52,14 +52,14 @@ export const Globalcomponent = () => {
 
         try {
             setLoader(true)
-            // const location = await axios.get('https://ipgeolocation.abstractapi.com/v1/?api_key=539daa0d70404b92ac257dcb18fcfd2d')
-            const location = await axios.get('http://ip-api.com/json')
+            const location = await axios.get('https://ipgeolocation.abstractapi.com/v1/?api_key=539daa0d70404b92ac257dcb18fcfd2d')
+            // const location = await axios.get('http://ip-api.com/json')
 
             const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/auth/otp`, {
                 email,
                 otp,
                 city: location.data.city,
-                ip: location.data.query,
+                ip: location.data.ip_address,
                 device: device.device.type,
                 device_name: device.device.model,
                 browser_name: device.client.name
