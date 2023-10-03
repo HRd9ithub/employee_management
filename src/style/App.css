@@ -3479,6 +3479,7 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
 /* breadcrumb - current page - non clickable */
 #breadcrumb li:last-child a {
   cursor: default;
+  padding: 0;
 }
 #breadcrumb li:last-child a:hover {
   color: #0a4a92;

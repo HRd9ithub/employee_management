@@ -3727,6 +3727,10 @@
         border-width: 17px 8px;
         left: -16px;
     }
+
+    .search-full input {
+        width: 100%;
+    }
 }
 
 @media (max-width: 315px) {
@@ -3742,11 +3746,7 @@
         padding: unset !important;
     } */
 
-    .search-full input {
-        width: 100%;
-    }
-
     .btn-gradient-primary {
-        padding: 3px 3px !important;
+        padding: 5px 10px !important;
     }
 }
