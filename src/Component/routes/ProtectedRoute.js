@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
     let navigate = useNavigate();
     // get url of page
-    let location = useLocation();
+    // let location = useLocation();
 
     let currDate = new Date().getDate();
     let { getCommonApi } = GlobalPageRedirect();

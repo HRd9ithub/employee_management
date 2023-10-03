@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { GetLocalStorage, RemoveLocalStorage } from '../../service/StoreLocalStorage';
 import Spinner from '../common/Spinner';
@@ -13,7 +13,7 @@ const OtpVerification = () => {
 
   let { onSubmitOtp, Error, HandleResend, loader } = Globalcomponent();
 
-  let history = useNavigate();
+  // let history = useNavigate();
   // onchange function
   const handleChange = (event) => {
     setOtp(event.target.value);

@@ -72,10 +72,6 @@ const EductionForm = (props) => {
                 return val.id !== ind
             }), { name: "Degree is a required field.", id: ind }]);
 
-        } else if (!eduction[ind].degree.match(/^[a-zA-Z. ]*$/)) {
-            setdegree_error([...degree_error.filter((val) => {
-                return val.id !== ind
-            }), { name: "Degree must be an alphabet,dot and space only.", id: ind }])
         } else {
             let temp = degree_error.filter((elem) => {
                 return elem.id !== ind
