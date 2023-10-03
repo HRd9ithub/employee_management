@@ -15,6 +15,8 @@ import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
+import Error500 from '../../error_pages/Error500';
+
 
 const Employee = () => {
   const [records, setRecords] = useState([]);
@@ -25,6 +27,7 @@ const Employee = () => {
   const [toggle, setToggle] = useState(false);
   const [permission, setPermission] = useState("")
   let { UserData } = useContext(AppProvider);
+  const [serverError, setServerError] = useState(false);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -158,6 +161,9 @@ const Employee = () => {
         if (error.response.status === 401) {
           getCommonApi();
         } else {
+          if(error.response.status === 500){
+            setServerError(true)
+          }
           if (error.response.data.message) {
             toast.error(error.response.data.message)
           }
@@ -247,7 +253,7 @@ const Employee = () => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
+        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
           <div className=" container-fluid pt-4">
             <div className="background-wrapper bg-white pt-2">
               <div className=''>
@@ -392,10 +398,11 @@ const Employee = () => {
                 </TablePagination>
               </div>
             </div>
-          </div> : !loader && <Error403/>}
+          </div> }
       </motion.div >
-      {loader && <Spinner />
-      }
+           {!loader && !serverError && !permission &&<Error403/>}
+           {!loader && serverError&&<Error500/>}
+      {loader && <Spinner />}
     </>
   );
 };

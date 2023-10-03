@@ -1505,6 +1505,10 @@ input[type='email']:disabled {
   margin-bottom: 1rem;
 }
 
+.user-modal .modal-button button {
+  width: 10% !important;
+}
+
 .file-upload-section {
   position: relative;
 }
@@ -3479,6 +3483,7 @@ table.common-table-section thead tr th, table.common-table-section tbody tr td{
 /* breadcrumb - current page - non clickable */
 #breadcrumb li:last-child a {
   cursor: default;
+  padding: 0;
 }
 #breadcrumb li:last-child a:hover {
   color: #0a4a92;
@@ -3729,6 +3734,12 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 
 .remove-side-margin {
   margin: 0 -15px;
+}
+
+/* csv button hover effect */
+.csv-button.btn-gradient-primary:hover a {
+  color: white !important;
+  text-decoration: none;
 }
 
 .profile_tabs{

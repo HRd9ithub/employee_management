@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
+import Error500 from '../error_pages/Error500';
 import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
@@ -30,6 +31,7 @@ const WorkReportComponent = () => {
     const [userName, setUserName] = useState([]);
     const [user_id, setuser_id] = useState("");
     const [show, setShow] = useState(false)
+    const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState("")
 
     let { getCommonApi } = GlobalPageRedirect()
@@ -64,6 +66,9 @@ const WorkReportComponent = () => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
+                if(error.response.status === 500){
+                    setServerError(true)
+                  }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }
@@ -390,7 +395,9 @@ const WorkReportComponent = () => {
                 </Modal.Body>
             </Modal>
         </motion.div >)
-    } else {
+    }  else if(serverError) {
+        return <Error500 />
+    }else{
         return <Error403 />
     }
 };
