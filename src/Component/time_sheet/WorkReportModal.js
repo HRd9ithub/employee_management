@@ -339,7 +339,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                         })}
                                     </ol>}
                                     <div className='d-flex justify-content-end modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Submit'}</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleHide}>Cancel</button>
                                     </div>
                                 </form>

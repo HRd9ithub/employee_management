@@ -1743,6 +1743,10 @@
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-toggle {
         margin-left: 2px !important;
     }
+
+    .leave-notification-body .preview-item-content > div.d-flex {
+        gap: 30px !important;
+    }
 }
 
 @media (max-width:640px) {
@@ -3294,11 +3298,11 @@
     }
 
     /* .sidebar .nav.sub-menu .nav-item .nav-link {
-    padding: 0.5rem 2rem 0.5rem 2.4rem;
-} */
-    /* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
-    padding: 10px 75% 10px 10px;
-}   */
+        padding: 0.5rem 2rem 0.5rem 2.4rem;
+    } */
+        /* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
+        padding: 10px 75% 10px 10px;
+    }   */
 
     /* profile view reponsive */
     .personal-info li .title,
@@ -3440,6 +3444,10 @@
 
     .my-chart ul li h4 {
         font-size: 12px !important;
+    }
+
+    .modal-button .btn {
+        width: 33% !important;
     }
 
 }
@@ -3731,11 +3739,6 @@
         padding: 0.5em 1em 0;
     }
 
-    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
-        top: -4px !important;
-        left: -5px !important;
-    }
-
     .doc-modal i {
         left: 49%;
     }
@@ -3770,6 +3773,10 @@
     .user-modal .modal-button button {
         width: 32% !important;
     }
+
+    .modal-button .btn {
+        width: 40% !important;
+    }
 }
 
 @media (max-width: 280px) {
@@ -3781,5 +3788,10 @@
 
     .btn-gradient-primary {
         padding: 5px 10px !important;
+    }
+
+    .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
+        top: 1px !important;
+        left: 3px !important;
     }
 }
