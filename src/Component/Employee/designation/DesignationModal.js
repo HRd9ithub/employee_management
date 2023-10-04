@@ -152,7 +152,7 @@ function DesignationModal({ data, getdesignation, permission, records }) {
                     />
                     {(nameError || error) && (<small id="emailHelp" className="form-text error">{nameError || error}</small>)}
                   </div>
-                  <div className="d-flex justify-content-end modal-button">
+                  <div className="d-flex justify-content-center modal-button">
                     <button
                       type="submit"
                       className="btn btn-gradient-primary mr-2"

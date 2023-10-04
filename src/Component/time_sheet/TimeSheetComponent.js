@@ -342,13 +342,13 @@ const TimeSheetComponent = () => {
                                                     <TableCell>{ind + 1}</TableCell>
                                                     {permission && permission.name.toLowerCase() === "admin" &&
                                                         <TableCell>
-                                                            <NavLink className='pr-3 d-flex align-items-center name_col'>
+                                                            <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
                                                                 {val.user ? <>
                                                                     <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
                                                                     {val.user.first_name.concat(" ", val.user.last_name)}
                                                                 </> : <HiOutlineMinus />
                                                                 }
-                                                            </NavLink>
+                                                            </div>
                                                         </TableCell>}
                                                     <TableCell>{val.date}</TableCell>
                                                     <TableCell>{val.login_time}</TableCell>
