@@ -3001,7 +3001,7 @@ input[type=password]::-ms-clear {
   cursor: pointer;
 }
 
-.action i.fa-solid.fa-eye {
+.action i.fa-solid.fa-eye, .action i.fa-solid.fa-download {
   color: rgb(7, 75, 154);
   cursor: pointer;
 }

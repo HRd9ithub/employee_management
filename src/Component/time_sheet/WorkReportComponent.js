@@ -37,7 +37,7 @@ const WorkReportComponent = () => {
     let { getCommonApi } = GlobalPageRedirect()
 
     // pagination state
-    const [count, setCount] = useState(100)
+    const [count, setCount] = useState(50)
     const [page, setpage] = useState(0)
 
     // sort state
@@ -49,7 +49,7 @@ const WorkReportComponent = () => {
         setLoader(true)
         try {
             const request = {
-                params: { startDate: start || startDate, endDate: end || endDate, id: id || (userName.length !== 0 ? userName[0]._id : "") },
+                params: { startDate: start || startDate, endDate: end || endDate, id: id },
                 headers: {
                     Authorization: `Bearer ${GetLocalStorage("token")}`,
                 },
