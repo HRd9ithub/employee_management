@@ -145,6 +145,35 @@ const Dashboard = () => {
           }
      };
 
+      // view all click
+  const allStatusChange = async () => {
+     try {
+       setLoader(true)
+       let token = GetLocalStorage('token');
+       const request = {
+         headers: {
+           Authorization: `Bearer ${token}`
+         }
+       }
+       const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
+       if (res.data.success) {
+         navigate('/leave')
+         setLoader(false)
+       }
+     } catch (error) {
+       setLoader(false)
+       if (!error.response) {
+         toast.error(error.message)
+       } else if (error.response.status === 401) {
+         getCommonApi();
+       } else {
+         if (error.response.data.message) {
+           toast.error(error.response.data.message)
+         }
+       }
+     }
+   }
+
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
@@ -166,17 +195,9 @@ const Dashboard = () => {
                                                   </div>
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink>
-                                             {/* <NavLink className="common-box-dashboard total-employee nav-link">
-                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                                  <div className="common-info-dashboard">
-                                                       <h2>{totalEmployee}</h2>
-                                                       <FaUsers />
-                                                  </div>
-                                                  <h4 className="mt-2">Total Employees</h4>
-                                             </NavLink> */}
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leave")}>
-                                             <NavLink className="common-box-dashboard employee-active nav-link">
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
+                                             <NavLink className="common-box-dashboard employee-active nav-link" onClick={allStatusChange}>
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h2>{leaveRequest}</h2>

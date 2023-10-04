@@ -37,7 +37,7 @@ const WorkReportComponent = () => {
     let { getCommonApi } = GlobalPageRedirect()
 
     // pagination state
-    const [count, setCount] = useState(10)
+    const [count, setCount] = useState(100)
     const [page, setpage] = useState(0)
 
     // sort state
@@ -360,7 +360,7 @@ const WorkReportComponent = () => {
                                     page={page}>
                                 </TablePagination>
                             </> :
-                                <h4 class="no-data my-2">Please select employee first</h4>}
+                                <h4 className="no-data my-2">Please select employee first</h4>}
                         </div>
                     </div>
                 </div>}

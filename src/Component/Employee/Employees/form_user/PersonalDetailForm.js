@@ -330,7 +330,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         } else if (!employee.email.match(mailformat)) {
             setemailError("Email must be a valid email.");
         } else {
-            console.log(userDetail.email)
             if (userDetail.email === employee.email) {
                 setemailError("")
             } else {
@@ -370,17 +369,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             setphoneError("");
         }
     }
-
-    // department validation
-    // const departmentValidation = () => {
-    //     if (Department.length !== 0) {
-    //         if (!employee.department_id || employee.department_id === "department") {
-    //             setdepartmentError("Please select a department.");
-    //         } else {
-    //             setdepartmentError("")
-    //         }
-    //     }
-    // }
+    
     // DESIGNATION validation
     const designationValidation = () => {
         if (Designations.length !== 0) {
@@ -650,7 +639,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                         onChange={(e) => { setEmployee({ ...employee, joining_date: e.target.value }) }}
                                         autoComplete='off'
                                         onBlur={handleJoinDatevalidation}
-                                        max={moment(new Date()).format("YYYY-MM-DD")}
                                     />
                                     <CalendarMonthIcon className='calendar-icon' />
                                 </div>
