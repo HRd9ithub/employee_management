@@ -12,6 +12,7 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Error403 from "../error_pages/Error403"
 import Error500 from '../error_pages/Error500';
+import fileDownload from 'js-file-download';
 
 const DocumentComponent = () => {
     const [permission, setpermission] = useState("");
@@ -56,9 +57,9 @@ const DocumentComponent = () => {
                     } else if (error.response.status === 401) {
                         getCommonApi();
                     } else {
-                        if(error.response.status === 500){
+                        if (error.response.status === 500) {
                             setServerError(true)
-                          }
+                        }
                         if (error.response.data.message) {
                             toast.error(error.response.data.message)
                         }
@@ -165,6 +166,32 @@ const DocumentComponent = () => {
         return rowArray.map((el) => el[0])
     }
 
+    const downloadFile = async(file) => {
+        setLoading(true)
+            axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`,{
+                responseType: 'blob',
+              }).then((res) => {
+                  fileDownload(res.data,file);
+                  toast.success("Download successfully.")
+                  setLoading(false)
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    if (!error.response) {
+                        toast.error(error.message);
+                    } else if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.status === 500) {
+                            setServerError(true)
+                        }
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        }
+                    }
+                })
+    }
+
     return (
         <>
             {!loading ?
@@ -215,10 +242,9 @@ const DocumentComponent = () => {
                                                             Description
                                                         </TableSortLabel>
                                                     </TableCell>
-                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.delete === 1 || permission.permissions.update === 1))) &&
                                                         <TableCell>
                                                             Action
-                                                        </TableCell>}
+                                                        </TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -238,13 +264,13 @@ const DocumentComponent = () => {
                                                             </TableCell>
                                                             <TableCell>{val.name}</TableCell>
                                                             <TableCell>{val.description}</TableCell>
-                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.delete === 1 || permission.permissions.update === 1))) &&
                                                                 <TableCell>
                                                                     <div className='action'>
+                                                                        <i className="fa-solid fa-download" onClick={() =>downloadFile(val.image)}></i>
                                                                         {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
                                                                         {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                                     </div>
-                                                                </TableCell>}
+                                                                </TableCell>
                                                         </TableRow>
                                                     )
                                                 }) :
@@ -267,7 +293,7 @@ const DocumentComponent = () => {
                                     </TablePagination>
                                 </div>
                             </div>
-                        </div> : !serverError ?  <Error403/> : <Error500/>}
+                        </div> : !serverError ? <Error403 /> : <Error500 />}
                 </motion.div> : <Spinner />}
         </>
     )

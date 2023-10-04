@@ -16,7 +16,11 @@ let AppProvider = createContext();
 const initialistate = {
     UserData: '',
     loader: false,
-    leaveNotification: []
+    leaveNotification: [],
+    leave:[],
+    leaveFilter : [],
+    permission : "",
+    serverError : false
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
@@ -92,6 +96,44 @@ const RouteContext = ({ children }) => {
             }
         }
     }
+    // leave data get
+    const getLeave = async () => {
+        setLoading(true);
+        try {
+            let token = GetLocalStorage('token');
+            const request = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+            }
+            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave/`, request)
+            if (res.data.success) {
+                getLeaveNotification();
+                dispatch({ type: "GET_LEAVE", payload: res.data })
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if(error.response.status === 500){
+                    // setServerError(true)
+                  }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const HandleFilter = (name) => {
+        let data = name;
+       dispatch({type : "SERACH_FILTER",payload : data})
+    }
 
     // input field toggle function
     const handleVisibility = () => {
@@ -114,7 +156,7 @@ const RouteContext = ({ children }) => {
 
 
     return (
-        <AppProvider.Provider value={{ ...state, visible, width, logoToggle, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state,HandleFilter, visible, width, logoToggle,getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )
