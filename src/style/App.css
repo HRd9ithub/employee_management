@@ -135,7 +135,7 @@ input:-webkit-autofill:active {
 
 *:disabled {
   opacity: .7;
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 .calcedar-field:disabled {
@@ -3740,4 +3740,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 .csv-button.btn-gradient-primary:hover a {
   color: white !important;
   text-decoration: none;
+}
+
+.profile_tabs{
+  z-index: unset !important;
 }

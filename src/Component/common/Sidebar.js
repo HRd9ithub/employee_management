@@ -153,64 +153,64 @@ const Sidebar = () => {
     });
   }
 
-    // employee drop down display or not 
-    let employee = useMemo(() => {
-      let submenu = ['employees', 'project', 'designation']
-      let response = ""
-      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-        response = true
-      } else {
-        response = menu.some((val) => {
-          return submenu.includes(val.name.toLowerCase())
-        })
-      }
-      return response
-      // eslint-disable-next-line
-    }, [menu])
-  
-    // leave drop down display or not 
-    let leave = useMemo(() => {
-      let submenu = ['holiday', 'leavetype', 'leaves']
-      let response = ""
-      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-        response = true
-      } else {
-        response = menu.some((val) => {
-          return submenu.includes(val.name.toLowerCase())
-        })
-      }
-      return response
-      // eslint-disable-next-line
-    }, [menu])
-  
-    // leave drop down display or not 
-    let setting = useMemo(() => {
-      let submenu = ['user role',"work report"]
-      let response = ""
-      if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-        response = true
-      } else {
-        response = menu.some((val) => {
-          return submenu.includes(val.name.toLowerCase())
-        })
-      }
-      return response
-      // eslint-disable-next-line
-    }, [menu])
+  // employee drop down display or not 
+  let employee = useMemo(() => {
+    let submenu = ['employees', 'project', 'designation']
+    let response = ""
+    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
+      response = true
+    } else {
+      response = menu.some((val) => {
+        return submenu.includes(val.name.toLowerCase())
+      })
+    }
+    return response
+    // eslint-disable-next-line
+  }, [menu])
+
+  // leave drop down display or not 
+  let leave = useMemo(() => {
+    let submenu = ['holiday', 'leavetype', 'leaves']
+    let response = ""
+    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
+      response = true
+    } else {
+      response = menu.some((val) => {
+        return submenu.includes(val.name.toLowerCase())
+      })
+    }
+    return response
+    // eslint-disable-next-line
+  }, [menu])
+
+  // leave drop down display or not 
+  let setting = useMemo(() => {
+    let submenu = ['user role', "work report"]
+    let response = ""
+    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
+      response = true
+    } else {
+      response = menu.some((val) => {
+        return submenu.includes(val.name.toLowerCase())
+      })
+    }
+    return response
+    // eslint-disable-next-line
+  }, [menu])
 
 
   useEffect(() => {
     const toggleSidebars = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target)) {
-         if(UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin'){
-          menuref.current && !menuref.current.contains(e.target) &&  settingref.current && !settingref.current.contains(e.target) && setSidebarToggle(false);  
+        if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
+          menuref.current && !menuref.current.contains(e.target) && settingref.current && !settingref.current.contains(e.target) && setSidebarToggle(false);
         } else {
           if (employee && menuref.current && !menuref.current.contains(e.target)) {
             setSidebarToggle(false);
           }
           if (setting && settingref.current && !settingref.current.contains(e.target)) {
             setSidebarToggle(false);
-          }else{
+          } else {
             setSidebarToggle(false);
           }
         }
@@ -221,7 +221,7 @@ const Sidebar = () => {
       document.removeEventListener("mousedown", toggleSidebars);
     };
     // eslint-disable-next-line
-  }, [sidebarRef,UserData]);
+  }, [sidebarRef, UserData]);
 
 
 
@@ -240,10 +240,15 @@ const Sidebar = () => {
             setData({})
             toggleSidebar();
           }} >
-            <NavLink className="nav-link" to="/" >
-              <i className={`fa-solid fa-house slider-hover-icon dashboard-icon `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-              <span className={`menu-title `}>Dashboard</span>
-            </NavLink>
+            {menu.map((elem) => {
+              return (
+                elem.name.toLowerCase().replace(/\s/g, '') === 'dashboard' &&
+                <NavLink key={elem._id} className="nav-link" to="/">
+                  <i className={`fa-solid fa-house slider-hover-icon dashboard-icon `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
+                  <span className={`menu-title`}>{elem.name}</span>
+                </NavLink>
+              )
+            })}
           </li>
           {/* employee */}
           {employee &&
@@ -259,7 +264,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'employees' || elem.name.toLowerCase().replace(/\s/g, '') === 'project' || elem.name.toLowerCase().replace(/\s/g, '') === 'designation' ) && 
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'employees' || elem.name.toLowerCase().replace(/\s/g, '') === 'project' || elem.name.toLowerCase().replace(/\s/g, '') === 'designation') &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item"  > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'project' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
@@ -282,7 +287,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' || elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' ||  elem.name.toLowerCase().replace(/\s/g, '') === 'holiday') &&
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' || elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' || elem.name.toLowerCase().replace(/\s/g, '') === 'holiday') &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" > <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
@@ -330,7 +335,7 @@ const Sidebar = () => {
                 <ul className="nav flex-column sub-menu">
                   {menu.map((elem) => {
                     return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' || elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' ) &&
+                      (elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' || elem.name.toLowerCase().replace(/\s/g, '') === 'workreport') &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/workreport">{elem.name}</NavLink></li>}

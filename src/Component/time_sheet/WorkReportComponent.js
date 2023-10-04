@@ -14,12 +14,14 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
+import Error500 from '../error_pages/Error500';
 import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
+    // eslint-disable-next-line
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
@@ -28,8 +30,9 @@ const WorkReportComponent = () => {
     const [endDate, setendtDate] = useState(new Date());
     const [userName, setUserName] = useState([]);
     const [user_id, setuser_id] = useState("");
-    const [show,setShow] = useState(false)
-    const [description,setdescription] = useState("")
+    const [show, setShow] = useState(false)
+    const [serverError, setServerError] = useState(false);
+    const [description, setdescription] = useState("")
 
     let { getCommonApi } = GlobalPageRedirect()
 
@@ -63,6 +66,9 @@ const WorkReportComponent = () => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
+                if(error.response.status === 500){
+                    setServerError(true)
+                  }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }
@@ -269,87 +275,92 @@ const WorkReportComponent = () => {
                         {/* table */}
                         <div className="mx-4">
                             {permission.name.toLowerCase() !== "admin" || user_id ? <>
-                            <TableContainer >
-                                <Table className="common-table-section">
-                                    <TableHead className="common-header">
-                                        <TableRow>
-                                            <TableCell>
-                                                Id
-                                            </TableCell>
-                                            {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                    Date
-                                                </TableSortLabel>
-                                            </TableCell>}
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
-                                                    Employee
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "hours"} direction={orderBy === "hours" ? order : "asc"} onClick={() => handleRequestSort("hours")}>
-                                                    Hours
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "project"} direction={orderBy === "project" ? order : "asc"} onClick={() => handleRequestSort("project")}>
-                                                    Project
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                Description
-                                            </TableCell>
-                                            {/* {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                            <TableCell>
-                                                Action
-                                            </TableCell>} */}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                            return (
-                                                <TableRow key={ind}>
-                                                    {!val.projectId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{val.date.concat(" - ", val.name)}</TableCell>}
-                                                    {!val.projectId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{val.date.concat(" - ", val.name)}</TableCell>}
-                                                    {val.projectId && <TableCell>{ind + 1}</TableCell>}
-                                                    {val.projectId && <TableCell>{val.date}</TableCell>}
-                                                    {val.projectId &&
-                                                        permission && permission.name.toLowerCase() === "admin" &&
-                                                        <TableCell>
-                                                            <div className='pr-3 d-flex align-items-center name_col'>
-                                                                {val.user ? <>
-                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                                    {val.user.first_name.concat(" ", val.user.last_name)}
-                                                                </> : <HiOutlineMinus />
-                                                                }
-                                                            </div>
-                                                        </TableCell>
-                                                    }
-                                                    {val.projectId && <TableCell>{val.hours}</TableCell>}
-                                                    {val.projectId && <TableCell>{val.project.name}</TableCell>}
-                                                    {val.projectId && <TableCell align="center"><NavLink to="" onClick={() =>handleShow(val)}>View</NavLink></TableCell>}
-                                                </TableRow>
-                                            )
-                                        }) :
+                                <TableContainer >
+                                    <Table className="common-table-section">
+                                        <TableHead className="common-header">
                                             <TableRow>
-                                                <TableCell colSpan={7} align="center">
-                                                    No Records Found
+                                                <TableCell>
+                                                    Id
                                                 </TableCell>
+                                                <TableCell>
+                                                    <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                        Date
+                                                    </TableSortLabel>
+                                                </TableCell>
+                                                {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                                    <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
+                                                        Employee
+                                                    </TableSortLabel>
+                                                </TableCell>}
+                                                <TableCell>
+                                                    <TableSortLabel active={orderBy === "hours"} direction={orderBy === "hours" ? order : "asc"} onClick={() => handleRequestSort("hours")}>
+                                                        Hours
+                                                    </TableSortLabel>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <TableSortLabel active={orderBy === "project"} direction={orderBy === "project" ? order : "asc"} onClick={() => handleRequestSort("project")}>
+                                                        Project
+                                                    </TableSortLabel>
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    Description
+                                                </TableCell>
+                                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                                    <TableCell>
+                                                        Action
+                                                    </TableCell>}
                                             </TableRow>
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
-                                count={dataFilter.length}
-                                page={page}>
-                            </TablePagination>
-                            </> : 
-                            <h4 class="no-data my-2">Please select employee first</h4>}
+                                        </TableHead>
+                                        <TableBody>
+                                            {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                                return (
+                                                    <TableRow key={ind}>
+                                                        {!val.projectId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{val.date.concat(" - ", val.name)}</TableCell>}
+                                                        {!val.projectId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{val.date.concat(" - ", val.name)}</TableCell>}
+                                                        {val.projectId && <TableCell>{ind + 1}</TableCell>}
+                                                        {val.projectId && <TableCell>{val.date}</TableCell>}
+                                                        {val.projectId &&
+                                                            permission && permission.name.toLowerCase() === "admin" &&
+                                                            <TableCell>
+                                                                <div className='pr-3 d-flex align-items-center name_col'>
+                                                                    {val.user ? <>
+                                                                        <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                        {val.user.first_name.concat(" ", val.user.last_name)}
+                                                                    </> : <HiOutlineMinus />
+                                                                    }
+                                                                </div>
+                                                            </TableCell>
+                                                        }
+                                                        {val.projectId && <TableCell>{val.hours}</TableCell>}
+                                                        {val.projectId && <TableCell>{val.project.name}</TableCell>}
+                                                        {val.projectId && <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>}
+                                                        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && val.projectId && <TableCell align="center">
+                                                            <div className="action">
+                                                                <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
+                                                            </div>
+                                                        </TableCell>}
+                                                    </TableRow>
+                                                )
+                                            }) :
+                                                <TableRow>
+                                                    <TableCell colSpan={7} align="center">
+                                                        No Records Found
+                                                    </TableCell>
+                                                </TableRow>
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                    component="div"
+                                    onPageChange={onChangePage}
+                                    onRowsPerPageChange={onChangeRowsPerPage}
+                                    rowsPerPage={count}
+                                    count={dataFilter.length}
+                                    page={page}>
+                                </TablePagination>
+                            </> :
+                                <h4 class="no-data my-2">Please select employee first</h4>}
                         </div>
                     </div>
                 </div>}
@@ -365,7 +376,7 @@ const WorkReportComponent = () => {
             >
                 <Modal.Header className="small-modal">
                     <Modal.Title>
-                       View Description
+                        View Description
                     </Modal.Title>
                     <p className="close-modal" onClick={handleClose}>
                         <i className="fa-solid fa-xmark"></i>
@@ -377,14 +388,16 @@ const WorkReportComponent = () => {
                             <div className="card-body table_section">
                                 <h4>{description?.project?.name}</h4>
                                 <hr />
-                                <div dangerouslySetInnerHTML={{__html : description?.description}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: description?.description }}></div>
                             </div>
                         </div>
                     </div>
                 </Modal.Body>
             </Modal>
         </motion.div >)
-    } else {
+    }  else if(serverError) {
+        return <Error500 />
+    }else{
         return <Error403 />
     }
 };

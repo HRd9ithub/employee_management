@@ -47,8 +47,15 @@ function WorkReportModal({ data, permission, getReport }) {
     // modal show function
     const handleShow = () => {
         if (data) {
-            // setName(data.name)
-            setId(data._id);
+            let { _id, userId, projectId, description, hours } = data;
+            setId(_id);
+
+            setWork({
+                userId: userId,
+                projectId: projectId,
+                description: description,
+                hours: hours
+            });
         }
         setShow(true)
     }
@@ -206,9 +213,9 @@ function WorkReportModal({ data, permission, getReport }) {
             }
             let url = "";
             if (id) {
-                url = axios.patch(`${process.env.REACT_APP_API_KEY}/report/${id}`, { userId, projectId, description, hours  }, config)
+                url = axios.patch(`${process.env.REACT_APP_API_KEY}/report/${id}`, { userId, projectId, description, hours }, config)
             } else {
-                url = axios.post(`${process.env.REACT_APP_API_KEY}/report/`, { userId, projectId, description, hours  }, config)
+                url = axios.post(`${process.env.REACT_APP_API_KEY}/report/`, { userId, projectId, description, hours }, config)
             }
             setloader(true);
             url.then(data => {
@@ -333,11 +340,11 @@ function WorkReportModal({ data, permission, getReport }) {
                                         {hoursError && <small id="emailHelp" className="form-text error">{hoursError}</small>}
                                     </div>
                                     {error.length !== 0 &&
-                                    <ol>
-                                        {error.map((val) => {
-                                            return <li key={val}>{val}</li>
-                                        })}
-                                    </ol>}
+                                        <ol>
+                                            {error.map((val) => {
+                                                return <li key={val}>{val}</li>
+                                            })}
+                                        </ol>}
                                     <div className='d-flex justify-content-end modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleHide}>Cancel</button>

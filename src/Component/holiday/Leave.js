@@ -11,7 +11,8 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import { GetLocalStorage } from '../../service/StoreLocalStorage'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
-import Error403 from '../error_pages/Error403'
+import Error403 from '../error_pages/Error403';
+import Error500 from '../error_pages/Error500';
 import { AppProvider } from '../context/RouteContext'
 import { useContext } from 'react'
 import moment from 'moment'
@@ -25,6 +26,7 @@ const Leave = () => {
     const [leaveRecordFilter, setleaveRecordFilter] = useState([]);
     const [Loading, setLoading] = useState(true);
     const [subLoading, setsubLoading] = useState(false);
+    const [serverError, setServerError] = useState(false);
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -62,6 +64,9 @@ const Leave = () => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
+                if(error.response.status === 500){
+                    setServerError(true)
+                  }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }
@@ -382,7 +387,7 @@ const Leave = () => {
                                     </TablePagination>
                                 </div>
                             </div >
-                        </div > : <Error403/>}
+                        </div > : !serverError ?  <Error403/> : <Error500/>}
                     {/* status changes modal * */}
                     <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                         <Modal.Header className='small-modal'>

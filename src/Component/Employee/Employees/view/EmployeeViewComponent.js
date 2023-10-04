@@ -235,7 +235,7 @@ const EmployeeViewComponent = () => {
                         </div>
                         {/* **** tab display **** */}
                         <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4 tab-view">
-                            <div className="card modal-content">
+                            <div className="card modal-content profile_tabs">
                                 {/* ............................Header one.......................... */}
                                 <div className="modal-header employee-form">
                                     <Tabs value={value} onChange={changeTab} aria-label="secondary tabs example">

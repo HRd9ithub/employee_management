@@ -9,12 +9,15 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import axios from "axios";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import Error403 from "../../error_pages/Error403"
+import Error500 from '../../error_pages/Error500';
 
 const Designation = () => {
   const [loader, setloader] = useState(false);
   const [records, setRecords] = useState([]);
   const [recordsFilter, setRecordsFilter] = useState([]);
   const [permission, setPermission] = useState("");
+  const [serverError, setServerError] = useState(false);
+
   // pagination state
   const [count, setCount] = useState(5)
   const [page, setpage] = useState(0)
@@ -49,6 +52,9 @@ const Designation = () => {
         if (error.response.status === 401) {
           getCommonApi();
         } else {
+          if (error.response.status === 500) {
+            setServerError(true)
+          }
           if (error.response.data.message) {
             toast.error(error.response.data.message)
           }
@@ -149,66 +155,67 @@ const Designation = () => {
                     </div>
                   </div>
                 </div>
-                  <div className="mx-4">
-                    {/* table */}
-                    <TableContainer >
-                      <Table className="common-table-section">
-                        <TableHead className="common-header">
-                          <TableRow>
+                <div className="mx-4">
+                  {/* table */}
+                  <TableContainer >
+                    <Table className="common-table-section">
+                      <TableHead className="common-header">
+                        <TableRow>
+                          <TableCell>
+                            Id
+                          </TableCell>
+                          <TableCell>
+                            <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                              Designation
+                            </TableSortLabel>
+                          </TableCell>
+                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
                             <TableCell>
-                              Id
-                            </TableCell>
-                            <TableCell>
-                              <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                Designation
-                              </TableSortLabel>
-                            </TableCell>
-                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                              <TableCell>
-                                Action
-                              </TableCell>}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                            return (
-                              <TableRow key={ind}>
-                                <TableCell>{ind + 1}</TableCell>
-                                <TableCell>{val.name}</TableCell>
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                  <TableCell>
-                                    <div className='action'>
-                                      <DesignationModal
-                                        data={val}
-                                        getdesignation={getdesignation}
-                                      />
-                                    </div>
-                                  </TableCell>}
-                              </TableRow>
-                            )
-                          }) :
-                            <TableRow>
-                              <TableCell colSpan={3} align="center">
-                                No Records Found
-                              </TableCell>
+                              Action
+                            </TableCell>}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                          return (
+                            <TableRow key={ind}>
+                              <TableCell>{ind + 1}</TableCell>
+                              <TableCell>{val.name}</TableCell>
+                              {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                <TableCell>
+                                  <div className='action'>
+                                    <DesignationModal
+                                      data={val}
+                                      getdesignation={getdesignation}
+                                    />
+                                  </div>
+                                </TableCell>}
                             </TableRow>
-                          }
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                      component="div"
-                      onPageChange={onChangePage}
-                      onRowsPerPageChange={onChangeRowsPerPage}
-                      rowsPerPage={count}
-                      count={recordsFilter.length}
-                      page={page}>
-                    </TablePagination>
-                  </div> 
+                          )
+                        }) :
+                          <TableRow>
+                            <TableCell colSpan={3} align="center">
+                              No Records Found
+                            </TableCell>
+                          </TableRow>
+                        }
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                    component="div"
+                    onPageChange={onChangePage}
+                    onRowsPerPageChange={onChangeRowsPerPage}
+                    rowsPerPage={count}
+                    count={recordsFilter.length}
+                    page={page}>
+                  </TablePagination>
+                </div>
               </div>
             </div>}
-        </motion.div>:<Spinner />}
-        {!loader && !permission && <Error403/>}
+        </motion.div> : <Spinner />}
+      {!loader && !serverError && !permission && <Error403 />}
+      {!loader && serverError && <Error500 />}
     </>
   );
 };
