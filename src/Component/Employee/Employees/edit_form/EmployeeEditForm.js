@@ -84,7 +84,18 @@ const EmployeeEditForm = () => {
     return (
       <>
         <div className="container-fluid px-4">
-          <div className=" grid-margin stretch-card inner-pages mb-lg-0 pt-4">
+          <div className='row justify-content-start align-items-center row-std m-0 my-3'>
+            <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
+                <div>
+                    <ul id="breadcrumb" className="mb-0">
+                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                        <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Edit</NavLink></li>
+                    </ul>
+                </div>
+            </div>
+          </div>
+          <div className=" grid-margin stretch-card inner-pages mb-lg-0">
             <div className="card">
               {/* ............................Header one.......................... */}
               <div className="modal-header employee-form">

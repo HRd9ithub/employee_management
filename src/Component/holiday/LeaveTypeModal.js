@@ -131,7 +131,7 @@ const LeaveTypeModal = (props) => {
                                         {Backerror && <small id="emailHelp" className="form-text error">{Backerror}</small>}
                                     </div>
                                     <div className='d-flex justify-content-end modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Submit'}</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
                                     </div>
                                 </form>

@@ -234,7 +234,7 @@ const Sidebar = () => {
             <Link className="navbar-brand brand-logo " to="/"><img src='/Images/d9_logo_black.png' alt="logo" /></Link> :
             <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link>}
         </div>
-        <ul className="nav" style={{ marginTop: '0.2rem' }}>
+        <ul className="nav mt-2" style={{marginTop: '0.2rem'}}>
           {/* dashboard */}
           <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/' && 'active'}`} onClick={() => {
             setData({})

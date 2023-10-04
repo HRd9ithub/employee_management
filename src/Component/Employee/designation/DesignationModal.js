@@ -157,7 +157,7 @@ function DesignationModal({ data, getdesignation, permission, records }) {
                       type="submit"
                       className="btn btn-gradient-primary mr-2"
                       onClick={handleSubmit}
-                    >{data ? "Update" : "Submit"}</button>
+                    >{data ? "Update" : "Save"}</button>
                     <button className="btn btn-light" onClick={handleClose}>
                       Cancel
                     </button>

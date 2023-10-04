@@ -164,7 +164,7 @@ const EmployeeViewComponent = () => {
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
                             <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
                                 <div>
-                                    <NavLink className="path-header">Profile</NavLink>
+                                    {/* <NavLink className="path-header">Profile</NavLink> */}
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                        {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
@@ -172,7 +172,7 @@ const EmployeeViewComponent = () => {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
+                            <div className="col-12 col-sm-6 d-flex justify-content-end pr-0" id="two">
                                 {!pathname.toLocaleLowerCase().match('/profile') &&
                                     <div>
                                         <button className='btn-gradient-primary' onClick={() => navigate("/employees")}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>

@@ -215,7 +215,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                                     </ol>}
                                     <div className="col-12">
                                         <div className="d-flex justify-content-center modal-button">
-                                            <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}> {data ? "Update" : "Submit"} </button>
+                                            <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}> {data ? "Update" : "Save"} </button>
                                             <button className="btn btn-light" onClick={handleClose}>Cancel</button>
                                         </div>
                                     </div>
