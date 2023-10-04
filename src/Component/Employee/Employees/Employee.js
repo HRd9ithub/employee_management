@@ -345,13 +345,13 @@ const Employee = () => {
                             <TableCell>{val.phone}</TableCell>
                             <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
                             <TableCell>
-                              <NavLink className='pr-3 d-flex align-items-center name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.report?.profile_image}`} target="_blank">
+                              <div className={`pr-3 d-flex align-items-center name_col ${val.report.status === "Inactive" ? 'user-status-inactive' : ''}`}>
                                 {val.report ? <>
                                   <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
                                   {val?.report?.first_name.concat(" ", val.report.last_name)}
                                 </> : <HiOutlineMinus />
                                 }
-                              </NavLink>
+                              </div>
                             </TableCell>
                             <TableCell>
                               <Switch color="success"
