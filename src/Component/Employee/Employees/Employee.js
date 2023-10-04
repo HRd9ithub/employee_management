@@ -288,13 +288,10 @@ const Employee = () => {
                   <Table className="common-table-section">
                     <TableHead className="common-header">
                       <TableRow>
-                        <TableCell align="center" >
+                        <TableCell>
                           <TableSortLabel active={orderBy === "employee_id"} direction={orderBy === "employee_id" ? order : "asc"} onClick={() => handleRequestSort("employee_id")}>
                             Employee Id
                           </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                          Profile
                         </TableCell>
                         <TableCell>
                           <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
@@ -334,16 +331,16 @@ const Employee = () => {
                       {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                         return (
                           <TableRow key={ind}>
-                            <TableCell align="center">{val.employee_id}</TableCell>
-                            <TableCell>  <NavLink className='pr-3 name_col' to={`${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} target="_blank">
-                              {val.profile_image &&
-                                <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />}
-                            </NavLink></TableCell>
+                            <TableCell>{val.employee_id}</TableCell>
                             <TableCell>
-                              <div>
-                                {val.first_name.concat(" ", val.last_name)}
+                              <div className={`pr-3 d-flex align-items-center name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                  {val ? <>
+                                      <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                      {val.first_name.concat(" ", val.last_name)}
+                                  </> : <HiOutlineMinus />
+                                  }
                               </div>
-                            </TableCell>
+                          </TableCell>
                             <TableCell>{val.email}</TableCell>
                             <TableCell>{val.phone}</TableCell>
                             <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>

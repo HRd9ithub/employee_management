@@ -280,9 +280,6 @@ const Leave = () => {
                                                     </TableCell>
                                                     {(permission && permission.name?.toLowerCase() === "admin") && <>
                                                         <TableCell>
-                                                            Profile
-                                                        </TableCell>
-                                                        <TableCell>
                                                             <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
                                                                 Employee
                                                             </TableSortLabel>
@@ -337,15 +334,17 @@ const Leave = () => {
                                                     return (
                                                         <TableRow key={ind}>
                                                             <TableCell>{ind + 1}</TableCell>
-                                                            {(permission && permission.name?.toLowerCase() === "admin") && <>
-                                                                <TableCell>{val.user &&
-                                                                    <NavLink className={'pr-3'} to={`${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} target="_blank">
-                                                                        <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                                    </NavLink>}</TableCell>
+                                                            {(permission && permission.name?.toLowerCase() === "admin") &&
                                                                 <TableCell>
-                                                                    {val.user ? val.user.first_name.concat(" ", val.user.last_name) : <HiOutlineMinus />}
+                                                                    <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                                                        {val.user ? <>
+                                                                            <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                            {val.user.first_name.concat(" ", val.user.last_name)}
+                                                                        </> : <HiOutlineMinus />
+                                                                        }
+                                                                    </div>
                                                                 </TableCell>
-                                                            </>}
+                                                            }
                                                             <TableCell>{val.leaveType ? val.leaveType : <HiOutlineMinus />}</TableCell>
                                                             <TableCell>{val.from_date}</TableCell>
                                                             <TableCell>{val.to_date}</TableCell>
@@ -408,7 +407,7 @@ const Leave = () => {
                                                     <option value="Declined"> Declined</option>
                                                 </select>
                                             </div>
-                                            <div className='d-flex justify-content-end modal-button'>
+                                            <div className='d-flex justify-content-center modal-button'>
                                                 <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleStatus}>Save</button>
                                                 <button className="btn btn-light" onClick={handleshideModal}>Cancel</button>
                                             </div>

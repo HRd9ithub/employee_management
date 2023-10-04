@@ -132,7 +132,7 @@ function ProjectModal({ data, getProject, permission, records }) {
                                         <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onBlur={handleValidate} />
                                         {(Error || error) &&  <small id="emailHelp" className="form-text error">{error || Error}</small>}
                                     </div>
-                                    <div className='d-flex justify-content-end modal-button'>
+                                    <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}>{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
                                     </div>

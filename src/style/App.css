@@ -3130,21 +3130,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   /* font-family: 'font_main_bold'; */
 }
 
-
 .ibeaker {
   padding-right: 15px;
 }
 
-#breadcrumb li a:active {
+#breadcrumb li a:hover, #breadcrumb li a:active {
   color: green;
 }
 
-#breadcrumb li a:hover {
-  color: green;
-}
-
-#breadcrumb a:hover {
-  color: lightblue;
+#breadcrumb li a:hover i, #breadcrumb li a:active i {
+  color: #0a4a92;
 }
 
 /* search */
@@ -3744,4 +3739,17 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 
 .profile_tabs{
   z-index: unset !important;
+}
+
+/* navbar toggler button */
+.navbar .navbar-menu-wrapper .navbar-toggler {
+  cursor: default;
+}
+.navbar .navbar-menu-wrapper .navbar-toggler span {
+  cursor: pointer;
+}
+
+/* user staus inactive dot style */
+.name_col.user-status-inactive {
+  color: red !important;
 }
