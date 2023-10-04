@@ -21,6 +21,33 @@ export const RouteReducer = (state, action) => {
             }
             // eslint-disable-next-line
             break;
+        case "GET_LEAVE":
+            return {
+                ...state,
+                leave: action.payload.data,
+                leaveFilter: action.payload.data,
+                permission: action.payload.permissions
+            }
+            // eslint-disable-next-line
+            break;
+        case "SERACH_FILTER":
+            let data = action.payload.toLowerCase();
+            let result = state.leaveFilter.filter((val) => {
+                return (val.user?.first_name && val.user.first_name.concat(" ", val.user.last_name).toLowerCase().includes(data)) ||
+                    val.leaveType.toLowerCase().includes(data) ||
+                    val.from_date.toString().includes(data) ||
+                    val.to_date.toString().includes(data) ||
+                    val.duration.toString().includes(data) ||
+                    val.leave_for.toLowerCase().includes(data) ||
+                    val.reason.toLowerCase().includes(data) ||
+                    val.status.toLowerCase().includes(data)
+            })
+            return {
+                ...state,
+                leave: result
+            }
+            // eslint-disable-next-line
+            break;
         default:
             return {
                 ...state

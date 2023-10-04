@@ -21,16 +21,11 @@ const Leave = () => {
     const [show, setShow] = useState(false);
     const [status, setstatus] = useState("");
     const [id, setid] = useState("");
-    const [permission, setpermission] = useState("");
-    const [leaveRecord, setleaveRecord] = useState([]);
-    const [leaveRecordFilter, setleaveRecordFilter] = useState([]);
-    const [Loading, setLoading] = useState(true);
     const [subLoading, setsubLoading] = useState(false);
-    const [serverError, setServerError] = useState(false);
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { getLeaveNotification } = useContext(AppProvider)
+    let { getLeave,leave,Loading,permission,serverError,HandleFilter} = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -38,43 +33,7 @@ const Leave = () => {
 
     // sort state
     const [order, setOrder] = useState("asc")
-    const [orderBy, setOrderBy] = useState("name")
-
-    // leave data get
-    const getLeave = async () => {
-        setLoading(true);
-        try {
-            let token = GetLocalStorage('token');
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-            }
-            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave/`, request)
-            if (res.data.success) {
-                setleaveRecordFilter(res.data.data)
-                setleaveRecord(res.data.data)
-                setpermission(res.data.permissions);
-                getLeaveNotification()
-            }
-        } catch (error) {
-            if (!error.response) {
-                toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
-                if(error.response.status === 500){
-                    setServerError(true)
-                  }
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                }
-            }
-        } finally {
-            setLoading(false)
-        }
-    }
+    const [orderBy, setOrderBy] = useState("name");
 
     useEffect(() => {
         getLeave();
@@ -91,22 +50,6 @@ const Leave = () => {
     const handleshideModal = (e) => {
         e.preventDefault();
         setShow(false);
-    }
-
-    // search filter function
-    const HandleFilter = (event) => {
-        let data = event.target.value;
-        let filter_data = leaveRecord.filter((val) => {
-            return (val.user?.first_name && val.user.first_name.concat(" ", val.user.last_name).toLowerCase().includes(data.toLowerCase())) ||
-                val.leaveType.toLowerCase().includes(data.toLowerCase()) ||
-                val.from_date.toString().includes(data.toLowerCase()) ||
-                val.to_date.toString().includes(data.toLowerCase()) ||
-                val.duration.toString().includes(data.toLowerCase()) ||
-                val.leave_for.toLowerCase().includes(data.toLowerCase()) ||
-                val.reason.toLowerCase().includes(data.toLowerCase()) ||
-                val.status.toLowerCase().includes(data.toLowerCase())
-        })
-        setleaveRecordFilter(filter_data)
     }
 
     // status change function
@@ -207,7 +150,7 @@ const Leave = () => {
         if (permission) {
             if ((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1)) {
                 if (permission && permission.name?.toLowerCase() === "admin") {
-                    let data = leaveRecordFilter.find((val) => {
+                    let data = leave.find((val) => {
                         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
                     })
                     if (data) {
@@ -216,7 +159,7 @@ const Leave = () => {
                         return false
                     }
                 } else {
-                    let data = leaveRecordFilter.find((val) => {
+                    let data = leave.find((val) => {
                         return val.status === "Pending" || val.status === "Read"
                     })
                     if (data) {
@@ -228,7 +171,7 @@ const Leave = () => {
             }
         }
         // eslint-disable-next-line
-    }, [leaveRecordFilter]);
+    }, [leave]);
 
 
     return (
@@ -255,12 +198,12 @@ const Leave = () => {
                                         </div>
                                         <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                                             <div className="search-full">
-                                                <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                                <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={(e) => HandleFilter(e.target.value)} />
                                                 <i className="fas fa-search"></i>
                                             </div>
                                             <div className="search-box mr-3">
                                                 <form name="search-inner">
-                                                    <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                                    <input type="text" className="input-search" name="txt" onChange={(e) => HandleFilter(e.target.value)} />
                                                 </form>
                                                 <i className="fas fa-search"></i>
                                             </div>
@@ -330,7 +273,7 @@ const Leave = () => {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {leaveRecordFilter.length !== 0 ? sortRowInformation(leaveRecordFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                                {leave.length !== 0 ? sortRowInformation(leave, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                                     return (
                                                         <TableRow key={ind}>
                                                             <TableCell>{ind + 1}</TableCell>
@@ -381,7 +324,7 @@ const Leave = () => {
                                         onPageChange={onChangePage}
                                         onRowsPerPageChange={onChangeRowsPerPage}
                                         rowsPerPage={count}
-                                        count={leaveRecordFilter.length}
+                                        count={leave.length}
                                         page={page}>
                                     </TablePagination>
                                 </div>

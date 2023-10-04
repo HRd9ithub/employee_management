@@ -145,34 +145,63 @@ const Dashboard = () => {
           }
      };
 
-      // view all click
-  const allStatusChange = async () => {
-     try {
-       setLoader(true)
-       let token = GetLocalStorage('token');
-       const request = {
-         headers: {
-           Authorization: `Bearer ${token}`
-         }
-       }
-       const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
-       if (res.data.success) {
-         navigate('/leave')
-         setLoader(false)
-       }
-     } catch (error) {
-       setLoader(false)
-       if (!error.response) {
-         toast.error(error.message)
-       } else if (error.response.status === 401) {
-         getCommonApi();
-       } else {
-         if (error.response.data.message) {
-           toast.error(error.response.data.message)
-         }
-       }
+     // view all click
+     const allStatusChange = async () => {
+          try {
+               setLoader(true)
+               let token = GetLocalStorage('token');
+               const request = {
+                    headers: {
+                         Authorization: `Bearer ${token}`
+                    }
+               }
+               const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
+               if (res.data.success) {
+                    navigate('/leave')
+                    setLoader(false)
+               }
+          } catch (error) {
+               setLoader(false)
+               if (!error.response) {
+                    toast.error(error.message)
+               } else if (error.response.status === 401) {
+                    getCommonApi();
+               } else {
+                    if (error.response.data.message) {
+                         toast.error(error.response.data.message)
+                    }
+               }
+          }
      }
-   }
+
+     var bdcApi = "https://api.bigdatacloud.net/data/reverse-geocode-client"
+
+     const getLoau = () => {
+          navigator.geolocation.getCurrentPosition(
+               (position) => {
+                    bdcApi = bdcApi
+                         + "?latitude=" + position.coords.latitude
+                         + "&longitude=" + position.coords.longitude
+                         + "&localityLanguage=en";
+                    getApi(bdcApi);
+     
+               },
+               (err) => { getApi(bdcApi); },
+               {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+               });
+     }
+
+     const getApi = async (bdcApi) => {
+          try {
+               axios.get(bdcApi).then((data) => console.log(data))
+          } catch (error) {
+               console.log(error)
+          }
+     }
+
 
      return (
           <>
@@ -196,17 +225,7 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Total Employees</h4>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
-                                             <NavLink className="common-box-dashboard employee-active nav-link" onClick={allStatusChange}>
-                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                                  <div className="common-info-dashboard">
-                                                       <h2>{leaveRequest}</h2>
-                                                       <ApprovalIcon />
-                                                  </div>
-                                                  <h4 className="mt-2">Leave Requests</h4>
-                                             </NavLink>
-                                        </div>
-                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -226,6 +245,16 @@ const Dashboard = () => {
                                                   <h4 className="mt-2">Absent Today</h4>
                                              </NavLink>
                                         </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
+                                             <NavLink className="common-box-dashboard employee-active nav-link" onClick={allStatusChange}>
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h2>{leaveRequest}</h2>
+                                                       <ApprovalIcon />
+                                                  </div>
+                                                  <h4 className="mt-2">Leave Requests</h4>
+                                             </NavLink>
+                                        </div>
                                    </>}
                                    <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
                                         <NavLink className="common-box-dashboard on-leave-today nav-link">
@@ -240,7 +269,7 @@ const Dashboard = () => {
                                                        return <h5 className='mr-4' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</h5>
                                                   })}
                                                   {todayLeave.length === 0 && totalEmployee !== 0 && <h5 className='mr-4'>All present today</h5>}
-                                                  {totalEmployee === 0  && <h5 className='mr-4'>No employee yet</h5>}
+                                                  {totalEmployee === 0 && <h5 className='mr-4'>No employee yet</h5>}
                                              </div>
                                         </NavLink>
                                    </div>

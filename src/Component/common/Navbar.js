@@ -1,6 +1,6 @@
 import React, { useContext, useLayoutEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { AppProvider } from '../context/RouteContext';
 import moment from 'moment';
@@ -18,10 +18,12 @@ import Avatar from '@mui/material/Avatar';
 
 const Navbar = () => {
   let { handleLogout, loader } = Globalcomponent()
-  let { UserData, leaveNotification, getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { UserData, leaveNotification, getLeaveNotification, getUserData,getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
   const [sidebar, setsidebar] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  let {pathname} = useLocation();
 
   const toggleOffcanvas = () => {
     setSidebarToggle(!sidebarToggle)
@@ -71,8 +73,12 @@ const Navbar = () => {
       }
       const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/leave/${id}`, { status: "Read" }, request)
       if (res.data.success) {
-        setLoading(false)
-        history('/leave')
+        setLoading(false);
+        if(pathname === "/leave"){
+          getLeave();
+        }else{
+          history('/leave')
+        }
       }
     } catch (error) {
       setLoading(false)
@@ -100,7 +106,11 @@ const Navbar = () => {
       }
       const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
       if (res.data.success) {
-        history('/leave')
+        if(pathname === "/leave"){
+          getLeave();
+        }else{
+          history('/leave')
+        }
         setLoading(false)
       }
     } catch (error) {
@@ -177,7 +187,7 @@ const Navbar = () => {
                                     <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
                                       <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
                                         <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
-                                        <small style={{ color: '#aaaa', marginTop: '3px' }}>{moment(elem.from_date).format("DD MMM")}</small>
+                                        <small style={{ color: '#aaaa', marginTop: '3px' }}>{moment(elem.createdAt).format("DD MMM")}</small>
                                       </div>
                                       <p className="text-gray ellipsis mb-0">
                                         {elem.leaveType} Request
