@@ -491,14 +491,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputfname">First Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname"  placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
                                                 {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off'  maxLength={25}/>
                                                 {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
                                             </div>
                                         </div>

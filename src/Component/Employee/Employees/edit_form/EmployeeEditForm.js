@@ -9,7 +9,7 @@ import AccountForm from "../form_user/AccountForm";
 import EductionForm from "../form_user/EductionForm";
 import UserDoumentForm from "../form_user/userDoumentForm";
 import EmergencyForm from "../form_user/EmergencyForm";
-import { NavLink } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import PersonalDetailForm from "../form_user/PersonalDetailForm";
 import { toast } from "react-hot-toast";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";

@@ -17,7 +17,6 @@ import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
 import Error500 from '../error_pages/Error500';
-import { useRef } from "react";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const TimeSheetComponent = () => {
@@ -43,9 +42,6 @@ const TimeSheetComponent = () => {
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
 
-    let dateRangePickerRef = useRef(null)
-    console.log(dateRangePickerRef.current, "dateRangePickerRef")
-
     // get timesheet data
     const getTimesheet = async (id, start, end) => {
         setLoader(true)
@@ -68,9 +64,9 @@ const TimeSheetComponent = () => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
-                if(error.response.status === 500){
+                if (error.response.status === 500) {
                     setServerError(true)
-                  }
+                }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }
@@ -382,9 +378,9 @@ const TimeSheetComponent = () => {
                     </div>
                 </div>}
         </motion.div >)
-    } else if(serverError) {
+    } else if (serverError) {
         return <Error500 />
-    }else{
+    } else {
         return <Error403 />
     }
 };

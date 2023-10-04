@@ -149,7 +149,7 @@ const EmployeeViewComponent = () => {
                         toast.error(error.response.data.message)
                     }
                 }
-            } 
+            }
         }
     }
 
@@ -167,8 +167,8 @@ const EmployeeViewComponent = () => {
                                     {/* <NavLink className="path-header">Profile</NavLink> */}
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                       {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
-                                        <li><NavLink to={!pathname.toLocaleLowerCase().match('/profile') ?  `/employees/view/${data._id}` :  `/profile/${data._id}` } className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
+                                        {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
+                                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
                                     </ul>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@ const EmployeeViewComponent = () => {
                                             <div className={pathname.toLocaleLowerCase().match('/profile') ? "profile-img-wrap" : "profile-img-wrap-view"}>
                                                 <div className="profile-img w-100 h-100">
                                                     <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
-                                                    {pathname.toLocaleLowerCase().match('/profile') && 
+                                                    {pathname.toLocaleLowerCase().match('/profile') &&
                                                         <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
                                                     }
                                                 </div>
@@ -560,9 +560,9 @@ const EmployeeViewComponent = () => {
                             </div>
                         </div>
                     </div>
-                </div> :<Error403/>: <Spinner />}
+                </div> : <Error403 /> : <Spinner />}
             <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getuser} />
-            
+
         </>
     )
 }

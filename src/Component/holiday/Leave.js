@@ -55,7 +55,7 @@ const Leave = () => {
             if (res.data.success) {
                 setleaveRecordFilter(res.data.data)
                 setleaveRecord(res.data.data)
-                setpermission(res.data.permissions)
+                setpermission(res.data.permissions);
                 getLeaveNotification()
             }
         } catch (error) {
@@ -319,7 +319,7 @@ const Leave = () => {
                                                         </TableSortLabel>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
+                                                        <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
                                                             Applied on
                                                         </TableSortLabel>
                                                     </TableCell>
