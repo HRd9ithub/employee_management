@@ -329,20 +329,23 @@ const Calendar = () => {
                                 return new Date(a.date) - new Date(b.date)
                               }).map((elem, index) => {
                               return (
+                                permission && (permission.name.toLowerCase() === "admin") ? 
                                 <li key={elem._id}>
                                   <div className="form-check">
-                                    <label htmlFor="" className="form-check-label m-0" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{elem.day}&nbsp;&nbsp;{elem.name}
-                                      <i className="input-helper"></i>
-                                    </label>
+                                    <label htmlFor="" className="form-check-label m-0" onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }} style={{ cursor: 'pointer', textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{elem.day}&nbsp;&nbsp;{elem.name}</label>
                                   </div>
-                                  {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
                                     <button className='edit action-icon' onClick={() => editHoliday(elem._id)} >
                                       <i className="fa-solid fa-pen-to-square" ></i>
-                                    </button>}
-                                  {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
+                                    </button>
                                     <button className='delete action-icon' onClick={() => removeTodo(elem._id)} >
                                       <i className={`remove mdi mdi-close-circle-outline`} ></i>
-                                    </button>}
+                                    </button>
+                                </li>
+                                :
+                                <li key={elem._id} style={{ cursor: 'pointer'}} onClick={() => { setstartDate(new Date(elem.date)); setdatetoggle(true) }}>
+                                  <div className="form-check">
+                                    <label htmlFor="" className="form-check-label m-0" style={{ textTransform: 'capitalize' }}>  {moment(elem.date).format('DD MMM YYYY')}&nbsp;&nbsp;{elem.day}&nbsp;&nbsp;{elem.name}</label>
+                                  </div>
                                 </li>
                               )
                             })}

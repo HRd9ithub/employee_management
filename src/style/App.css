@@ -3753,3 +3753,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 .name_col.user-status-inactive {
   color: red !important;
 }
+
+/* calender holiday list hover effect */
+ul.todo-list li:hover {
+  background-color: #f9f9f9;
+}
