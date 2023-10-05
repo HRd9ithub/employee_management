@@ -1,21 +1,22 @@
-import React from 'react'
+import React, { useMemo,useState, useEffect  } from 'react'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../common/Spinner'
 import { toast } from 'react-hot-toast'
 import LeaveTypeModal from './LeaveTypeModal';
-import { useState, useEffect } from 'react'
 import { motion } from "framer-motion";
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import { GetLocalStorage } from '../../service/StoreLocalStorage'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import Error403 from '../error_pages/Error403'
+import Error403 from '../error_pages/Error403';
+import Error500 from '../error_pages/Error500';
 
 const LeaveType = () => {
     const [loader, setloader] = useState(false);
     const [records, setRecords] = useState([]);
-    const [recordsFilter, setRecordsFilter] = useState([]);
+    const [searchItem, setsearchItem] = useState("");
     const [permission, setpermission] = useState("");
+    const [serverError, setServerError] = useState(false);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -40,18 +41,23 @@ const LeaveType = () => {
             }
             const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leaveType/`, request)
             if (res.data.success) {
-                setRecords(res.data.data)
-                setRecordsFilter(res.data.data)
-                setpermission(res.data.permissions)
+                setRecords(res.data.data);
+                setpermission(res.data.permissions);
             }
         } catch (error) {
             if (!error.response) {
-                toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
+                setServerError(true)
+                toast.error(error.message)
             } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
+                if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.status === 500) {
+                        setServerError(true)
+                    }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
                 }
             }
         } finally {
@@ -64,14 +70,10 @@ const LeaveType = () => {
         // eslint-disable-next-line
     }, [])
 
-    // search filter function
-    const HandleFilter = (event) => {
-        let data = event.target.value;
-        let filter_data = records.filter((val) => {
-            return val.name.toLowerCase().includes(data.toLowerCase())
-        })
-        setRecordsFilter(filter_data)
-    }
+    // memoize filtered items
+    const recordsFilter = useMemo(() => {
+        return records.filter((item) => item.name.toLowerCase().includes(searchItem.toLowerCase()));
+    }, [records, searchItem]);
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -136,18 +138,18 @@ const LeaveType = () => {
                                             <div>
                                                 <ul id="breadcrumb" className="mb-0">
                                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                                    <li><NavLink to="/leavetype" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave Type</NavLink></li>
+                                                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave Type</NavLink></li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                                             <div className="search-full">
-                                                <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                                <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                                 <i className="fas fa-search"></i>
                                             </div>
                                             <div className="search-box mr-3">
                                                 <form name="search-inner">
-                                                    <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                                    <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
                                                 </form>
                                                 <i className="fas fa-search"></i>
                                             </div>
@@ -211,7 +213,7 @@ const LeaveType = () => {
                                     </TablePagination>
                                 </div >
                             </div >
-                        </div> :<Error403/>}
+                        </div> : !serverError ? <Error403 /> : <Error500/> }
                 </motion.div> : <Spinner />}
         </>
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState,useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../common/Spinner'
@@ -14,7 +14,6 @@ import Avatar from '@mui/material/Avatar';
 import Error403 from '../error_pages/Error403';
 import Error500 from '../error_pages/Error500';
 import { AppProvider } from '../context/RouteContext'
-import { useContext } from 'react'
 import moment from 'moment'
 
 const Leave = () => {
@@ -192,18 +191,18 @@ const Leave = () => {
                                             <div>
                                                 <ul id="breadcrumb" className="mb-0">
                                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                                    <li><NavLink to="/leave" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
+                                                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Leave</NavLink></li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                                             <div className="search-full">
-                                                <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={(e) => HandleFilter(e.target.value)} />
+                                                <input type="search" autoComplete='off' className="input-search-full" name="txt" placeholder="Search" onChange={(e) => HandleFilter(e.target.value)} />
                                                 <i className="fas fa-search"></i>
                                             </div>
                                             <div className="search-box mr-3">
                                                 <form name="search-inner">
-                                                    <input type="text" className="input-search" name="txt" onChange={(e) => HandleFilter(e.target.value)} />
+                                                    <input type="search" autoComplete='off' className="input-search" name="txt" onChange={(e) => HandleFilter(e.target.value)} />
                                                 </form>
                                                 <i className="fas fa-search"></i>
                                             </div>

@@ -19,13 +19,15 @@ import Spinner from './common/Spinner';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import { dateFormat } from '../helper/dateFormat';
+import ConfettiExplosion from 'react-confetti-explosion';
 
 
 const Dashboard = () => {
      const [loader, setLoader] = useState(false)
+     const [animateLoader, setanimateLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState("");
-     // eslint-disable-next-line
      const [leaveRequest, setleaveRequest] = useState("");
      const [presentToday, setpresentToday] = useState("");
      const [todayLeave, settodayLeave] = useState([]);
@@ -33,7 +35,6 @@ const Dashboard = () => {
      const [holidayfilter, setHolidayfilter] = useState([])
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
-     // const [reportBy, setreportBy] = useState([])
 
      let { getCommonApi } = GlobalPageRedirect();
 
@@ -81,6 +82,10 @@ const Dashboard = () => {
                     }
                } finally {
                     setLoader(false);
+                    setanimateLoader(true)
+                    setTimeout(() => {
+                         setanimateLoader(false)
+                    },[10000])
                }
           }
           if (GetLocalStorage("token")) {
@@ -126,25 +131,6 @@ const Dashboard = () => {
           setBirthDayFilter(birth)
      }
 
-
-     //Ordinal  add in date
-     const dateHandle = (date) => {
-          let day = new Date(date).getDate();
-          var b = day % 10;
-
-          if ((day % 100) / 10 === 1) {
-               return "th";
-          } else if (b === 1) {
-               return "st";
-          } else if (b === 2) {
-               return "nd";
-          } else if (b === 3) {
-               return "rd";
-          } else {
-               return "th";
-          }
-     };
-
      // view all click
      const allStatusChange = async () => {
           try {
@@ -176,6 +162,7 @@ const Dashboard = () => {
 
      var bdcApi = "https://api.bigdatacloud.net/data/reverse-geocode-client"
 
+     // eslint-disable-next-line
      const getLoau = () => {
           navigator.geolocation.getCurrentPosition(
                (position) => {
@@ -184,7 +171,7 @@ const Dashboard = () => {
                          + "&longitude=" + position.coords.longitude
                          + "&localityLanguage=en";
                     getApi(bdcApi);
-     
+
                },
                (err) => { getApi(bdcApi); },
                {
@@ -296,9 +283,7 @@ const Dashboard = () => {
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
-                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{moment(val.date).format("DD")}
-                                                                 <sup> {dateHandle(val.date)} </sup>
-                                                                 {moment(val.date).format("MMM YYYY")} - {val.name}</h4></li>
+                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
                                                        })}
                                                        {birthDayFilter.map((val) => {
                                                             return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
@@ -313,7 +298,11 @@ const Dashboard = () => {
                          </div>
                     </div>}
                </motion.div>
-               {loader && <Spinner />}
+               {loader && <Spinner/>}
+               {!loader && animateLoader &&
+               <div className="animate_cele">
+                    <ConfettiExplosion duration={20000} force={0.5} particleCount={250} width={4000} height={4000} />
+               </div>}
           </>
      )
 }

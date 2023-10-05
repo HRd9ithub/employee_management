@@ -41,16 +41,16 @@ const AppRoute = () => {
                 <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project/></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
-                <Route exact path='/userrole' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
+                <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 {/* leave route */}
                 <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><Calendar /></ProtectedRoute>}></Route>
-                <Route exact path='/leavetype' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
+                <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
                 <Route exact path='/leave' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
                 {/* document component */}
                 <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
                 {/* timesheet component */}
-                <Route exact path='/timesheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/workreport' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/time-sheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>

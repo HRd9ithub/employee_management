@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import DocumentModalComponent from './DocumentModalComponent';
-import { useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../common/Spinner';
 import Swal from 'sweetalert2';
@@ -17,7 +16,7 @@ import fileDownload from 'js-file-download';
 const DocumentComponent = () => {
     const [permission, setpermission] = useState("");
     const [documentData, setDocumentData] = useState([]);
-    const [documentDataFilter, setDocumentDataFilter] = useState([]);
+    const [searchItem, setsearchItem] = useState("");
     const [loading, setLoading] = useState(false);
     const [toggle, setToggle] = useState(false);
     const [serverError, setServerError] = useState(false);
@@ -46,13 +45,13 @@ const DocumentComponent = () => {
             )
                 .then((res) => {
                     setDocumentData(res.data.data);
-                    setDocumentDataFilter(res.data.data);
                     setpermission(res.data.permissions);
                     setLoading(false);
                 })
                 .catch((error) => {
                     setLoading(false)
                     if (!error.response) {
+                        setServerError(true)
                         toast.error(error.message);
                     } else if (error.response.status === 401) {
                         getCommonApi();
@@ -111,15 +110,13 @@ const DocumentComponent = () => {
         })
     }
 
-    // search function
-    const HandleFilter = (event) => {
-        let data = event.target.value;
-        let filter_data = documentData.filter((val) => {
-            return val.name.toLowerCase().includes(data.toLowerCase()) ||
-                val.description.toLowerCase().includes(data.toLowerCase())
+    // memoize filtered items
+    const documentDataFilter = useMemo(() => {
+        return documentData.filter((item) => {
+            return item.name.toLowerCase().includes(searchItem.toLowerCase()) ||
+                item.description.toLowerCase().includes(searchItem.toLowerCase())
         })
-        setDocumentDataFilter(filter_data)
-    }
+    }, [documentData, searchItem]);
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -166,30 +163,30 @@ const DocumentComponent = () => {
         return rowArray.map((el) => el[0])
     }
 
-    const downloadFile = async(file) => {
+    const downloadFile = async (file) => {
         setLoading(true)
-            axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`,{
-                responseType: 'blob',
-              }).then((res) => {
-                  fileDownload(res.data,file);
-                  toast.success("Download successfully.")
-                  setLoading(false)
-                })
-                .catch((error) => {
-                    setLoading(false)
-                    if (!error.response) {
-                        toast.error(error.message);
-                    } else if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.status === 500) {
-                            setServerError(true)
-                        }
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+        axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`, {
+            responseType: 'blob',
+        }).then((res) => {
+            fileDownload(res.data, file);
+            toast.success("Download successfully.")
+            setLoading(false)
+        })
+            .catch((error) => {
+                setLoading(false)
+                if (!error.response) {
+                    toast.error(error.message);
+                } else if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.status === 500) {
+                        setServerError(true)
                     }
-                })
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
+                }
+            })
     }
 
     return (
@@ -211,12 +208,12 @@ const DocumentComponent = () => {
                                         </div>
                                         <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                                             <div className="search-full">
-                                                <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                            <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                                 <i className="fas fa-search"></i>
                                             </div>
                                             <div className="search-box mr-3">
                                                 <form name="search-inner">
-                                                    <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                                <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
                                                 </form>
                                                 <i className="fas fa-search"></i>
                                             </div>
@@ -242,9 +239,9 @@ const DocumentComponent = () => {
                                                             Description
                                                         </TableSortLabel>
                                                     </TableCell>
-                                                        <TableCell>
-                                                            Action
-                                                        </TableCell>
+                                                    <TableCell>
+                                                        Action
+                                                    </TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -264,13 +261,13 @@ const DocumentComponent = () => {
                                                             </TableCell>
                                                             <TableCell>{val.name}</TableCell>
                                                             <TableCell>{val.description}</TableCell>
-                                                                <TableCell>
-                                                                    <div className='action'>
-                                                                        <i className="fa-solid fa-download" onClick={() =>downloadFile(val.image)}></i>
-                                                                        {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
-                                                                        {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
-                                                                    </div>
-                                                                </TableCell>
+                                                            <TableCell>
+                                                                <div className='action'>
+                                                                    <i className="fa-solid fa-download" onClick={() => downloadFile(val.image)}></i>
+                                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
+                                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                                                </div>
+                                                            </TableCell>
                                                         </TableRow>
                                                     )
                                                 }) :

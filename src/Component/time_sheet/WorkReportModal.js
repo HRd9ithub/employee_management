@@ -342,7 +342,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                     {error.length !== 0 &&
                                         <ol>
                                             {error.map((val) => {
-                                                return <li key={val}>{val}</li>
+                                                return <li key={val} className='error'>{val}</li>
                                             })}
                                         </ol>}
                                     <div className='d-flex justify-content-center modal-button'>

@@ -30,6 +30,13 @@ export const RouteReducer = (state, action) => {
             }
             // eslint-disable-next-line
             break;
+        case "SERVER_ERROR":
+            return {
+                ...state,
+                serverError :true
+            }
+            // eslint-disable-next-line
+            break;
         case "SERACH_FILTER":
             let data = action.payload.toLowerCase();
             let result = state.leaveFilter.filter((val) => {

@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-hot-toast";
 import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
-import { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
@@ -48,7 +47,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
         setName(value)
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (data) {
             setId(data._id)
         }

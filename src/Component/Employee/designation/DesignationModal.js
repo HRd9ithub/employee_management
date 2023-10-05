@@ -6,14 +6,13 @@ import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { toast } from "react-hot-toast";
 
-function DesignationModal({ data, getdesignation, permission, records }) {
+function DesignationModal({ data, getdesignation, permission }) {
   const [show, setShow] = useState(false);
   const [loader, setloader] = useState(false);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [id, setId] = useState("");
   const [error, setError] = useState("");
-  let toggleButton = false;
 
   let { getCommonApi } = GlobalPageRedirect();
 
@@ -68,14 +67,14 @@ function DesignationModal({ data, getdesignation, permission, records }) {
     }
     let config = {
       headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${GetLocalStorage('token')}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GetLocalStorage('token')}`
       },
-  }
+    }
     if (id) {
-      url = axios.patch(`${process.env.REACT_APP_API_KEY}/designation/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
+      url = axios.patch(`${process.env.REACT_APP_API_KEY}/designation/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, config)
     } else {
-      url = axios.post(`${process.env.REACT_APP_API_KEY}/designation/`, { name: name.charAt(0).toUpperCase() + name.slice(1) },config)
+      url = axios.post(`${process.env.REACT_APP_API_KEY}/designation/`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, config)
     }
     setloader(true);
 
@@ -111,7 +110,6 @@ function DesignationModal({ data, getdesignation, permission, records }) {
         : permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
         <button
           className="btn btn-gradient-primary btn-rounded btn-fw text-center "
-          disabled={toggleButton}
           onClick={handleShow}
         >
           <i className="fa-solid fa-plus"></i>&nbsp;Add

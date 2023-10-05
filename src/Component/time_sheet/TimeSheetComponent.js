@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
@@ -22,7 +21,6 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const TimeSheetComponent = () => {
     let date_today = new Date();
     const [data, setData] = useState([]);
-    const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
     const [Loader, setLoader] = useState(false);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
@@ -30,7 +28,7 @@ const TimeSheetComponent = () => {
     const [userName, setUserName] = useState([]);
     const [user_id, setuser_id] = useState("");
     const [serverError, setServerError] = useState(false);
-
+    const [searchItem, setsearchItem] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect()
 
@@ -54,12 +52,12 @@ const TimeSheetComponent = () => {
             };
             const result = await axios.get(`${process.env.REACT_APP_API_KEY}/timeSheet`, request);
             if (result.data.success) {
-                setData(result.data.data);
-                setDataFilter(result.data.data);
                 setpermission(result.data.permissions);
+                setData(result.data.data);
             }
         } catch (error) {
             if (!error.response) {
+                setServerError(true)
                 toast.error(error.message);
             } else if (error.response.status === 401) {
                 getCommonApi();
@@ -137,26 +135,17 @@ const TimeSheetComponent = () => {
         // eslint-disable-next-line
     }, []);
 
-
-    // Search filter
-    const HandleFilter = (event) => {
-        let { value } = event.target;
-
-        const list = data.filter((val, ind) => {
+    // memoize filtered items
+    const dataFilter = useMemo(() => {
+        return data.filter((val) => {
             return (
-                permission && permission.name.toLowerCase() === "admin" && (val.user?.first_name?.concat(" ", val.user.last_name).toLowerCase().includes(value.toLowerCase()) ||
-                    val.date.includes(value) ||
-                    val.login_time?.includes(value) ||
-                    val.logout_time?.includes(value) ||
-                    val.total?.includes(value))
+                val.date.includes(searchItem.toLowerCase()) ||
+                val.login_time?.includes(searchItem.toLowerCase()) ||
+                val.logout_time?.includes(searchItem.toLowerCase()) ||
+                val.total?.includes(searchItem.toLowerCase())
             );
         });
-        if (value) {
-            setDataFilter(list);
-        } else {
-            setDataFilter(data)
-        }
-    }
+    }, [data, searchItem]);
 
 
     // pagination function
@@ -251,18 +240,18 @@ const TimeSheetComponent = () => {
                                     <div>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/timesheet" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
+                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                                     <div className="search-full">
-                                        <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                                        <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                         <i className="fas fa-search"></i>
                                     </div>
                                     <div className="search-box mr-3">
                                         <form name="search-inner">
-                                            <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                                            <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
                                         </form>
                                         <i className="fas fa-search"></i>
                                     </div>

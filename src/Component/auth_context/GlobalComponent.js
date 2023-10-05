@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-// import { browserName,mobileModel } from "react-device-detect";
+import {isDesktop} from "react-device-detect";
 import DeviceDetector from "device-detector-js";
 import GlobalPageRedirect from './GlobalPageRedirect';
 import { GetLocalStorage, RemoveLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
@@ -14,11 +14,6 @@ export const Globalcomponent = () => {
     const navigate = useNavigate();
 
     let { getCommonApi } = GlobalPageRedirect();
-
-    const deviceDetector = new DeviceDetector();
-    const userAgent = navigator.userAgent;
-    const device = deviceDetector.parse(userAgent);
-
 
     // login function
     const onSubmit = async (data) => {
@@ -45,11 +40,14 @@ export const Globalcomponent = () => {
             setLoader(false)
         }
     }
-
+    
     // otp verify function
     const onSubmitOtp = async (email, otp) => {
+        const deviceDetector = new DeviceDetector();
+        const userAgent = navigator.userAgent;
+        const device = deviceDetector.parse(userAgent);
         setError([]);
-
+        
         try {
             setLoader(true)
             const location = await axios.get('https://ipgeolocation.abstractapi.com/v1/?api_key=539daa0d70404b92ac257dcb18fcfd2d')
@@ -62,7 +60,8 @@ export const Globalcomponent = () => {
                 ip: location.data.ip_address,
                 device: device.device.type,
                 device_name: device.device.model,
-                browser_name: device.client.name
+                browser_name: device.client.name,
+                isDesktop : isDesktop
             })
 
             if (res.data.success) {

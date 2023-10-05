@@ -16,18 +16,17 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
+import { useMemo } from "react";
 
 
 const Employee = () => {
   const [records, setRecords] = useState([]);
-  // eslint-disable-next-line
-  const [value, setvalue] = useState("");
-  const [recordsFilter, setRecordsFilter] = useState([]);
   const [loader, setloader] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [permission, setPermission] = useState("")
   let { UserData } = useContext(AppProvider);
   const [serverError, setServerError] = useState(false);
+  const [searchItem, setsearchItem] = useState("");
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -43,8 +42,8 @@ const Employee = () => {
 
   // status update function
   const handleStatus = async (row) => {
-     // eslint-disable-next-line
-    let { _id,email } = row;
+    // eslint-disable-next-line
+    let { _id, email } = row;
     setloader(true);
     let config = {
       headers: {
@@ -117,23 +116,6 @@ const Employee = () => {
     })
   };
 
-  // search function
-  const HandleFilter = (event) => {
-    let data = event.target.value;
-    let filter_data = records.filter((val) => {
-      return (
-        val.employee_id?.toLowerCase().includes(data.toLowerCase()) ||
-        val.first_name?.concat(" ", val.last_name).toLowerCase().includes(data.toLowerCase()) ||
-        val.email.toLowerCase().includes(data.toLowerCase()) ||
-        val.phone.toString().includes(data.toLowerCase()) ||
-        val.role?.name.toLowerCase().includes(data.toLowerCase()) ||
-        (val.report && val.report?.first_name?.concat(" ", val.report.last_name).toLowerCase().includes(data.toLowerCase()))
-      );
-    });
-    setRecordsFilter(filter_data);
-    setvalue(data);
-  };
-
   // get employee data in backend
   const getAlluser = async () => {
     try {
@@ -152,16 +134,16 @@ const Employee = () => {
           return val?.role?.name.toLowerCase() !== "admin"
         })
         setRecords(data);
-        setRecordsFilter(data);
       }
     } catch (error) {
       if (!error.response) {
+        setServerError(true)
         toast.error(error.message);
       } else {
         if (error.response.status === 401) {
           getCommonApi();
         } else {
-          if(error.response.status === 500){
+          if (error.response.status === 500) {
             setServerError(true)
           }
           if (error.response.data.message) {
@@ -179,6 +161,22 @@ const Employee = () => {
     // eslint-disable-next-line
   }, [toggle]);
 
+  // memoize filtered items
+  const recordsFilter = useMemo(() => {
+    return records.filter((item) => {
+      return (
+        item.employee_id?.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.first_name?.concat(" ", item.last_name).toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.email.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.phone.toString().includes(searchItem.toLowerCase()) ||
+        item.role?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
+        (item.report && item.report?.first_name?.concat(" ", item.report.last_name).toLowerCase().includes(searchItem.toLowerCase()))
+      );
+    })
+  }, [records, searchItem]);
+
+
+
   // pagination function
   const onChangePage = (e, page) => {
     setpage(page)
@@ -187,7 +185,6 @@ const Employee = () => {
   const onChangeRowsPerPage = (e) => {
     setCount(e.target.value)
   }
-
 
   // sort function
   const handleRequestSort = (name) => {
@@ -233,7 +230,6 @@ const Employee = () => {
     }
   }
 
-
   const getComparator = (order, orderBy) => {
     return order === "desc" ? (a, b) => descedingComparator(a, b, orderBy) : (a, b) => -descedingComparator(a, b, orderBy)
   }
@@ -263,18 +259,18 @@ const Employee = () => {
                       {/* <NavLink className="path-header">Employee</NavLink> */}
                       <ul id="breadcrumb" className="mb-0">
                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                        <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
                       </ul>
                     </div>
                   </div>
                   <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                     <div className="search-full">
-                      <input type="text" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                      <input type="search" autoComplete="off" className="input-search-full" name="txt" value={searchItem} placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                       <i className="fas fa-search"></i>
                     </div>
                     <div className="search-box mr-3">
                       <form name="search-inner">
-                        <input type="text" className="input-search" name="txt" onChange={HandleFilter} />
+                        <input type="search" autoComplete="off" className="input-search" name="txt" value={searchItem} onChange={(event) => setsearchItem(event.target.value)} />
                       </form>
                       <i className="fas fa-search"></i>
                     </div>
@@ -334,13 +330,13 @@ const Employee = () => {
                             <TableCell>{val.employee_id}</TableCell>
                             <TableCell>
                               <div className={`pr-3 d-flex align-items-center name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                  {val ? <>
-                                      <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                      {val.first_name.concat(" ", val.last_name)}
-                                  </> : <HiOutlineMinus />
-                                  }
+                                {val ? <>
+                                  <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                  {val.first_name.concat(" ", val.last_name)}
+                                </> : <HiOutlineMinus />
+                                }
                               </div>
-                          </TableCell>
+                            </TableCell>
                             <TableCell>{val.email}</TableCell>
                             <TableCell>{val.phone}</TableCell>
                             <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
@@ -395,10 +391,10 @@ const Employee = () => {
                 </TablePagination>
               </div>
             </div>
-          </div> }
+          </div>}
       </motion.div >
-           {!loader && !serverError && !permission &&<Error403/>}
-           {!loader && serverError&&<Error500/>}
+      {!loader && !serverError && !permission && <Error403 />}
+      {!loader && serverError && <Error500 />}
       {loader && <Spinner />}
     </>
   );
