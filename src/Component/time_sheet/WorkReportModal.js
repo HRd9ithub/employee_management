@@ -221,7 +221,7 @@ function WorkReportModal({ data, permission, getReport }) {
             url.then(data => {
                 if (data.data.success) {
                     toast.success(data.data.message)
-                    getReport();
+                    getReport(userId);
                     setShow(false)
                     setloader(false);
                     setId('');
