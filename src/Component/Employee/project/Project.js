@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import ProjectModal from './ProjectModal'
 import Spinner from '../../common/Spinner';
@@ -14,7 +14,7 @@ import Error500 from '../../error_pages/Error500';
 const Project = () => {
   const [loader, setloader] = useState(false);
   const [records, setRecords] = useState([]);
-  const [recordsFilter, setRecordsFilter] = useState([]);
+  const [searchItem, setsearchItem] = useState("");
   const [serverError, setServerError] = useState(false);
   const [permission, setPermission] = useState("");
 
@@ -43,16 +43,16 @@ const Project = () => {
       if (res.data.success) {
         setPermission(res.data.permissions)
         setRecords(res.data.data)
-        setRecordsFilter(res.data.data)
       }
     } catch (error) {
       if (!error.response) {
+        setServerError(true)
         toast.error(error.message)
       } else {
         if (error.response.status === 401) {
           getCommonApi();
         } else {
-          if(error.response.status === 500){
+          if (error.response.status === 500) {
             setServerError(true)
           }
           if (error.response.data.message) {
@@ -70,14 +70,11 @@ const Project = () => {
     // eslint-disable-next-line
   }, [])
 
-  // search filter function
-  const HandleFilter = (event) => {
-    let data = event.target.value;
-    let filter_data = records.filter((val, ind) => {
-      return val.name.toLowerCase().includes(data.toLowerCase())
-    })
-    setRecordsFilter(filter_data)
-  }
+  // memoize filtered items
+  const recordsFilter = useMemo(() => {
+    return records.filter((item) => item.name.toLowerCase().includes(searchItem.toLowerCase()));
+  }, [records, searchItem]);
+
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -87,7 +84,6 @@ const Project = () => {
   const onChangeRowsPerPage = (e) => {
     setCount(e.target.value)
   }
-
 
   // sort function
   const handleRequestSort = (name) => {
@@ -124,8 +120,6 @@ const Project = () => {
     return rowArray.map((el) => el[0])
   }
 
-
-
   return (
     <>
       {!loader ?
@@ -139,18 +133,18 @@ const Project = () => {
                       <div>
                         <ul id="breadcrumb" className="mb-0">
                           <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                          <li><NavLink to="/project" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Project</NavLink></li>
+                          <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Project</NavLink></li>
                         </ul>
                       </div>
                     </div>
                     <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
                       <div className="search-full">
-                        <input type="search" className="input-search-full" name="txt" placeholder="Search" onChange={HandleFilter} />
+                        <input type="search" className="input-search-full" name="txt" autoComplete='off' value={searchItem} placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                         <i className="fas fa-search"></i>
                       </div>
                       <div className="search-box mr-3">
                         <form name="search-inner">
-                          <input type="search" className="input-search" name="txt" onChange={HandleFilter} />
+                          <input type="search" className="input-search" name="txt" autoComplete='off' value={searchItem} onChange={(event) => setsearchItem(event.target.value)} />
                         </form>
                         <i className="fas fa-search"></i>
                       </div>
@@ -188,7 +182,7 @@ const Project = () => {
                                 <TableCell>
                                   <div className='action'>
                                     {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                    <ProjectModal data={val} getProject={getProject} />}
+                                      <ProjectModal data={val} getProject={getProject} />}
                                   </div>
                                 </TableCell>}
                             </TableRow>
@@ -216,8 +210,8 @@ const Project = () => {
             </div>}
         </motion.div>
         : <Spinner />}
-      {!loader && !permission  && !serverError && <Error403/>}
-      {!loader && serverError && <Error500/>}
+      {!loader && !permission && !serverError && <Error403 />}
+      {!loader && serverError && <Error500 />}
     </>
   )
 }

@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
@@ -62,6 +61,7 @@ const WorkReportComponent = () => {
             }
         } catch (error) {
             if (!error.response) {
+                setServerError(true)
                 toast.error(error.message);
             } else if (error.response.status === 401) {
                 getCommonApi();
@@ -239,7 +239,7 @@ const WorkReportComponent = () => {
                                     <div>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="/workreport" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
+                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
                                         </ul>
                                     </div>
                                 </div>

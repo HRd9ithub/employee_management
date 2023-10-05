@@ -57,6 +57,7 @@ const RouteContext = ({ children }) => {
             dispatch({ type: "GET_USER_DATA", payload: result })
         } catch (error) {
             if (!error.response) {
+                toast.error(error.message);
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
@@ -114,13 +115,14 @@ const RouteContext = ({ children }) => {
             }
         } catch (error) {
             if (!error.response) {
+                dispatch({ type: "SERVER_ERROR" })
                 toast.error(error.message)
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
                 if(error.response.status === 500){
-                    // setServerError(true)
-                  }
+                    dispatch({ type: "SERVER_ERROR" })
+                }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }

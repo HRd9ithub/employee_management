@@ -1,5 +1,5 @@
 import axios from 'axios';
-import moment from 'moment/moment';
+import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react'
 import DatePickers from "react-datepicker";
 import 'react-date-picker/dist/DatePicker.css';
@@ -35,8 +35,6 @@ const Calendar = () => {
   const [datetoggle, setdatetoggle] = useState(false);
   const [permission, setpermission] = useState("");
   const [serverError, setServerError] = useState(false);
-
-
 
   let { getCommonApi } = GlobalPageRedirect();
 
@@ -247,7 +245,7 @@ const Calendar = () => {
                   <div>
                     <ul id="breadcrumb" className="mb-0">
                       <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/holiday" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
+                      <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Calender</NavLink></li>
                     </ul>
                   </div>
                 </div>

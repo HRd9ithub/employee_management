@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useMatch, useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../../../common/Spinner';
 import { toast } from 'react-hot-toast';
-import moment from 'moment';
 import EmployeeModal from "../../../user_profile/EmployeeModal"
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -16,6 +15,7 @@ import Avatar from '@mui/material/Avatar';
 import { useContext } from 'react';
 import { AppProvider } from '../../../context/RouteContext';
 import Error403 from '../../../error_pages/Error403';
+import { dateFormat } from '../../../../helper/dateFormat';
 
 const EmployeeViewComponent = () => {
     let config = {
@@ -31,22 +31,21 @@ const EmployeeViewComponent = () => {
     const [value, setvalue] = React.useState('Personal');
     const [permission, setpermission] = useState("");
 
-
     let navigate = useNavigate();
-
+    
     // eslint-disable-next-line
     const [image, setimage] = useState("")
-
+    
     let { getCommonApi } = GlobalPageRedirect();
     let { getUserData } = useContext(AppProvider);
-
+    
     const ref = useRef(null);
-
+    
     // get parameter 
     const { id } = useParams();
-
+    
     // get path name
-    const { pathname } = useLocation();
+    const match = useMatch("/profile/" + id)
 
     // drop down tab onchange function
     const handleChanges = (newValue) => {
@@ -57,6 +56,7 @@ const EmployeeViewComponent = () => {
     const changeTab = (event, newValue) => {
         setvalue(newValue);
     }
+
     const getuser = async () => {
         setLoader(true);
         try {
@@ -87,25 +87,7 @@ const EmployeeViewComponent = () => {
     useEffect(() => {
         getuser();
         // eslint-disable-next-line
-    }, [pathname]);
-
-    //Ordinal  add in date
-    const dateHandle = (date) => {
-        let day = new Date(date).getDate();
-        var b = day % 10;
-
-        if ((day % 100) / 10 === 1) {
-            return "th";
-        } else if (b === 1) {
-            return "st";
-        } else if (b === 2) {
-            return "nd";
-        } else if (b === 3) {
-            return "rd";
-        } else {
-            return "th";
-        }
-    };
+    }, [match]);
 
     // **** modal close function ****
     const handleClose = () => {
@@ -116,8 +98,6 @@ const EmployeeViewComponent = () => {
         setValue(data);
         setShow(true);
     }
-
-
     // image onchnage function
     const imageChange = async (e) => {
         if (e.target.files.length !== 0) {
@@ -158,7 +138,7 @@ const EmployeeViewComponent = () => {
 
             {/* ................................................................... */}
             {/* <div className=" container-fluid pt-4"> */}
-            {!loader ? (pathname.toLocaleLowerCase().match('/profile') || (!pathname.toLocaleLowerCase().match('/profile') && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
+            {!loader ? (match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
                 <div className="background-wrapper bg-white py-2">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
@@ -167,13 +147,13 @@ const EmployeeViewComponent = () => {
                                     {/* <NavLink className="path-header">Profile</NavLink> */}
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                        {!pathname.toLocaleLowerCase().match('/profile') && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
+                                        {!match && <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>}
                                         <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Profile</NavLink></li>
                                     </ul>
                                 </div>
                             </div>
                             <div className="col-12 col-sm-6 d-flex justify-content-end pr-0" id="two">
-                                {!pathname.toLocaleLowerCase().match('/profile') &&
+                                {!match &&
                                     <div>
                                         <button className='btn-gradient-primary' onClick={() => navigate("/employees")}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
                                     </div>}
@@ -181,14 +161,14 @@ const EmployeeViewComponent = () => {
                         </div>
                         <div className="profile-box mb-0">
                             <div className="card-body">
-                                {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Profile")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                {match && <NavLink onClick={() => handleShow("Profile")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                 <div className="row m-0">
                                     <div className="col-md-12">
                                         <div className="profile-view col-12">
-                                            <div className={pathname.toLocaleLowerCase().match('/profile') ? "profile-img-wrap" : "profile-img-wrap-view"}>
+                                            <div className={match ? "profile-img-wrap" : "profile-img-wrap-view"}>
                                                 <div className="profile-img w-100 h-100">
                                                     <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
-                                                    {pathname.toLocaleLowerCase().match('/profile') &&
+                                                    {match &&
                                                         <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
                                                     }
                                                 </div>
@@ -199,9 +179,7 @@ const EmployeeViewComponent = () => {
                                                         <div className="profile-info-left">
                                                             <h3 className="user-name m-t-0 mb-0">{data.first_name && data.first_name.concat(" ", data.last_name)}</h3>
                                                             <small className="text-muted">{data && data.designation ? data.designation.name : <AiOutlineMinus />}</small>
-                                                            <div className="small doj text-muted">Date of Join :  {moment(data.joining_date).format("DD")}
-                                                                <sup> {dateHandle(data.joining_date)} </sup>
-                                                                {moment(data.joining_date).format("MMM YYYY")}</div>
+                                                            <div className="small doj text-muted">Date of Join :  {dateFormat(data.joining_date)}</div>
                                                             <div className="staff-id">Employee ID : {data.employee_id}</div>
                                                             <div className="staff-msg"><button className="btn btn-custom btn-gradient-primary" disabled>Send Message</button></div>
                                                         </div>
@@ -245,7 +223,7 @@ const EmployeeViewComponent = () => {
                                         <Tab value="Document" label="Document Info." />
                                         <Tab value="Company" label="Company Info." />
                                         <Tab value="Emergency" label="Emergency Contact Info." />
-                                        {pathname.toLocaleLowerCase().match('/profile') &&
+                                        {match &&
                                             <Tab value="password" label="Change Password" />}
                                     </Tabs>
                                 </div>
@@ -264,7 +242,7 @@ const EmployeeViewComponent = () => {
                                             <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Info.</NavLink>
                                             <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Info.</NavLink>
                                             <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Info.</NavLink>
-                                            {pathname.toLocaleLowerCase().match('/profile') &&
+                                            {match &&
                                                 <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("password")}>Change Password</NavLink>}
                                         </div>
                                     </div>
@@ -280,7 +258,7 @@ const EmployeeViewComponent = () => {
                                                         <div className="flex-fill">
                                                             <div className="">
                                                                 <h3 className="card-title">Personal Information
-                                                                    {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Personal")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                    {match && <NavLink onClick={() => handleShow("Personal")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                 </h3>
                                                                 <ul className="personal-info">
                                                                     <li>
@@ -299,9 +277,7 @@ const EmployeeViewComponent = () => {
 
                                                                     <li>
                                                                         <div className="title">Birthday</div>
-                                                                        {data.date_of_birth ? <div className="text">{moment(data.date_of_birth).format("DD")}
-                                                                            <sup> {dateHandle(data.date_of_birth)} </sup>
-                                                                            {moment(data.date_of_birth).format("MMMM YYYY")}</div>
+                                                                        {data.date_of_birth ? <div className="text">{dateFormat(data.date_of_birth)}</div>
                                                                             : <div className='text'><HiOutlineMinus /></div>}
                                                                     </li>
                                                                     <li>
@@ -327,7 +303,7 @@ const EmployeeViewComponent = () => {
                                                         <div className="flex-fill">
                                                             <div className="">
                                                                 <h3 className="card-title">Account Information
-                                                                    {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Account")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                    {match && <NavLink onClick={() => handleShow("Account")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                 </h3>
                                                                 {data.account_detail.length !== 0 ?
                                                                     <ul className="personal-info">
@@ -368,7 +344,7 @@ const EmployeeViewComponent = () => {
                                                             <div className="flex-fill">
                                                                 <div className="">
                                                                     <h3 className="card-title">Education Informations
-                                                                        {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Education")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                        {match && <NavLink onClick={() => handleShow("Education")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                     </h3>
                                                                     {data.education && data.education.length > 0 ?
                                                                         <div className="experience-box">
@@ -434,18 +410,14 @@ const EmployeeViewComponent = () => {
                                                                                 <li>
                                                                                     <div className="title">Joining Date</div>
                                                                                     {data.joining_date ?
-                                                                                        <div className="text"> {data.joining_date && moment(data.joining_date).format("DD")}
-                                                                                            <sup> {dateHandle(data.joining_date)} </sup>
-                                                                                            {moment(data.joining_date).format("MMMM YYYY")}</div> :
+                                                                                        <div className="text"> {dateFormat(data.joining_date)}</div> :
                                                                                         <div className='text'><AiOutlineMinus /></div>
                                                                                     }
                                                                                 </li>
                                                                                 <li>
                                                                                     <div className="title">Leaving Date</div>
                                                                                     {data.leaveing_date ?
-                                                                                        <div className="text">{moment(data.leaveing_date).format("DD")}
-                                                                                            <sup> {dateHandle(data.leaveing_date)} </sup>
-                                                                                            {moment(data.leaveing_date).format("MMMM YYYY")}</div> :
+                                                                                        <div className="text">{dateFormat(data.leaveing_date)}</div> :
                                                                                         <div className='text'><AiOutlineMinus /></div>
                                                                                     }
                                                                                 </li>
@@ -464,7 +436,7 @@ const EmployeeViewComponent = () => {
                                                                     <div className="flex-fill">
                                                                         <div className="">
                                                                             <h3 className="card-title">Document Information
-                                                                                {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Document")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                {match && <NavLink onClick={() => handleShow("Document")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                             </h3>
                                                                             {data.user_document.length > 0 ?
                                                                                 <div className='d-flex'>
@@ -523,7 +495,7 @@ const EmployeeViewComponent = () => {
                                                                         <div className="flex-fill">
                                                                             <div className="">
                                                                                 <h3 className="card-title">Emergency Contact
-                                                                                    {pathname.toLocaleLowerCase().match('/profile') && <NavLink onClick={() => handleShow("Emergency Contact")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                    {match && <NavLink onClick={() => handleShow("Emergency Contact")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                                 </h3>
                                                                                 {data.emergency_contact.length > 0 ?
                                                                                     <ul className="personal-info">

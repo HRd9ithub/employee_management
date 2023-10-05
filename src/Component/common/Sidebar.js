@@ -290,7 +290,7 @@ const Sidebar = () => {
                       (elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' || elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' || elem.name.toLowerCase().replace(/\s/g, '') === 'holiday') &&
                       <div key={elem._id}>
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" > <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leavetype">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leave-type">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
                         {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" > <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
                       </div>
                     )
@@ -299,11 +299,11 @@ const Sidebar = () => {
               </Collapse>
             </li>}
           {/* timesheet */}
-          <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/timesheet' && 'active'} `} onClick={() => setData({})} >
+          <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/time-sheet' && 'active'} `} onClick={() => setData({})} >
             {menu.map((elem) => {
               return (
                 elem.name.toLowerCase().replace(/\s/g, '') === 'timesheet' &&
-                <NavLink key={elem._id} className="nav-link" to="/timesheet" onClick={toggleSidebar}>
+                <NavLink key={elem._id} className="nav-link" to="/time-sheet" onClick={toggleSidebar}>
                   <i className={`fa-solid fa-clock slider-hover-icon timesheet-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
                   <span className={`menu-title`}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
                 </NavLink>)
@@ -337,8 +337,8 @@ const Sidebar = () => {
                     return (
                       (elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' || elem.name.toLowerCase().replace(/\s/g, '') === 'workreport') &&
                       <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/userRole">{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/workreport">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/user-role">{elem.name}</NavLink></li>}
+                        {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/work-report">{elem.name}</NavLink></li>}
                       </div>)
                   })}
                 </ul>
