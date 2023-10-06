@@ -600,6 +600,10 @@
     .apexcharts-canvas {
         width: 450px !important;
     }
+
+    .animate-celebration-content p {
+        width: 75%;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -1509,6 +1513,19 @@
     .col-md-6.mt-3.box-dashboard:last-child {
         margin-top: 30px !important;
         margin-bottom: 15px;
+    }
+
+    .animate-celebration-content img {
+        width: 200px;
+    }
+
+    .animate-celebration-content h2 {
+        font-size: 40px;
+    }
+
+    .animate-celebration-content p {
+        width: 85%;
+        font-size: 20px;
     }
 }
 
@@ -2827,6 +2844,18 @@
     .user-modal .modal-button button {
         width: 22% !important;
     }
+
+    .animate-celebration-content img {
+        width: 170px;
+    }
+
+    .animate-celebration-content h2 {
+        font-size: 35px;
+    }
+    
+    .animate-celebration-content p {
+        font-size: 16px;
+    }
 }
 
 @media (max-width:414px) {
@@ -3461,6 +3490,10 @@
 
     .modal-button .btn {
         width: 33% !important;
+    }
+    
+    .animate-celebration-content p {
+        width: 95%;
     }
 
 }
