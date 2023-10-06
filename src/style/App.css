@@ -3760,7 +3760,7 @@ ul.todo-list li:hover {
 }
 input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 
 .animate-celebration {
