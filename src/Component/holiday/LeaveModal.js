@@ -55,6 +55,11 @@ const LeaveModal = (props) => {
     // modal show function
     const handleShow = () => {
         if (data) {
+            if (data?.leaveType?.toLowerCase() === "casual leave") {
+                let date = new Date();
+                date.setDate(date.getDate() + 4);
+                setleaveType(moment(date).format("YYYY-MM-DD"))
+            }
             setleave({ leave_type_id: data.leave_type_id })
             setStatus({ leave_status: data.leave_for, status: data.status })
             setReason({ description: data.reason })
