@@ -265,9 +265,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 }
                 if (pathname.toLocaleLowerCase().includes('/employees')) {
                     getEmployeeDetail()
-                    toast.success("Saved Successfully");
+                    toast.success("Data updated Successfully");
                 } else {
-                    toast.success("Profile has been updated successfully.");
+                    toast.success("Profile details updated successfully.");
                     handleClose()
                     getuser()
                 }
