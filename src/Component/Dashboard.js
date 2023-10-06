@@ -296,7 +296,7 @@ const Dashboard = () => {
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
-                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
+                                                            return <li key={val._id} className='my-2' style={{background: '#ff3a3a'}}><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
                                                        })}
                                                        {birthDayFilter.map((val) => {
                                                             return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
