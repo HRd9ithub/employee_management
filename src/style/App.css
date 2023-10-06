@@ -3763,7 +3763,7 @@ input[type="search"]::-webkit-search-cancel-button {
   margin-right: 5px;
 }
 
-.animate_cele{
+.animate-celebration {
   display: flex;
   width: 100%;
   height: 100vh;
@@ -3772,8 +3772,38 @@ input[type="search"]::-webkit-search-cancel-button {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1100 !important;
 }
-.animate_cele::after{
+.animate-celebration-content {
+  color: white;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, .8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1100 !important;
+}
+.animate-celebration-content img {
+  width: 250px;
+  height: auto;
+}
+.animate-celebration-content h2 {
+  font-size: 50px;
+  font-weight: 800;
+  background: linear-gradient(45deg, #e29a21 0%, #f9df74 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.animate-celebration-content p {
+  width: 50%;
+  font-size: 25px;
+}
+/* .animate-celebration::after{
   content: "Happy Birthday";
   position: absolute;
   top: 0;
@@ -3788,4 +3818,4 @@ input[type="search"]::-webkit-search-cancel-button {
   align-items: center;
   text-align: center;
   justify-content: center;
-}
+} */

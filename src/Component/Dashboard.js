@@ -97,7 +97,7 @@ const Dashboard = () => {
                     setLoader(false);
                     setTimeout(() => {
                          setanimateLoader(false)
-                    }, [10000])
+                    }, [15000])
                }
           }
           if (GetLocalStorage("token")) {
@@ -291,7 +291,8 @@ const Dashboard = () => {
                                    </div>
                                    <div className='col-md-6 mt-3 box-dashboard'>
                                         <div className='my-chart'>
-                                             <div className='my-chart-head text-center'>List of Holiday</div>
+                                             {/* <div className='my-chart-head text-center'>List of Holiday</div> */}
+                                             <div className='my-chart-head text-center'>Bookmarks</div>
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
@@ -312,8 +313,13 @@ const Dashboard = () => {
                </motion.div>
                {loader && <Spinner />}
                {!loader && animateLoader &&
-                    <div className="animate_cele">
-                         <ConfettiExplosion duration={20000} force={0.5} particleCount={250} width={4000} height={4000} />
+                    <div className="animate-celebration">
+                         <div className="animate-celebration-content">
+                              <img src="./Images/birthday-emoji.png" alt="img"/>
+                              <h2 className='text-center my-3'>Happy Birthday</h2>
+                              <p className='mb-0 text-center'>The warmest wishes to a great member of our team. May your special day be full of happiness, fun and cheer!</p>
+                         </div>
+                         <ConfettiExplosion duration={25000} force={0.5} particleCount={250} width={4000} height={4000} />
                     </div>}
           </>
      )
