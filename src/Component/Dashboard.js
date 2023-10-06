@@ -24,6 +24,7 @@ import ConfettiExplosion from 'react-confetti-explosion';
 
 
 const Dashboard = () => {
+     let userId = GetLocalStorage("user_id");
      const [loader, setLoader] = useState(false)
      const [animateLoader, setanimateLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
@@ -68,8 +69,20 @@ const Dashboard = () => {
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
                          setBirthDay(birthDay);
-                         setHolidayfilter(holidayDay)
-                         setleaveRequest(leaveRequest)
+                         setHolidayfilter(holidayDay);
+                         setleaveRequest(leaveRequest);
+                         let birthDayFilter = birthDay.find((item) => {
+                              return item._id === userId && moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
+                         });
+                         if(birthDayFilter){
+                           let data = localStorage.getItem("employeeBirthday");
+                           if(!data){
+                                setanimateLoader(true);
+                                localStorage.setItem("employeeBirthday",true);
+                           }
+                         }else{
+                              localStorage.removeItem("employeeBirthday");
+                         }
                          // setreportBy(reportBy)
                     }
                } catch (error) {
@@ -82,10 +95,9 @@ const Dashboard = () => {
                     }
                } finally {
                     setLoader(false);
-                    setanimateLoader(true)
                     setTimeout(() => {
                          setanimateLoader(false)
-                    },[10000])
+                    }, [10000])
                }
           }
           if (GetLocalStorage("token")) {
@@ -126,7 +138,7 @@ const Dashboard = () => {
 
      const birthFilter = (date) => {
           let birth = birthDay.filter((val) => {
-               return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM")
+               return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM") && val._id !== userId
           })
           setBirthDayFilter(birth)
      }
@@ -298,11 +310,11 @@ const Dashboard = () => {
                          </div>
                     </div>}
                </motion.div>
-               {loader && <Spinner/>}
+               {loader && <Spinner />}
                {!loader && animateLoader &&
-               <div className="animate_cele">
-                    <ConfettiExplosion duration={20000} force={0.5} particleCount={250} width={4000} height={4000} />
-               </div>}
+                    <div className="animate_cele">
+                         <ConfettiExplosion duration={20000} force={0.5} particleCount={250} width={4000} height={4000} />
+                    </div>}
           </>
      )
 }
