@@ -1,11 +1,10 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
+import { customAxios1 } from '../../../../service/CreateApi';
 
 const UserDoumentForm = (props) => {
     let { userDetail, getEmployeeDetail, getuser, handleClose } = props;
@@ -89,12 +88,7 @@ const UserDoumentForm = (props) => {
 
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user_document/`,formdata , {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        'Authorization': `Bearer ${GetLocalStorage('token')}`
-                    }
-                });
+                const response = await customAxios1().post('/user_document/',formdata);
                 if (response.data.success) {
                     toast.success(response.data.message)
                     if (pathname.toLocaleLowerCase().includes('/profile')) {

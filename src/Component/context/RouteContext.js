@@ -3,12 +3,12 @@ import { useReducer } from 'react';
 import { createContext } from 'react'
 import { RouteReducer } from './RouteReducer';
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { useRef } from 'react';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { customAxios } from '../../service/CreateApi';
 
 // create context
 let AppProvider = createContext();
@@ -44,15 +44,8 @@ const RouteContext = ({ children }) => {
     const getUserData = async () => {
         try {
             let id = GetLocalStorage('user_id');
-            //create header
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
 
-            let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`, request)
+            let res = await customAxios().get(`/user/${id}`)
             let result = await res.data.data;
             dispatch({ type: "GET_USER_DATA", payload: result })
         } catch (error) {
@@ -72,14 +65,7 @@ const RouteContext = ({ children }) => {
     const getLeaveNotification = async () => {
         setLoading(true);
         try {
-            let token = GetLocalStorage('token');
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-            }
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/notification`, {}, request)
+            const res = await customAxios().post('/leave/notification')
             if (res.data.success) {
                 dispatch({ type: "LEAVE_NOTIFICATION", payload: res.data.data })
             }
@@ -101,14 +87,7 @@ const RouteContext = ({ children }) => {
     const getLeave = async () => {
         setLoading(true);
         try {
-            let token = GetLocalStorage('token');
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-            }
-            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leave/`, request)
+            const res = await customAxios().get('/leave/');
             if (res.data.success) {
                 getLeaveNotification();
                 dispatch({ type: "GET_LEAVE", payload: res.data })

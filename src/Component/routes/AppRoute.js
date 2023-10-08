@@ -20,7 +20,7 @@ import Error404 from '../error_pages/Error404';
 import ResetPassword from '../auth/ResetPassword';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
-import Project from "../Employee/project/Project"
+import Project from "../Employee/project/Project";
 
 const AppRoute = () => {
     return (

@@ -11,15 +11,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
-import axios from "axios";
+import { customAxios } from "../../../../service/CreateApi.js";
 
 function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuser, value }) {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
+    
     const [employee, setEmployee] = useState({
         first_name: "",
         last_name: "",
@@ -86,7 +81,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const get_role = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role`, config);
+                const res = await customAxios().get('/role');
                 if (res.data.success) {
                     setUserRole(res.data.data);
                 }
@@ -105,7 +100,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const get_Designations = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation`, config);
+                const res = await customAxios().get('/designation');
 
                 if (res.data.success) {
                     setDesignations(res.data.data);
@@ -126,7 +121,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
         const getAlluser = async () => {
             setLoader(true);
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, config);
+                const res = await customAxios().post('/user/username');
                 if (res.data.success) {
                     setallRecords(res.data.data)
                 }
@@ -237,7 +232,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
         setLoader(true)
         try {
-            const response = await axios.put(`${process.env.REACT_APP_API_KEY}/user/${_id}`, {
+            const response = await customAxios().put(`/user/${_id}`, {
                 first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
                 last_name: last_name.charAt(0).toUpperCase() + last_name.slice(1),
                 email,
@@ -259,7 +254,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 status,
                 leaveing_date,
                 report_by
-            }, config);
+            });
             if (response.data.success) {
                 if (userDetail._id === GetLocalStorage('user_id') && (pathname.toLocaleLowerCase().includes('/employees') || value === "Profile")) {
                     getUserData()
@@ -335,7 +330,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 setemailError("")
             } else {
                 setLoader(true)
-                axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }, config).then((response) => {
+                customAxios().post('/user/email', { email: employee.email }).then((response) => {
                     if (response.data.success) {
                         setemailError("")
                     }

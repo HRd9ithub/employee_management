@@ -1,11 +1,10 @@
-import axios from 'axios';
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from '../common/Spinner';
 import { Form } from 'react-bootstrap';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { customAxios } from '../../service/CreateApi';
 
 const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [show, setShow] = useState(false);
@@ -93,17 +92,10 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
         formdata.append('description', description);
 
         let url = "";
-        let config = {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${GetLocalStorage('token')}`
-            }
-        }
-
         if (id) {
-            url = axios.put(`${process.env.REACT_APP_API_KEY}/document/${id}`, formdata, config)
+            url = customAxios().put(`/document/${id}`, formdata)
         } else {
-            url = axios.post(`${process.env.REACT_APP_API_KEY}/document/`, formdata, config)
+            url = customAxios().post('/document/', formdata)
         }
         setloader(true)
         url.then((res) => {

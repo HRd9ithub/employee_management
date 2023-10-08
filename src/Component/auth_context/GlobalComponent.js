@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import {isDesktop} from "react-device-detect";
 import DeviceDetector from "device-detector-js";
 import GlobalPageRedirect from './GlobalPageRedirect';
-import { GetLocalStorage, RemoveLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
+import { RemoveLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
+import { customAxios } from '../../service/CreateApi';
 
 export const Globalcomponent = () => {
     const [loader, setLoader] = useState(false)
@@ -15,12 +16,12 @@ export const Globalcomponent = () => {
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    // login function
+    //  login function
     const onSubmit = async (data) => {
         setError([]);
         try {
             setLoader(true)
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/auth/login`, data)
+            const res = await customAxios().post('/auth/login', data)
             if (res.data.success) {
                 toast.success(res.data.message);
                 SetLocalStorage("email" ,res.data.data);
@@ -53,7 +54,7 @@ export const Globalcomponent = () => {
             // const location = await axios.get('https://ipgeolocation.abstractapi.com/v1/?api_key=539daa0d70404b92ac257dcb18fcfd2d')
             const location = await axios.get('http://ip-api.com/json')
 
-            const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/auth/otp`, {
+            const res = await customAxios().patch('/auth/otp', {
                 email,
                 otp,
                 city: location.data.city,
@@ -90,15 +91,8 @@ export const Globalcomponent = () => {
 
     // sign out function
     const handleLogout = async () => {
-        setLoader(true)
-        let config = {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${GetLocalStorage('token')}`
-            },
-        }
-
-        axios.post(`${process.env.REACT_APP_API_KEY}/auth/logout`, {}, config).then((res) => {
+        setLoader(true);
+        customAxios().post('/auth/logout').then((res) => {
             if (res.data.success) {
                 RemoveLocalStorage('token')
                 RemoveLocalStorage('user_id')
@@ -123,7 +117,7 @@ export const Globalcomponent = () => {
         setError([]);
         try {
             setLoader(true)
-            const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/auth/resendOtp`, {email})
+            const res = await customAxios().patch('/auth/resendOtp', {email})
             if (res.data.success) {
                 toast.success(res.data.message)
             }

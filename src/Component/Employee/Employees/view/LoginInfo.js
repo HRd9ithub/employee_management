@@ -2,8 +2,6 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import axios from 'axios';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import Spinner from '../../../common/Spinner';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from 'moment';
@@ -11,6 +9,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from 'react-router-dom';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { customAxios } from '../../../../service/CreateApi';
 
 
 const LoginInfo = ({ userId }) => {
@@ -35,13 +34,7 @@ const LoginInfo = ({ userId }) => {
     const getLoginInfo = async (start ,end) => {
         try {
             setLoader(true);
-            let config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
-            const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/loginInfo`, { id: userId ,startDate : start || startDate,endDate : end || endDate}, config);
+            const response = await customAxios().post('/user/loginInfo', { id: userId ,startDate : start || startDate,endDate : end || endDate});
 
             if (response.data.success) {
                 setDataFilter(response.data.data)

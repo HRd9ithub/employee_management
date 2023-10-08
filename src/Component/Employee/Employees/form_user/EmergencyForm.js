@@ -6,16 +6,9 @@ import { useEffect } from 'react';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
-import axios from 'axios';
+import { customAxios } from '../../../../service/CreateApi';
 
 const EmergencyForm = (props) => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props
 
     const [emergency, setEmergncy] = useState({
@@ -68,7 +61,7 @@ const EmergencyForm = (props) => {
         } else {
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/emergency`, { relationship: relationship.charAt(0).toUpperCase() + relationship.slice(1), address, phone, email, user_id: userDetail && userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1) },config);
+                const response = await customAxios().post('/emergency', { relationship: relationship.charAt(0).toUpperCase() + relationship.slice(1), address, phone, email, user_id: userDetail && userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1) });
                 if (response.data.success) {
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();

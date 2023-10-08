@@ -7,11 +7,11 @@ import Spinner from '../common/Spinner';
 import Swal from 'sweetalert2';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Error403 from "../error_pages/Error403"
 import Error500 from '../error_pages/Error500';
 import fileDownload from 'js-file-download';
+import { customAxios } from '../../service/CreateApi';
 
 const DocumentComponent = () => {
     const [permission, setpermission] = useState("");
@@ -34,16 +34,8 @@ const DocumentComponent = () => {
     // get document data in api
     useEffect(() => {
         const getDocument = () => {
-            setLoading(true)
-            axios.get(`${process.env.REACT_APP_API_KEY}/document/`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + GetLocalStorage('token')
-                    }
-                }
-            )
-                .then((res) => {
+            setLoading(true);
+            customAxios().get('/document/').then((res) => {
                     setDocumentData(res.data.data);
                     setpermission(res.data.permissions);
                     setLoading(false);
@@ -71,12 +63,6 @@ const DocumentComponent = () => {
 
     // delete function
     const handleDelete = (id) => {
-        let token = GetLocalStorage('token');
-        const request = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
         Swal.fire({
             title: 'Delete Document',
             text: "Are you sure you want to delete?",
@@ -90,7 +76,7 @@ const DocumentComponent = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 setLoading(true)
-                const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/document/${id}`, request)
+                const res = await customAxios().delete(`/document/${id}`);
                 if (res.data.success) {
                     setToggle(!toggle)
                     toast.success(res.data.message)
