@@ -17,8 +17,8 @@ import { dateFormat } from '../../../../helper/dateFormat';
 import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 
 const EmployeeViewComponent = () => {
-    const [loader, setLoader] = React.useState(false);
-    const [data, setdata] = React.useState("");
+    const [isLoading, setisLoading] = useState(false);
+    const [data, setdata] = useState("");
     const [show, setShow] = useState(false);
     const [Value, setValue] = useState("");
     const [value, setvalue] = React.useState('Personal');
@@ -51,7 +51,7 @@ const EmployeeViewComponent = () => {
     }
 
     const getuser = async () => {
-        setLoader(true);
+        setisLoading(true);
         try {
             const response = await customAxios().get(`/user/${id}`)
             if (response.data.success) {
@@ -61,9 +61,9 @@ const EmployeeViewComponent = () => {
                 }
                 setdata(response.data.data)
             }
-            setLoader(false);
+            setisLoading(false);
         } catch (error) {
-            setLoader(false);
+            setisLoading(false);
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.status === 401) {
@@ -96,7 +96,7 @@ const EmployeeViewComponent = () => {
         if (e.target.files.length !== 0) {
             var formdata = new FormData();
             formdata.append('profile_image', e.target.files[0]);
-            setLoader(true);
+            setisLoading(true);
             try {
                 const response = await customAxios1().post('/user/image', formdata);
                 if (response.data.success) {
@@ -105,7 +105,7 @@ const EmployeeViewComponent = () => {
                     getUserData();
                 }
             } catch (error) {
-                setLoader(false)
+                setisLoading(false)
                 if (!error.response) {
                     toast.error(error.message)
                 } else if (error.response.status === 401) {
@@ -124,7 +124,7 @@ const EmployeeViewComponent = () => {
 
             {/* ................................................................... */}
             {/* <div className=" container-fluid pt-4"> */}
-            {!loader ? (match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
+            {!isLoading ? (match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
                 <div className="background-wrapper bg-white py-2">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>

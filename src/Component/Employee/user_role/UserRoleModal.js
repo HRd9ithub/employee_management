@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useLayoutEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-hot-toast";
@@ -6,17 +5,11 @@ import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
-import { GetLocalStorage } from "../../../service/StoreLocalStorage";
+import { customAxios } from "../../../service/CreateApi";
 
 function UserRoleModal({ data, getuserRole, permission }) {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     const [show, setShow] = useState(false);
-    const [loader, setloader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [name, setName] = useState("")
     const [error, seterror] = useState('');
     const [Error, setError] = useState([]);
@@ -72,14 +65,14 @@ function UserRoleModal({ data, getuserRole, permission }) {
     // get page name deatil
     const getPageData = async () => {
         try {
-            setloader(true)
+            setisLoading(true)
             let url = ""
             if (id) {
-                url = `${process.env.REACT_APP_API_KEY}/role/${id}`
+                url = `/role/${id}`
             } else {
-                url = `${process.env.REACT_APP_API_KEY}/role/static`
+                url = '/role/static'
             }
-            const res = await axios.get(url, config)
+            const res = await customAxios().get(url)
             if (res.data.success) {
                 if (id) {
                     let data = res.data.data.map((val) => {
@@ -105,7 +98,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                 }
             }
         } finally {
-            setloader(false)
+            setisLoading(false)
         }
     }
 
@@ -117,11 +110,11 @@ function UserRoleModal({ data, getuserRole, permission }) {
         if (name && !error) {
             let url = "";
             if (id) {
-                url = axios.put(`${process.env.REACT_APP_API_KEY}/role/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+                url = customAxios().put(`/role/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page })
             } else {
-                url = axios.post(`${process.env.REACT_APP_API_KEY}/role/`, { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page }, config)
+                url = customAxios().post('/role/', { name: name.charAt(0).toUpperCase() + name.slice(1), permissions: page })
             }
-            setloader(true)
+            setisLoading(true)
             url.then((response) => {
                 if (response.data.success) {
                     toast.success(response.data.message)
@@ -145,7 +138,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                         }
                     }
                 }
-            }).finally(() => setloader(false))
+            }).finally(() => setisLoading(false))
         } 
     };
 
@@ -222,7 +215,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                             </div>
                         </div>
                     </div>
-                    {loader && <Spinner />}
+                    {isLoading && <Spinner />}
                 </Modal.Body>
             </Modal>
         </>

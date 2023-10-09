@@ -1,12 +1,10 @@
 import React, { useEffect,useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
-import Spinners from "../common/Spinner";
+import Spinner from "../common/Spinner";
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
-import { GetLocalStorage } from "../../service/StoreLocalStorage";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
@@ -17,6 +15,7 @@ import Error500 from '../error_pages/Error500';
 import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
+import { customAxios } from "../../service/CreateApi";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
@@ -24,7 +23,7 @@ const WorkReportComponent = () => {
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
-    const [Loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
     const [endDate, setendtDate] = useState(new Date());
     const [userName, setUserName] = useState([]);
@@ -45,15 +44,10 @@ const WorkReportComponent = () => {
 
     // get report data
     const getReport = async (id, start, end) => {
-        setLoader(true)
         try {
-            const request = {
-                params: { startDate: start || startDate, endDate: end || endDate, id: id },
-                headers: {
-                    Authorization: `Bearer ${GetLocalStorage("token")}`,
-                },
-            };
-            const result = await axios.get(`${process.env.REACT_APP_API_KEY}/report`, request);
+            setisLoading(true);
+            setServerError(false);
+            const result = await customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `);
             if (result.data.success) {
                 setData(result.data.data);
                 setDataFilter(result.data.data);
@@ -75,21 +69,17 @@ const WorkReportComponent = () => {
             }
         } finally {
             setTimeout(() => {
-                setLoader(false)
+                setisLoading(false)
             }, 500)
         }
     };
 
     // get user name
     const get_username = async () => {
-        setLoader(true)
+        setisLoading(true)
         try {
-            const request = {
-                headers: {
-                    Authorization: `Bearer ${GetLocalStorage("token")}`,
-                },
-            };
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
+        
+            const res = await customAxios().post(`/user/username`);
 
             if (res.data.success) {
                 let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
@@ -110,7 +100,7 @@ const WorkReportComponent = () => {
             }
         } finally {
             setTimeout(() => {
-                setLoader(false)
+                setisLoading(false)
             }, 800)
         }
     };
@@ -192,7 +182,7 @@ const WorkReportComponent = () => {
 
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
-        setendtDate(end._d)
+        setendtDate(end._d);
         getReport(user_id, start._d, end._d)
     }
 
@@ -225,12 +215,20 @@ const WorkReportComponent = () => {
     const handleClose = () => {
         setShow(false)
     }
+    
+    if (isLoading) {
+        return <Spinner />;
+    }
 
-    if (Loader) {
-        return <Spinners />
-    } else if (permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1))) {
-        return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
+    if (serverError) {
+        return <Error500 />;
+    }
+
+    if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+        return <Error403 />;
+    }
+    
+    return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                 <div className=" container-fluid pt-4">
                     <div className="background-wrapper bg-white pt-2">
                         <div className=''>
@@ -363,7 +361,7 @@ const WorkReportComponent = () => {
                                 <h4 className="no-data my-2">Please select employee first</h4>}
                         </div>
                     </div>
-                </div>}
+                </div>
 
 
             <Modal
@@ -395,11 +393,6 @@ const WorkReportComponent = () => {
                 </Modal.Body>
             </Modal>
         </motion.div >)
-    }  else if(serverError) {
-        return <Error500 />
-    }else{
-        return <Error403 />
-    }
 };
 
 export default WorkReportComponent;

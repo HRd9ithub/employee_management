@@ -21,7 +21,7 @@ const AccountForm = (props) => {
     const [ifsc_code_error, setifsc_code_error] = useState('')
     const [branch_name_error, setbranch_name_error] = useState('');
     const [name_error, setname_error] = useState('')
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [error, setError] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
@@ -119,7 +119,7 @@ const AccountForm = (props) => {
         if (userDetail.account_detail) {
             // edit data in mysql
             try {
-                setLoader(true)
+                setisLoading(true)
                 const response = await customAxios().post('/account', { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name });
                 if (response.data.success) {
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
@@ -142,7 +142,7 @@ const AccountForm = (props) => {
                         setError(error.response.data.error);
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         }
     }
 
@@ -196,7 +196,7 @@ const AccountForm = (props) => {
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
                 </div>
             </form>
-            {loader && <Spinner />}
+            {isLoading && <Spinner />}
         </>
 
     )

@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";
 import LoginInfo from "../view/LoginInfo";
 import Error403 from "../../../error_pages/Error403";
+import Error500 from "../../../error_pages/Error500";
 import { customAxios } from "../../../../service/CreateApi";
 
 const EmployeeEditForm = () => {
@@ -22,7 +23,9 @@ const EmployeeEditForm = () => {
   const [userId, setUserId] = useState("");
   const [userDetail, setUserDetail] = useState("");
   const [permission, setpermission] = useState("");
-  const [loader, setLoader] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
+  const [serverError, setServerError] = useState(false);
+
 
   // drop down tab onchange function
   const handleChanges = (newValue) => {
@@ -42,6 +45,8 @@ const EmployeeEditForm = () => {
   // get employee data for single
   const getEmployeeDetail = async () => {
     try {
+      setServerError(false);
+      setisLoading(true);
       let res = await customAxios().get(`/user/${id}`)
 
       if (res.data.success) {
@@ -52,15 +57,19 @@ const EmployeeEditForm = () => {
       }
     } catch (error) {
       if (!error.response) {
+        setServerError(true);
         toast.error(error.message)
       } else if (error.response.status === 401) {
         getCommonApi();
       } else {
+        if (error.response.status === 500) {
+          setServerError(true)
+        }
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
       }
-    } finally { setLoader(false) }
+    } finally { setisLoading(false) }
   }
 
   useEffect(() => {
@@ -70,9 +79,18 @@ const EmployeeEditForm = () => {
     // eslint-disable-next-line
   }, [id])
 
-  if (loader) {
-    return <Spinner />
-  } else if (permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1))) {
+  if(isLoading){
+    return <Spinner />;
+  }
+
+  if(serverError){
+    return <Error500/>;
+  }
+
+  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
+    return <Error403/>;
+  }
+
     return (
       <>
         <div className="container-fluid px-4">
@@ -156,10 +174,7 @@ const EmployeeEditForm = () => {
           </div>
         </div>
       </>
-    );
-  } else {
-   return <Error403/>
-  }
+    )
 }
 
 export default EmployeeEditForm;

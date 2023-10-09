@@ -1,16 +1,16 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { NavLink, useNavigate } from "react-router-dom";
 import Spinner from '../common/Spinner';
+import { customAxios } from '../../service/CreateApi';
 
 const ForgotPassword = () => {
   // eslint-disable-next-line
   // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  var mailformat =/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   //initialistate state
-  const [loader, setLoader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [email, setEmail] = useState("");
   // error state
   const [error, setError] = useState("");
@@ -35,31 +35,32 @@ const ForgotPassword = () => {
   }
 
   // submit function 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     emailValidation();
 
     if (!email || error) {
       return false;
     } else {
-      setLoader(true)
-      axios.post(`${process.env.REACT_APP_API_KEY}/auth/forgotpassword`, { email }).then((response) => {
+      try {
+        setisLoading(true);
+        const response = await customAxios().post("/auth/forgotpassword", { email });
         if (response.data.success) {
           let { message } = response.data
           history('/login');
-          setLoader(false);
+          setisLoading(false);
           toast.success(message);
           setEmail("");
         }
-      }).catch((error) => {
+      } catch (error) {
         setEmail("");
-        setLoader(false)
+        setisLoading(false)
         if (!error.response) {
           toast.error(error.message);
         } else {
           toast.error(error.response.data.message);
         }
-      });
+      }
     }
   }
 
@@ -109,7 +110,7 @@ const ForgotPassword = () => {
           </div>
         </div>
       </div>
-      {loader && <Spinner />}
+      {isLoading && <Spinner />}
     </div>
   )
 }

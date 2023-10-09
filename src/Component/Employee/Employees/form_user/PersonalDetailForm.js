@@ -7,14 +7,14 @@ import { useContext } from "react";
 import { AppProvider } from "../../../context/RouteContext.js";
 import { useRef } from 'react';
 import Spinner from "../../../common/Spinner.js";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useMatch, useNavigate } from "react-router-dom";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
 
 function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuser, value }) {
-    
+
     const [employee, setEmployee] = useState({
         first_name: "",
         last_name: "",
@@ -40,7 +40,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     const [userRole, setUserRole] = useState([]);
     const [Designations, setDesignations] = useState([]);
 
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [allRecords, setallRecords] = useState([]);
     const [reportToerror, setreporttoError] = useState('');
 
@@ -66,11 +66,11 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
 
     let { getUserData } = useContext(AppProvider);
 
-    let { pathname } = useLocation();
-
     let { getCommonApi } = GlobalPageRedirect();
 
     let history = useNavigate();
+    // get path name
+    const match = useMatch("/employees/edit/" + userDetail._id)
 
     const birthDateRef = useRef(null);
     const joinDateRef = useRef(null);
@@ -79,7 +79,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // get department,designation,user role
     useLayoutEffect(() => {
         const get_role = async () => {
-            setLoader(true)
+            setisLoading(true)
             try {
                 const res = await customAxios().get('/role');
                 if (res.data.success) {
@@ -95,10 +95,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         toast.error(error.response.data.message)
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         };
         const get_Designations = async () => {
-            setLoader(true)
+            setisLoading(true)
             try {
                 const res = await customAxios().get('/designation');
 
@@ -115,11 +115,11 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         toast.error(error.response.data.message)
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         };
         // get employee data in backend
         const getAlluser = async () => {
-            setLoader(true);
+            setisLoading(true);
             try {
                 const res = await customAxios().post('/user/username');
                 if (res.data.success) {
@@ -135,7 +135,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         toast.error(error.response.data.message)
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         };
         if (!value) {
             getAlluser();
@@ -216,7 +216,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             if (!address || !city || !postcode || !gender || !first_name || !last_name || !email || !phone) {
                 return false
             }
-            if (addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError ) {
+            if (addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError) {
                 return false
             }
         }
@@ -230,7 +230,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             }
         }
 
-        setLoader(true)
+        setisLoading(true)
         try {
             const response = await customAxios().put(`/user/${_id}`, {
                 first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
@@ -256,10 +256,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 report_by
             });
             if (response.data.success) {
-                if (userDetail._id === GetLocalStorage('user_id') && (pathname.toLocaleLowerCase().includes('/employees') || value === "Profile")) {
+                if (userDetail._id === GetLocalStorage('user_id') && (match || value === "Profile")) {
                     getUserData()
                 }
-                if (pathname.toLocaleLowerCase().includes('/employees')) {
+                if (match) {
                     getEmployeeDetail()
                     toast.success("Data updated Successfully");
                 } else {
@@ -267,10 +267,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     handleClose()
                     getuser()
                 }
-                setLoader(false)
+                setisLoading(false)
             }
         } catch (error) {
-            setLoader(false)
+            setisLoading(false)
             if (!error.response) {
                 toast.error(error.message);
             } else if (error.response.status === 401) {
@@ -329,7 +329,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             if (userDetail.email === employee.email) {
                 setemailError("")
             } else {
-                setLoader(true)
+                setisLoading(true)
                 customAxios().post('/user/email', { email: employee.email }).then((response) => {
                     if (response.data.success) {
                         setemailError("")
@@ -347,7 +347,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                         }
                     }
                 }).finally(() => {
-                    setLoader(false)
+                    setisLoading(false)
                 })
             }
         }
@@ -365,7 +365,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
             setphoneError("");
         }
     }
-    
+
     // DESIGNATION validation
     const designationValidation = () => {
         if (Designations.length !== 0) {
@@ -500,7 +500,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     // back btn
     const BackBtn = (e) => {
         e.preventDefault();
-        if (pathname.toLocaleLowerCase().includes('/employees')) {
+        if (match) {
             history("/employees")
         } else {
             handleClose();
@@ -510,14 +510,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     return (
         <>
             <form className="forms-sample">
-                {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") &&
+                {(match || value === "Profile") &&
                     <div className="employee-id shadow rounded mb-4">
                         <h5 >Employee Id : -  {employee.employee_id}</h5>
                     </div>}
 
 
                 <div className="row">
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") && <>
+                    {(match || value === "Profile") && <>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputfname">First Name</label>
@@ -554,7 +554,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>
                     </>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Personal") && <>
+                    {(match || value === "Personal") && <>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">Country</label>
@@ -579,7 +579,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>
                     </>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") && <>
+                    {(match || value === "Profile") && <>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">City</label>
@@ -604,7 +604,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>
                     </>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Personal") &&
+                    {(match || value === "Personal") &&
                         <div className="col-md-6">
                             <div className="form-group position-relative">
                                 <label htmlFor="exampleInputDate">Date Of Birth</label>
@@ -623,7 +623,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 {dateofbirthError && <small id="emailHelp" className="form-text error">{dateofbirthError}</small>}
                             </div>
                         </div>}
-                    {pathname.toLocaleLowerCase().includes('/employees') &&
+                    {match &&
                         <div className="col-md-6">
                             <div className="form-group position-relative">
                                 <label htmlFor="exampleInputJoining">Joining Date</label>
@@ -641,7 +641,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                             </div>
                         </div>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Profile") && <>
+                    {(match || value === "Profile") && <>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputgender">Gender</label>
@@ -654,7 +654,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>
                     </>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Personal") && <>
+                    {(match || value === "Personal") && <>
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputAge">Age</label>
@@ -669,7 +669,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                             </div>
                         </div>
                     </>}
-                    {(pathname.toLocaleLowerCase().includes('/employees') || value === "Personal") &&
+                    {(match || value === "Personal") &&
                         <div className="col-md-6">
                             <div className="form-group">
                                 <label htmlFor="exampleInputMARIIT">Marital Status</label>
@@ -681,7 +681,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 {marritialError && <small id="emailHelp" className="form-text error">{marritialError}</small>}
                             </div>
                         </div>}
-                    {pathname.toLocaleLowerCase().includes('/employees') && <>
+                    {match && <>
                         <div className="col-md-6">
                             <Form.Group>
                                 <label htmlFor="exampleFormControldesignation">Designation</label>
@@ -770,8 +770,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     <button className="btn btn-light" onClick={BackBtn}>Back</button>
                 </div>
             </form >
-            {loader && <Spinner />}
-
+            {isLoading && <Spinner />}
         </>
     );
 }

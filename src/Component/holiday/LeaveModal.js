@@ -3,17 +3,16 @@ import React, { useEffect, useRef } from 'react'
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { customAxios } from '../../service/CreateApi';
 
 const LeaveModal = (props) => {
     let { data, getLeave, permission } = props;
     const [show, setShow] = useState(false);
-    const [loader, setloader] = useState(false)
+    const [isLoading, setisLoading] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
     const [user, setUser] = useState([])
     let [page, setPage] = useState(false)
@@ -121,7 +120,7 @@ const LeaveModal = (props) => {
         if (leave.leave_type_id_error || from.from_date_error || to.to_date_error || status_info.leave_status_error || reason.description_error || (permission && permission.name?.toLowerCase() === 'admin' && info.user_id_error)) {
             return false
         }
-        setloader(true);
+        setisLoading(true);
         // object destructuring
         let { leave_type_id } = leave
         let { from_date } = from
@@ -131,13 +130,6 @@ const LeaveModal = (props) => {
         let { user_id } = info
 
         // edit api call
-        let token = GetLocalStorage('token');
-        const request = {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            }
-        }
         let common = {
             leave_type_id,
             user_id,
@@ -150,9 +142,9 @@ const LeaveModal = (props) => {
         }
         let url = ""
         if (id) {
-            url = axios.put(`${process.env.REACT_APP_API_KEY}/leave/${id}`, common, request)
+            url = customAxios().put(`${process.env.REACT_APP_API_KEY}/leave/${id}`, common)
         } else {
-            url = axios.post(`${process.env.REACT_APP_API_KEY}/leave/`, common, request)
+            url = customAxios().post(`${process.env.REACT_APP_API_KEY}/leave/`, common)
         }
         url.then(data => {
             if (data.data.success) {
@@ -180,7 +172,7 @@ const LeaveModal = (props) => {
             }
         }).finally(() => {
             setPage(false);
-            setloader(false)
+            setisLoading(false)
         })
 
     }
@@ -188,16 +180,9 @@ const LeaveModal = (props) => {
     useEffect(() => {
         // leave type get data in api
         const getLeaveType = async () => {
-            setloader(true)
+            setisLoading(true)
             try {
-                let token = GetLocalStorage('token');
-                const request = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                }
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/leavetype?key="leave"`, request)
+                const res = await customAxios().get('/leavetype?key="leave"');
                 if (res.data.success) {
                     setleaveTypeDetail(res.data.data)
                 }
@@ -214,19 +199,14 @@ const LeaveModal = (props) => {
                     }
                 }
             } finally {
-                setloader(false)
+                setisLoading(false)
             }
         }
         // get user name
         const get_username = async () => {
-            setloader(true)
+            setisLoading(true)
             try {
-                const request = {
-                    headers: {
-                        Authorization: `Bearer ${GetLocalStorage("token")}`,
-                    },
-                };
-                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
+                const res = await customAxios().post('/user/username');
 
                 if (res.data.success) {
                     let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
@@ -245,7 +225,7 @@ const LeaveModal = (props) => {
                     }
                 }
             } finally {
-                setloader(false)
+                setisLoading(false)
             }
         };
         if (page) {
@@ -482,7 +462,7 @@ const LeaveModal = (props) => {
                         </div>
                     </div>
                 </Modal.Body>
-                {loader && <Spinner />}
+                {isLoading && <Spinner />}
             </Modal>
         </>
     )

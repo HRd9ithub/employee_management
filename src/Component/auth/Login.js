@@ -20,7 +20,7 @@ const Login = () => {
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
 
-  let { onSubmit, loader, Error } = Globalcomponent();
+  let { onSubmit, loading, Error } = Globalcomponent();
 
 
   //onchange function
@@ -139,7 +139,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {loader && <Spinner />}
+      {loading && <Spinner />}
     </div>
   )
 }

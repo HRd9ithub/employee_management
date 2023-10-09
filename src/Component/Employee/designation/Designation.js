@@ -11,7 +11,7 @@ import Error500 from '../../error_pages/Error500';
 import { customAxios } from "../../../service/CreateApi";
 
 const Designation = () => {
-  const [loader, setloader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [records, setRecords] = useState([]);
   const [searchItem, setsearchItem] = useState("");
   const [permission, setPermission] = useState("");
@@ -31,7 +31,8 @@ const Designation = () => {
   // get data in mysql
   const getdesignation = async () => {
     try {
-      setloader(true);
+      setServerError(false);
+      setisLoading(true);
       const res = await customAxios().get('/designation/');
       if (res.data.success) {
         setPermission(res.data.permissions)
@@ -54,7 +55,7 @@ const Designation = () => {
         }
       }
     } finally {
-      setloader(false);
+      setisLoading(false);
     }
   };
 
@@ -111,11 +112,22 @@ const Designation = () => {
     return rowArray.map((el) => el[0])
   }
 
+  
+  if(isLoading){
+    return <Spinner />;
+  }
+
+  if(serverError){
+    return <Error500/>;
+  }
+
+  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
+    return <Error403/>;
+  }
+
   return (
     <>
-      {!loader ?
         <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
             <div className=" container-fluid pt-4">
               <div className="background-wrapper bg-white pt-2">
                 <div className=''>
@@ -200,10 +212,8 @@ const Designation = () => {
                   </TablePagination>
                 </div>
               </div>
-            </div>}
-        </motion.div> : <Spinner />}
-      {!loader && !serverError && !permission && <Error403 />}
-      {!loader && serverError && <Error500 />}
+            </div>
+        </motion.div> 
     </>
   );
 };

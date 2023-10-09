@@ -26,7 +26,7 @@ import {customAxios} from '../service/CreateApi';
 
 const Dashboard = () => {
      let userId = GetLocalStorage("user_id");
-     const [loader, setLoader] = useState(false)
+     const [isLoading, setisLoading] = useState(false)
      const [animateLoader, setanimateLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState("");
@@ -54,7 +54,7 @@ const Dashboard = () => {
      useEffect(() => {
           const getData = async () => {
                try {
-                    setLoader(true);
+                    setisLoading(true);
                     const res = await customAxios().get('/dashboard');
 
                     if (res.data.success) {
@@ -69,7 +69,7 @@ const Dashboard = () => {
                               return item._id === userId && moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
                          });
                          if(birthDayFilter){
-                           let data = localStorage.getItem("employeeBirthday");
+                           let data = JSON.parse(localStorage.getItem("employeeBirthday"));
                            if(!data){
                                 setanimateLoader(true);
                                 localStorage.setItem("employeeBirthday",true);
@@ -88,7 +88,7 @@ const Dashboard = () => {
                          toast.error(error.response.data.message)
                     }
                } finally {
-                    setLoader(false);
+                    setisLoading(false);
                     setTimeout(() => {
                          setanimateLoader(false)
                     }, [15000])
@@ -140,14 +140,14 @@ const Dashboard = () => {
      // view all click
      const allStatusChange = async () => {
           try {
-               setLoader(true);
+               setisLoading(true);
                const res = await customAxios().post('/leave/status')
                if (res.data.success) {
                     navigate('/leave')
-                    setLoader(false)
+                    setisLoading(false)
                }
           } catch (error) {
-               setLoader(false)
+               setisLoading(false)
                if (!error.response) {
                     toast.error(error.message)
                } else if (error.response.status === 401) {
@@ -193,7 +193,7 @@ const Dashboard = () => {
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    {!loader && <div className=''>
+                    {!isLoading && <div className=''>
                          <div className='container-fluid inner-pages py-3'>
                               <div className='row p-3 align-items-center row-std'>
                                    <div className='col-12 employee-path px-2' id="one">
@@ -299,8 +299,8 @@ const Dashboard = () => {
                          </div>
                     </div>}
                </motion.div>
-               {loader && <Spinner />}
-               {!loader && animateLoader &&
+               {isLoading && <Spinner />}
+               {!isLoading && animateLoader &&
                     <div className="animate-celebration">
                          <div className="animate-celebration-content">
                               <img src="./Images/birthday-emoji.png" alt="img"/>

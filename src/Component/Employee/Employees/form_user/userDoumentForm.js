@@ -9,7 +9,7 @@ import { customAxios1 } from '../../../../service/CreateApi';
 const UserDoumentForm = (props) => {
     let { userDetail, getEmployeeDetail, getuser, handleClose } = props;
 
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [error, setError] = useState([])
 
     const [file, setFile] = useState({
@@ -87,7 +87,7 @@ const UserDoumentForm = (props) => {
             formdata.append('user_id', userDetail._id);
 
             try {
-                setLoader(true)
+                setisLoading(true)
                 const response = await customAxios1().post('/user_document/',formdata);
                 if (response.data.success) {
                     toast.success(response.data.message)
@@ -110,7 +110,7 @@ const UserDoumentForm = (props) => {
                         setError(error.response.data.error);
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         }
     }
 
@@ -186,7 +186,7 @@ const UserDoumentForm = (props) => {
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
                 </div>
             </form>
-            {loader && <Spinner />}
+            {isLoading && <Spinner />}
         </>
     )
 }
