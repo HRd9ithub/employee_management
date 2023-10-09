@@ -6,13 +6,12 @@ import { toast } from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import { GetLocalStorage } from '../../../service/StoreLocalStorage';
-import axios from 'axios';
 import Error403 from "../../error_pages/Error403"
 import Error500 from '../../error_pages/Error500';
+import { customAxios } from '../../../service/CreateApi';
 
 const Project = () => {
-  const [loader, setloader] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [records, setRecords] = useState([]);
   const [searchItem, setsearchItem] = useState("");
   const [serverError, setServerError] = useState(false);
@@ -31,15 +30,9 @@ const Project = () => {
   // get data in project
   const getProject = async () => {
     try {
-      setloader(true)
-      let token = GetLocalStorage('token');
-      const request = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-      }
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/project`, request)
+      setServerError(false);
+      setIsLoading(true);
+      const res = await customAxios().get('/project');
       if (res.data.success) {
         setPermission(res.data.permissions)
         setRecords(res.data.data)
@@ -61,7 +54,7 @@ const Project = () => {
         }
       }
     } finally {
-      setloader(false)
+      setIsLoading(false)
     }
   }
 
@@ -120,11 +113,22 @@ const Project = () => {
     return rowArray.map((el) => el[0])
   }
 
+
+  if(isLoading){
+    return <Spinner />;
+  }
+
+  if(serverError){
+    return <Error500/>;
+  }
+
+  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
+    return <Error403/>;
+  }
+
   return (
     <>
-      {!loader ?
         <motion.div className="box" initial={{ opacity: 0, transform: 'translateY(-20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: 0.5, ease: 'linear' }}>
-          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) &&
             <div className=" container-fluid pt-4">
               <div className="background-wrapper bg-white pt-2">
                 <div className=''>
@@ -207,11 +211,8 @@ const Project = () => {
                   </TablePagination>
                 </div>
               </div>
-            </div>}
+            </div>
         </motion.div>
-        : <Spinner />}
-      {!loader && !permission && !serverError && <Error403 />}
-      {!loader && serverError && <Error500 />}
     </>
   )
 }

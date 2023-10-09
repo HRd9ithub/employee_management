@@ -11,7 +11,7 @@ const OtpVerification = () => {
 
   let email = GetLocalStorage("email");
 
-  let { onSubmitOtp, Error, HandleResend, loader } = Globalcomponent();
+  let { onSubmitOtp, Error, HandleResend, loading } = Globalcomponent();
 
   // let history = useNavigate();
   // onchange function
@@ -116,7 +116,7 @@ const OtpVerification = () => {
           </div>
         </div>
       </div>
-      {loader && <Spinner />}
+      {loading && <Spinner />}
     </div>
   )
 }

@@ -17,11 +17,11 @@ import { customAxios } from '../../service/CreateApi';
 // import { Trans } from 'react-i18next';
 
 const Navbar = () => {
-  let { handleLogout, loader } = Globalcomponent()
+  let { handleLogout ,loading} = Globalcomponent()
   let { UserData, leaveNotification, getLeaveNotification, getUserData,getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
   const [sidebar, setsidebar] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   let {pathname} = useLocation();
 
@@ -64,10 +64,10 @@ const Navbar = () => {
   // leave status change
   const changeStatus = async (id) => {
     try {
-      setLoading(true);
+      setisLoading(true);
       const res = await customAxios().patch(`/leave/${id}`, { status: "Read" })
       if (res.data.success) {
-        setLoading(false);
+        setisLoading(false);
         if(pathname === "/leave"){
           getLeave();
         }else{
@@ -75,7 +75,7 @@ const Navbar = () => {
         }
       }
     } catch (error) {
-      setLoading(false)
+      setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
       } else if (error.response.status === 401) {
@@ -91,7 +91,7 @@ const Navbar = () => {
   // view all click
   const allStatusChange = async () => {
     try {
-      setLoading(true);
+      setisLoading(true);
       const res = await customAxios().post('/leave/status');
       if (res.data.success) {
         if(pathname === "/leave"){
@@ -99,10 +99,10 @@ const Navbar = () => {
         }else{
           history('/leave')
         }
-        setLoading(false)
+        setisLoading(false)
       }
     } catch (error) {
-      setLoading(false)
+      setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
       } else if (error.response.status === 401) {
@@ -248,7 +248,7 @@ const Navbar = () => {
       </div>
       <div className="nav-standard">
       </div>
-      {(loader || loading) && <Spinner />}
+      {(isLoading || loading) && <Spinner />}
     </nav>
   );
 }

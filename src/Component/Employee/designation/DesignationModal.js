@@ -7,7 +7,7 @@ import { customAxios } from "../../../service/CreateApi";
 
 function DesignationModal({ data, getdesignation, permission }) {
   const [show, setShow] = useState(false);
-  const [loader, setloader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [id, setId] = useState("");
@@ -31,6 +31,7 @@ function DesignationModal({ data, getdesignation, permission }) {
     setName("");
     setNameError("");
     setId("");
+    setError("");
   };
 
   // onchange function
@@ -69,7 +70,7 @@ function DesignationModal({ data, getdesignation, permission }) {
     } else {
       url = customAxios().post('/designation/', { name: name.charAt(0).toUpperCase() + name.slice(1) })
     }
-    setloader(true);
+    setisLoading(true);
 
     url.then((data) => {
       if (data.data.success) {
@@ -93,7 +94,7 @@ function DesignationModal({ data, getdesignation, permission }) {
           }
         }
       }
-    }).finally(() => setloader(false));
+    }).finally(() => setisLoading(false));
   };
 
 
@@ -157,7 +158,7 @@ function DesignationModal({ data, getdesignation, permission }) {
               </div>
             </div>
           </div>
-          {loader && <Spinner />}
+          {isLoading && <Spinner />}
         </Modal.Body>
       </Modal>
     </>

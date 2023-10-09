@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import {isDesktop} from "react-device-detect";
+import { isDesktop } from "react-device-detect";
 import DeviceDetector from "device-detector-js";
 import GlobalPageRedirect from './GlobalPageRedirect';
 import { RemoveLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 
 export const Globalcomponent = () => {
-    const [loader, setLoader] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [Error, setError] = useState([]);
 
     const navigate = useNavigate();
@@ -20,11 +20,11 @@ export const Globalcomponent = () => {
     const onSubmit = async (data) => {
         setError([]);
         try {
-            setLoader(true)
+            setLoading(true)
             const res = await customAxios().post('/auth/login', data)
             if (res.data.success) {
                 toast.success(res.data.message);
-                SetLocalStorage("email" ,res.data.data);
+                SetLocalStorage("email", res.data.data);
                 navigate("/otp");
             }
         } catch (error) {
@@ -38,19 +38,19 @@ export const Globalcomponent = () => {
                 }
             }
         } finally {
-            setLoader(false)
+            setLoading(false)
         }
     }
-    
+
     // otp verify function
     const onSubmitOtp = async (email, otp) => {
         const deviceDetector = new DeviceDetector();
         const userAgent = navigator.userAgent;
         const device = deviceDetector.parse(userAgent);
         setError([]);
-        
+
         try {
-            setLoader(true)
+            setLoading(true)
             // const location = await axios.get('https://ipgeolocation.abstractapi.com/v1/?api_key=539daa0d70404b92ac257dcb18fcfd2d')
             const location = await axios.get('http://ip-api.com/json')
 
@@ -63,7 +63,7 @@ export const Globalcomponent = () => {
                 device: device.device.type,
                 device_name: device.device.model,
                 browser_name: device.client.name,
-                isDesktop : isDesktop
+                isDesktop: isDesktop
             })
 
             if (res.data.success) {
@@ -85,23 +85,23 @@ export const Globalcomponent = () => {
                 }
             }
         } finally {
-            setLoader(false)
+            setLoading(false)
         }
     }
 
     // sign out function
     const handleLogout = async () => {
-        setLoader(true);
+        setLoading(true);
         customAxios().post('/auth/logout').then((res) => {
             if (res.data.success) {
                 RemoveLocalStorage('token')
                 RemoveLocalStorage('user_id')
                 navigate('/login');
-                setLoader(false)
+                setLoading(false)
                 toast.success('Logged out successfully.')
             }
         }).catch((error) => {
-            setLoader(false)
+            setLoading(false)
             if (!error.response) {
                 toast.error(error.message)
             } else if (error.response.status === 401) {
@@ -116,8 +116,8 @@ export const Globalcomponent = () => {
     const HandleResend = async (email) => {
         setError([]);
         try {
-            setLoader(true)
-            const res = await customAxios().patch('/auth/resendOtp', {email})
+            setLoading(true)
+            const res = await customAxios().patch('/auth/resendOtp', { email })
             if (res.data.success) {
                 toast.success(res.data.message)
             }
@@ -132,13 +132,13 @@ export const Globalcomponent = () => {
                 }
             }
         } finally {
-            setLoader(false)
+            setLoading(false)
         }
     }
 
     return {
         onSubmit,
-        loader,
+        loading,
         onSubmitOtp,
         handleLogout,
         Error,

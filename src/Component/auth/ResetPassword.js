@@ -12,7 +12,7 @@ const ResetPassword = () => {
   const query = new URLSearchParams(useLocation().search);
   let email = query.get("email");
   let token = query.get("token");
-
+  email = email.replace(" ", "+")
   // common header for api
   const request = {
     headers: {
@@ -22,7 +22,7 @@ const ResetPassword = () => {
   }
 
   //initialistate state
-  const [loader, setLoader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState({
     new_password: '',
     confirm_password: ""
@@ -45,16 +45,16 @@ const ResetPassword = () => {
   // check link for expire or not
   useEffect(() => {
     const checkLink = async () => {
-      setLoader(true)
+      setisLoading(true)
       axios.get(`${process.env.REACT_APP_API_KEY}/auth/checklink`, request).then((response) => {
 
         if (response.data.success) {
           setExpire(false)
           setExpireError("")
-          setLoader(false)
+          setisLoading(false)
         }
       }).catch((error) => {
-        setLoader(false)
+        setisLoading(false)
         if (!error.response) {
           toast.error(error.msessage);
         } else if (error.response.data.error) {
@@ -97,7 +97,7 @@ const ResetPassword = () => {
       setconfirm_password_error('');
     }
   }
-  
+
   // submit function 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -111,7 +111,7 @@ const ResetPassword = () => {
     if (!new_password || !confirm_password || new_password_error || confirm_password_error) {
       return false;
     } else {
-      setLoader(true);
+      setisLoading(true);
       // reset password api call
       axios.post(`${process.env.REACT_APP_API_KEY}/auth/resetpassword`, { password: new_password, password_confirmation: confirm_password, email }, request).then((response) => {
 
@@ -122,10 +122,10 @@ const ResetPassword = () => {
             new_password: '',
             confirm_password: ""
           })
-          setLoader(false);
+          setisLoading(false);
         }
       }).catch((error) => {
-        setLoader(false);
+        setisLoading(false);
         setData({
           new_password: '',
           confirm_password: ""
@@ -141,19 +141,19 @@ const ResetPassword = () => {
     }
   }
 
-   // password show and hide 
-   const newPassswordToggle = () => {
+  // password show and hide 
+  const newPassswordToggle = () => {
     setnewPasswordIconToggle(!newPasswordIconToggle)
   }
 
-   // password show and hide 
-   const confirmPassswordToggle = () => {
+  // password show and hide 
+  const confirmPassswordToggle = () => {
     setconfirmPasswordIconToggle(!confirmPasswordIconToggle)
   }
 
   return (
     <div className='login-page'>
-      {!expire && !loader ?
+      {!expire && !isLoading ?
         <div className="login-wrap container">
           <div className="login-inner-text row h-100 p-3 align-items-center">
             <div className="login-left col-lg-6 col-12 pr-0">
@@ -185,7 +185,7 @@ const ResetPassword = () => {
                       </div>
                       <input type={newPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='New Password' name="new_password" value={data.new_password} onChange={HandleChange} onBlur={newPassswordValidation} autoComplete="off" />
                       {newPasswordIconToggle ? <span className='eye-icon' onClick={newPassswordToggle}><VisibilityIcon /></span> :
-                            <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
+                        <span className='eye-icon' onClick={newPassswordToggle}><VisibilityOffIcon /></span>}
                     </div>
                     {new_password_error && <small className="form-text error text-left mb-2">{new_password_error}</small>}
                   </div>
@@ -198,7 +198,7 @@ const ResetPassword = () => {
                       </div>
                       <input type={confirmPasswordIconToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Confirm Password' name="confirm_password" value={data.confirm_password} onChange={HandleChange} onBlur={confirmPasswordValidation} autoComplete="off" />
                       {confirmPasswordIconToggle ? <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityIcon /></span> :
-                            <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
+                        <span className='eye-icon' onClick={confirmPassswordToggle}><VisibilityOffIcon /></span>}
                     </div>
                     {confirm_password_error && <small className="form-text error text-left mt-2">{confirm_password_error}</small>}
                   </div>
@@ -222,7 +222,7 @@ const ResetPassword = () => {
             </div>
           </div>
         </div>
-        : !loader &&
+        : !isLoading &&
         <div className="row align-items-center px-0 py-4 link_expire">
           <div className="col-12 col-md-4 col-lg-4 col-lg-4 col-xxl-4 text-center">
             <img src="./Images/warning-orange.png" alt="img" />
@@ -242,7 +242,7 @@ const ResetPassword = () => {
           </div>
         </div>
       }
-       {loader && <Spinner />}
+      {isLoading && <Spinner />}
     </div>
   )
 }

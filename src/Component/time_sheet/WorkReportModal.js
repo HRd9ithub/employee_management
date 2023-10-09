@@ -3,17 +3,15 @@ import Modal from 'react-bootstrap/Modal';
 import Spinner from '.././common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
 import JoditEditor from 'jodit-react';
 import { useEffect } from 'react';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
-
+import { customAxios } from '../../service/CreateApi';
 
 function WorkReportModal({ data, permission, getReport }) {
     // common state
     const [show, setShow] = useState(false);
     const [id, setId] = useState('')
-    const [loader, setloader] = useState(false)
+    const [isLoading, setisLoading] = useState(false)
 
     // store database value
     const [project, setProject] = useState([])
@@ -35,14 +33,6 @@ function WorkReportModal({ data, permission, getReport }) {
     const [error, setError] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
-
-    // api headers
-    const request = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
 
     // modal show function
     const handleShow = () => {
@@ -91,8 +81,8 @@ function WorkReportModal({ data, permission, getReport }) {
     // get data in project
     const getProject = async () => {
         try {
-            setloader(true)
-            const res = await axios.get(`${process.env.REACT_APP_API_KEY}/project?key="project`, request)
+            setisLoading(true)
+            const res = await customAxios().get('/project?key="project');
             if (res.data.success) {
                 setProject(res.data.data)
             }
@@ -109,20 +99,15 @@ function WorkReportModal({ data, permission, getReport }) {
                 }
             }
         } finally {
-            setloader(false)
+            setisLoading(false)
         }
     }
 
     // get user name
     const get_username = async () => {
-        setloader(true)
+        setisLoading(true)
         try {
-            const request = {
-                headers: {
-                    Authorization: `Bearer ${GetLocalStorage("token")}`,
-                },
-            };
-            const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, request);
+            const res = await customAxios().post('/user/username');
 
             if (res.data.success) {
                 let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
@@ -141,7 +126,7 @@ function WorkReportModal({ data, permission, getReport }) {
                 }
             }
         } finally {
-            setloader(false)
+            setisLoading(false)
         }
     };
 
@@ -205,25 +190,19 @@ function WorkReportModal({ data, permission, getReport }) {
         if (userError || projectError || descriptionError || hoursError || (permission && permission.name?.toLowerCase() === 'admin' && !userId) || !projectId || !description || !hours) {
             return false;
         } else {
-            let config = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${GetLocalStorage('token')}`
-                },
-            }
             let url = "";
             if (id) {
-                url = axios.patch(`${process.env.REACT_APP_API_KEY}/report/${id}`, { userId, projectId, description, hours }, config)
+                url = customAxios().patch(`/report/${id}`, { userId, projectId, description, hours })
             } else {
-                url = axios.post(`${process.env.REACT_APP_API_KEY}/report/`, { userId, projectId, description, hours }, config)
+                url = customAxios().post('/report/', { userId, projectId, description, hours })
             }
-            setloader(true);
+            setisLoading(true);
             url.then(data => {
                 if (data.data.success) {
                     toast.success(data.data.message)
                     getReport(userId);
                     setShow(false)
-                    setloader(false);
+                    setisLoading(false);
                     setId('');
                     setWork({
                         userId: "",
@@ -233,7 +212,7 @@ function WorkReportModal({ data, permission, getReport }) {
                     })
                 }
             }).catch((error) => {
-                setloader(false);
+                setisLoading(false);
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
@@ -353,7 +332,7 @@ function WorkReportModal({ data, permission, getReport }) {
                             </div>
                         </div>
                     </div>
-                    {loader && <Spinner />}
+                    {isLoading && <Spinner />}
                 </Modal.Body>
             </Modal>
         </>

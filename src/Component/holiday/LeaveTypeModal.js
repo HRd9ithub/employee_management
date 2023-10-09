@@ -2,15 +2,14 @@ import Modal from 'react-bootstrap/Modal';
 import React from 'react'
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { customAxios } from '../../service/CreateApi';
 
 const LeaveTypeModal = (props) => {
     let { data, getLeaveType, permission } = props;
     const [show, setShow] = useState(false);
-    const [loader, setloader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [name, setName] = useState("")
     const [id, setId] = useState("")
     const [error, setError] = useState("")
@@ -32,7 +31,8 @@ const LeaveTypeModal = (props) => {
         setShow(false)
         setName("");
         setError("")
-        setId("")
+        setId("");
+        setBackerror("");
     }
 
     // onchange function
@@ -62,19 +62,12 @@ const LeaveTypeModal = (props) => {
         if (!name || error) {
             return false;
         } else {
-            setloader(true);
-            let token = GetLocalStorage('token');
-            const request = {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-            }
+            setisLoading(true);
             let url = ""
             if (id) {
-                url = axios.patch(`${process.env.REACT_APP_API_KEY}/leavetype/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, request)
+                url = customAxios().patch(`/leavetype/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) })
             } else {
-                url = axios.post(`${process.env.REACT_APP_API_KEY}/leavetype/`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, request)
+                url = customAxios().post('/leavetype/', { name: name.charAt(0).toUpperCase() + name.slice(1) })
             }
 
             url.then(data => {
@@ -97,9 +90,8 @@ const LeaveTypeModal = (props) => {
                         setBackerror(error.response.data.error);
                     }
                 }
-            }).finally(() => setloader(false))
+            }).finally(() => setisLoading(false))
         }
-
     }
 
 
@@ -113,6 +105,7 @@ const LeaveTypeModal = (props) => {
                     className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow}>
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button>}
+
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Leave Type' : 'Add Leave Type'}
@@ -139,7 +132,7 @@ const LeaveTypeModal = (props) => {
                         </div>
                     </div>
                 </Modal.Body>
-                {loader && <Spinner />}
+                {isLoading && <Spinner />}
             </Modal>
         </>
     )

@@ -15,7 +15,7 @@ import { customAxios } from '../../service/CreateApi';
 const Sidebar = () => {
   const [data, setData] = useState({});
   const [menu, setMenu] = useState([]);
-  const [loader, setLoader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [widthTogle, setWidthToggle] = useState("")
   let { UserData, setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
 
@@ -46,7 +46,7 @@ const Sidebar = () => {
 
   const getMenu = async () => {
     try {
-      setLoader(true);
+      setisLoading(true);
       const res = await customAxios().get('/menu');
 
       if (res.data.success) {
@@ -62,7 +62,7 @@ const Sidebar = () => {
         toast.error(error.response.data.message)
       }
     } finally {
-      setLoader(false);
+      setisLoading(false);
     }
   }
 
@@ -113,9 +113,9 @@ const Sidebar = () => {
     if (name === 'employee') {
       submenu = ['employees', 'project', 'designation', 'premission']
     } else if (name === 'leave') {
-      submenu = ['holiday', 'leavetype', 'leave']
+      submenu = ['holiday', 'leave-type', 'leave']
     } else if (name === "setting") {
-      submenu = ['userrole', 'email']
+      submenu = ['user-role', 'work-report']
     }
     const response = submenu.filter((val) => {
       return val === location.pathname.toLowerCase().slice(1)
@@ -339,7 +339,7 @@ const Sidebar = () => {
             </li>}
         </ul>
       </nav>
-      {loader && <Spinner />}
+      {isLoading && <Spinner />}
     </>
   )
 }

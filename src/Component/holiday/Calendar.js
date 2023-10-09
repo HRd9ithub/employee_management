@@ -1,4 +1,3 @@
-import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react'
 import DatePickers from "react-datepicker";
@@ -10,12 +9,11 @@ import { motion } from "framer-motion";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { subDays } from "date-fns";
 import { NavLink } from 'react-router-dom';
 import Error403 from '../error_pages/Error403';
 import Error500 from '../error_pages/Error500';
-
+import { customAxios } from '../../service/CreateApi';
 
 const Calendar = () => {
   let DateRef = useRef();
@@ -30,7 +28,7 @@ const Calendar = () => {
   const [dateError, setdateError] = useState("")
   const [errorb, setErrorb] = useState([])
   const [toggle, setToggle] = useState(false)
-  const [loader, setLoader] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [editToggle, seteditToggle] = useState(false);
   const [datetoggle, setdatetoggle] = useState(false);
   const [permission, setpermission] = useState("");
@@ -86,28 +84,21 @@ const Calendar = () => {
 
   const onSubmit = () => {
     setErrorb([])
-    setLoader(true)
-    let url = ""
+    setisLoading(true)
+    let url = "";
 
-    let token = GetLocalStorage('token');
-    const request = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-    }
     if (editToggle) {
-      url = axios.put(`${process.env.REACT_APP_API_KEY}/holiday/${list.id}`, {
+      url = customAxios().put(`/holiday/${list.id}`, {
         name: list.name.charAt(0).toUpperCase() + list.name.slice(1),
         date: list.date,
         day: moment(list.date).format("dddd")
-      }, request)
+      })
     } else {
-      url = axios.post(`${process.env.REACT_APP_API_KEY}/holiday/`, {
+      url = customAxios().post('/holiday/', {
         name: list.name.charAt(0).toUpperCase() + list.name.slice(1),
         date: list.date,
         day: moment(list.date).format("dddd")
-      }, request)
+      })
     }
 
     url.then(data => {
@@ -132,17 +123,11 @@ const Calendar = () => {
           setErrorb(error.response.data.error)
         }
       }
-    }).finally(() => setLoader(false))
+    }).finally(() => setisLoading(false))
   }
 
   // delete function
   const removeTodo = (id) => {
-    let token = GetLocalStorage('token');
-    const request = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
     Swal.fire({
       title: 'Delete Holiday',
       text: "Are you sure you want to delete?",
@@ -155,15 +140,15 @@ const Calendar = () => {
       width: '450px',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        setLoader(true)
-        const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/holiday/${id}`, request)
+        setisLoading(true)
+        const res = await customAxios().delete(`/holiday/${id}`);
         if (res.data.success) {
           toast.success(res.data.message)
           setToggle(!toggle)
         }
       }
     }).catch((error) => {
-      setLoader(false)
+      setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
       } else if (error.response.status === 401) {
@@ -191,15 +176,9 @@ const Calendar = () => {
   useEffect(() => {
     const get_holiday_detail = async () => {
       try {
-        setLoader(true)
-        let token = GetLocalStorage('token');
-        const request = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-        }
-        const res = await axios.get(`${process.env.REACT_APP_API_KEY}/holiday/`, request)
+        setisLoading(true);
+        setServerError(false);
+        const res = await customAxios().get('/holiday/');
         if (res.data.success) {
           setHolidayDetail(res.data.data)
           setHolidayDetailfilter(res.data.data)
@@ -207,6 +186,7 @@ const Calendar = () => {
         }
       } catch (error) {
         if (!error.response) {
+          setServerError(true)
           toast.error(error.message)
         } else if (error.response.status === 401) {
           getCommonApi();
@@ -219,26 +199,34 @@ const Calendar = () => {
           }
         }
       } finally {
-        setLoader(false)
+        setisLoading(false)
       }
     }
     get_holiday_detail()
     // eslint-disable-next-line
   }, [toggle])
 
+  if(isLoading){
+    return <Spinner />;
+  }
 
+  if(serverError){
+    return <Error500/>;
+  }
+
+  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
+    return <Error403/>;
+  }
 
 
   return (
     <>
-      {!loader ?
         <motion.div
           className="box"
           initial={{ opacity: 0, transform: 'translateY(-20px)' }}
           animate={{ opacity: 1, transform: 'translateY(0px)' }}
           transition={{ duration: 0.5 }}
         >
-          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
             <div className='container-fluid pt-4 overflow-hidden'>
               <div className="background-wrapper bg-white pt-2">
                 <div className="col-12 d-flex justify-content-between align-items-center pb-2">
@@ -362,8 +350,8 @@ const Calendar = () => {
                   </div>
                 </div>
               </div>
-            </div> : !serverError ?  <Error403/> : <Error500/>}
-        </motion.div> : <Spinner />}
+            </div>
+        </motion.div> 
     </>
   )
 }

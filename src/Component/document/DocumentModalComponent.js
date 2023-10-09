@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from '../common/Spinner';
 import { Form } from 'react-bootstrap';
-import { customAxios } from '../../service/CreateApi';
+import { customAxios1 } from '../../service/CreateApi';
 
 const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [show, setShow] = useState(false);
@@ -17,7 +17,7 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [nameError, setNameError] = useState('')
     const [descriptioneError, setDescriptioneError] = useState('')
     const [imageError, setImagerror] = useState('');
-    const [loader, setloader] = useState(false)
+    const [isLoading, setisLoading] = useState(false)
     const [Error, setError] = useState([])
 
     let { getCommonApi } = GlobalPageRedirect();
@@ -93,11 +93,11 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
 
         let url = "";
         if (id) {
-            url = customAxios().put(`/document/${id}`, formdata)
+            url = customAxios1().put(`/document/${id}`, formdata)
         } else {
-            url = customAxios().post('/document/', formdata)
+            url = customAxios1().post('/document/', formdata)
         }
-        setloader(true)
+        setisLoading(true)
         url.then((res) => {
             if (res.data.success) {
                 toast.success(res.data.message)
@@ -122,7 +122,7 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
                     setError(error.response.data.error);
                 }
             }
-        }).finally(() => setloader(false))
+        }).finally(() => setisLoading(false))
     }
 
 // file name field vlidation
@@ -212,7 +212,7 @@ return (
                         </div>
                     </div>
                 </div>
-                {loader && <Spinner />}
+                {isLoading && <Spinner />}
             </Modal.Body>
         </Modal>
     </>

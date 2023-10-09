@@ -20,7 +20,7 @@ const EductionForm = (props) => {
     const [university_name_error, setuniversity_name_error] = useState([])
     const [year_error, setyear_error] = useState([])
     const [percentage_error, setpercentage_error] = useState([]);
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [disableBtn, setDisableBtn] = useState(false);
     const [error, setError] = useState([])
 
@@ -152,7 +152,7 @@ const EductionForm = (props) => {
             return false
         }
         // edit data in mysql
-        setLoader(true)
+        setisLoading(true)
         try {
             const response = await customAxios().post('/education/', { info: eduction,user_id : userDetail._id})
             if (response.data.success) {
@@ -176,7 +176,7 @@ const EductionForm = (props) => {
                     setError(error.response.data.error);
                 }
             }
-        } finally { setLoader(false) }
+        } finally { setisLoading(false) }
 }
 
 // add row of form
@@ -208,7 +208,7 @@ const deleteRow = (id, ind) => {
             width: "450px",
         }).then(async (result) => {
             if (result.isConfirmed) {
-                setLoader(true);
+                setisLoading(true);
                 const res = await customAxios().delete(`/education/${id}`);
                 if (res.data.success) {
                     toast.success(res.data.message);
@@ -231,7 +231,7 @@ const deleteRow = (id, ind) => {
                     setError(error.response.data.error);
                 }
             }
-        }).finally(() => setLoader(false))
+        }).finally(() => setisLoading(false))
     } else {
         let deleteField = [...eduction];
         deleteField.splice(ind, 1);
@@ -307,7 +307,7 @@ return (
                 <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
             </div>
         </form>
-        {loader && <Spinner />}
+        {isLoading && <Spinner />}
     </>
 
 )

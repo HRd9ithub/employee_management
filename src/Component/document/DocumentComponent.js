@@ -17,7 +17,7 @@ const DocumentComponent = () => {
     const [permission, setpermission] = useState("");
     const [documentData, setDocumentData] = useState([]);
     const [searchItem, setsearchItem] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [toggle, setToggle] = useState(false);
     const [serverError, setServerError] = useState(false);
 
@@ -34,14 +34,15 @@ const DocumentComponent = () => {
     // get document data in api
     useEffect(() => {
         const getDocument = () => {
-            setLoading(true);
+            setisLoading(true);
+            setServerError(false);
             customAxios().get('/document/').then((res) => {
-                    setDocumentData(res.data.data);
-                    setpermission(res.data.permissions);
-                    setLoading(false);
-                })
+                setDocumentData(res.data.data);
+                setpermission(res.data.permissions);
+                setisLoading(false);
+            })
                 .catch((error) => {
-                    setLoading(false)
+                    setisLoading(false)
                     if (!error.response) {
                         setServerError(true)
                         toast.error(error.message);
@@ -75,7 +76,7 @@ const DocumentComponent = () => {
             width: '450px',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                setLoading(true)
+                setisLoading(true)
                 const res = await customAxios().delete(`/document/${id}`);
                 if (res.data.success) {
                     setToggle(!toggle)
@@ -83,7 +84,7 @@ const DocumentComponent = () => {
                 }
             }
         }).catch((error) => {
-            setLoading(false)
+            setisLoading(false)
             if (!error.response) {
                 toast.error(error.message);
             } else if (error.response.status === 401) {
@@ -150,16 +151,16 @@ const DocumentComponent = () => {
     }
 
     const downloadFile = async (file) => {
-        setLoading(true)
+        setisLoading(true)
         axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`, {
             responseType: 'blob',
         }).then((res) => {
             fileDownload(res.data, file);
             toast.success("Download successfully.")
-            setLoading(false)
+            setisLoading(false)
         })
             .catch((error) => {
-                setLoading(false)
+                setisLoading(false)
                 if (!error.response) {
                     toast.error(error.message);
                 } else if (error.response.status === 401) {
@@ -169,115 +170,128 @@ const DocumentComponent = () => {
                         setServerError(true)
                     }
                     if (error.response.data.message) {
-                        toast.error(error.response.data.message)
+                        toast.error(error.response.data.message);
+                    }else{
+                        toast.error(error.response.statusText);
                     }
                 }
             })
     }
 
+
+    if (isLoading) {
+        return <Spinner />;
+    }
+
+    if (serverError) {
+        return <Error500 />;
+    }
+
+    if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+        return <Error403 />;
+    }
+
     return (
         <>
-            {!loading ?
-                <motion.div className="box" initial={{ opacity: 0, transform: 'translateY(-20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: 0.5 }}>
-                    {permission && (permission?.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)) ?
-                        <div className=" container-fluid pt-4">
-                            <div className="background-wrapper bg-white pt-2">
-                                <div className=''>
-                                    <div className='row justify-content-end align-items-center row-std m-0'>
-                                        <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <ul id="breadcrumb" className="mb-0">
-                                                    <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                                    <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Documents</NavLink></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
-                                            <div className="search-full">
-                                            <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
-                                                <i className="fas fa-search"></i>
-                                            </div>
-                                            <div className="search-box mr-3">
-                                                <form name="search-inner">
-                                                <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
-                                                </form>
-                                                <i className="fas fa-search"></i>
-                                            </div>
-                                            <DocumentModalComponent setToggle={setToggle} toggle={toggle} permission={permission} />
-                                        </div>
+            <motion.div className="box" initial={{ opacity: 0, transform: 'translateY(-20px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} transition={{ duration: 0.5 }}>
+                <div className=" container-fluid pt-4">
+                    <div className="background-wrapper bg-white pt-2">
+                        <div className=''>
+                            <div className='row justify-content-end align-items-center row-std m-0'>
+                                <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <ul id="breadcrumb" className="mb-0">
+                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                            <li><NavLink to="/documents" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Documents</NavLink></li>
+                                        </ul>
                                     </div>
                                 </div>
-                                {/* {table} */}
-                                <div className="mx-4">
-                                    <TableContainer >
-                                        <Table className="common-table-section">
-                                            <TableHead className="common-header">
-                                                <TableRow>
-                                                    <TableCell>Id</TableCell>
-                                                    <TableCell>File</TableCell>
-                                                    <TableCell>
-                                                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                            File Name
-                                                        </TableSortLabel>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
-                                                            Description
-                                                        </TableSortLabel>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        Action
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                                    return (
-                                                        <TableRow key={ind}>
-                                                            <TableCell>{ind + 1}</TableCell>
-                                                            <TableCell>
-                                                                <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
-                                                                    <img
-                                                                        className='mt-1 profile-action-icon'
-                                                                        style={{ width: '70px', height: '70px' }}
-                                                                        src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` : val.image.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
-                                                                        alt="file"
-                                                                    />
-                                                                </NavLink>
-                                                            </TableCell>
-                                                            <TableCell>{val.name}</TableCell>
-                                                            <TableCell>{val.description}</TableCell>
-                                                            <TableCell>
-                                                                <div className='action'>
-                                                                    <i className="fa-solid fa-download" onClick={() => downloadFile(val.image)}></i>
-                                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
-                                                                    {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
-                                                                </div>
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    )
-                                                }) :
-                                                    <TableRow>
-                                                        <TableCell colSpan={5} align="center">
-                                                            No Records Found
-                                                        </TableCell>
-                                                    </TableRow>
-                                                }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                    <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                        component="div"
-                                        onPageChange={onChangePage}
-                                        onRowsPerPageChange={onChangeRowsPerPage}
-                                        rowsPerPage={count}
-                                        count={documentDataFilter.length}
-                                        page={page}>
-                                    </TablePagination>
+                                <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
+                                    <div className="search-full">
+                                        <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
+                                        <i className="fas fa-search"></i>
+                                    </div>
+                                    <div className="search-box mr-3">
+                                        <form name="search-inner">
+                                            <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
+                                        </form>
+                                        <i className="fas fa-search"></i>
+                                    </div>
+                                    <DocumentModalComponent setToggle={setToggle} toggle={toggle} permission={permission} />
                                 </div>
                             </div>
-                        </div> : !serverError ? <Error403 /> : <Error500 />}
-                </motion.div> : <Spinner />}
+                        </div>
+                        {/* {table} */}
+                        <div className="mx-4">
+                            <TableContainer >
+                                <Table className="common-table-section">
+                                    <TableHead className="common-header">
+                                        <TableRow>
+                                            <TableCell>Id</TableCell>
+                                            <TableCell>File</TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                    File Name
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "description"} direction={orderBy === "description" ? order : "asc"} onClick={() => handleRequestSort("description")}>
+                                                    Description
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                Action
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                            return (
+                                                <TableRow key={ind}>
+                                                    <TableCell>{ind + 1}</TableCell>
+                                                    <TableCell>
+                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
+                                                            <img
+                                                                className='mt-1 profile-action-icon'
+                                                                style={{ width: '70px', height: '70px' }}
+                                                                src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` : val.image.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                alt="file"
+                                                            />
+                                                        </NavLink>
+                                                    </TableCell>
+                                                    <TableCell>{val.name}</TableCell>
+                                                    <TableCell>{val.description}</TableCell>
+                                                    <TableCell>
+                                                        <div className='action'>
+                                                            <i className="fa-solid fa-download" onClick={() => downloadFile(val.image)}></i>
+                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
+                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }) :
+                                            <TableRow>
+                                                <TableCell colSpan={5} align="center">
+                                                    No Records Found
+                                                </TableCell>
+                                            </TableRow>
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                component="div"
+                                onPageChange={onChangePage}
+                                onRowsPerPageChange={onChangeRowsPerPage}
+                                rowsPerPage={count}
+                                count={documentDataFilter.length}
+                                page={page}>
+                            </TablePagination>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
         </>
     )
 }

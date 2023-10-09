@@ -23,7 +23,7 @@ const EmergencyForm = (props) => {
     const [addressError, setaddressError] = useState("")
     const [phoneError, setphoneError] = useState("")
     const [relationshipError, setrelationshipError] = useState("")
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [error, seterror] = useState([]);
 
     let { pathname } = useLocation();
@@ -60,7 +60,7 @@ const EmergencyForm = (props) => {
             return false;
         } else {
             try {
-                setLoader(true)
+                setisLoading(true)
                 const response = await customAxios().post('/emergency', { relationship: relationship.charAt(0).toUpperCase() + relationship.slice(1), address, phone, email, user_id: userDetail && userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1) });
                 if (response.data.success) {
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
@@ -84,7 +84,7 @@ const EmergencyForm = (props) => {
                         seterror(error.response.data.error);
                     }
                 }
-            } finally { setLoader(false) }
+            } finally { setisLoading(false) }
         }
     }
 
@@ -212,7 +212,7 @@ const EmergencyForm = (props) => {
                     <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
                 </div>
             </form>
-            {loader && <Spinner />}
+            {isLoading && <Spinner />}
         </>
     )
 }

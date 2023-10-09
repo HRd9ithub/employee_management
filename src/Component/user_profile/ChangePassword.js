@@ -4,16 +4,9 @@ import { Globalcomponent } from '../auth_context/GlobalComponent'
 import { toast } from 'react-hot-toast'
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import Spinner from '../common/Spinner';
-import { GetLocalStorage } from '../../service/StoreLocalStorage'
-import axios from 'axios'
+import { customAxios } from '../../service/CreateApi'
 
 const ChangePassword = () => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     // change password state
     const [list, setList] = useState({
         password: "",
@@ -23,12 +16,12 @@ const ChangePassword = () => {
     const [passwordError, setpasswordError] = useState("")
     const [newPasswordError, setnewPasswordError] = useState("")
     const [renewpasswordError, setrenewpasswordError] = useState("");
-    const [loading, setloading] = React.useState(false);
+    const [isLoading, setisLoading] = React.useState(false);
     const [error, setError] = React.useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { handleLogout, loader } = Globalcomponent();
+    let { handleLogout, loading } = Globalcomponent();
 
     // ******** change password functionality part  *********
     // onchange function
@@ -83,9 +76,9 @@ const ChangePassword = () => {
         if (!password || !newpassword || !renewpassword || passwordError || newPasswordError || renewpasswordError) {
             return false;
         } else {
-            setloading(true)
+            setisLoading(true)
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/password`, { current_password: password, new_password: newpassword, confirm_password: renewpassword }, config);
+                const response = await customAxios().post('/user/password', { current_password: password, new_password: newpassword, confirm_password: renewpassword });
 
                 if (response.data.success) {
                     toast.success(response.data.message);
@@ -118,7 +111,7 @@ const ChangePassword = () => {
                     }
                 }
             } finally {
-                setloading(false)
+                setisLoading(false)
             }
 
         }
@@ -153,7 +146,7 @@ const ChangePassword = () => {
             <div className="submit-section pb-3">
                 <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>
-            {(loader || loading) && <Spinner />}
+            {(loading || isLoading) && <Spinner />}
         </form>
     )
 }
