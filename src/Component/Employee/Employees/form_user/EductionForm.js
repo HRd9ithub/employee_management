@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
+import { customAxios } from '../../../../service/CreateApi';
 
 const EductionForm = (props) => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
     const [eduction, setEduction] = useState([{
         degree: '',
@@ -161,7 +154,7 @@ const EductionForm = (props) => {
         // edit data in mysql
         setLoader(true)
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_KEY}/education/`, { info: eduction,user_id : userDetail._id},config)
+            const response = await customAxios().post('/education/', { info: eduction,user_id : userDetail._id})
             if (response.data.success) {
                 toast.success(response.data.message);
                 if (pathname.toLocaleLowerCase().includes('/profile')) {
@@ -216,7 +209,7 @@ const deleteRow = (id, ind) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 setLoader(true);
-                const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/education/${id}`,config);
+                const res = await customAxios().delete(`/education/${id}`);
                 if (res.data.success) {
                     toast.success(res.data.message);
                     if (pathname.toLocaleLowerCase().includes('/profile')) {

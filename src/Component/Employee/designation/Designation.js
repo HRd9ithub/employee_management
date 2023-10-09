@@ -6,10 +6,9 @@ import { motion } from "framer-motion";
 import DesignationModal from "./DesignationModal";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import axios from "axios";
-import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import Error403 from "../../error_pages/Error403"
 import Error500 from '../../error_pages/Error500';
+import { customAxios } from "../../../service/CreateApi";
 
 const Designation = () => {
   const [loader, setloader] = useState(false);
@@ -33,13 +32,7 @@ const Designation = () => {
   const getdesignation = async () => {
     try {
       setloader(true);
-      let config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-      }
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`, config);
+      const res = await customAxios().get('/designation/');
       if (res.data.success) {
         setPermission(res.data.permissions)
         setRecords(res.data.data);

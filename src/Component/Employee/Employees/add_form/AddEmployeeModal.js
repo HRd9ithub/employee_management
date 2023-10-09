@@ -10,16 +10,9 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { useRef } from 'react';
-import axios from 'axios';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
+import {customAxios} from "../../../../service/CreateApi";
 
 const AddEmployeeModal = ({ getAlluser, permission }) => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     // eslint-disable-next-line
     // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -69,7 +62,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_role = async () => {
             setLoader(true);
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/role/`, config);
+                const res = await customAxios().get('/role/');
                 if (res.data.success) {
                     setUserRole(res.data.data);
                 }
@@ -92,7 +85,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_Designations = async () => {
             setLoader(true)
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_KEY}/designation/`, config);
+                const res = await customAxios().get('/designation/');
 
                 if (res.data.success) {
                     setDesignations(res.data.data);
@@ -116,7 +109,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         const get_username = async () => {
             setLoader(true)
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/user/username`, {}, config);
+                const res = await customAxios().post('/user/username');
 
                 if (res.data.success) {
                     setUserName(res.data.data);
@@ -229,7 +222,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         } else {
             setLoader(true)
 
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/email`, { email: employee.email }, config).then((response) => {
+            customAxios().post('/user/email', { email: employee.email }).then((response) => {
                 if (response.data.success) {
                     setemailError("")
                 }
@@ -259,7 +252,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             setEmployeeIdError("Please enter valid employee id.");
         } else {
             setLoader(true)
-            axios.post(`${process.env.REACT_APP_API_KEY}/user/employeeId`, { employee_id: employee.employee_id }, config).then((response) => {
+            customAxios().post('/user/employeeId', { employee_id: employee.employee_id }).then((response) => {
                 if (response.data.success) {
                     setEmployeeIdError("")
                 }
@@ -404,7 +397,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             try {
                 setLoader(true);
 
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/`, {
+                const response = await customAxios().post('/user/', {
                     first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
                     last_name: last_name.charAt(0).toUpperCase() + last_name.slice(1),
                     email,
@@ -417,7 +410,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     confirmPassword,
                     employee_id,
                     report_by: reporting_by
-                }, config);
+                });
 
                 if (response.data.success) {
                     setModalShow(false)

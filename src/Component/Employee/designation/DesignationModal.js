@@ -1,10 +1,9 @@
-import axios from "axios";
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
-import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { toast } from "react-hot-toast";
+import { customAxios } from "../../../service/CreateApi";
 
 function DesignationModal({ data, getdesignation, permission }) {
   const [show, setShow] = useState(false);
@@ -65,16 +64,10 @@ function DesignationModal({ data, getdesignation, permission }) {
     if (!name || nameError) {
       return false;
     }
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${GetLocalStorage('token')}`
-      },
-    }
     if (id) {
-      url = axios.patch(`${process.env.REACT_APP_API_KEY}/designation/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, config)
+      url = customAxios().patch(`/designation/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) })
     } else {
-      url = axios.post(`${process.env.REACT_APP_API_KEY}/designation/`, { name: name.charAt(0).toUpperCase() + name.slice(1) }, config)
+      url = customAxios().post('/designation/', { name: name.charAt(0).toUpperCase() + name.slice(1) })
     }
     setloader(true);
 

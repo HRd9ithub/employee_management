@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Spinner from "../../common/Spinner";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -11,12 +10,12 @@ import AddEmployeeModal from "./add_form/AddEmployeeModal";
 import Switch from '@mui/material/Switch';
 import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
-import { GetLocalStorage } from "../../../service/StoreLocalStorage";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
+import { customAxios } from "../../../service/CreateApi";
 
 
 const Employee = () => {
@@ -43,16 +42,10 @@ const Employee = () => {
   // status update function
   const handleStatus = async (row) => {
     // eslint-disable-next-line
-    let { _id, email } = row;
+    let { _id} = row;
     setloader(true);
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${GetLocalStorage('token')}`
-      },
-    }
     try {
-      const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/user/${_id}`, {}, config);
+      const res = await customAxios().patch(`/user/${_id}`);
 
       if (res.data.success) {
         setToggle(!toggle);
@@ -77,12 +70,6 @@ const Employee = () => {
 
   // delete function
   const handleDelete = (id) => {
-    let token = GetLocalStorage("token");
-    const request = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
     Swal.fire({
       title: "Delete Employee",
       text: "Are you sure you want to delete?",
@@ -96,7 +83,7 @@ const Employee = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         setloader(true);
-        const res = await axios.delete(`${process.env.REACT_APP_API_KEY}/user/${id}`, request);
+        const res = await customAxios().delete(`/user/${id}`);
         if (res.data.success) {
           setToggle(!toggle);
           toast.success(res.data.message);
@@ -121,12 +108,7 @@ const Employee = () => {
     try {
       setloader(true);
 
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/user`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${GetLocalStorage('token')}`
-        }
-      });
+      const res = await customAxios().get('/user');
 
       if (res.data.success) {
         setPermission(res.data.permissions)

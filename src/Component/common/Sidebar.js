@@ -6,11 +6,11 @@ import { useState } from 'react';
 import { useContext } from 'react';
 import { AppProvider } from '../context/RouteContext';
 import Spinner from './Spinner';
-import axios from 'axios';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { useMemo } from 'react';
+import { customAxios } from '../../service/CreateApi';
 
 const Sidebar = () => {
   const [data, setData] = useState({});
@@ -47,14 +47,7 @@ const Sidebar = () => {
   const getMenu = async () => {
     try {
       setLoader(true);
-      let token = GetLocalStorage("token");
-      const request = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const res = await axios.get(`${process.env.REACT_APP_API_KEY}/menu`, request);
+      const res = await customAxios().get('/menu');
 
       if (res.data.success) {
         let { data } = res.data

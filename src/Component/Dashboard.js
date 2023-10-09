@@ -21,6 +21,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { dateFormat } from '../helper/dateFormat';
 import ConfettiExplosion from 'react-confetti-explosion';
+import {customAxios} from '../service/CreateApi';
 
 
 const Dashboard = () => {
@@ -54,14 +55,7 @@ const Dashboard = () => {
           const getData = async () => {
                try {
                     setLoader(true);
-                    let token = GetLocalStorage("token");
-                    const request = {
-                         headers: {
-                              "Content-Type": "application/json",
-                              Authorization: `Bearer ${token}`,
-                         },
-                    };
-                    const res = await axios.get(`${process.env.REACT_APP_API_KEY}/dashboard`, request);
+                    const res = await customAxios().get('/dashboard');
 
                     if (res.data.success) {
                          let { totalEmployee, leaveRequest, presentToday, absentToday, holidayDay, birthDay } = res.data
@@ -146,14 +140,8 @@ const Dashboard = () => {
      // view all click
      const allStatusChange = async () => {
           try {
-               setLoader(true)
-               let token = GetLocalStorage('token');
-               const request = {
-                    headers: {
-                         Authorization: `Bearer ${token}`
-                    }
-               }
-               const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
+               setLoader(true);
+               const res = await customAxios().post('/leave/status')
                if (res.data.success) {
                     navigate('/leave')
                     setLoader(false)

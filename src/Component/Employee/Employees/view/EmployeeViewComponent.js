@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import { NavLink, useMatch, useNavigate, useParams } from 'react-router-dom';
 import Spinner from '../../../common/Spinner';
 import { toast } from 'react-hot-toast';
@@ -9,21 +8,15 @@ import Tabs from '@mui/material/Tabs';
 import { HiOutlineMinus } from "react-icons/hi";
 import { AiOutlineMinus } from "react-icons/ai";
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import ChangePassword from '../../../user_profile/ChangePassword';
 import Avatar from '@mui/material/Avatar';
 import { useContext } from 'react';
 import { AppProvider } from '../../../context/RouteContext';
 import Error403 from '../../../error_pages/Error403';
 import { dateFormat } from '../../../../helper/dateFormat';
+import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 
 const EmployeeViewComponent = () => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     const [loader, setLoader] = React.useState(false);
     const [data, setdata] = React.useState("");
     const [show, setShow] = useState(false);
@@ -60,7 +53,7 @@ const EmployeeViewComponent = () => {
     const getuser = async () => {
         setLoader(true);
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`, config)
+            const response = await customAxios().get(`/user/${id}`)
             if (response.data.success) {
                 setpermission(response.data.permissions)
                 if (response.data.data.profile_image) {
@@ -105,14 +98,7 @@ const EmployeeViewComponent = () => {
             formdata.append('profile_image', e.target.files[0]);
             setLoader(true);
             try {
-                const config = {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        authorization: `Bearer ${GetLocalStorage('token')}`
-                    }
-                }
-
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/user/image`, formdata, config)
+                const response = await customAxios1().post('/user/image', formdata);
                 if (response.data.success) {
                     toast.success(response.data.message)
                     getuser();

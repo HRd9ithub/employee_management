@@ -4,16 +4,9 @@ import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
-import axios from 'axios';
+import { customAxios } from '../../../../service/CreateApi';
 
 const AccountForm = (props) => {
-    let config = {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${GetLocalStorage('token')}`
-        },
-    }
     let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
     const [account, setAccount] = useState({
         bank_name: '',
@@ -127,7 +120,7 @@ const AccountForm = (props) => {
             // edit data in mysql
             try {
                 setLoader(true)
-                const response = await axios.post(`${process.env.REACT_APP_API_KEY}/account`, { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name }, config);
+                const response = await customAxios().post('/account', { bank_name, account_number, ifsc_code, user_id: userDetail._id, name: name.charAt(0).toUpperCase() + name.slice(1), id, branch_name });
                 if (response.data.success) {
                     if (pathname.toLocaleLowerCase().includes('/profile')) {
                         getuser();

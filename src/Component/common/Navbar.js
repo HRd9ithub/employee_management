@@ -6,7 +6,6 @@ import { AppProvider } from '../context/RouteContext';
 import moment from 'moment';
 import { useEffect } from 'react';
 import Spinner from './Spinner';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { FaAngleDown, FaAngleLeft } from "react-icons/fa";
 import { useState } from 'react';
@@ -14,6 +13,7 @@ import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import Avatar from '@mui/material/Avatar';
+import { customAxios } from '../../service/CreateApi';
 // import { Trans } from 'react-i18next';
 
 const Navbar = () => {
@@ -64,14 +64,8 @@ const Navbar = () => {
   // leave status change
   const changeStatus = async (id) => {
     try {
-      setLoading(true)
-      let token = GetLocalStorage('token');
-      const request = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const res = await axios.patch(`${process.env.REACT_APP_API_KEY}/leave/${id}`, { status: "Read" }, request)
+      setLoading(true);
+      const res = await customAxios().patch(`/leave/${id}`, { status: "Read" })
       if (res.data.success) {
         setLoading(false);
         if(pathname === "/leave"){
@@ -97,14 +91,8 @@ const Navbar = () => {
   // view all click
   const allStatusChange = async () => {
     try {
-      setLoading(true)
-      let token = GetLocalStorage('token');
-      const request = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const res = await axios.post(`${process.env.REACT_APP_API_KEY}/leave/status`, {}, request)
+      setLoading(true);
+      const res = await customAxios().post('/leave/status');
       if (res.data.success) {
         if(pathname === "/leave"){
           getLeave();

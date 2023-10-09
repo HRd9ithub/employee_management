@@ -13,19 +13,11 @@ import { NavLink } from "react-router-dom";
 import PersonalDetailForm from "../form_user/PersonalDetailForm";
 import { toast } from "react-hot-toast";
 import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";
-import { GetLocalStorage } from "../../../../service/StoreLocalStorage";
-import axios from "axios";
 import LoginInfo from "../view/LoginInfo";
 import Error403 from "../../../error_pages/Error403";
+import { customAxios } from "../../../../service/CreateApi";
 
 const EmployeeEditForm = () => {
-  let config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${GetLocalStorage('token')}`
-    },
-  }
-
   const [value, setValue] = React.useState('Personal');
   const [userId, setUserId] = useState("");
   const [userDetail, setUserDetail] = useState("");
@@ -50,7 +42,7 @@ const EmployeeEditForm = () => {
   // get employee data for single
   const getEmployeeDetail = async () => {
     try {
-      let res = await axios.get(`${process.env.REACT_APP_API_KEY}/user/${id}`, config)
+      let res = await customAxios().get(`/user/${id}`)
 
       if (res.data.success) {
         let result = await res.data.data;
