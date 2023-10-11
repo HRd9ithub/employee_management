@@ -150,12 +150,13 @@ const DocumentComponent = () => {
         return rowArray.map((el) => el[0])
     }
 
-    const downloadFile = async (file) => {
+    const downloadFile = async (file,name) => {
+        let ext = file.split(".").pop();
         setisLoading(true)
         axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`, {
             responseType: 'blob',
         }).then((res) => {
-            fileDownload(res.data, file);
+            fileDownload(res.data, name.concat(".",ext));
             toast.success("Download successfully.")
             setisLoading(false)
         })
@@ -263,7 +264,7 @@ const DocumentComponent = () => {
                                                     <TableCell>{val.description}</TableCell>
                                                     <TableCell>
                                                         <div className='action'>
-                                                            <i className="fa-solid fa-download" onClick={() => downloadFile(val.image)}></i>
+                                                            <i className="fa-solid fa-download" onClick={() => downloadFile(val.image,val.name)}></i>
                                                             {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
                                                             {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                         </div>

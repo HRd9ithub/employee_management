@@ -3878,7 +3878,15 @@ img{
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item.request-report-dropdrown {
   align-items: start !important;
 }
-/* .notification-box .accordion .card .request-body{
+.notification-box .accordion .card .request-body{
   height: 100px;
   overflow-y: auto;
-} */
+}
+.notification-dd-contents {
+  height: 50vh;
+  overflow-y: auto;
+}
+.notification-description {
+  height: 80px;
+  overflow-y: auto;
+}
