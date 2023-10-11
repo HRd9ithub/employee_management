@@ -187,7 +187,7 @@ const LoginInfo = ({ userId }) => {
                                     <TableRow key={ind}>
                                         <TableCell>{ind + 1}</TableCell>
                                         <TableCell>{moment(val.createdAt).format("DD-MM-YYYY")}</TableCell>
-                                        <TableCell>{moment(val.createdAt).format("hh:mm")}</TableCell>
+                                        <TableCell>{moment(val.createdAt).format("hh:mm:ss A")}</TableCell>
                                         <TableCell>{val.ip}</TableCell>
                                         <TableCell>{val.device}</TableCell>
                                         <TableCell>{val.device_name ? val.device_name : "-"}</TableCell>

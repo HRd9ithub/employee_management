@@ -129,8 +129,8 @@ const TimeSheetComponent = () => {
         return data.filter((val) => {
             return (
                 moment(val.date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase()) ||
-                val.login_time?.includes(searchItem.toLowerCase()) ||
-                val.logout_time?.includes(searchItem.toLowerCase()) ||
+                moment(val.login_time,"HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
+                moment(val.logout_time,"HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
                 val.total?.includes(searchItem.toLowerCase())
             );
         });
@@ -335,8 +335,8 @@ const TimeSheetComponent = () => {
                                                     </div>
                                                 </TableCell>}
                                             <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
-                                            <TableCell>{val.login_time}</TableCell>
-                                            <TableCell>{val.logout_time ? val.logout_time : <HiOutlineMinus />}</TableCell>
+                                            <TableCell>{moment(val.login_time,"HH:mm:ss").format("hh:mm:ss A")}</TableCell>
+                                            <TableCell>{val.logout_time ? moment(val.logout_time,"HH:mm:ss").format("hh:mm:ss A") : <HiOutlineMinus />}</TableCell>
                                             <TableCell>{val.total ? val.total : (<HiOutlineMinus />)}</TableCell>
                                         </TableRow>
                                     )
