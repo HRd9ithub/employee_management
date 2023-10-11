@@ -3,7 +3,6 @@ import { Dropdown } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { AppProvider } from '../context/RouteContext';
-import moment from 'moment';
 import { useEffect } from 'react';
 import Spinner from './Spinner';
 import { toast } from 'react-hot-toast';
@@ -14,16 +13,18 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import Avatar from '@mui/material/Avatar';
 import { customAxios } from '../../service/CreateApi';
+import { timeAgo } from '../../helper/dateFormat';
 // import { Trans } from 'react-i18next';
 
 const Navbar = () => {
-  let { handleLogout ,loading} = Globalcomponent()
-  let { UserData, leaveNotification, getLeaveNotification, getUserData,getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { handleLogout, loading } = Globalcomponent()
+  let { UserData, leaveNotification, getLeaveNotification, getUserData, getLeave, reportRequest, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
+  const [dropdownbtnToggleTwo, setdropdownbtnToggleTwo] = useState(false);
   const [sidebar, setsidebar] = useState(false);
   const [isLoading, setisLoading] = useState(false);
 
-  let {pathname} = useLocation();
+  let { pathname } = useLocation();
 
   const toggleOffcanvas = () => {
     setSidebarToggle(!sidebarToggle)
@@ -68,9 +69,9 @@ const Navbar = () => {
       const res = await customAxios().patch(`/leave/${id}`, { status: "Read" })
       if (res.data.success) {
         setisLoading(false);
-        if(pathname === "/leave"){
+        if (pathname === "/leave") {
           getLeave();
-        }else{
+        } else {
           history('/leave')
         }
       }
@@ -94,12 +95,36 @@ const Navbar = () => {
       setisLoading(true);
       const res = await customAxios().post('/leave/status');
       if (res.data.success) {
-        if(pathname === "/leave"){
+        if (pathname === "/leave") {
           getLeave();
-        }else{
+        } else {
           history('/leave')
         }
         setisLoading(false)
+      }
+    } catch (error) {
+      setisLoading(false)
+      if (!error.response) {
+        toast.error(error.message)
+      } else if (error.response.status === 401) {
+        getCommonApi();
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    }
+  }
+
+  // ! report request delete api
+  const handleDeleteRequestReportClick = async (id) => {
+    try {
+      setisLoading(true);
+      const res = await customAxios().delete(`/report_request/${id}`)
+      if (res.data.success) {
+        setisLoading(false);
+        getLeaveNotification();
+        history('/work-report')
       }
     } catch (error) {
       setisLoading(false)
@@ -138,11 +163,12 @@ const Navbar = () => {
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link count-indicator new-notification">
                   <i className="fa-solid fa-bell nav-icons"></i>
-                  <span className="badge badge-light">{leaveNotification.length}</span>
+                  <span className="badge badge-light">{leaveNotification.length + reportRequest.length}</span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
                   <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
                   <div className="dropdown-divider"></div>
+                  {/* leave box */}
                   <div className='notification-box'>
                     <div className="accordion" id="accordionExample">
                       <div className="card mb-0">
@@ -175,7 +201,7 @@ const Navbar = () => {
                                     <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
                                       <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
                                         <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
-                                        <small style={{ color: '#aaaa', marginTop: '3px' }}>{moment(elem.createdAt).format("DD MMM")}</small>
+                                        <small style={{ color: '#aaaa', marginTop: '3px' }}>{timeAgo(elem.createdAt)}</small>
                                       </div>
                                       <p className="text-gray ellipsis mb-0">
                                         {elem.leaveType} Request
@@ -186,6 +212,59 @@ const Navbar = () => {
                               )
                             })}
                             {leaveNotification.length === 0 &&
+                              <div className='d-flex align-items-center justify-content-center'>
+                                <label className="my-2">No Records Found</label>
+                              </div>}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* report request box */}
+                  <div className='notification-box'>
+                    <div className="accordion" id="accordionExample2">
+                      <div className="card mb-0">
+                        <div className="card-header" style={{ padding: "0.3rem" }} id="headingOne">
+                          <h2 className="mb-0 ">
+                            <button className="btn btn-link d-flex justify-content-between align-items-center" onClick={() => setdropdownbtnToggleTwo(!dropdownbtnToggleTwo)} type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                              Report Request
+                              {!dropdownbtnToggleTwo ? <FaAngleDown className='drop-leave-icon' data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" /> : <FaAngleLeft data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne" />}
+                            </button>
+                          </h2>
+                        </div>
+                        <div id="collapseTwo" className="collapse show reuest-body" aria-labelledby="headingOne" data-parent="#accordionExample2">
+                          <div className={` leave-notification-body ${reportRequest.length === 0 ? "mb-1" : "card-body"}`}>
+                            {reportRequest.map((elem) => {
+                              return (
+                                <div key={elem._id}>
+                                  <Dropdown.Item className="dropdown-item preview-item request-report-dropdrown" onClick={evt => {
+                                    evt.preventDefault()
+                                    handleDeleteRequestReportClick(elem._id)
+                                  }}>
+                                    <div className="preview-thumbnail">
+                                      <div className="preview-icon bg-success">
+                                        {elem.user && elem.user.profile_image &&
+                                          // eslint-disable-next-line
+                                          <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
+                                      </div>
+                                    </div>
+                                    <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
+                                      <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
+                                        <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
+                                        <small style={{ color: '#aaaa', marginTop: '3px' }}>{timeAgo(elem.createdAt)}</small>
+                                      </div>
+                                      <p className="text-gray ellipsis mb-0">
+                                        {elem.date} - {elem.title}
+                                      </p>
+                                      <p className="text-gray mb-0 w-100 text-wrap">
+                                       {elem.description}
+                                      </p>
+                                    </div>
+                                  </Dropdown.Item>
+                                </div>
+                              )
+                            })}
+                            {reportRequest.length === 0 &&
                               <div className='d-flex align-items-center justify-content-center'>
                                 <label className="my-2">No Records Found</label>
                               </div>}

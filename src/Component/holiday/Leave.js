@@ -219,9 +219,6 @@ const Leave = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
-                                            <TableCell>
-                                                Id
-                                            </TableCell>
                                             {(permission && permission.name?.toLowerCase() === "admin") && <>
                                                 <TableCell>
                                                     <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
@@ -277,7 +274,7 @@ const Leave = () => {
                                         {leave.length !== 0 ? sortRowInformation(leave, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
+                                                    {/* <TableCell>{ind + 1}</TableCell> */}
                                                     {(permission && permission.name?.toLowerCase() === "admin") &&
                                                         <TableCell>
                                                             <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
@@ -290,12 +287,12 @@ const Leave = () => {
                                                         </TableCell>
                                                     }
                                                     <TableCell>{val.leaveType ? val.leaveType : <HiOutlineMinus />}</TableCell>
-                                                    <TableCell>{val.from_date}</TableCell>
-                                                    <TableCell>{val.to_date}</TableCell>
+                                                    <TableCell>{moment(val.from_date).format("DD MMM YYYY")}</TableCell>
+                                                    <TableCell>{moment(val.to_date).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>{val.duration}</TableCell>
                                                     <TableCell>{val.leave_for}</TableCell>
                                                     <TableCell>{val.reason}</TableCell>
-                                                    <TableCell>{moment(val.createdAt).format("YYYY-MM-DD")}</TableCell>
+                                                    <TableCell>{moment(val.createdAt).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>
                                                         <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
                                                     </TableCell>

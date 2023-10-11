@@ -166,7 +166,7 @@ const Designation = () => {
                           </TableCell>
                           <TableCell>
                             <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                              Designation
+                              Designation Name
                             </TableSortLabel>
                           </TableCell>
                           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&

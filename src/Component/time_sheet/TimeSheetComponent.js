@@ -128,7 +128,7 @@ const TimeSheetComponent = () => {
     const dataFilter = useMemo(() => {
         return data.filter((val) => {
             return (
-                val.date.includes(searchItem.toLowerCase()) ||
+                moment(val.date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase()) ||
                 val.login_time?.includes(searchItem.toLowerCase()) ||
                 val.logout_time?.includes(searchItem.toLowerCase()) ||
                 val.total?.includes(searchItem.toLowerCase())
@@ -292,9 +292,6 @@ const TimeSheetComponent = () => {
                         <Table className="common-table-section">
                             <TableHead className="common-header">
                                 <TableRow>
-                                    <TableCell>
-                                        Id
-                                    </TableCell>
                                     {permission && permission.name.toLowerCase() === "admin" && <TableCell>
                                         <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
                                             Employee
@@ -326,7 +323,7 @@ const TimeSheetComponent = () => {
                                 {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                     return (
                                         <TableRow key={ind}>
-                                            <TableCell>{ind + 1}</TableCell>
+                                            {/* <TableCell>{ind + 1}</TableCell> */}
                                             {permission && permission.name.toLowerCase() === "admin" &&
                                                 <TableCell>
                                                     <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
@@ -337,7 +334,7 @@ const TimeSheetComponent = () => {
                                                         }
                                                     </div>
                                                 </TableCell>}
-                                            <TableCell>{val.date}</TableCell>
+                                            <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
                                             <TableCell>{val.login_time}</TableCell>
                                             <TableCell>{val.logout_time ? val.logout_time : <HiOutlineMinus />}</TableCell>
                                             <TableCell>{val.total ? val.total : (<HiOutlineMinus />)}</TableCell>

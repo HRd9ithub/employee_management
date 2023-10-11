@@ -3,11 +3,16 @@ import Modal from 'react-bootstrap/Modal';
 import Spinner from '.././common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { toast } from 'react-hot-toast';
-import JoditEditor from 'jodit-react';
 import { useEffect } from 'react';
 import { customAxios } from '../../service/CreateApi';
+import moment from 'moment';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { useRef } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useMemo } from 'react';
 
 function WorkReportModal({ data, permission, getReport }) {
+    let workDateRef = useRef(null);
     // common state
     const [show, setShow] = useState(false);
     const [id, setId] = useState('')
@@ -20,16 +25,21 @@ function WorkReportModal({ data, permission, getReport }) {
     // initialistate state
     const [work, setWork] = useState({
         userId: "",
+        date: moment(new Date()).format("YYYY-MM-DD"),
+    })
+
+    const [workData, setworkData] = useState([{
         projectId: "",
         description: "",
-        hours: ""
-    })
+        hours: "0"
+    }])
 
     // error state
     const [userError, setUserError] = useState("");
-    const [projectError, setprojectError] = useState("");
-    const [descriptionError, setdescriptionError] = useState("");
-    const [hoursError, sethoursError] = useState("");
+    const [dateError, setdateError] = useState("");
+    const [projectError, setprojectError] = useState([]);
+    const [descriptionError, setdescriptionError] = useState([]);
+    const [hoursError, sethoursError] = useState([]);
     const [error, setError] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
@@ -37,15 +47,16 @@ function WorkReportModal({ data, permission, getReport }) {
     // modal show function
     const handleShow = () => {
         if (data) {
-            let { _id, userId, projectId, description, hours } = data;
+            console.log(data)
+            let { _id, userId, date, totalHours, work } = data;
             setId(_id);
 
             setWork({
-                userId: userId,
-                projectId: projectId,
-                description: description,
-                hours: hours
+                userId,
+                date,
+                totalHours
             });
+            setworkData(work);
         }
         setShow(true)
     }
@@ -55,16 +66,19 @@ function WorkReportModal({ data, permission, getReport }) {
 
         setShow(false);
         setUserError("")
-        setprojectError("")
-        setdescriptionError("")
-        sethoursError("")
+        setprojectError([])
+        setdescriptionError([])
+        sethoursError([])
         setError([]);
         setWork({
             userId: "",
+            date: moment(new Date()).format("YYYY-MM-DD"),
+        })
+        setworkData([{
             projectId: "",
             description: "",
-            hours: ""
-        })
+            hours: "0"
+        }])
     }
 
     // modal open starting call api
@@ -137,64 +151,25 @@ function WorkReportModal({ data, permission, getReport }) {
         setWork({ ...work, [name]: value })
     }
 
-    // descriptionChange
-    const descriptionChange = (value) => {
-        setWork({ ...work, "description": value });
-        if (!value || value === "<p><br></p>") {
-            setdescriptionError("Description is a required field.");
-        } else {
-            setdescriptionError("");
-        }
-    }
-
-    // CUSTOM EDITOR CONFIG
-    let editorConfig = {
-        readonly: false,
-        tabIndex: 1,
-
-        askBeforePasteHTML: false,
-        askBeforePasteFromWord: false,
-        defaultActionOnPaste: 'insert_clear_html',
-
-        placeholder: 'Write something awesome ...',
-        beautyHTML: true,
-        toolbarButtonSize: "large",
-        buttons: [
-            'source',
-            '|', 'bold', 'italic',
-            '|', 'ul', 'ol',
-            '|', 'font', 'fontsize', 'brush', 'paragraph',
-            '|', 'left', 'center', 'right', 'justify',
-            '|', 'undo', 'redo',
-            '|', 'hr', 'eraser', 'fullsize'
-        ],
-        removeButtons: ["image", "link"]
-    }
-
-
-    // submit form function
+    // * submit form function
     const handleSubmit = (e) => {
         e.preventDefault();
         setError([])
-        let { userId, projectId, description, hours } = work;
+        let { userId, date } = work;
+        let data = validate();
+        console.log('data', data)
 
         permission && permission.name?.toLowerCase() === 'admin' && userIdValidation();
-        projectValidation();
-        hourValidation();
-        if (!description || description === "<p><br></p>") {
-            setdescriptionError("Description is a required field.");
-        } else {
-            setdescriptionError("");
-        }
+        workDateValidation();
 
-        if (userError || projectError || descriptionError || hoursError || (permission && permission.name?.toLowerCase() === 'admin' && !userId) || !projectId || !description || !hours) {
+        if (userError || projectError.length !== 0 || descriptionError.length !== 0 || hoursError.length !== 0 || dateError || (permission && permission.name?.toLowerCase() === 'admin' && !userId) || !date || totalHours === "0" || data) {
             return false;
         } else {
             let url = "";
             if (id) {
-                url = customAxios().patch(`/report/${id}`, { userId, projectId, description, hours })
+                url = customAxios().patch(`/report/${id}`, { userId, date, totalHours, work: workData })
             } else {
-                url = customAxios().post('/report/', { userId, projectId, description, hours })
+                url = customAxios().post('/report/', { userId, date, totalHours, work: workData })
             }
             setisLoading(true);
             url.then(data => {
@@ -206,10 +181,13 @@ function WorkReportModal({ data, permission, getReport }) {
                     setId('');
                     setWork({
                         userId: "",
+                        date: moment(new Date()).format("YYYY-MM-DD"),
+                    })
+                    setworkData([{
                         projectId: "",
                         description: "",
-                        hours: ""
-                    })
+                        hours: "0"
+                    }])
                 }
             }).catch((error) => {
                 setisLoading(false);
@@ -228,10 +206,42 @@ function WorkReportModal({ data, permission, getReport }) {
                 }
             })
         }
+
     }
 
-    // validation form  part
+    //  * validation form  part    
+    const validate = () => {
+        let pError = [];
+        let hError = [];
+        let dError = [];
+        // eslint-disable-next-line array-callback-return
+        workData.map((val, ind) => {
+            if ((!val.projectId)) {
+                pError.push({ name: "Project is a required field.", id: ind })
+            }
+            if ((!val.description)) {
+                dError.push({ name: "Description is a required field.", id: ind })
+            }
+            if (!val.hours) {
+                hError.push({ name: "Working hours is a required field.", id: ind })
+            } else if (val.hours.toString() > 24 || val.hours.toString() < 1) {
+                hError.push({ name: "Working hours range from 1 to 24 hours.", id: ind })
+            }
+        })
+        setprojectError(pError);
+        sethoursError(hError);
+        setdescriptionError(dError);
+        return (pError.length !== 0 || hError.length !== 0 || dError.length !== 0)
+    }
 
+    // date
+    const workDateValidation = () => {
+        if (!work.date) {
+            setdateError("Work date is a required field.");
+        } else {
+            setdateError("");
+        }
+    }
     // user id
     const userIdValidation = () => {
         if (!work.userId || work.userId === "0") {
@@ -241,25 +251,90 @@ function WorkReportModal({ data, permission, getReport }) {
         }
     }
     // project id
-    const projectValidation = () => {
-        if (!work.projectId || work.projectId === "0") {
-            setprojectError("Project is a required field.");
+    const projectValidation = (ind) => {
+        if (!workData[ind].projectId) {
+            setprojectError([...projectError.filter((val) => {
+                return val.id !== ind
+            }), { name: "Project is a required field.", id: ind }]);
         } else {
-            setprojectError("");
+            let temp = projectError.filter((elem) => {
+                return elem.id !== ind
+            })
+            setprojectError(temp)
         }
     }
+    // description
+    const descriptionValidation = (ind) => {
+        if (!workData[ind].description) {
+            setdescriptionError([...descriptionError.filter((val) => {
+                return val.id !== ind
+            }), { name: "Description is a required field.", id: ind }]);
+        } else {
+            let temp = descriptionError.filter((elem) => {
+                return elem.id !== ind
+            })
+            setdescriptionError(temp)
+        }
+    }
+
     // hours
-    const hourValidation = () => {
-        if (!work.hours) {
-            sethoursError("Working hours is a required field.");
-        } else if (!work.hours.toString().match(/^[0-9]+$/)) {
-            sethoursError("Working hours must be a number.");
-        } else if (work.hours.toString() > 24 || work.hours.toString() < 1) {
-            sethoursError("Working hours range from 1 to 24 hours. ");
+    const hourValidation = (ind) => {
+        if (!workData[ind].hours) {
+            sethoursError([...hoursError.filter((val) => {
+                return val.id !== ind
+            }), { name: "Working hours is a required field.", id: ind }]);
+        } else if (workData[ind].hours.toString() > 24 || workData[ind].hours.toString() < 1) {
+            sethoursError([...hoursError.filter((val) => {
+                return val.id !== ind
+            }), { name: "Working hours range from 1 to 24 hours.", id: ind }]);
         } else {
-            sethoursError("");
+            let temp = hoursError.filter((elem) => {
+                return elem.id !== ind
+            })
+            sethoursError(temp)
         }
     }
+
+    // * add row of form
+    const addDuplicate = () => {
+        let data = [...workData, {
+            projectId: "",
+            description: "",
+            hours: "0"
+        }]
+
+        setworkData(data)
+    }
+    // * delete row
+    const deleteRow = (id, ind) => {
+        let deleteField = [...workData];
+        deleteField.splice(ind, 1);
+        setworkData(deleteField);
+        setprojectError(projectError.filter((val) => val.id !== ind));
+        sethoursError(hoursError.filter((val) => val.id !== ind));
+        setdescriptionError(descriptionError.filter((val) => val.id !== ind));
+    }
+
+    // * work change
+    const handleWorkChange = (e, ind) => {
+        let { name, value } = e.target;
+
+        let list = [...workData];
+        list[ind][name] = value;
+
+        setworkData(list)
+    }
+
+    // * total hours  generator
+    const totalHours = useMemo(() => {
+        let store = workData.reduce(myFunc);
+
+        function myFunc(total, num) {
+            return Number(total.hours ? total.hours : total) + Number(num.hours);
+        }
+
+        return typeof store === "object" ? store.hours : store
+    }, [workData])
 
     return (
         <>
@@ -282,41 +357,98 @@ function WorkReportModal({ data, permission, getReport }) {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
-                                    {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                        <div className="form-group">
-                                            <label htmlFor="user" className='mt-3'>Employee</label>
-                                            <select className="form-control " id="user" name='userId' disabled={data} value={work.userId} onChange={handleChange} onBlur={userIdValidation} >
-                                                <option value='0'>Select Employee </option>
-                                                {user.map((val) => {
-                                                    return (
-                                                        <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                            {userError && <small id="emailHelp" className="form-text error">{userError}</small>}
-                                        </div>}
-                                    <div className="form-group">
-                                        <label htmlFor="project" className='mt-3'>Projects</label>
-                                        <select className="form-control " id="project" name='projectId' value={work.projectId} onChange={handleChange} onBlur={projectValidation}>
-                                            <option value='0'>Select Project </option>
-                                            {project.map((val) => {
-                                                return <option key={val._id} value={val._id} >{val.name}</option>
-                                            })}
-                                        </select>
-                                        {projectError && <small id="emailHelp" className="form-text error">{projectError}</small>}
+                                    <div className="row">
+                                        {/* ====================   select  employee ============*/}
+                                        {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="user" className='mt-3'>Employee</label>
+                                                    <select className="form-control " id="user" name='userId' disabled={data} value={work.userId} onChange={handleChange} onBlur={userIdValidation} >
+                                                        <option value='0'>Select Employee </option>
+                                                        {user.map((val) => {
+                                                            return (
+                                                                <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    {userError && <small id="employee-field" className="form-text error">{userError}</small>}
+                                                </div>
+                                            </div>}
+                                        {/* ====================   select  Date ============*/}
+                                        <div className="col-md-6">
+                                            <div className="form-group position-relative">
+                                                <label htmlFor="work_date" className='mt-3'>Work Date</label>
+                                                <div onClick={() => { workDateRef.current.showPicker(); }}>
+                                                    <input type="date"
+                                                        className="form-control"
+                                                        autoComplete='off'
+                                                        ref={workDateRef}
+                                                        name='date'
+                                                        onChange={handleChange}
+                                                        value={work.date}
+                                                        onBlur={workDateValidation}
+                                                        max={moment(new Date()).format("YYYY-MM-DD")}
+                                                        min={moment(new Date()).subtract(1, "day").format("YYYY-MM-DD")}
+                                                    />
+                                                    <CalendarMonthIcon className='calendar-icon-work' />
+                                                    {dateError && <small id="date-field" className="form-text error">{dateError}</small>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {workData.map((item, ind) => {
+                                        return (
+                                            <div className='education-wrapper mt-3' key={ind}>
+                                                {ind > 0 && <div data-action="delete" className='delete text-right' >
+                                                    <i className="fa-solid fa-trash-can " onClick={() => deleteRow(item._id, ind)}></i>
+                                                </div>}
+                                                <div className="row">
+                                                    <div className="col-md-4">
+                                                        {/* ====================   project select field  ============*/}
+                                                        <div className="form-group">
+                                                            <label htmlFor="project" className='mt-3'>Projects</label>
+                                                            <select className="form-control " id="project" name='projectId' value={item.projectId} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => projectValidation(ind)}>
+                                                                <option value='0'>Select Project </option>
+                                                                {project.map((val) => {
+                                                                    return <option key={val._id} value={val._id} >{val.name}</option>
+                                                                })}
+                                                            </select>
+                                                            {projectError.map((val) => {
+                                                                return val.id === ind && <small id="project-field" className="form-text error" key={val.id}>{val.name}</small>
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-2">
+                                                        {/* ====================   hours field  ============*/}
+                                                        <div className="form-group">
+                                                            <label htmlFor="hours" className='mt-3'>Hours</label>
+                                                            <input type="number" className="form-control" min={1} max={24} id="hours" inputMode='numeric' placeholder="Enter Working Hours" name='hours' value={item.hours} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => hourValidation(ind)} autoComplete='off' />
+                                                            {hoursError.map((val) => {
+                                                                return val.id === ind && <small id="hours-field" className="form-text error" key={val.id}>{val.name}</small>
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        {/* ====================   description field  ============*/}
+                                                        <div className="form-group">
+                                                            <label htmlFor="description" className='mt-3' >Description</label>
+                                                            <textarea name="description" id="description" rows="1" className="form-control" value={item.description} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => descriptionValidation(ind)}></textarea>
+                                                            {descriptionError.map((val) => {
+                                                                return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                    {/* ==================== add field button ================= */}
+                                    <div className="work-report-form">
+                                        <NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="description" className='mt-3'>Description</label>
-                                        <JoditEditor value={work.description} config={editorConfig}
-                                            onBlur={descriptionChange}
-                                        // onBlur={newContent => this.setContent(newContent)}
-                                        />
-                                        {descriptionError && <small id="emailHelp" className="form-text error">{descriptionError}</small>}
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="hours" className='mt-3'>Working Hours</label>
-                                        <input type="text" className="form-control" id="hours" placeholder="Enter Working Hours" name='hours' value={work.hours} onChange={handleChange} maxLength={2} onBlur={hourValidation} />
-                                        {hoursError && <small id="emailHelp" className="form-text error">{hoursError}</small>}
+                                        <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
+                                        <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />
                                     </div>
                                     {error.length !== 0 &&
                                         <ol>

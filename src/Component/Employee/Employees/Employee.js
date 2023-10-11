@@ -280,7 +280,7 @@ const Employee = () => {
                     <TableRow>
                       <TableCell>
                         <TableSortLabel active={orderBy === "employee_id"} direction={orderBy === "employee_id" ? order : "asc"} onClick={() => handleRequestSort("employee_id")}>
-                          Employee Id
+                          Employee ID
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -290,12 +290,12 @@ const Employee = () => {
                       </TableCell>
                       <TableCell>
                         <TableSortLabel active={orderBy === "email"} direction={orderBy === "email" ? order : "asc"} onClick={() => handleRequestSort("email")}>
-                          Email Address
+                          Email
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
                         <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
-                          Contact No.
+                          Mobile
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -326,7 +326,7 @@ const Employee = () => {
                             <div className={`pr-3 d-flex align-items-center name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
                               {val ? <>
                                 <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                {val.first_name.concat(" ", val.last_name)}
+                                  {val.first_name?.concat(" ", val.last_name)}
                               </> : <HiOutlineMinus />
                               }
                             </div>
