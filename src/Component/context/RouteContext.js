@@ -17,6 +17,7 @@ const initialistate = {
     UserData: '',
     loader: false,
     leaveNotification: [],
+    reportRequest :[],
     leave:[],
     leaveFilter : [],
     permission : "",
@@ -33,7 +34,7 @@ const RouteContext = ({ children }) => {
 
     // sidebar toggle
     const [sidebarToggle, setSidebarToggle] = useState(false)
-    let sidebarRef = useRef(null)
+    let sidebarRef = useRef(null);
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -67,7 +68,7 @@ const RouteContext = ({ children }) => {
         try {
             const res = await customAxios().post('/leave/notification')
             if (res.data.success) {
-                dispatch({ type: "LEAVE_NOTIFICATION", payload: res.data.data })
+                dispatch({ type: "LEAVE_NOTIFICATION", payload: res.data })
             }
             setLoading(false)
         } catch (error) {

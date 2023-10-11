@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -16,6 +16,7 @@ import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
 import { customAxios } from "../../service/CreateApi";
+import RequestModal from "./RequestModal";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
@@ -30,7 +31,7 @@ const WorkReportComponent = () => {
     const [user_id, setuser_id] = useState("");
     const [show, setShow] = useState(false)
     const [serverError, setServerError] = useState(false);
-    const [description, setdescription] = useState("")
+    const [description, setdescription] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect()
 
@@ -60,9 +61,9 @@ const WorkReportComponent = () => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
-                if(error.response.status === 500){
+                if (error.response.status === 500) {
                     setServerError(true)
-                  }
+                }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 }
@@ -78,7 +79,7 @@ const WorkReportComponent = () => {
     const get_username = async () => {
         setisLoading(true)
         try {
-        
+
             const res = await customAxios().post(`/user/username`);
 
             if (res.data.success) {
@@ -209,13 +210,13 @@ const WorkReportComponent = () => {
     // modal show 
     const handleShow = (val) => {
         setShow(true)
-        setdescription(val)
+        setdescription(val.work)
     }
     // modal Hide 
     const handleClose = () => {
         setShow(false)
     }
-    
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -227,143 +228,142 @@ const WorkReportComponent = () => {
     if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
         return <Error403 />;
     }
-    
-    return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                <div className=" container-fluid pt-4">
-                    <div className="background-wrapper bg-white pt-2">
-                        <div className=''>
-                            <div className='row justify-content-end align-items-center row-std m-0'>
-                                <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <ul id="breadcrumb" className="mb-0">
-                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
-                                    <WorkReportModal permission={permission && permission} getReport={getReport} />
+    return (
+        <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
+            <div className=" container-fluid pt-4">
+                <div className="background-wrapper bg-white pt-2">
+                    <div className=''>
+                        <div className='row justify-content-end align-items-center row-std m-0'>
+                            <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <ul id="breadcrumb" className="mb-0">
+                                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div className='container-fluid'>
-                                <div className='row'>
-                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
-                                            <div className="form-group mb-0">
-                                                <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
-                                                    <option value="">Select employee</option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-                                        </div>}
-                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
-                                        <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon" />
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
+                                {permission && permission.name.toLowerCase() !== "admin" && <RequestModal />}
+                                <WorkReportModal permission={permission && permission} getReport={getReport} />
                             </div>
                         </div>
-
-                        {/* table */}
-                        <div className="mx-4">
-                            {permission.name.toLowerCase() !== "admin" || user_id ? <>
-                                <TableContainer >
-                                    <Table className="common-table-section">
-                                        <TableHead className="common-header">
-                                            <TableRow>
-                                                <TableCell>
-                                                    Id
-                                                </TableCell>
-                                                <TableCell>
-                                                    <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                                                        Date
-                                                    </TableSortLabel>
-                                                </TableCell>
-                                                {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                                    <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
-                                                        Employee
-                                                    </TableSortLabel>
-                                                </TableCell>}
-                                                <TableCell>
-                                                    <TableSortLabel active={orderBy === "hours"} direction={orderBy === "hours" ? order : "asc"} onClick={() => handleRequestSort("hours")}>
-                                                        Hours
-                                                    </TableSortLabel>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <TableSortLabel active={orderBy === "project"} direction={orderBy === "project" ? order : "asc"} onClick={() => handleRequestSort("project")}>
-                                                        Project
-                                                    </TableSortLabel>
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    Description
-                                                </TableCell>
-                                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                                    <TableCell>
-                                                        Action
-                                                    </TableCell>}
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                                return (
-                                                    <TableRow key={ind}>
-                                                        {!val.projectId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{val.date.concat(" - ", val.name)}</TableCell>}
-                                                        {!val.projectId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{val.date.concat(" - ", val.name)}</TableCell>}
-                                                        {val.projectId && <TableCell>{ind + 1}</TableCell>}
-                                                        {val.projectId && <TableCell>{val.date}</TableCell>}
-                                                        {val.projectId &&
-                                                            permission && permission.name.toLowerCase() === "admin" &&
-                                                            <TableCell>
-                                                                <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                                    {val.user ? <>
-                                                                        <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                                        {val.user.first_name.concat(" ", val.user.last_name)}
-                                                                    </> : <HiOutlineMinus />
-                                                                    }
-                                                                </div>
-                                                            </TableCell>
-                                                        }
-                                                        {val.projectId && <TableCell>{val.hours}</TableCell>}
-                                                        {val.projectId && <TableCell>{val.project.name}</TableCell>}
-                                                        {val.projectId && <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>}
-                                                        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && val.projectId && <TableCell align="center">
-                                                            <div className="action">
-                                                                <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
-                                                            </div>
-                                                        </TableCell>}
-                                                    </TableRow>
-                                                )
-                                            }) :
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        No Records Found
-                                                    </TableCell>
-                                                </TableRow>
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                                <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                    component="div"
-                                    onPageChange={onChangePage}
-                                    onRowsPerPageChange={onChangeRowsPerPage}
-                                    rowsPerPage={count}
-                                    count={dataFilter.length}
-                                    page={page}>
-                                </TablePagination>
-                            </> :
-                                <h4 className="no-data my-2">Please select employee first</h4>}
+                        <div className='container-fluid'>
+                            <div className='row'>
+                                {permission && permission.name.toLowerCase() === "admin" &&
+                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                        <div className="form-group mb-0">
+                                            <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                <option value="">Select employee</option>
+                                                {userName.map((val) => {
+                                                    return (
+                                                        <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>}
+                                <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
+                                    <div className="form-group mb-0 position-relative">
+                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                                        <CalendarMonthIcon className="range_icon" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {/* table */}
+                    <div className="mx-4">
+                        {permission.name.toLowerCase() !== "admin" || user_id ? <>
+                            <TableContainer >
+                                <Table className="common-table-section">
+                                    <TableHead className="common-header">
+                                        <TableRow>
+                                            {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
+                                                    Employee
+                                                </TableSortLabel>
+                                            </TableCell>}
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                    Date
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
+                                                    Total Hours
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                Description
+                                            </TableCell>
+                                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                                <TableCell>
+                                                    Action
+                                                </TableCell>}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                            return (
+                                                <TableRow key={ind}>
+                                                    {!val.userId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
+                                                    {!val.userId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
+                                                    {/* {val.userId && <TableCell>{ind + 1}</TableCell>} */}
+                                                    {val.userId &&
+                                                        permission && permission.name.toLowerCase() === "admin" &&
+                                                        <TableCell>
+                                                            <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                                                {val.user ? <>
+                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
+                                                                    {val.user.first_name.concat(" ", val.user.last_name)}
+                                                                </> : <HiOutlineMinus />
+                                                                }
+                                                            </div>
+                                                        </TableCell>
+                                                    }
+                                                    {val.userId && <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>}
+                                                    {val.userId && <TableCell>{val.totalHours}</TableCell>}
+                                                    {val.userId && <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>}
+                                                    {val.userId && (permission && permission.name.toLowerCase() === "admin" && val.userId ? <TableCell align="center">
+                                                        <div className="action">
+                                                            <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
+                                                        </div>
+                                                    </TableCell> :
+                                                        <TableCell>
+                                                            <div className="action">
+                                                                <RequestModal data={val.date} />
+                                                            </div>
+                                                        </TableCell>
+                                                    )
+                                                    }
+                                                </TableRow>
+                                            )
+                                        }) :
+                                            <TableRow>
+                                                <TableCell colSpan={7} align="center">
+                                                    No Records Found
+                                                </TableCell>
+                                            </TableRow>
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                component="div"
+                                onPageChange={onChangePage}
+                                onRowsPerPageChange={onChangeRowsPerPage}
+                                rowsPerPage={count}
+                                count={dataFilter.length}
+                                page={page}>
+                            </TablePagination>
+                        </> :
+                            <h4 className="no-data my-2">Please select employee first</h4>}
+                    </div>
                 </div>
+            </div>
 
-
+            {/* view description modal */}
             <Modal
                 show={show}
                 animation={true}
@@ -383,11 +383,18 @@ const WorkReportComponent = () => {
                 <Modal.Body>
                     <div className=" grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
-                            <div className="card-body table_section">
-                                <h4>{description?.project?.name}</h4>
-                                <hr />
-                                <div dangerouslySetInnerHTML={{ __html: description?.description }}></div>
-                            </div>
+                            {description?.map((currElem, ind) => {
+                                return <div className="card-body table_section" key={currElem._id}>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <h4>{ind + 1}. {currElem.project?.name}</h4>
+                                        <h5 className="text-secondary">{currElem.hours}h</h5>
+                                    </div>
+                                    <hr />
+                                    <div>
+                                        {currElem.description}
+                                    </div>
+                                </div>
+                            })}
                         </div>
                     </div>
                 </Modal.Body>

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const RouteReducer = (state, action) => {
     switch (action.type) {
         case "GET_USER_DATA":
@@ -17,7 +19,8 @@ export const RouteReducer = (state, action) => {
         case "LEAVE_NOTIFICATION":
             return {
                 ...state,
-                leaveNotification: action.payload
+                leaveNotification: action.payload.leave,
+                reportRequest: action.payload.report,
             }
             // eslint-disable-next-line
             break;
@@ -33,7 +36,7 @@ export const RouteReducer = (state, action) => {
         case "SERVER_ERROR":
             return {
                 ...state,
-                serverError :true
+                serverError: true
             }
             // eslint-disable-next-line
             break;
@@ -42,8 +45,9 @@ export const RouteReducer = (state, action) => {
             let result = state.leaveFilter.filter((val) => {
                 return (val.user?.first_name && val.user.first_name.concat(" ", val.user.last_name).toLowerCase().includes(data)) ||
                     val.leaveType.toLowerCase().includes(data) ||
-                    val.from_date.toString().includes(data) ||
-                    val.to_date.toString().includes(data) ||
+                    // val.from_date.toString().includes(data) ||
+                    moment(val.to_date).format("DD MMM YYYY").toLowerCase().includes(data) ||
+                    moment(val.from_date).format("DD MMM YYYY").toLowerCase().includes(data) ||
                     val.duration.toString().includes(data) ||
                     val.leave_for.toLowerCase().includes(data) ||
                     val.reason.toLowerCase().includes(data) ||

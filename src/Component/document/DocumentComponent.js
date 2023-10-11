@@ -227,7 +227,7 @@ const DocumentComponent = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
-                                            <TableCell>Id</TableCell>
+                                            {/* <TableCell>Id</TableCell> */}
                                             <TableCell>File</TableCell>
                                             <TableCell>
                                                 <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
@@ -248,7 +248,7 @@ const DocumentComponent = () => {
                                         {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
+                                                    {/* <TableCell>{ind + 1}</TableCell> */}
                                                     <TableCell>
                                                         <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
                                                             <img

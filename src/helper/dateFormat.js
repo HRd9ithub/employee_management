@@ -28,3 +28,26 @@ export const dateFormat = (date) => {
         </>
     )
 }
+
+export const timeAgo = (date) => {
+    moment.updateLocale('en', {
+        relativeTime : {
+            future: "in%s",
+            past:   "%sago",
+            s  : 'just now',
+            ss : '%ds',
+            m:  "1min",
+            mm: "%dmin",
+            h:  "1h",
+            hh: "%dh",
+            d:  "1d",
+            dd: "%dd",
+            M:  "1m",
+            MM: "%dm",
+            y:  "1yr",
+            yy: "%dyr"
+        }
+    });
+   let time =  moment(date).fromNow(true);
+   return time;
+}
