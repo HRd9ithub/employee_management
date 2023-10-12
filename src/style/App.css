@@ -1018,7 +1018,8 @@ span.eye-icon {
   padding: 0 0.2rem 0 0 !important;
 }
 
-.sidebar .item-hover.active, .sidebar .item-hover:hover {
+.sidebar .item-hover.active,
+.sidebar .item-hover:hover {
   background: #f1f1f1 !important;
   /* border-left: 3px solid #0a4a92 !important; */
 }
@@ -1767,7 +1768,8 @@ select.status-select {
   background: #024290;
 }
 
-.list-wrapper .remove, .add-update-button .delete .remove {
+.list-wrapper .remove,
+.add-update-button .delete .remove {
   color: #ff0005 !important;
   font-size: 1.2rem;
 }
@@ -2139,7 +2141,8 @@ svg {
   padding: 0px;
 }
 
-.profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
+.profile-view .profile-img-wrap,
+.profile-view .profile-img-wrap-view {
   height: 100px;
   width: 100px;
   position: absolute;
@@ -2148,6 +2151,7 @@ svg {
   overflow: hidden;
   border-radius: 50%;
 }
+
 .profile-view .profile-img-wrap .img::after {
   content: "\f304";
   font-family: FontAwesome;
@@ -2189,7 +2193,8 @@ svg {
   font-family: font_main_semi;
 }
 
-.profile-view .profile-img-wrap .img, .profile-view .profile-img-wrap-view .img {
+.profile-view .profile-img-wrap .img,
+.profile-view .profile-img-wrap-view .img {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2223,12 +2228,12 @@ svg {
 
 .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
   /* color: #1976d2 !important; */
-  color: #004b8f  !important;
+  color: #004b8f !important;
 }
 
 .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
   /* background-color: #1976d2 !important; */
-  background-color: #004b8f  !important;
+  background-color: #004b8f !important;
 }
 
 .personal-info li .title {
@@ -2318,7 +2323,8 @@ svg {
   color: #00488e !important;
 } */
 
-.profile-box .edit-icon, .profile-info .edit-icon {
+.profile-box .edit-icon,
+.profile-info .edit-icon {
   color: #00488e !important;
 }
 
@@ -3063,19 +3069,44 @@ input[type=password]::-ms-clear {
   top: 30px;
   right: 9px;
   color: #084e9c;
+  background-color: #fff;
 }
 
 input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   -webkit-appearance: none;
+  -moz-appearance: none !important;
+  -o-appearance: none;
+  appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+input[type="date"]::-moz-calendar-picker-indicator {
+  display: none;
+  color: red;
+  -moz-appearance: none;
+}
+
+input[type="date"]::-ms-clear,input[type="date"]::-webkit-clear-button {
+  display: none;
+  width: 0;
+  height: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none !important;
+  -o-appearance: none;
+  appearance: none;
 }
 
 .calendar-icon-holiday {
   position: absolute;
-  top: 11px;
-  right: 9px;
+  top: 12px;
+  right: 2px;
   color: #084e9c;
+  background-color: #fff;
 }
 
 .react-datepicker__day--highlighted,
@@ -3150,11 +3181,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding-right: 15px;
 }
 
-#breadcrumb li a:hover, #breadcrumb li a:active {
+#breadcrumb li a:hover,
+#breadcrumb li a:active {
   color: green;
 }
 
-#breadcrumb li a:hover i, #breadcrumb li a:active i {
+#breadcrumb li a:hover i,
+#breadcrumb li a:active i {
   color: #0a4a92;
 }
 
@@ -3234,6 +3267,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   right: 12px;
   font-size: 21px;
   color: #004b8f;
+  pointer-events: none;
 }
 
 
@@ -3310,6 +3344,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   outline: 1px solid transparent !important;
   background-color: #fff;
 }
+
 select.form-control {
   outline: transparent;
   padding: 2px 1px !important;
@@ -3324,15 +3359,19 @@ select.form-control {
   background-position-x: 100%;
   background-position-y: 55%;
 }
+
 select.form-control:focus {
   border-bottom: 1px solid #0a4a92;
 }
+
 .form-control,
 .swal2-modal .swal2-content .swal2-input {
   border: none;
   padding: 0.2rem 0.8rem;
 }
-.form-control.border-red-600, .search-field.form-group .form-control.border-red-600 {
+
+.form-control.border-red-600,
+.search-field.form-group .form-control.border-red-600 {
   border-color: red !important;
 }
 
@@ -3345,11 +3384,13 @@ select.form-control:focus {
 }
 
 /* login page */
-.auth form .form-group .form-control, .auth form .form-group .swal2-modal .swal2-content .swal2-input, .swal2-modal .swal2-content .auth form .form-group .swal2-input {
+.auth form .form-group .form-control,
+.auth form .form-group .swal2-modal .swal2-content .swal2-input,
+.swal2-modal .swal2-content .auth form .form-group .swal2-input {
   border-bottom: 1px solid #0a4a92 !important;
 }
 
- /* .auth-form-light {
+/* .auth-form-light {
   position: relative;
   overflow: hidden;
   z-index: 100 !important;
@@ -3515,6 +3556,7 @@ table.common-table-section tbody tr td {
 .react-datepicker__day--selected::before {
   border-radius: 5px !important;
 }
+
 .react-datepicker__day--highlighted::before {
   background-color: red !important;
 }
@@ -3524,6 +3566,7 @@ table.common-table-section tbody tr td {
   cursor: default;
   padding: 0;
 }
+
 #breadcrumb li:last-child a:hover {
   color: #0a4a92;
 }
@@ -3532,41 +3575,47 @@ table.common-table-section tbody tr td {
 .count-indicator.new-notification i {
   animation: bellShaking 0.7s ease 2;
 }
+
 @keyframes bellShaking {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg);
   }
+
   30% {
     transform: rotate(20deg);
   }
+
   50% {
     transform: rotate(0deg);
   }
+
   70% {
     transform: rotate(-20deg);
   }
 }
+
 .count-indicator.new-notification span.badge {
   animation: showupbadge 1.4s ease 1;
 }
+
 @keyframes showupbadge {
-  0%, 90% {
+
+  0%,
+  90% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
 }
 
-/* calender date picker icon */
-.calendar-icon-holiday {
-  top: 12px;
-  right: 2px;
-}
-
+/* calender date picker icon *
 
 /* login page new */
-.login-page{
+.login-page {
   background-image: url(../../public/Images/bg-new.jpg);
   background-size: cover;
   height: 100vh;
@@ -3574,13 +3623,15 @@ table.common-table-section tbody tr td {
   justify-content: center;
   align-items: center;
 }
-.login-wrap{
+
+.login-wrap {
   margin: auto;
   height: 450px;
   width: 80%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   background-color: white;
 }
+
 .login-left {
   display: flex;
   flex-direction: column;
@@ -3588,34 +3639,42 @@ table.common-table-section tbody tr td {
   align-items: center;
   height: 100%;
 }
-.login-left .side-img{
+
+.login-left .side-img {
   width: 450px;
 }
-.login-page-logo img{
+
+.login-page-logo img {
   width: 170px;
 }
-.login-page-logo-none img{
+
+.login-page-logo-none img {
   width: 110px;
   padding: 10px 0px 0px 0px;
   display: none;
 }
-.login-right .input-group{
+
+.login-right .input-group {
   border-radius: 0px;
   border: 1px solid #989ba5;
   /* width: 90%; */
 }
-.login-right .input-group-text{
-  padding: 0.875rem 1.375rem!important;
+
+.login-right .input-group-text {
+  padding: 0.875rem 1.375rem !important;
   background-color: #fff;
 }
-.login-right .form-control{
-  border-bottom: 0px!important;
+
+.login-right .form-control {
+  border-bottom: 0px !important;
 }
-.login-button{
+
+.login-button {
   /* padding-top: 50px; */
   font-weight: 700;
 }
-.login-button button{
+
+.login-button button {
   padding: 10px 30px;
   border-radius: 4px;
   background-color: #054392;
@@ -3623,19 +3682,23 @@ table.common-table-section tbody tr td {
   /* border: 2px solid #054392; */
   border: transparent;
 }
-.login-right h2{
+
+.login-right h2 {
   /* padding-top: 50px; */
   font-weight: 800;
 }
-.login-right h5{
+
+.login-right h5 {
   color: #aeb1b9;
   /* padding-bottom: 30px; */
 }
+
 .forgot-password-link {
   color: #054392 !important;
   font-weight: 500;
   text-decoration: underline;
 }
+
 .forgot-password-link:hover {
   text-decoration: none;
 }
@@ -3656,13 +3719,16 @@ table.common-table-section tbody tr td {
 
 @keyframes shakeimage {
   40% {
-      transform: translateY(-5px)
+    transform: translateY(-5px)
   }
-  0%, 100% {
-      transform: translateY(0px)
+
+  0%,
+  100% {
+    transform: translateY(0px)
   }
+
   80% {
-      transform: translateY(3px)
+    transform: translateY(3px)
   }
 }
 
@@ -3674,7 +3740,7 @@ table.common-table-section tbody tr td {
 }
 
 .card.modal-content .card-body {
-  background-color: white ;
+  background-color: white;
 }
 
 
@@ -3682,18 +3748,22 @@ table.common-table-section tbody tr td {
   cursor: pointer;
 } */
 
-input[type="date"], .css-i4bv87-MuiSvgIcon-root{
+input[type="date"],
+.css-i4bv87-MuiSvgIcon-root {
   user-select: none !important;
   cursor: pointer;
 }
 
-.swal2-modal .swal2-content .swal2-input:disabled, .form-control[readonly], .swal2-modal .swal2-content .swal2-input[readonly]{
+.swal2-modal .swal2-content .swal2-input:disabled,
+.form-control[readonly],
+.swal2-modal .swal2-content .swal2-input[readonly] {
   background-color: transparent;
 }
 
 .daterangepicker .ranges li {
   padding: 4px 12px !important;
 }
+
 /* sidebar style */
 /* .sidebar .nav.sub-menu .nav-item .nav-link {
   padding: 0.80rem 2rem 0.80rem 2rem;
@@ -3704,19 +3774,19 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   background-color: transparent;
 } */
 
-.department-modal.modal_Section .modal-dialog{
-  max-width:  700px !important;
+.department-modal.modal_Section .modal-dialog {
+  max-width: 700px !important;
 }
 
 
 
 /* work report component style */
-.Holiday_column{
-  color:  orange !important;
+.Holiday_column {
+  color: orange !important;
 }
 
-.Leave_column{
-  color:  red !important;
+.Leave_column {
+  color: red !important;
 }
 
 .sidebar .nav-item .nav.sub-menu {
@@ -3729,6 +3799,7 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
   color: #084e9c;
   right: 7px;
   top: 45px;
+  background-color: #fff;
 }
 
 .work-report-form {
@@ -3749,6 +3820,7 @@ input[type="date"], .css-i4bv87-MuiSvgIcon-root{
 span.eye-icon {
   z-index: 100;
 }
+
 span.eye-icon .css-i4bv87-MuiSvgIcon-root {
   width: 0.89em !important;
   height: 0.89em !important;
@@ -3761,7 +3833,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* report section view modal style */
-.work-report-view-modal .card-body.table_section table tbody tr td, .work-report-view-modal .card-body.table_section table thead tr th {
+.work-report-view-modal .card-body.table_section table tbody tr td,
+.work-report-view-modal .card-body.table_section table thead tr th {
   border: 1px solid rgba(0, 0, 0, .2);
   padding: 10px;
 }
@@ -3776,7 +3849,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* jodit text-editor design */
-.jodit-status-bar-link, .jodit-status-bar__item .jodit-xpath {
+.jodit-status-bar-link,
+.jodit-status-bar__item .jodit-xpath {
   display: none;
 }
 
@@ -3796,7 +3870,7 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
   text-decoration: none;
 }
 
-.profile_tabs{
+.profile_tabs {
   z-index: unset !important;
 }
 
@@ -3804,6 +3878,7 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 .navbar .navbar-menu-wrapper .navbar-toggler {
   cursor: default;
 }
+
 .navbar .navbar-menu-wrapper .navbar-toggler span {
   cursor: pointer;
 }
@@ -3817,6 +3892,7 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 ul.todo-list li:hover {
   background-color: #f9f9f9;
 }
+
 input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
   margin-right: 10px;
@@ -3833,6 +3909,7 @@ input[type="search"]::-webkit-search-cancel-button {
   left: 0;
   z-index: 1100 !important;
 }
+
 .animate-celebration-content {
   color: white;
   width: 100%;
@@ -3847,10 +3924,12 @@ input[type="search"]::-webkit-search-cancel-button {
   left: 0;
   z-index: 1100 !important;
 }
+
 .animate-celebration-content img {
   width: 250px;
   height: auto;
 }
+
 .animate-celebration-content h2 {
   font-size: 50px;
   font-weight: 800;
@@ -3858,10 +3937,12 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .animate-celebration-content p {
   width: 50%;
   font-size: 25px;
 }
+
 /* .animate-celebration::after{
   content: "Happy Birthday";
   position: absolute;
@@ -3880,7 +3961,7 @@ input[type="search"]::-webkit-search-cancel-button {
 } */
 
 
-img{
+img {
   user-select: none;
 }
 
@@ -3927,4 +4008,39 @@ img{
 }
 .text-dark-secondary {
   color: #8d8d8d;
+}
+
+.notification-description {
+  height: 80px;
+  overflow-y: auto;
+}
+
+.range-custom-picker .form-control {
+  position: relative;
+
+}
+
+.range-custom-picker:before {
+  font-family: 'FontAwesome';
+  color: #004b8f;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  content: "\f073";
+}
+
+input[type="date"]:disabled + .calendar-icon, input[type="date"]:read-only + .calendar-icon {
+  background-color: #e8ecef;
+  cursor: not-allowed;
+}
+
+.dropdown .dropdown-toggle:after {
+  content: "" !important;
+}
+
+input[type="search"]{
+  appearance: searchfield;
+  -moz-appearance: searchfield;
+  -webkit-appearance: searchfield;
+  -ms-appearance: searchfield;
 }

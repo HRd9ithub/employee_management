@@ -9,6 +9,7 @@ import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { useRef } from 'react';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
+import moment from 'moment';
 
 // create context
 let AppProvider = createContext();
@@ -21,7 +22,8 @@ const initialistate = {
     leave:[],
     leaveFilter : [],
     permission : "",
-    serverError : false
+    serverError : false,
+    userName : []
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
@@ -85,13 +87,16 @@ const RouteContext = ({ children }) => {
         }
     }
     // leave data get
-    const getLeave = async () => {
+    const getLeave = async (startDate,endDate,id) => {
         setLoading(true);
         try {
-            const res = await customAxios().get('/leave/');
+            const res = await customAxios().get(`/leave?startDate=${moment(startDate || moment().clone().startOf('month')).format("YYYY-MM-DD")}&endDate=${moment(endDate || moment().clone().endOf('month')).format("YYYY-MM-DD")}&id=${id ? id : ""}`);
             if (res.data.success) {
-                getLeaveNotification();
-                dispatch({ type: "GET_LEAVE", payload: res.data })
+                dispatch({ type: "GET_LEAVE", payload: res.data });
+                if(res.data.permissions && res.data.permissions.name.toLowerCase() === "admin"){
+                    getLeaveNotification();
+                    get_username();
+                }
             }
         } catch (error) {
             if (!error.response) {
@@ -111,6 +116,32 @@ const RouteContext = ({ children }) => {
             setLoading(false)
         }
     }
+
+        // get user name
+        const get_username = async () => {
+            setLoading(true)
+            try {
+                const res = await customAxios().post('/user/username');
+    
+                if (res.data.success) {
+                    dispatch({ type: "GET_USER", payload: res.data })
+                }
+            } catch (error) {
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
+                    if (error.response.status === 401) {
+                        getCommonApi();
+                    } else {
+                        if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        }
+                    }
+                }
+            } finally {
+                    setLoading(false)
+            }
+        };
 
     const HandleFilter = (name) => {
         let data = name;

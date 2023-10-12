@@ -17,6 +17,7 @@ export const RouteReducer = (state, action) => {
             // eslint-disable-next-line
             break;
         case "LEAVE_NOTIFICATION":
+            // let data =[]
             return {
                 ...state,
                 leaveNotification: action.payload.leave,
@@ -30,6 +31,13 @@ export const RouteReducer = (state, action) => {
                 leave: action.payload.data,
                 leaveFilter: action.payload.data,
                 permission: action.payload.permissions
+            }
+            // eslint-disable-next-line
+            break;
+        case "GET_USER":
+            return {
+                ...state,
+                userName: action.payload.data,
             }
             // eslint-disable-next-line
             break;
