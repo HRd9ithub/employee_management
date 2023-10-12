@@ -169,113 +169,27 @@ const Navbar = () => {
                 <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
                   <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
                   <div className="dropdown-divider"></div>
-                  <div className="notification-dd-contents">
-                    {/* leave box */}
-                    <div className='notification-box'>
-                      <div className="accordion" id="accordionExample">
-                        <div className="card mb-0">
-                          <div className="card-header" style={{ padding: "0.3rem" }} id="headingOne">
-                            <h2 className="mb-0 ">
-                              <button className="btn btn-link d-flex justify-content-between align-items-center" onClick={() => setdropdownbtnToggle(!dropdownbtnToggle)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Leave
-                                {!dropdownbtnToggle ? <FaAngleDown className='drop-leave-icon' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" /> : <FaAngleLeft data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" />}
-                              </button>
-                            </h2>
+                  <div className="notification-list">
+                    <div className="notification-item">
+                      <div className="notification-content d-flex justify-content-start align-items-start">
+                        <div>
+                          <div className="notification-image">
+                            <img src="./Images/download.png" alt="img" />
                           </div>
-                          <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                            <div className={` leave-notification-body ${leaveNotification.length === 0 ? "mb-1" : "card-body"}`}>
-                              {leaveNotification.sort(function (a, b) {
-                                return new Date(b.from_date) - new Date(a.from_date)
-                              }).map((elem) => {
-                                return (
-                                  <div key={elem._id}>
-                                    <Dropdown.Item className="dropdown-item preview-item" onClick={evt => {
-                                      evt.preventDefault()
-                                      changeStatus(elem._id)
-                                    }}>
-                                      <div className="preview-thumbnail">
-                                        <div className="preview-icon bg-success">
-                                          {elem.user && elem.user.profile_image &&
-                                            // eslint-disable-next-line
-                                            <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
-                                        </div>
-                                      </div>
-                                      <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
-                                        <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
-                                          <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
-                                          <small style={{ color: '#aaaa', marginTop: '3px' }}>{timeAgo(elem.createdAt)}</small>
-                                        </div>
-                                        <p className="text-gray ellipsis mb-0">
-                                          {elem.leaveType} Request
-                                        </p>
-                                      </div>
-                                    </Dropdown.Item>
-                                  </div>
-                                )
-                              })}
-                              {leaveNotification.length === 0 &&
-                                <div className='d-flex align-items-center justify-content-center'>
-                                  <label className="my-2">No Records Found</label>
-                                </div>}
-                            </div>
+                        </div>
+                        <div className="notification-details w-100">
+                          <div className="w-100 d-flex justify-content-between align-items-center">
+                            <p className='mb-0'>Leave Application</p>
+                            <p className='mb-0 text-dark-secondary'>1min</p>
                           </div>
+                          <p className='mt-1 mb-0 ellipsis text-dark-secondary'>Lorem ipsum dolor sit</p>
+                          <p className='notifictaion-description mt-1 mb-0 text-dark-secondary'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, pariatur reiciendis nulla quaerat facilis dolorem deleniti sapiente error quidem corporis quam? Debitis autem sint</p>
                         </div>
                       </div>
                     </div>
-                    {/* report request box */}
-                    <div className='notification-box'>
-                      <div className="accordion" id="accordionExample2">
-                        <div className="card mb-0">
-                          <div className="card-header" style={{ padding: "0.3rem" }} id="headingOne">
-                            <h2 className="mb-0 ">
-                              <button className="btn btn-link d-flex justify-content-between align-items-center" onClick={() => setdropdownbtnToggleTwo(!dropdownbtnToggleTwo)} type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Report Request
-                                {!dropdownbtnToggleTwo ? <FaAngleDown className='drop-leave-icon' data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" /> : <FaAngleLeft data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne" />}
-                              </button>
-                            </h2>
-                          </div>
-                          <div id="collapseTwo" className="collapse show reuest-body" aria-labelledby="headingOne" data-parent="#accordionExample2">
-                            <div className={` leave-notification-body ${reportRequest.length === 0 ? "mb-1" : "card-body"}`}>
-                              {reportRequest.map((elem) => {
-                                return (
-                                  <div key={elem._id}>
-                                    <Dropdown.Item className="dropdown-item preview-item request-report-dropdrown" onClick={evt => {
-                                      evt.preventDefault()
-                                      handleDeleteRequestReportClick(elem._id)
-                                    }}>
-                                      <div className="preview-thumbnail">
-                                        <div className="preview-icon bg-success">
-                                          {elem.user && elem.user.profile_image &&
-                                            // eslint-disable-next-line
-                                            <Avatar alt={elem.user.first_name} className='text-capitalize' src={`${elem.user.profile_image && process.env.REACT_APP_IMAGE_API}/${elem.user.profile_image}`} sx={{ width: 30, height: 30 }} />}
-                                        </div>
-                                      </div>
-                                      <div className="preview-item-content d-flex align-items-start flex-column justify-content-center w-100">
-                                        <div className='d-flex justify-content-between w-100' style={{ gap: "50px" }}>
-                                          <h6 className="preview-subject font-weight-normal mb-1">{elem.user ? elem.user.first_name.concat(" ", elem.user.last_name) : <HiOutlineMinus />}</h6>
-                                          <small style={{ color: '#aaaa', marginTop: '3px' }}>{timeAgo(elem.createdAt)}</small>
-                                        </div>
-                                        <p className="text-gray ellipsis mb-0">
-                                          {moment(elem.date).format("DD MMM YYYY")} - {elem.title}
-                                        </p>
-                                        <p className="text-gray mb-0 w-100 text-wrap notification-description">
-                                        {/* {elem.description} */}
-                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex, dolor quisquam recusandae nulla ullam, distinctio repellat voluptatem ea doloremque, provident eveniet sapiente obcaecati. Id quod animi iusto labore a corrupti accusamus eligendi eveniet ab! Non pariatur excepturi omnis, amet veritatis sed, ex perferendis ab et blanditiis nesciunt, ipsam asperiores at voluptates beatae officia hic porro minima tempora consequuntur voluptas quo. Quo odio expedita veritatis qui, labore sapiente! Minima aliquam ad quos quibusdam neque commodi perferendis dolor illo. Alias vitae ipsam qui dolore, excepturi earum exercitationem deleniti rem, nemo incidunt sit neque numquam omnis a tenetur repellendus laudantium corrupti aliquam officiis.
-                                        </p>
-                                      </div>
-                                    </Dropdown.Item>
-                                  </div>
-                                )
-                              })}
-                              {reportRequest.length === 0 &&
-                                <div className='d-flex align-items-center justify-content-center'>
-                                  <label className="my-2">No Records Found</label>
-                                </div>}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    {/* <div className="notification-item-no-record">
+                      <h5 className='text-center my-3 text-dark-secondary'>No Record Found</h5>
+                    </div> */}
                   </div>
                   {leaveNotification.length > 0 && <>
                     <div className="dropdown-divider"></div>
