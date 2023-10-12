@@ -142,9 +142,9 @@ const LeaveModal = (props) => {
         }
         let url = ""
         if (id) {
-            url = customAxios().put(`${process.env.REACT_APP_API_KEY}/leave/${id}`, common)
+            url = customAxios().put(`/leave/${id}`, common)
         } else {
-            url = customAxios().post(`${process.env.REACT_APP_API_KEY}/leave/`, common)
+            url = customAxios().post('/leave', common)
         }
         url.then(data => {
             if (data.data.success) {

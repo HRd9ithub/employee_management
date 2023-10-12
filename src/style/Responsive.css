@@ -2509,6 +2509,10 @@
     .MuiSwitch-root.MuiSwitch-sizeMedium.css-julti5-MuiSwitch-root .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
     }
+    .calendar-icon {
+        top: 38px;
+        right: 6px;
+    }
 }
 
 @media (max-width:480px) {

@@ -7,13 +7,13 @@ import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 import { AiOutlineDownload } from "react-icons/ai";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
 import Error500 from '../error_pages/Error500';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { customAxios } from "../../service/CreateApi";
 import Spinner from "../common/Spinner";
 
@@ -157,10 +157,10 @@ const TimeSheetComponent = () => {
 
     const descedingComparator = (a, b, orderBy) => {
         if (orderBy === "name") {
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user < a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if (b.user.first_name?.concat(" ", b.last_name)  < a.user.first_name?.concat(" ", a.last_name)) {
                 return -1
             }
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if (b.user.first_name?.concat(" ", b.last_name)  > a.user.first_name?.concat(" ", a.last_name)) {
                 return 1
             }
             return 0
@@ -229,6 +229,7 @@ const TimeSheetComponent = () => {
         return <Error403 />;
     }
 
+
     return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
         <div className=" container-fluid pt-4">
             <div className="background-wrapper bg-white pt-2">
@@ -279,7 +280,7 @@ const TimeSheetComponent = () => {
                                     <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
                                         <input className="form-control mt-3" />
                                     </DateRangePicker>
-                                    <CalendarMonthIcon className="range_icon" />
+                                    <CalendarMonthIcon className="range_icon"/>
                                 </div>
                             </div>
                         </div>

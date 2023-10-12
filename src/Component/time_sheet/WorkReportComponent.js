@@ -134,22 +134,14 @@ const WorkReportComponent = () => {
 
     const descedingComparator = (a, b, orderBy) => {
         if (orderBy === "name") {
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user < a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if ( b.user?.first_name?.concat(" ", b.user?.last_name) <  a.user?.first_name?.concat(" ", a.user?.last_name)) {
                 return -1
             }
-            if (b.user ? b.user.first_name?.concat(" ", b.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.last_name) : a.user) {
+            if ( b.user?.first_name?.concat(" ", b.user?.last_name) >  a.user?.first_name?.concat(" ", a.user?.last_name)) {
                 return 1
             }
             return 0
-        } else if (orderBy === "project") {
-            if (b.project ? b.project?.name : b.project < a.project ? a.project.name : a.project) {
-                return -1
-            }
-            if (b.project ? b.project.name : b.project > a.project ? a.project.name : a.project) {
-                return 1
-            }
-            return 0
-        } else {
+        }else {
             if (b[orderBy] < a[orderBy]) {
                 return -1
             }
@@ -280,12 +272,12 @@ const WorkReportComponent = () => {
                                     <TableHead className="common-header">
                                         <TableRow>
                                             {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
+                                                {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
                                                     Employee
-                                                </TableSortLabel>
+                                                {/* </TableSortLabel> */}
                                             </TableCell>}
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                     Date
                                                 </TableSortLabel>
                                             </TableCell>
