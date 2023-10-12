@@ -3943,28 +3943,11 @@ input[type="search"]::-webkit-search-cancel-button {
   font-size: 25px;
 }
 
-/* .animate-celebration::after{
-  content: "Happy Birthday";
-  position: absolute;
-  top: 0;
-  left:0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  font-size: 50px;
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-} */
-
-
 img {
   user-select: none;
 }
 
+/* notification list dropdown */
 .notification-list {
   max-height: 300px;
   overflow-y: auto;
@@ -4003,21 +3986,20 @@ img {
   background-color: rgb(209, 209, 209);
   border-radius: 5px;
 }
-.work-report-description {
-  overflow-y: auto;
-}
 .text-dark-secondary {
   color: #8d8d8d;
 }
-
 .notification-description {
   height: 80px;
   overflow-y: auto;
 }
 
+.work-report-description {
+  overflow-y: auto;
+}
+/* date range picker icon clickable */
 .range-custom-picker .form-control {
   position: relative;
-
 }
 
 .range-custom-picker:before {
@@ -4029,7 +4011,9 @@ img {
   content: "\f073";
 }
 
-input[type="date"]:disabled + .calendar-icon, input[type="date"]:read-only + .calendar-icon {
+input[type="date"]:disabled + .calendar-icon, input[type="date"]:read-only + .calendar-icon,
+input[type="date"]:disabled + .calendar-icon-work, input[type="date"]:read-only + .calendar-icon-work,
+input[type="date"]:disabled + .calendar-icon-holiday, input[type="date"]:read-only + .calendar-icon-holiday {
   background-color: #e8ecef;
   cursor: not-allowed;
 }
