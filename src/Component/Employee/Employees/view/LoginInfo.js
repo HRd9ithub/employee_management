@@ -148,12 +148,14 @@ const LoginInfo = ({ userId }) => {
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
-                                        Date
+                                        Date & Time
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>
+                                {/* <TableCell>
+                                    <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
                                         Time
-                                </TableCell>
+                                    </TableSortLabel>
+                                </TableCell> */}
                                 <TableCell>
                                     <TableSortLabel active={orderBy === "ip"} direction={orderBy === "ip" ? order : "asc"} onClick={() => handleRequestSort("ip")}>
                                         IP
@@ -186,8 +188,8 @@ const LoginInfo = ({ userId }) => {
                                 return (
                                     <TableRow key={ind}>
                                         <TableCell>{ind + 1}</TableCell>
-                                        <TableCell>{moment(val.createdAt).format("DD-MM-YYYY")}</TableCell>
-                                        <TableCell>{moment(val.createdAt).format("hh:mm:ss A")}</TableCell>
+                                        <TableCell>{moment(val.createdAt).format("DD MMM YYYY hh:mm:ss A")}</TableCell>
+                                        {/* <TableCell>{moment(val.createdAt).format("hh:mm:ss A")}</TableCell> */}
                                         <TableCell>{val.ip}</TableCell>
                                         <TableCell>{val.device}</TableCell>
                                         <TableCell>{val.device_name ? val.device_name : "-"}</TableCell>

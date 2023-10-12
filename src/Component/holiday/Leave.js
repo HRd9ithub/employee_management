@@ -13,17 +13,23 @@ import Error403 from '../error_pages/Error403';
 import Error500 from '../error_pages/Error500';
 import { AppProvider } from '../context/RouteContext'
 import moment from 'moment'
-import { customAxios } from '../../service/CreateApi'
+import { customAxios } from '../../service/CreateApi';
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const Leave = () => {
+    const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
+    const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
     const [show, setShow] = useState(false);
     const [status, setstatus] = useState("");
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
+    const [user_id, setuser_id] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { getLeave, leave, Loading, permission, serverError, HandleFilter } = useContext(AppProvider);
+    let { getLeave, leave, Loading, permission, serverError,userName, HandleFilter } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -76,6 +82,27 @@ const Leave = () => {
         }
     }
 
+        // calcendar option
+        const ranges = {
+            Today: [moment(), moment()],
+            Yesterday: [
+                moment().subtract(1, "days"),
+                moment().subtract(1, "days")
+            ],
+            "Last 7 Days": [moment().subtract(6, "days"), moment()],
+            "Last 30 Days": [moment().subtract(29, "days"), moment()],
+            "This Month": [moment().startOf("month"), moment().endOf("month")],
+            "Last Month": [
+                moment()
+                    .subtract(1, "month")
+                    .startOf("month"),
+                moment()
+                    .subtract(1, "month")
+                    .endOf("month")
+            ]
+        };
+    
+
     // pagination function
     const onChangePage = (e, page) => {
         setpage(page)
@@ -104,10 +131,10 @@ const Leave = () => {
             }
             return 0
         } else if (orderBy === "name") {
-            if (b.user ? b.user.first_name?.concat(" ", b.user.last_name) : b.user < a.user ? a.user.first_name?.concat(" ", a.user.last_name) : a.user) {
+            if (b.user.first_name?.concat(" ", b.user.last_name) < a.user.first_name?.concat(" ", a.user.last_name)) {
                 return -1
             }
-            if (a.user ? b.user.first_name?.concat(" ", b.user.last_name) : b.user > a.user ? a.user.first_name?.concat(" ", a.user.last_name) : a.user) {
+            if (b.user.first_name?.concat(" ", b.user.last_name) > a.user.first_name?.concat(" ", a.user.last_name)) {
                 return 1
             }
             return 0
@@ -135,6 +162,18 @@ const Leave = () => {
             return a[1] - b[1]
         })
         return rowArray.map((el) => el[0])
+    }
+
+    const handleCallback = (start, end, label) => {
+        setStartDate(start._d)
+        setendtDate(end._d)
+        getLeave(start._d, end._d,user_id)
+    }
+
+     // user change function
+     const userChange = (e) => {
+        setuser_id(e.target.value)
+        getLeave(startDate,endDate,e.target.value)
     }
 
     // eslint-disable-next-line
@@ -211,6 +250,31 @@ const Leave = () => {
                                     <LeaveModal getLeave={getLeave} permission={permission} />
                                 </div>
                             </div>
+                            <div className='container-fluid'>
+                        <div className='row'>
+                            {permission && permission.name.toLowerCase() === "admin" &&
+                                <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                    <div className="form-group mb-0">
+                                        <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange}  >
+                                            <option value=''>All</option>
+                                            {userName.map((val) => {
+                                                return (
+                                                    val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>}
+                            <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
+                                <div className="form-group mb-0 position-relative">
+                                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
+                                        <input className="form-control mt-3" />
+                                    </DateRangePicker>
+                                    <CalendarMonthIcon className="range_icon"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                         </div>
 
                         {/* table */}
