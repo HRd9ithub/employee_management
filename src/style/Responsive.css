@@ -658,7 +658,7 @@
     }
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
-        padding: 7px 13px;
+        padding: 10px 13px;
     }
 
     .dropdown .dropdown-menu .dropdown-item {
@@ -722,16 +722,6 @@
     #two .form-control-lg {
         height: 2.49rem;
         font-size: 11px;
-    }
-
-    .preview-subject {
-        margin-bottom: 1px !important;
-        font-size: 13px;
-
-    }
-
-    .preview-list {
-        width: 16rem !important;
     }
 
     .preview-list .preview-item .preview-item-content p {
@@ -1141,13 +1131,13 @@
         font-size: 12px;
     }
 
-    .preview-list {
+    /* .preview-list {
         width: 15rem !important;
-    }
+    } */
 
-    .navbar-dropdown {
+    /* .navbar-dropdown {
         transform: translate3d(-6px, 58px, 0px) !important;
-    }
+    } */
 
     .sidebar .nav .nav-item {
         padding: 0 2rem;
@@ -1527,6 +1517,10 @@
         width: 85%;
         font-size: 20px;
     }
+
+    .navbar-dropdown {
+        transform: translate3d(-10px, 53px, 0px) !important;
+    }
 }
 
 @media (max-width:736px) {
@@ -1623,9 +1617,9 @@
         font-size: 19px;
     }
 
-    .preview-list {
+    /* .preview-list {
         width: 13.5rem !important;
-    }
+    } */
 
     .preview-list .preview-item .preview-thumbnail img,
     .preview-list .preview-item .preview-thumbnail .preview-icon {
@@ -1642,11 +1636,7 @@
     }
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
-        padding: 3px 12px;
-    }
-
-    .navbar-dropdown {
-        transform: translate3d(-33px, 50px, 0px) !important;
+        padding: 7px 12px;
     }
 
     .dropdown-menu {
@@ -2541,18 +2531,14 @@
         height: 33px;
     }
 
-    .preview-list {
-        width: 12.5rem !important;
+    .navbar-dropdown {
+        transform: translate3d(-10px, 45px, 0px) !important;
     }
 
     .preview-list .preview-item .preview-thumbnail img,
     .preview-list .preview-item .preview-thumbnail .preview-icon {
         width: 30px;
         height: 30px;
-    }
-
-    .navbar .navbar-menu-wrapper .navbar-nav .nav-item .dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
-        padding: 3px 8px;
     }
 
     .dropdown .dropdown-menu .dropdown-item {
@@ -3137,6 +3123,15 @@
 
     .standard-wrapper {
         padding: 0 13px;
+    }
+
+    .preview-list {
+        width: 85% !important;
+    }
+
+    .notification-list .notification-item .notification-content .notification-image {
+        width: 40px;
+        height: 40px;
     }
 }
 

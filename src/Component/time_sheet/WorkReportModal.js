@@ -432,7 +432,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                         {/* ====================   description field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="description" className='mt-3' >Description</label>
-                                                            <textarea name="description" id="description" rows="1" className="form-control" value={item.description} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => descriptionValidation(ind)}></textarea>
+                                                            <textarea name="description" id="description" rows="1" className="form-control work-report-description" value={item.description} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => descriptionValidation(ind)}></textarea>
                                                             {descriptionError.map((val) => {
                                                                 return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
                                                             })}
