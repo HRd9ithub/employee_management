@@ -11,7 +11,6 @@ import Switch from '@mui/material/Switch';
 import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import Avatar from '@mui/material/Avatar';
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
@@ -323,24 +322,16 @@ const Employee = () => {
                         <TableRow key={ind}>
                           <TableCell>{val.employee_id}</TableCell>
                           <TableCell>
-                            <div className={`pr-3 d-flex align-items-center name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                              {val ? <>
-                                <Avatar alt={val.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                  {val.first_name?.concat(" ", val.last_name)}
-                              </> : <HiOutlineMinus />
-                              }
+                            <div className={`pr-3 name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                              {val ? val.first_name?.concat(" ", val.last_name): <HiOutlineMinus />}
                             </div>
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
                           <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
                           <TableCell>
-                            <div className={`pr-3 d-flex align-items-center name_col ${val.report.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                              {val.report ? <>
-                                <Avatar alt={val.report.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.report.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.report.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                {val?.report?.first_name.concat(" ", val.report.last_name)}
-                              </> : <HiOutlineMinus />
-                              }
+                            <div className={`pr-3 name_col ${val.report.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                              {val.report ? val?.report?.first_name.concat(" ", val.report.last_name) : <HiOutlineMinus />}
                             </div>
                           </TableCell>
                           <TableCell>

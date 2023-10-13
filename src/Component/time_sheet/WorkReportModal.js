@@ -388,7 +388,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                         value={work.date}
                                                         onBlur={workDateValidation}
                                                         max={moment(new Date()).format("YYYY-MM-DD")}
-                                                        min={moment(new Date()).subtract(1, "day").format("YYYY-MM-DD")}
+                                                        min={permission?.name?.toLowerCase() !== "admin" && moment(new Date()).subtract(1, "day").format("YYYY-MM-DD")}
                                                     />
                                                     <CalendarMonthIcon className='calendar-icon-work' />
                                                     {dateError && <small id="date-field" className="form-text error">{dateError}</small>}

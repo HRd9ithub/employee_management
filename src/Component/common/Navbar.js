@@ -6,7 +6,6 @@ import { AppProvider } from '../context/RouteContext';
 import { useEffect } from 'react';
 import Spinner from './Spinner';
 import { toast } from 'react-hot-toast';
-import { FaAngleDown, FaAngleLeft } from "react-icons/fa";
 import { useState } from 'react';
 import { HiOutlineMinus } from "react-icons/hi";
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
@@ -19,9 +18,7 @@ import moment from 'moment';
 
 const Navbar = () => {
   let { handleLogout, loading } = Globalcomponent()
-  let { UserData, leaveNotification, getLeaveNotification, getUserData, getLeave, reportRequest, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
-  const [dropdownbtnToggle, setdropdownbtnToggle] = useState(false);
-  const [dropdownbtnToggleTwo, setdropdownbtnToggleTwo] = useState(false);
+  let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
   const [sidebar, setsidebar] = useState(false);
   const [isLoading, setisLoading] = useState(false);
 
@@ -141,6 +138,17 @@ const Navbar = () => {
     }
   }
 
+
+  const notificationToggle = (item) => {
+    let { date, _id } = item;
+
+    if (date) {
+      handleDeleteRequestReportClick(_id);
+    } else {
+      changeStatus(_id);
+    }
+  }
+
   return (
     <nav className="navbar default-layout-navbar sticky-top">
       <div className="navbar-menu-wrapper d-flex align-items-stretch">
@@ -164,34 +172,39 @@ const Navbar = () => {
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link count-indicator new-notification">
                   <i className="fa-solid fa-bell nav-icons"></i>
-                  <span className="badge badge-light">{leaveNotification.length + reportRequest.length}</span>
+                  {notification.length !== 0 && <span className="badge badge-light">{notification.length}</span>}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
                   <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
                   <div className="dropdown-divider"></div>
                   <div className="notification-list">
-                    <div className="notification-item">
-                      <div className="notification-content d-flex justify-content-start align-items-start">
-                        <div>
-                          <div className="notification-image">
-                            <img src="./Images/download.png" alt="img" />
+                    {notification.map((item) => {
+                      return (
+                        <Dropdown.Item className="notification-item" key={item._id} onClick={() => notificationToggle(item)}>
+                          <div className={`notification-content d-flex justify-content-start align-items-start w-100`}>
+                            <div>
+                              <div className="notification-image">
+                                {item.user.profile_image &&
+                                  <img src={`${item.user.profile_image && process.env.REACT_APP_IMAGE_API}/${item.user.profile_image}`} alt="img" />}
+                              </div>
+                            </div>
+                            <div className="notification-details w-100">
+                              <div className="w-100 d-flex justify-content-between align-items-center">
+                                <p className='mb-0'>{item.user ? item.user.first_name?.concat(" ", item.user?.last_name) : <HiOutlineMinus />}</p>
+                                <p className='mb-0 text-dark-secondary'>{timeAgo(item.createdAt)}</p>
+                              </div>
+                              <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.title ? moment(item.date).format("DD MMM YYYY") + "  -  " + item.title : item.leaveType + " Request"}</p>
+                              {item.description && <p className='notifictaion-description mt-1 mb-0 text-dark-secondary text-wrap w-100'>{item.description}</p>}
+                            </div>
                           </div>
-                        </div>
-                        <div className="notification-details w-100">
-                          <div className="w-100 d-flex justify-content-between align-items-center">
-                            <p className='mb-0'>Leave Application</p>
-                            <p className='mb-0 text-dark-secondary'>1min</p>
-                          </div>
-                          <p className='mt-1 mb-0 ellipsis text-dark-secondary'>Lorem ipsum dolor sit</p>
-                          <p className='notifictaion-description mt-1 mb-0 text-dark-secondary'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, pariatur reiciendis nulla quaerat facilis dolorem deleniti sapiente error quidem corporis quam? Debitis autem sint</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <div className="notification-item-no-record">
+                        </Dropdown.Item>
+                      )
+                    })}
+                    {notification.length === 0 && <div className="notification-item-no-record">
                       <h5 className='text-center my-3 text-dark-secondary'>No Record Found</h5>
-                    </div> */}
+                    </div>}
                   </div>
-                  {leaveNotification.length > 0 && <>
+                  {notification.length > 0 && <>
                     <div className="dropdown-divider"></div>
                     <Dropdown.Item className="dropdown-item preview-item justify-content-center" onClick={evt => {
                       evt.preventDefault()

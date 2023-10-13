@@ -135,7 +135,7 @@ const LoginInfo = ({ userId }) => {
             <div>
                 <div className='col-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto px-0'>
                     <div className="form-group mb-0 position-relative">
-                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate ,ranges: ranges}} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate ,ranges: ranges, maxDate: new Date()}} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
                         <CalendarMonthIcon className="range_icon"/>
                     </div>
                 </div>

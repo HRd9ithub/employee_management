@@ -3808,6 +3808,9 @@
     .search-box + .btn{
         padding: 8px 5px !important;
     }
+    .notification-content .notification-details .ellipsis{
+        max-width: 150px !important;
+    }
 }
 
 @media (max-width: 315px) {
