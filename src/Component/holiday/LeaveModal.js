@@ -392,7 +392,7 @@ const LeaveModal = (props) => {
                                             onClick={() => { fromDateRef.current.showPicker(); }}
                                             onBlur={fromDateValidation}
                                         />
-                                        <CalendarMonthIcon className='calendar-icon' onClick={() => {leave.leave_type_id && leave.leave_type_id !== "0" &&  fromDateRef.current.showPicker(); }} />
+                                        <CalendarMonthIcon className='calendar-icon' onClick={() => { leave.leave_type_id && leave.leave_type_id !== "0" && fromDateRef.current.showPicker(); }} />
                                         {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
                                     </div>
 
@@ -411,7 +411,7 @@ const LeaveModal = (props) => {
                                             onBlur={toDateValidation}
                                             min={from.from_date || new Date()}
                                         />
-                                        <CalendarMonthIcon className='calendar-icon' onClick={() => {from.from_date !== "" &&  toDateRef.current.showPicker(); }} />
+                                        <CalendarMonthIcon className='calendar-icon' onClick={() => { from.from_date !== "" && toDateRef.current.showPicker(); }} />
                                         {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
                                     </div>
 
@@ -433,7 +433,7 @@ const LeaveModal = (props) => {
 
                                     <div className="form-group">
                                         <label htmlFor="1" className='mt-3'>Leave Reason</label>
-                                        <Form.Control as="textarea" placeholder="Leave Reason .  .  ." onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
+                                        <Form.Control as="textarea" onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
                                         {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
                                     </div>
 
@@ -448,11 +448,11 @@ const LeaveModal = (props) => {
                                             </select>
                                         </div>}
                                     {error.length !== 0 &&
-                                    <ol>
-                                        {error.map((val) => {
-                                            return <li className='error' key={val} >{val}</li>
-                                        })}
-                                    </ol>}
+                                        <ol>
+                                            {error.map((val) => {
+                                                return <li className='error' key={val} >{val}</li>
+                                            })}
+                                        </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
