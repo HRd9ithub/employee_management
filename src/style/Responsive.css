@@ -710,11 +710,6 @@
         font-size: 11px;
     }
 
-    .profile-action-icon {
-        height: 50px !important;
-        width: 50px !important;
-    }
-
     .employee-content .row-std {
         padding: 0.8rem 1rem 0.5rem 0rem !important
     }
@@ -931,11 +926,6 @@
 
 @media (max-width: 1028px) {
 
-
-    .profile-action-icon {
-        height: 60px;
-        width: 60px;
-    }
 
     .employee_name_style {
         font-size: 15px !important;
@@ -1324,10 +1314,6 @@
         font-size: 12px !important;
     }
 
-    .profile-action-icon {
-        height: 43px !important;
-        width: 43px !important;
-    }
 
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link i {
         font-size: 1rem;
@@ -1775,11 +1761,6 @@
 
     .employee_name_style {
         font-size: 14px !important;
-    }
-
-    .profile-action-icon {
-        height: 55px;
-        width: 55px;
     }
 
     .card .card-body {
@@ -2681,11 +2662,6 @@
         top: 22px;
     }
 
-    .profile-action-icon {
-        height: 50px;
-        width: 50px;
-    }
-
     .profile-image {
         width: 137px;
         height: 137px;
@@ -2933,11 +2909,6 @@
 
     #one {
         padding-left: 6px;
-    }
-
-    .profile-action-icon {
-        height: 30px !important;
-        width: 30px !important;
     }
 
     .epNTxY {
@@ -3560,12 +3531,7 @@
     .page-title {
         font-size: 16px;
     }
-
-    .profile-action-icon {
-        height: 45px;
-        width: 45px;
-    }
-
+    
     .form-control {
         margin-top: 7px !important;
     }
