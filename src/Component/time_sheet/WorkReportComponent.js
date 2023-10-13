@@ -22,6 +22,7 @@ const WorkReportComponent = () => {
     // eslint-disable-next-line
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
+    const [report, setreport] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
@@ -51,6 +52,7 @@ const WorkReportComponent = () => {
             if (result.data.success) {
                 setData(result.data.data);
                 setDataFilter(result.data.data);
+                setreport(result.data.test);
                 setpermission(result.data.permissions);
             }
         } catch (error) {
@@ -298,21 +300,17 @@ const WorkReportComponent = () => {
                                         {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    {!val.userId && val.name !== "Leave" && <TableCell colSpan={7} align="center" className="Holiday_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
-                                                    {!val.userId && val.name === "Leave" && <TableCell colSpan={7} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
-                                                    {/* {val.userId && <TableCell>{ind + 1}</TableCell>} */}
-                                                    {val.userId &&
-                                                        permission && permission.name.toLowerCase() === "admin" &&
+                                                    {permission && permission.name.toLowerCase() === "admin" &&
                                                         <TableCell>
-                                                            <div className={`pr-3  ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                                {val.user ? <NavLink to={"/employees/view/" + val.userId} className="name_col">{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                                            <div className='pr-3'>
+                                                                {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                             </div>
                                                         </TableCell>
                                                     }
-                                                    {val.userId && <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>}
-                                                    {val.userId && <TableCell>{val.totalHours}</TableCell>}
-                                                    {val.userId && <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>}
-                                                    {val.userId && (permission && permission.name.toLowerCase() === "admin" && val.userId ? <TableCell align="center">
+                                                    <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
+                                                    <TableCell>{val.totalHours}</TableCell>
+                                                    <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
+                                                    {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">
                                                         <div className="action">
                                                             <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
                                                         </div>
@@ -321,9 +319,7 @@ const WorkReportComponent = () => {
                                                             <div className="action">
                                                                 <RequestModal data={val.date} />
                                                             </div>
-                                                        </TableCell>
-                                                    )
-                                                    }
+                                                        </TableCell>}
                                                 </TableRow>
                                             )
                                         }) :

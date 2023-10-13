@@ -327,8 +327,8 @@ const TimeSheetComponent = () => {
                                             <TableCell>{ind + 1}</TableCell>
                                             {(permission && permission.name?.toLowerCase() === "admin") &&
                                                 <TableCell>
-                                                    <div className={`pr-3  ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                        {val.user ? <NavLink to={"/employees/view/" + val.user_id} className="name_col">{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                                    <div className='pr-3'>
+                                                        {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                     </div>
                                                 </TableCell>
                                             }

@@ -1229,13 +1229,13 @@ span.eye-icon {
 }
 
 .name_col {
-  text-decoration: none;
-  color: #434343;
+  text-decoration: none !important;
+  color: #434343 !important;
 }
 
 .name_col:hover {
-  text-decoration: none;
-  color: #434343;
+  text-decoration: none !important;
+  color: #434343 !important;
 }
 
 .profile-image img {
@@ -3890,8 +3890,9 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* user staus inactive dot style */
-.name_col.user-status-inactive {
+.user-status-inactive {
   color: red !important;
+  text-decoration: none;
 }
 
 /* calender holiday list hover effect */
