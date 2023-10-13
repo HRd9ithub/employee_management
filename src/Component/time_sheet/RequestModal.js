@@ -107,7 +107,7 @@ const RequestModal = ({ data }) => {
                     className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={() => {
                         setrequestModal(true);
                         settitle("Add Request");
-                        setrequest({...request, date:moment(new Date()).subtract(1,"day").format("YYYY-MM-DD")})
+                        setrequest({...request, date:moment(new Date()).subtract(2,"day").format("YYYY-MM-DD")})
                     }} >
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add Request
                 </button > :
@@ -155,7 +155,7 @@ const RequestModal = ({ data }) => {
                                                         onChange={handleChange}
                                                         value={request.date}
                                                         onBlur={dateValidation}
-                                                        max={moment(new Date()).subtract(1,"day").format("YYYY-MM-DD")}
+                                                        max={moment(new Date()).subtract(2,"day").format("YYYY-MM-DD")}
                                                         disabled={data}
                                                     />
                                                     <CalendarMonthIcon className='calendar-icon-work' />
@@ -167,7 +167,7 @@ const RequestModal = ({ data }) => {
                                             {/* ====================   description   ============*/}
                                             <div className="form-group">
                                                 <label htmlFor="request" className='mt-3'>Description</label>
-                                                <textarea name="description" id="request" cols="30" rows="2" className="form-control" autoComplete="off" value={request.description} onChange={handleChange} onBlur={handleDescriptionValidation}></textarea>
+                                                <textarea name="description" id="request" cols="30" rows="2" className="form-control work-report-description" autoComplete="off" value={request.description} onChange={handleChange} onBlur={handleDescriptionValidation}></textarea>
                                                 {descriptionError && <small className="from-text error" id="request" >{descriptionError}</small>}
                                             </div>
                                         </div>

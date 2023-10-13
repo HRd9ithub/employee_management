@@ -17,8 +17,7 @@ let AppProvider = createContext();
 const initialistate = {
     UserData: '',
     loader: false,
-    leaveNotification: [],
-    reportRequest :[],
+    notification: [],
     leave:[],
     leaveFilter : [],
     permission : "",

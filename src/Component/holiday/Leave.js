@@ -8,7 +8,6 @@ import { HiOutlineMinus } from "react-icons/hi";
 import Modal from 'react-bootstrap/Modal';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import Avatar from '@mui/material/Avatar';
 import Error403 from '../error_pages/Error403';
 import Error500 from '../error_pages/Error500';
 import { AppProvider } from '../context/RouteContext'
@@ -283,6 +282,7 @@ const Leave = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
+                                            <TableCell>id</TableCell>
                                             {(permission && permission.name?.toLowerCase() === "admin") && <>
                                                 <TableCell>
                                                     <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
@@ -338,15 +338,11 @@ const Leave = () => {
                                         {leave.length !== 0 ? sortRowInformation(leave, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    {/* <TableCell>{ind + 1}</TableCell> */}
+                                                    <TableCell>{ind + 1}</TableCell>
                                                     {(permission && permission.name?.toLowerCase() === "admin") &&
                                                         <TableCell>
-                                                            <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                                {val.user ? <>
-                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                                    {val.user.first_name.concat(" ", val.user.last_name)}
-                                                                </> : <HiOutlineMinus />
-                                                                }
+                                                            <div className={`pr-3  ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                                                {val.user ?<NavLink to={"/employees/view/"+ val.user_id} className="name_col">{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                             </div>
                                                         </TableCell>
                                                     }

@@ -243,8 +243,10 @@ const Dashboard = () => {
                                              </NavLink>
                                         </div>
                                    </>}
-                                   <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
-                                        <NavLink className="common-box-dashboard on-leave-today nav-link">
+                                   <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leave")}>
+                                        <NavLink className="common-box-dashboard on-leave-today nav-link" style={{
+                                        cursor : UserData?.role && UserData.role.name.toLowerCase() !== "admin" && "default"
+                                   }}>
                                              <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                              <div className="common-info-dashboard">
                                                   <h4>On Leave Today</h4>
@@ -279,8 +281,8 @@ const Dashboard = () => {
                                    </div>
                                    <div className='col-md-6 mt-3 box-dashboard'>
                                         <div className='my-chart'>
-                                             {/* <div className='my-chart-head text-center'>List of Holiday</div> */}
-                                             <div className='my-chart-head text-center'>Bookmarks</div>
+                                             <div className='my-chart-head text-center'>Holiday</div>
+                                             {/* <div className='my-chart-head text-center'>Bookmarks</div> */}
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {

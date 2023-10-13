@@ -116,16 +116,22 @@ h6,
   font-size: 13px;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  display: none;
+  margin: 0;
   -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance : none;
+  -o-appearance : none;
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  transition: background-color 5000s;
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-background-clip: text;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 @font-face {
@@ -3972,6 +3978,9 @@ img {
 .notification-list .notification-item {
   padding: 10px 5px;
   cursor: pointer;
+  display: block;
+  text-decoration: none;
+  color: unset;
 }
 .notification-list .notification-item:hover {
   background-color: #f5f5f5;

@@ -11,7 +11,6 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import { CSVLink } from "react-csv";
 import moment from "moment";
-import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
 import Error500 from '../error_pages/Error500';
 import { customAxios } from "../../service/CreateApi";
@@ -129,8 +128,8 @@ const TimeSheetComponent = () => {
         return data.filter((val) => {
             return (
                 moment(val.date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase()) ||
-                moment(val.login_time,"HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
-                moment(val.logout_time,"HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
+                moment(val.login_time, "HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
+                moment(val.logout_time, "HH:mm:ss").format("hh:mm:ss A")?.includes(searchItem.toLowerCase()) ||
                 val.total?.includes(searchItem.toLowerCase())
             );
         });
@@ -157,10 +156,10 @@ const TimeSheetComponent = () => {
 
     const descedingComparator = (a, b, orderBy) => {
         if (orderBy === "name") {
-            if (b.user.first_name?.concat(" ", b.last_name)  < a.user.first_name?.concat(" ", a.last_name)) {
+            if (b.user.first_name?.concat(" ", b.last_name) < a.user.first_name?.concat(" ", a.last_name)) {
                 return -1
             }
-            if (b.user.first_name?.concat(" ", b.last_name)  > a.user.first_name?.concat(" ", a.last_name)) {
+            if (b.user.first_name?.concat(" ", b.last_name) > a.user.first_name?.concat(" ", a.last_name)) {
                 return 1
             }
             return 0
@@ -277,10 +276,10 @@ const TimeSheetComponent = () => {
                                 </div>}
                             <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                 <div className="form-group mb-0 position-relative">
-                                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
+                                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >
                                         <input className="form-control mt-3" />
                                     </DateRangePicker>
-                                    <CalendarMonthIcon className="range_icon"/>
+                                    <CalendarMonthIcon className="range_icon" />
                                 </div>
                             </div>
                         </div>
@@ -293,6 +292,7 @@ const TimeSheetComponent = () => {
                         <Table className="common-table-section">
                             <TableHead className="common-header">
                                 <TableRow>
+                                    <TableCell>id</TableCell>
                                     {permission && permission.name.toLowerCase() === "admin" && <TableCell>
                                         <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
                                             Employee
@@ -324,20 +324,17 @@ const TimeSheetComponent = () => {
                                 {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                     return (
                                         <TableRow key={ind}>
-                                            {/* <TableCell>{ind + 1}</TableCell> */}
-                                            {permission && permission.name.toLowerCase() === "admin" &&
+                                            <TableCell>{ind + 1}</TableCell>
+                                            {(permission && permission.name?.toLowerCase() === "admin") &&
                                                 <TableCell>
-                                                    <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                        {val.user ? <>
-                                                            <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                            {val.user.first_name.concat(" ", val.user.last_name)}
-                                                        </> : <HiOutlineMinus />
-                                                        }
+                                                    <div className={`pr-3  ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                                        {val.user ? <NavLink to={"/employees/view/" + val.user_id} className="name_col">{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                     </div>
-                                                </TableCell>}
+                                                </TableCell>
+                                            }
                                             <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
-                                            <TableCell>{moment(val.login_time,"HH:mm:ss").format("hh:mm:ss A")}</TableCell>
-                                            <TableCell>{val.logout_time ? moment(val.logout_time,"HH:mm:ss").format("hh:mm:ss A") : <HiOutlineMinus />}</TableCell>
+                                            <TableCell>{moment(val.login_time, "HH:mm:ss").format("hh:mm:ss A")}</TableCell>
+                                            <TableCell>{val.logout_time ? moment(val.logout_time, "HH:mm:ss").format("hh:mm:ss A") : <HiOutlineMinus />}</TableCell>
                                             <TableCell>{val.total ? val.total : (<HiOutlineMinus />)}</TableCell>
                                         </TableRow>
                                     )

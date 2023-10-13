@@ -9,7 +9,6 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from "moment";
-import Avatar from '@mui/material/Avatar';
 import Error403 from "../error_pages/Error403";
 import Error500 from '../error_pages/Error500';
 import WorkReportModal from "./WorkReportModal";
@@ -134,14 +133,14 @@ const WorkReportComponent = () => {
 
     const descedingComparator = (a, b, orderBy) => {
         if (orderBy === "name") {
-            if ( b.user?.first_name?.concat(" ", b.user?.last_name) <  a.user?.first_name?.concat(" ", a.user?.last_name)) {
+            if (b.user?.first_name?.concat(" ", b.user?.last_name) < a.user?.first_name?.concat(" ", a.user?.last_name)) {
                 return -1
             }
-            if ( b.user?.first_name?.concat(" ", b.user?.last_name) >  a.user?.first_name?.concat(" ", a.user?.last_name)) {
+            if (b.user?.first_name?.concat(" ", b.user?.last_name) > a.user?.first_name?.concat(" ", a.user?.last_name)) {
                 return 1
             }
             return 0
-        }else {
+        } else {
             if (b[orderBy] < a[orderBy]) {
                 return -1
             }
@@ -256,7 +255,7 @@ const WorkReportComponent = () => {
                                     </div>}
                                 <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                     <div className="form-group mb-0 position-relative">
-                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
                                         <CalendarMonthIcon className="range_icon" />
                                     </div>
                                 </div>
@@ -273,7 +272,7 @@ const WorkReportComponent = () => {
                                         <TableRow>
                                             {permission && permission.name.toLowerCase() === "admin" && <TableCell>
                                                 {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
-                                                    Employee
+                                                Employee
                                                 {/* </TableSortLabel> */}
                                             </TableCell>}
                                             <TableCell>
@@ -305,12 +304,8 @@ const WorkReportComponent = () => {
                                                     {val.userId &&
                                                         permission && permission.name.toLowerCase() === "admin" &&
                                                         <TableCell>
-                                                            <div className={`pr-3 d-flex align-items-center name_col ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                                                                {val.user ? <>
-                                                                    <Avatar alt={val.user.first_name} className='text-capitalize profile-action-icon text-center mr-2' src={val.user.profile_image && `${process.env.REACT_APP_IMAGE_API}/${val.user.profile_image}`} sx={{ width: 30, height: 30 }} />
-                                                                    {val.user.first_name.concat(" ", val.user.last_name)}
-                                                                </> : <HiOutlineMinus />
-                                                                }
+                                                            <div className={`pr-3  ${val.user.status === "Inactive" ? 'user-status-inactive' : ''}`}>
+                                                                {val.user ? <NavLink to={"/employees/view/" + val.userId} className="name_col">{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                             </div>
                                                         </TableCell>
                                                     }
