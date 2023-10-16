@@ -179,7 +179,7 @@ const RequestModal = ({ data }) => {
                                             })}
                                         </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSendRequest} ><i className="fa-solid fa-paper-plane"></i> &nbsp;&nbsp;{title}</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSendRequest} >Send</button>
                                         <button className="btn btn-light" onClick={handleRequestmodal}>Cancel</button>
                                     </div>
                                 </form>

@@ -160,40 +160,56 @@ const AccountForm = (props) => {
     return (
         <>
             <form className="forms-sample">
-                <div className="form-group">
-                    <label htmlFor="2" className='mt-2'>Account Number</label>
-                    <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
-                    {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="3" className='mt-2'>IFSC Code</label>
-                    <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
-                    {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="1" className='mt-2'> Bank Name</label>
-                    <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
-                    {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="6" className='mt-2'> Branch Name</label>
-                    <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
-                    {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="3" className='mt-2'>Account Holder Name</label>
-                    <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
-                    {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
-                </div>
-                {error.length !== 0 && 
-                <ol>
-                    {error.map((elem) => {
-                        return <li className='error' key={elem}>{elem}</li>
-                    })}
-                </ol>}
-                <div className="submit-section d-flex justify-content-between pb-3">
-                    <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
-                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                <div className="row">
+                    <div className="col-md-4">
+                        <div className="form-group">
+                            <label htmlFor="2" className='mt-2'>Account Number</label>
+                            <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
+                            {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-group">
+                            <label htmlFor="3" className='mt-2'>IFSC Code</label>
+                            <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
+                            {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-group">
+                            <label htmlFor="1" className='mt-2'> Bank Name</label>
+                            <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
+                            {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-group">
+                            <label htmlFor="6" className='mt-2'> Branch Name</label>
+                            <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
+                            {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="form-group">
+                            <label htmlFor="3" className='mt-2'>Account Holder Name</label>
+                            <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
+                            {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
+                        </div>
+                    </div>
+                    {error.length !== 0 && 
+                    <div className="col-12">
+                        <ol>
+                            {error.map((elem) => {
+                                return <li className='error' key={elem}>{elem}</li>
+                            })}
+                        </ol>
+                    </div>}
+                    <div className="col-12">
+                        <div className="submit-section d-flex justify-content-between pb-3">
+                            <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
+                            <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                        </div>
+                    </div>
                 </div>
             </form>
             {isLoading && <Spinner />}

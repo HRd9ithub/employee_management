@@ -125,7 +125,7 @@ const EmployeeViewComponent = () => {
             {/* ................................................................... */}
             {/* <div className=" container-fluid pt-4"> */}
             {!isLoading ? (match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
-                <div className="background-wrapper bg-white py-2">
+                <div className="background-wrapper bg-white py-4">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
                             <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
