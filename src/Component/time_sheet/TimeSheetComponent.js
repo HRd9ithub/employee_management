@@ -231,10 +231,10 @@ const TimeSheetComponent = () => {
 
     return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
         <div className=" container-fluid pt-4">
-            <div className="background-wrapper bg-white pt-2">
+            <div className="background-wrapper bg-white pt-4">
                 <div className=''>
                     <div className='row justify-content-end align-items-center row-std m-0'>
-                        <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
+                        <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
                             <div>
                                 <ul id="breadcrumb" className="mb-0">
                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
@@ -242,29 +242,12 @@ const TimeSheetComponent = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
-                            <div className="search-full">
-                                <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
-                                <i className="fas fa-search"></i>
-                            </div>
-                            <div className="search-box mr-3">
-                                <form name="search-inner">
-                                    <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
-                                </form>
-                                <i className="fas fa-search"></i>
-                            </div>
-                            {dataFilter.length >= 1 &&
-                                <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' >
-                                    <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
-                                </div>}
-                        </div>
-                    </div>
-                    <div className='container-fluid'>
-                        <div className='row'>
-                            {permission && permission.name.toLowerCase() === "admin" &&
-                                <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                        <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
+                            <div className="d-flex justify-content-end align-items-center w-100" style={{gap: '15px'}}>
+                                {permission && permission.name.toLowerCase() === "admin" &&
+                                <div className="search-full w-25 pr-0 hide-at-small-screen">
                                     <div className="form-group mb-0">
-                                        <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                        <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
                                             <option value=''>All</option>
                                             {userName.map((val) => {
                                                 return (
@@ -274,6 +257,46 @@ const TimeSheetComponent = () => {
                                         </select>
                                     </div>
                                 </div>}
+                                <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
+                                    <div className="form-group mb-0 position-relative">
+                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >
+                                            <input className="form-control mb-0"/>
+                                        </DateRangePicker>
+                                        <CalendarMonthIcon className="range_icon" />
+                                    </div>
+                                </div>
+                                <div className="search-full pr-0">
+                                    <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
+                                    <i className="fas fa-search"></i>
+                                </div>
+                                <div className="search-box mr-3">
+                                    <form name="search-inner">
+                                        <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
+                                    </form>
+                                    <i className="fas fa-search"></i>
+                                </div>
+                                {dataFilter.length >= 1 &&
+                                    <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' >
+                                        <CSVLink data={csvdata} headers={header} filename={"Work Report.csv"} target="_blank"><AiOutlineDownload />&nbsp;CSV</CSVLink>
+                                    </div>}
+                            </div>
+                        </div>
+                    </div>
+                    <div className='container-fluid show-at-small-screen'>
+                        <div className='row'>
+                            {permission && permission.name.toLowerCase() === "admin" &&
+                            <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                <div className="form-group mb-0">
+                                    <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                        <option value=''>All</option>
+                                        {userName.map((val) => {
+                                            return (
+                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                            </div>}
                             <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                 <div className="form-group mb-0 position-relative">
                                     <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >

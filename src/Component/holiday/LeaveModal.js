@@ -344,118 +344,134 @@ const LeaveModal = (props) => {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
-                                    {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                        <div className="form-group">
-                                            <label htmlFor="1" className='mt-3'>Employee</label>
-                                            <select className="form-control " id="user" name='user' disabled={data} value={info
-                                                .user_id} onChange={(e) => {
-                                                    setinfo({ ...info, user_id: e.target.value })
-                                                }
-                                                } onBlur={userValidation} >
-                                                <option value='0'>Select Employee </option>
-                                                {user.map((val) => {
-                                                    return (
-                                                        <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
-                                                    )
+                                    <div className="row">
+                                        {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1">Employee</label>
+                                                <select className="form-control " id="user" name='user' disabled={data} value={info
+                                                    .user_id} onChange={(e) => {
+                                                        setinfo({ ...info, user_id: e.target.value })
+                                                    }
+                                                    } onBlur={userValidation} >
+                                                    <option value='0'>Select Employee </option>
+                                                    {user.map((val) => {
+                                                        return (
+                                                            <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                                {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
+                                                {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
+                                            </div>
+                                        </div>}
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1"> Leave Type</label>
+                                                <select className="form-control text-capitalize " id="leaveType" name='leave_type_id' value={leave
+                                                    .leave_type_id} onChange={InputEvent} onBlur={leaveTypeValidation} >
+                                                    <option value='0'>Select Leave Type </option>
+                                                    {leaveTypeDetail.map((val) => {
+                                                        return (
+                                                            <option key={val._id} value={val._id} className='text-capitalize'>{val.name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                                {leave.leave_type_id_error && <small id="emailHelp" className="form-text error">{leave.leave_type_id_error}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group position-relative">
+                                                <label htmlFor="exampleInputJoining">From</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    value={from.from_date}
+                                                    name='date'
+                                                    disabled={!leave.leave_type_id || leave.leave_type_id === "0"}
+                                                    min={leaveType && leaveType}
+                                                    ref={fromDateRef}
+                                                    onChange={fromDateChange}
+                                                    autoComplete='off'
+                                                    onClick={() => { fromDateRef.current.showPicker(); }}
+                                                    onBlur={fromDateValidation}
+                                                />
+                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { leave.leave_type_id && leave.leave_type_id !== "0" && fromDateRef.current.showPicker(); }} />
+                                                {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group position-relative">
+                                                <label htmlFor="exampleInputJoining">To</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    value={to.to_date || ''}
+                                                    name='todate'
+                                                    disabled={from.from_date === ''}
+                                                    ref={toDateRef}
+                                                    onChange={toDateChange}
+                                                    autoComplete='off'
+                                                    onClick={() => { toDateRef.current.showPicker(); }}
+                                                    onBlur={toDateValidation}
+                                                    min={from.from_date || new Date()}
+                                                />
+                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { from.from_date !== "" && toDateRef.current.showPicker(); }} />
+                                                {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1"> Number of days</label>
+                                                <input type="text" className="form-control" id="1" value={day} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1"> Leave status</label>
+                                                <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
+                                                } onChange={(e) => { setStatus({ ...status_info, leave_status: e.target.value }) }} onBlur={leaveStatusValidation} >
+                                                    <option value='0'>Select Leave Status </option>
+                                                    <option value='Full'>Full</option>
+                                                    <option value='Half' disabled={day > 1}>Half</option>
+                                                </select>
+                                                {status_info.leave_status_error && <small id="emailHelp" className="form-text error">{status_info.leave_status_error}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1">Leave Reason</label>
+                                                <Form.Control as="textarea" onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
+                                                {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
+                                            </div>
+                                        </div>
+
+                                        {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="1">Status</label>
+                                                <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
+                                                    {data && <option value="Pending"> Pending</option>}
+                                                    {data && <option value='Read'>Read </option>}
+                                                    <option value='Approved'>Approved</option>
+                                                    <option value='Declined'>Declined</option>
+                                                </select>
+                                            </div>
+                                        </div>}
+                                        {error.length !== 0 &&
+                                        <div className="col-12">
+                                            <ol>
+                                                {error.map((val) => {
+                                                    return <li className='error' key={val} >{val}</li>
                                                 })}
-                                            </select>
-                                            {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
-                                            {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
+                                            </ol>
                                         </div>}
-
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'> Leave Type</label>
-                                        <select className="form-control text-capitalize " id="leaveType" name='leave_type_id' value={leave
-                                            .leave_type_id} onChange={InputEvent} onBlur={leaveTypeValidation} >
-                                            <option value='0'>Select Leave Type </option>
-                                            {leaveTypeDetail.map((val) => {
-                                                return (
-                                                    <option key={val._id} value={val._id} className='text-capitalize'>{val.name}</option>
-                                                )
-                                            })}
-                                        </select>
-                                        {leave.leave_type_id_error && <small id="emailHelp" className="form-text error">{leave.leave_type_id_error}</small>}
-                                    </div>
-
-                                    <div className="form-group position-relative">
-                                        <label htmlFor="exampleInputJoining">From</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            value={from.from_date}
-                                            name='date'
-                                            disabled={!leave.leave_type_id || leave.leave_type_id === "0"}
-                                            min={leaveType && leaveType}
-                                            ref={fromDateRef}
-                                            onChange={fromDateChange}
-                                            autoComplete='off'
-                                            onClick={() => { fromDateRef.current.showPicker(); }}
-                                            onBlur={fromDateValidation}
-                                        />
-                                        <CalendarMonthIcon className='calendar-icon' onClick={() => { leave.leave_type_id && leave.leave_type_id !== "0" && fromDateRef.current.showPicker(); }} />
-                                        {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
-                                    </div>
-
-                                    <div className="form-group position-relative">
-                                        <label htmlFor="exampleInputJoining">To</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            value={to.to_date || ''}
-                                            name='todate'
-                                            disabled={from.from_date === ''}
-                                            ref={toDateRef}
-                                            onChange={toDateChange}
-                                            autoComplete='off'
-                                            onClick={() => { toDateRef.current.showPicker(); }}
-                                            onBlur={toDateValidation}
-                                            min={from.from_date || new Date()}
-                                        />
-                                        <CalendarMonthIcon className='calendar-icon' onClick={() => { from.from_date !== "" && toDateRef.current.showPicker(); }} />
-                                        {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'> Number of days</label>
-                                        <input type="text" className="form-control" id="1" value={day} disabled />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'> Leave status</label>
-                                        <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
-                                        } onChange={(e) => { setStatus({ ...status_info, leave_status: e.target.value }) }} onBlur={leaveStatusValidation} >
-                                            <option value='0'>Select Leave Status </option>
-                                            <option value='Full'>Full</option>
-                                            <option value='Half' disabled={day > 1}>Half</option>
-                                        </select>
-                                        {status_info.leave_status_error && <small id="emailHelp" className="form-text error">{status_info.leave_status_error}</small>}
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'>Leave Reason</label>
-                                        <Form.Control as="textarea" onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
-                                        {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
-                                    </div>
-
-                                    {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                        <div className="form-group">
-                                            <label htmlFor="1" className='mt-3'>Status</label>
-                                            <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
-                                                {data && <option value="Pending"> Pending</option>}
-                                                {data && <option value='Read'>Read </option>}
-                                                <option value='Approved'>Approved</option>
-                                                <option value='Declined'>Declined</option>
-                                            </select>
-                                        </div>}
-                                    {error.length !== 0 &&
-                                        <ol>
-                                            {error.map((val) => {
-                                                return <li className='error' key={val} >{val}</li>
-                                            })}
-                                        </ol>}
-                                    <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
-                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                        <div className="col-12">
+                                            <div className='d-flex justify-content-center modal-button'>
+                                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
+                                                <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

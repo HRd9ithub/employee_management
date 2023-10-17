@@ -398,7 +398,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                     </div>
                                     {workData.map((item, ind) => {
                                         return (
-                                            <div className='education-wrapper mt-3' key={ind}>
+                                            <div className='education-wrapper mb-3' key={ind}>
                                                 {ind > 0 && <div data-action="delete" className='delete text-right' >
                                                     <i className="fa-solid fa-trash-can " onClick={() => deleteRow(item._id, ind)}></i>
                                                 </div>}

@@ -163,37 +163,35 @@ const EmergencyForm = (props) => {
         <>
             <form className="forms-sample mt-2">
                 <div className='row'>
-                    <div className='col-md-6'>
+                    <div className='col-md-4'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Name</label>
                             <input type="text" className="form-control text-capitalize" id="2" placeholder="Enter name" name='name' onChange={InputEvent} value={emergency.name} autoComplete='off' onBlur={nameValidation} />
                             {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-6'>
+                    <div className='col-md-4'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Email</label>
                             <input type="text" className="form-control" id="2" placeholder="Enter email address" name='email' onChange={InputEvent} value={emergency.email} autoComplete='off' onBlur={emailValidation} />
                             {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                         </div>
                     </div>
-                </div>
-                <div className='row'>
-                    <div className='col-md-6'>
+                    <div className='col-md-4'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Mobile Number</label>
                             <input type="text" className="form-control" id="2" maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off'  onBlur={phoneVlidation}/>
                             {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-6'>
+                    <div className='col-md-4'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>relationship</label>
                             <input type="text" className="form-control  text-capitalize" id="2" placeholder="Enter relationship" name='relationship' onChange={InputEvent} value={emergency.relationship} autoComplete='off' onBlur={relationshipValidtion}  />
                             {relationshipError && <small id="emailHelp" className="form-text error">{relationshipError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-12'>
+                    <div className='col-md-8'>
                         <div className="form-group">
                             <label htmlFor="ADDREESS" className='mt-3'>Address</label>
                             <input type="text" className="form-control" id="ADDRESS" placeholder="Enter address" name='address' onChange={InputEvent} value={emergency.address} autoComplete='off' onBlur={addressValidtion} />

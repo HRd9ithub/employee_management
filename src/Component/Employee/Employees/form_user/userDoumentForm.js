@@ -129,61 +129,72 @@ const UserDoumentForm = (props) => {
     return (
         <>
             <form className="forms-sample mt-4">
-                <div className='form-group'>
-                    <label>Resume File</label>
-                    <div className='d-flex justify-content-between'>
-                        <div className="custom-file ">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
-                            <label className="custom-file-label" htmlFor="customFileLang">{`${file.resume_name ? file.resume_name : 'Upload file'}`}</label>
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className='form-group'>
+                            <label>Resume File</label>
+                            <div className='d-flex justify-content-between'>
+                                <div className="custom-file ">
+                                    <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang" name='resume' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
+                                    <label className="custom-file-label" htmlFor="customFileLang">{`${file.resume_name ? file.resume_name : 'Upload file'}`}</label>
+                                </div>
+                                <button disabled={(!file.resume_name || file.resume)} className='custom-file-btn'>
+                                    <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.resume_name}`} target='_VIEW'>Preview</a>
+                                </button>
+                            </div>
                         </div>
-                        <button disabled={(!file.resume_name || file.resume)} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.resume_name}`} target='_VIEW'>Preview</a>
-                        </button>
                     </div>
-                </div>
-                <div className='form-group'>
-                    <label>Offer Letter</label>
-                    <div className='d-flex justify-content-between'>
-                        <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
-                            <label className="custom-file-label" htmlFor="customFileLang2">{`${file.offer_letter_name ? file.offer_letter_name : 'Upload file'}`}</label>
+                    <div className="col-md-6">
+                        <div className='form-group'>
+                            <label>Offer Letter</label>
+                            <div className='d-flex justify-content-between'>
+                                <div className="custom-file">
+                                    <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
+                                    <label className="custom-file-label" htmlFor="customFileLang2">{`${file.offer_letter_name ? file.offer_letter_name : 'Upload file'}`}</label>
+                                </div>
+                                <button disabled={!file.offer_letter_name || file.offer_letter} className='custom-file-btn'>
+                                    <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.offer_letter_name}`} target='_VIEW'>Preview</a>
+                                </button>
+                            </div>
                         </div>
-                        <button disabled={!file.offer_letter_name || file.offer_letter} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.offer_letter_name}`} target='_VIEW'>Preview</a>
-                        </button>
                     </div>
-                </div>
-
-                <div className='form-group'>
-                    <label>Joining Letter</label>
-                    <div className='d-flex justify-content-between'>
-                        <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
-                            <label className="custom-file-label" htmlFor="customFileLang3">{`${file.joining_letter_name ? file.joining_letter_name : 'Upload file'}`}</label>
+                    <div className="col-md-6">
+                        <div className='form-group'>
+                            <label>Joining Letter</label>
+                            <div className='d-flex justify-content-between'>
+                                <div className="custom-file">
+                                    <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang3" lang="es" name='joining_letter' accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
+                                    <label className="custom-file-label" htmlFor="customFileLang3">{`${file.joining_letter_name ? file.joining_letter_name : 'Upload file'}`}</label>
+                                </div>
+                                <button disabled={!file.joining_letter_name || file.joining_letter} className='custom-file-btn'>
+                                    <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.joining_letter_name}`} target='_VIEW'>Preview</a>
+                                </button>
+                            </div>
                         </div>
-                        <button disabled={!file.joining_letter_name || file.joining_letter} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.joining_letter_name}`} target='_VIEW'>Preview</a>
-                        </button>
                     </div>
-                </div>
-                <div className='form-group'>
-                    <label>Other</label>
-                    <div className='d-flex justify-content-between'>
-                        <div className="custom-file">
-                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
-                            <label className="custom-file-label" htmlFor="customFileLang4">{`${file.other_name ? file.other_name : 'Upload file'}`}</label>
+                    <div className="col-md-6">
+                        <div className='form-group'>
+                            <label>Other</label>
+                            <div className='d-flex justify-content-between'>
+                                <div className="custom-file">
+                                    <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang4" name='other' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
+                                    <label className="custom-file-label" htmlFor="customFileLang4">{`${file.other_name ? file.other_name : 'Upload file'}`}</label>
+                                </div>
+                                <button disabled={!file.other_name || file.other} className='custom-file-btn'>
+                                    <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.other_name}`} target='_VIEW'>Preview</a>
+                                </button>
+                            </div>
                         </div>
-                        <button disabled={!file.other_name || file.other} className='custom-file-btn'>
-                            <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${file.other_name}`} target='_VIEW'>Preview</a>
-                        </button>
                     </div>
-                </div>
-                {error.map((elem) => {
-                    return <li className='error' key={error}>{elem}</li>
-                })}
-                <div className="submit-section d-flex justify-content-between py-3">
-                    <button className="btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
-                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                    {error.map((elem) => {
+                        return <div className="col-12" key={elem}><li className='error'>{elem}</li></div>
+                    })}
+                    <div className="col-12">
+                        <div className="submit-section d-flex justify-content-between py-3">
+                            <button className="btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
+                            <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                        </div>
+                    </div>
                 </div>
             </form>
             {isLoading && <Spinner />}
