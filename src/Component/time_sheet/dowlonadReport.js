@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import DownloadIcon from '@mui/icons-material/Download';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Spinner from '../common/Spinner';
@@ -45,7 +44,6 @@ const DowlonadReport = () => {
 
     useEffect(() => {
         if (show) {
-            console.log("fdhak")
             get_username();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,7 +97,7 @@ const DowlonadReport = () => {
         <div>
             <button
                 className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShowModal}>
-                <DownloadIcon />&nbsp; Download
+                <i className="fa-solid fa-download"></i>&nbsp; Download
             </button >
             
             {/* // add and edit request */}

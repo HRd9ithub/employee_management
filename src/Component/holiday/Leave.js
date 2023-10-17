@@ -35,8 +35,8 @@ const Leave = () => {
     const [page, setpage] = useState(0)
 
     // sort state
-    const [order, setOrder] = useState("asc")
-    const [orderBy, setOrderBy] = useState("name");
+    const [order, setOrder] = useState("desc")
+    const [orderBy, setOrderBy] = useState("createdAt");
 
     useEffect(() => {
         getLeave();

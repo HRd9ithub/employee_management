@@ -4,8 +4,6 @@ import Spinner from "../../common/Spinner";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import { useContext } from "react";
-import { AppProvider } from "../../context/RouteContext";
 import AddEmployeeModal from "./add_form/AddEmployeeModal";
 import Switch from '@mui/material/Switch';
 import { HiOutlineMinus } from "react-icons/hi";
@@ -16,13 +14,11 @@ import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
 import { customAxios } from "../../../service/CreateApi";
 
-
 const Employee = () => {
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const [permission, setPermission] = useState("")
-  let { UserData } = useContext(AppProvider);
+  const [permission, setPermission] = useState("");
   const [serverError, setServerError] = useState(false);
   const [searchItem, setsearchItem] = useState("");
 
@@ -103,21 +99,19 @@ const Employee = () => {
   };
 
   // get employee data in backend
-  const getAlluser = async () => {
-    try {
-      setServerError(false)
-      setisLoading(true);
-
-      const res = await customAxios().get('/user');
-
+  const getAlluser = () => {
+    setServerError(false)
+    setisLoading(true);
+    
+    customAxios().get('/user').then((res) => {
       if (res.data.success) {
-        setPermission(res.data.permissions)
-        let data = res.data.data.filter((val) => {
-          return val?.role?.name.toLowerCase() !== "admin"
-        })
+        let {data,permissions} = res.data;
+        setPermission(permissions);
         setRecords(data);
+        setisLoading(false);
       }
-    } catch (error) {
+    }).catch((error) => {
+      setisLoading(false);
       if (!error.response) {
         setServerError(true)
         toast.error(error.message);
@@ -133,9 +127,7 @@ const Employee = () => {
           }
         }
       }
-    } finally {
-      setisLoading(false);
-    }
+    });
   };
 
   useEffect(() => {
@@ -323,7 +315,7 @@ const Employee = () => {
                           <TableCell>{val.employee_id}</TableCell>
                           <TableCell>
                             <div className={`pr-3 name_col ${val.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                              {val ? val.first_name?.concat(" ", val.last_name): <HiOutlineMinus />}
+                              {val ? val.first_name?.concat(" ", val.last_name) : <HiOutlineMinus />}
                             </div>
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
@@ -338,10 +330,7 @@ const Employee = () => {
                             <Switch color="success"
                               checked={val.status === "Active" ? true : false}
                               onChange={() => handleStatus(val)}
-                              disabled={
-                                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                UserData && UserData._id === val._id
-                              }
+                              disabled={permission && permission.name.toLowerCase() !== "admin"}
                             />
                           </TableCell>
                           {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&

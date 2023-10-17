@@ -29,15 +29,17 @@ const LeaveType = () => {
 
     // get leave type data
     const getLeaveType = async () => {
-        try {
-            setisLoading(true);
-            setServerError(false);
-            const res = await customAxios().get('/leaveType/');
-            if (res.data.success) {
-                setRecords(res.data.data);
-                setpermission(res.data.permissions);
+        setisLoading(true);
+        setServerError(false);
+        customAxios().get('/designation/').then((res) => {
+            let { success, data, permissions } = res.data;
+            if (success) {
+                setpermission(permissions);
+                setRecords(data);
+                setisLoading(false);
             }
-        } catch (error) {
+        }).catch((error) => {
+            setisLoading(false);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message)
@@ -53,10 +55,8 @@ const LeaveType = () => {
                     }
                 }
             }
-        } finally {
-            setisLoading(false)
-        }
-    }
+        })
+    };
 
     useEffect(() => {
         getLeaveType()

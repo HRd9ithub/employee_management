@@ -1,10 +1,9 @@
-import React,{ useContext,useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AppProvider } from '../context/RouteContext';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { motion } from "framer-motion";
 import moment from 'moment';
-import DownloadIcon from '@mui/icons-material/Download';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
@@ -20,13 +19,12 @@ const ReportPreview = () => {
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    console.log(reportData);
     useEffect(() => {
         if (reportData.length === 0) {
             navigate("/work-report");
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const downloadReport = async () => {
         setisLoading(true)
@@ -69,7 +67,7 @@ const ReportPreview = () => {
                             </div>
                             <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
                                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={downloadReport}>
-                                    <DownloadIcon />&nbsp; Download
+                                    <i className="fa-solid fa-download"></i>&nbsp; Download
                                 </button >
                                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report")} >
                                     <i className="fa-solid fa-arrow-left"></i>&nbsp; Back
@@ -78,7 +76,7 @@ const ReportPreview = () => {
                         </div>
                         <div className="d-flex justify-content-between align-content-center flex-wrap px-4 mt-3">
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">
-                                <h6 className="mb-0">Total Days</h6>
+                                <h6 className="mb-0">Total Working Days</h6>
                                 <h6 className="mb-0">{summary.dayCount}</h6>
                             </div>
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">

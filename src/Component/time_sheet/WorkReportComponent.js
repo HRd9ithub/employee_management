@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -26,22 +26,22 @@ const WorkReportComponent = () => {
     const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);
-    const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
-    const [endDate, setendtDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
+    const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
     const [user_id, setuser_id] = useState("");
     const [show, setShow] = useState(false)
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
-    let {get_username, userName} = useContext(AppProvider);
+    let { get_username, userName } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(50)
     const [page, setpage] = useState(0)
 
     // sort state
-    const [order, setOrder] = useState("asc")
+    const [order, setOrder] = useState("desc")
     const [orderBy, setOrderBy] = useState("date")
 
     // get report data
@@ -137,13 +137,16 @@ const WorkReportComponent = () => {
     // user change function
     const userChange = (e) => {
         setuser_id(e.target.value)
-        getReport(e.target.value)
     }
 
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d);
-        getReport(user_id, start._d, end._d)
+        permission && permission.name.toLowerCase() !== "admin"  && getReport(user_id, start._d, end._d)
+    }
+
+    const generateReport = () => {
+        getReport(user_id,startDate, endDate)
     }
 
     // calcendar option
@@ -202,46 +205,52 @@ const WorkReportComponent = () => {
                                 </div>
                             </div>
                             <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                                <div className="d-flex justify-content-end align-items-center w-100" style={{gap: '15px'}}>
+                                <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
                                     {permission && permission.name.toLowerCase() === "admin" &&
-                                    <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                        <div className="form-group mb-0">
-                                            <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
-                                                <option value="">Select employee</option>
-                                                {userName.map((val) => {
-                                                    return (
-                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>}
+                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
+                                            <div className="form-group mb-0">
+                                                <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                    <option value="">Select employee</option>
+                                                    {userName.map((val) => {
+                                                        return (
+                                                            val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>}
                                     <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
                                         <div className="form-group mb-0 position-relative">
                                             <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
                                             <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
+                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                    <button
+                                        className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={generateReport} >
+                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
+                                    </button>}
                                     {permission && permission.name.toLowerCase() !== "admin" && <RequestModal />}
                                     <WorkReportModal permission={permission && permission} getReport={getReport} />
+                                    {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                                 </div>
                             </div>
                         </div>
                         <div className='container-fluid show-at-small-screen'>
                             <div className='row'>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
-                                    <div className="form-group mb-0">
-                                        <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
-                                            <option value="">Select employee</option>
-                                            {userName.map((val) => {
-                                                return (
-                                                    <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
-                                                )
-                                            })}
-                                        </select>
-                                    </div>
-                                </div>}
+                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                        <div className="form-group mb-0">
+                                            <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                <option value="">Select employee</option>
+                                                {userName.map((val) => {
+                                                    return (
+                                                        <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>}
                                 <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                     <div className="form-group mb-0 position-relative">
                                         <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
@@ -254,81 +263,78 @@ const WorkReportComponent = () => {
 
                     {/* table */}
                     <div className="mx-4">
-                        {permission.name.toLowerCase() !== "admin" || user_id ? <>
-                            <TableContainer >
-                                <Table className="common-table-section">
-                                    <TableHead className="common-header">
-                                        <TableRow>
-                                            {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                                {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
-                                                Employee
-                                                {/* </TableSortLabel> */}
+                        <TableContainer >
+                            <Table className="common-table-section">
+                                <TableHead className="common-header">
+                                    <TableRow>
+                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                            {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
+                                            Employee
+                                            {/* </TableSortLabel> */}
+                                        </TableCell>}
+                                        <TableCell>
+                                            <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
+                                                Date
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
+                                                Total Hours
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            Description
+                                        </TableCell>
+                                        {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                            <TableCell>
+                                                Action
                                             </TableCell>}
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
-                                                    Date
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
-                                                    Total Hours
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                Description
-                                            </TableCell>
-                                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                                <TableCell>
-                                                    Action
-                                                </TableCell>}
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                            return (
-                                                <TableRow key={ind}>
-                                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                                        <TableCell>
-                                                            <div className='pr-3'>
-                                                                {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
-                                                            </div>
-                                                        </TableCell>
-                                                    }
-                                                    <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
-                                                    <TableCell>{val.totalHours}</TableCell>
-                                                    <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
-                                                    {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">
-                                                        <div className="action">
-                                                            <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                        return (
+                                            <TableRow key={ind}>
+                                                {permission && permission.name.toLowerCase() === "admin" &&
+                                                    <TableCell>
+                                                        <div className='pr-3'>
+                                                            {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                         </div>
-                                                    </TableCell> :
-                                                        <TableCell>
-                                                            <div className="action">
-                                                                <RequestModal data={val.date} />
-                                                            </div>
-                                                        </TableCell>}
-                                                </TableRow>
-                                            )
-                                        }) :
-                                            <TableRow>
-                                                <TableCell colSpan={7} align="center">
-                                                    No Records Found
-                                                </TableCell>
+                                                    </TableCell>
+                                                }
+                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
+                                                <TableCell>{val.totalHours}</TableCell>
+                                                <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
+                                                {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">
+                                                    <div className="action">
+                                                        <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
+                                                    </div>
+                                                </TableCell> :
+                                                    <TableCell>
+                                                        <div className="action">
+                                                            <RequestModal data={val.date} />
+                                                        </div>
+                                                    </TableCell>}
                                             </TableRow>
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                                component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
-                                count={dataFilter.length}
-                                page={page}>
-                            </TablePagination>
-                        </> :
-                            <h4 className="no-data my-2">Please select employee first</h4>}
+                                        )
+                                    }) :
+                                        <TableRow>
+                                            <TableCell colSpan={7} align="center">
+                                                No Records Found
+                                            </TableCell>
+                                        </TableRow>
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                            component="div"
+                            onPageChange={onChangePage}
+                            onRowsPerPageChange={onChangeRowsPerPage}
+                            rowsPerPage={count}
+                            count={dataFilter.length}
+                            page={page}>
+                        </TablePagination>
                     </div>
                 </div>
             </div>
