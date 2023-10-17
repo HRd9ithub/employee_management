@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import { Form } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../../../common/Spinner';
@@ -9,8 +8,8 @@ import "react-calendar/dist/Calendar.css";
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
-import { useRef } from 'react';
-import {customAxios} from "../../../../service/CreateApi";
+import { customAxios } from "../../../../service/CreateApi";
+import { AppProvider } from '../../../context/RouteContext';
 
 const AddEmployeeModal = ({ getAlluser, permission }) => {
     // eslint-disable-next-line
@@ -19,6 +18,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
     const history = useNavigate();
     let { getCommonApi } = GlobalPageRedirect();
+    let { get_username, userName, loading } = useContext(AppProvider);
 
     let DateRef = useRef();
 
@@ -41,7 +41,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     });
     const [loader, setLoader] = useState(false);
     const [userRole, setUserRole] = useState([]);
-    const [userName, setUserName] = useState([]);
     const [Designations, setDesignations] = useState([]);
     const [firstNameError, setfirstNameError] = useState('');
     const [lastNameError, setlastNameError] = useState('');
@@ -89,30 +88,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
                 if (res.data.success) {
                     setDesignations(res.data.data);
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
-                    }
-                }
-            } finally {
-                setLoader(false)
-            }
-        };
-        const get_username = async () => {
-            setLoader(true)
-            try {
-                const res = await customAxios().post('/user/username');
-
-                if (res.data.success) {
-                    setUserName(res.data.data);
                 }
             } catch (error) {
                 if (!error.response) {
@@ -485,14 +460,14 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputfname">First Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname"  placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
                                                 {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="exampleInputlname">Last Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off'  maxLength={25}/>
+                                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' maxLength={25} />
                                                 {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
                                             </div>
                                         </div>
@@ -644,7 +619,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                         </div>
                     </div>
                 </Modal.Body>
-                {loader && <Spinner />}
+                {(loader || loading) && <Spinner />}
             </Modal>
         </>
     )

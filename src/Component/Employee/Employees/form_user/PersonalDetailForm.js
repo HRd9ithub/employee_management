@@ -41,7 +41,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     const [Designations, setDesignations] = useState([]);
 
     const [isLoading, setisLoading] = useState(false);
-    const [allRecords, setallRecords] = useState([]);
     const [reportToerror, setreporttoError] = useState('');
 
     const [firstNameError, setfirstNameError] = useState('');
@@ -64,7 +63,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
     const [marritialError, setmeritialerror] = useState("");
 
 
-    let { getUserData } = useContext(AppProvider);
+    let { getUserData ,get_username,loading,userName} = useContext(AppProvider);
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -117,28 +116,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 }
             } finally { setisLoading(false) }
         };
-        // get employee data in backend
-        const getAlluser = async () => {
-            setisLoading(true);
-            try {
-                const res = await customAxios().post('/user/username');
-                if (res.data.success) {
-                    setallRecords(res.data.data)
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            } finally { setisLoading(false) }
-        };
+     
         if (!value) {
-            getAlluser();
+            get_username();
             get_role();
             get_Designations();
         }
@@ -729,7 +709,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                                 <label htmlFor="reportby">Report To</label>
                                 <select className="form-control" id="reportby" name="report_by" value={employee.report_by === null ? "" : employee.report_by} onChange={InputEvent} onBlur={reportValidation}>
                                     <option value="report">Select Report To</option>
-                                    {allRecords.map((val) => {
+                                    {userName.map((val) => {
                                         return (
                                             val._id !== employee._id && <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
                                         );
@@ -770,7 +750,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     <button className="btn btn-light" onClick={BackBtn}>Back</button>
                 </div>
             </form >
-            {isLoading && <Spinner />}
+            {(isLoading || loading) && <Spinner />}
         </>
     );
 }

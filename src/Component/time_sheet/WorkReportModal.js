@@ -10,6 +10,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMemo } from 'react';
+import { useContext } from 'react';
+import { AppProvider } from '../context/RouteContext';
 
 function WorkReportModal({ data, permission, getReport }) {
     let workDateRef = useRef(null);
@@ -20,7 +22,6 @@ function WorkReportModal({ data, permission, getReport }) {
 
     // store database value
     const [project, setProject] = useState([])
-    const [user, setUser] = useState([])
 
     // initialistate state
     const [work, setWork] = useState({
@@ -43,11 +44,11 @@ function WorkReportModal({ data, permission, getReport }) {
     const [error, setError] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
+    let { get_username, userName, loading } = useContext(AppProvider);
 
     // modal show function
     const handleShow = () => {
         if (data) {
-            console.log(data)
             let { _id, userId, date, totalHours, work } = data;
             setId(_id);
 
@@ -117,33 +118,6 @@ function WorkReportModal({ data, permission, getReport }) {
         }
     }
 
-    // get user name
-    const get_username = async () => {
-        setisLoading(true)
-        try {
-            const res = await customAxios().post('/user/username');
-
-            if (res.data.success) {
-                let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
-                setUser(data);
-            }
-        } catch (error) {
-            if (!error.response) {
-                toast.error(error.message);
-            } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            }
-        } finally {
-            setisLoading(false)
-        }
-    };
-
     // initialistate onchange function
     const handleChange = (e) => {
         let { name, value } = e.target;
@@ -157,7 +131,6 @@ function WorkReportModal({ data, permission, getReport }) {
         setError([])
         let { userId, date } = work;
         let data = validate();
-        console.log('data', data)
 
         permission && permission.name?.toLowerCase() === 'admin' && userIdValidation();
         workDateValidation();
@@ -327,20 +300,16 @@ function WorkReportModal({ data, permission, getReport }) {
 
     // * total hours  generator
     const totalHours = useMemo(() => {
-        let store = workData.reduce(myFunc);
-
-        function myFunc(total, num) {
-            return Number(total.hours ? total.hours : total) + Number(num.hours);
-        }
-
-        return typeof store === "object" ? store.hours : store
+        const initialValue = 0;
+        const sumWithInitial = workData.reduce((total, num) => Number(total.hours ? total.hours : total) + Number(num.hours), initialValue);
+        return sumWithInitial
     }, [workData])
 
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
                 permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
-                < button
+                <button
                     className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={handleShow} >
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add
                 </button >
@@ -365,9 +334,9 @@ function WorkReportModal({ data, permission, getReport }) {
                                                     <label htmlFor="user" className='mt-3'>Employee</label>
                                                     <select className="form-control " id="user" name='userId' disabled={data} value={work.userId} onChange={handleChange} onBlur={userIdValidation} >
                                                         <option value='0'>Select Employee </option>
-                                                        {user.map((val) => {
+                                                        {userName.map((val) => {
                                                             return (
-                                                                <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
                                                             )
                                                         })}
                                                     </select>
@@ -388,7 +357,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                         value={work.date}
                                                         onBlur={workDateValidation}
                                                         max={moment(new Date()).format("YYYY-MM-DD")}
-                                                        min={permission?.name?.toLowerCase() !== "admin" && moment(new Date()).subtract(1, "day").format("YYYY-MM-DD")}
+                                                        min={permission?.name?.toLowerCase() !== "admin" ? moment(new Date()).subtract(1, "day").format("YYYY-MM-DD") : ""}
                                                     />
                                                     <CalendarMonthIcon className='calendar-icon-work' />
                                                     {dateError && <small id="date-field" className="form-text error">{dateError}</small>}
@@ -464,7 +433,7 @@ function WorkReportModal({ data, permission, getReport }) {
                             </div>
                         </div>
                     </div>
-                    {isLoading && <Spinner />}
+                    {(isLoading || loading) && <Spinner />}
                 </Modal.Body>
             </Modal>
         </>

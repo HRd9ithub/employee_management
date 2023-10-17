@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -15,27 +15,28 @@ import Error403 from "../error_pages/Error403";
 import Error500 from '../error_pages/Error500';
 import { customAxios } from "../../service/CreateApi";
 import Spinner from "../common/Spinner";
+import { AppProvider } from "../context/RouteContext";
 
 const TimeSheetComponent = () => {
     let date_today = new Date();
     const [data, setData] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);
-    const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
-    const [endDate, setendtDate] = useState(new Date());
-    const [userName, setUserName] = useState([]);
+    const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
+    const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
     const [user_id, setuser_id] = useState("");
     const [serverError, setServerError] = useState(false);
     const [searchItem, setsearchItem] = useState("");
 
-    let { getCommonApi } = GlobalPageRedirect()
+    let { getCommonApi } = GlobalPageRedirect();
+    let {get_username,userName,loading} = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
     const [page, setpage] = useState(0)
 
     // sort state
-    const [order, setOrder] = useState("asc")
+    const [order, setOrder] = useState("desc")
     const [orderBy, setOrderBy] = useState("date")
 
     // get timesheet data
@@ -66,34 +67,6 @@ const TimeSheetComponent = () => {
             setTimeout(() => {
                 setisLoading(false)
             }, 500)
-        }
-    };
-
-    // get user name
-    const get_username = async () => {
-        setisLoading(true)
-        try {
-            const res = await customAxios().post('/user/username');
-
-            if (res.data.success) {
-                setUserName(res.data.data);
-            }
-        } catch (error) {
-            if (!error.response) {
-                toast.error(error.message);
-            } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            }
-        } finally {
-            setTimeout(() => {
-                setisLoading(false)
-            }, 800)
         }
     };
 
@@ -192,13 +165,16 @@ const TimeSheetComponent = () => {
     // user change function
     const userChange = (e) => {
         setuser_id(e.target.value)
-        getTimesheet(e.target.value)
     }
 
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
-        setendtDate(end._d)
-        getTimesheet(user_id, start._d, end._d)
+        setendtDate(end._d);
+        permission && permission.name.toLowerCase() !== "admin"  && getTimesheet(user_id, start._d, end._d)
+    }
+
+    const generateTimeSheet = () => {
+        getTimesheet(user_id,startDate, endDate)
     }
 
     let header = [
@@ -216,7 +192,7 @@ const TimeSheetComponent = () => {
     })
 
 
-    if (isLoading) {
+    if (isLoading || loading) {
         return <Spinner />;
     }
 
@@ -265,6 +241,10 @@ const TimeSheetComponent = () => {
                                         <CalendarMonthIcon className="range_icon" />
                                     </div>
                                 </div>
+                                {permission && permission.name.toLowerCase() === "admin" &&
+                                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={generateTimeSheet} >
+                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
+                                    </button>}
                                 <div className="search-full pr-0">
                                     <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                     <i className="fas fa-search"></i>

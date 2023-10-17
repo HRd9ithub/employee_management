@@ -1,6 +1,5 @@
 import Modal from 'react-bootstrap/Modal';
-import React, { useEffect, useRef } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react'
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-hot-toast';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -8,6 +7,7 @@ import moment from 'moment';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../service/CreateApi';
+import { useMemo } from 'react';
 
 const LeaveModal = (props) => {
     let { data, getLeave, permission } = props;
@@ -29,7 +29,6 @@ const LeaveModal = (props) => {
         to_date: '',
         to_date_error: '',
     });
-    let day = ''
     const [status_info, setStatus] = useState({
         leave_status: "",
         leave_status_error: "",
@@ -305,10 +304,15 @@ const LeaveModal = (props) => {
     }
 
     // numbers of day genrate
-    if (from.from_date && to.to_date) {
-        let text = from.from_date
-        day = moment(to.to_date).diff(moment(text), 'days') + 1
-    }
+    
+    let day = useMemo(() => {
+        if (from.from_date && to.to_date) {
+            let text = from.from_date
+            return moment(to.to_date).diff(moment(text), 'days') + 1
+        }else{
+            return 0
+        }
+    },[from,to])
 
     // reason onchange function
     const reasonChange = (e) => {
