@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -16,24 +16,25 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
 import { customAxios } from "../../service/CreateApi";
 import RequestModal from "./RequestModal";
+import DowlonadReport from "./dowlonadReport";
+import { AppProvider } from "../context/RouteContext";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
     // eslint-disable-next-line
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
-    const [report, setreport] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
     const [endDate, setendtDate] = useState(new Date());
-    const [userName, setUserName] = useState([]);
     const [user_id, setuser_id] = useState("");
     const [show, setShow] = useState(false)
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
 
-    let { getCommonApi } = GlobalPageRedirect()
+    let { getCommonApi } = GlobalPageRedirect();
+    let {get_username, userName} = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(50)
@@ -45,17 +46,17 @@ const WorkReportComponent = () => {
 
     // get report data
     const getReport = async (id, start, end) => {
-        try {
-            setisLoading(true);
-            setServerError(false);
-            const result = await customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `);
+        setisLoading(true);
+        setServerError(false);
+        customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `).then((result) => {
             if (result.data.success) {
                 setData(result.data.data);
                 setDataFilter(result.data.data);
-                setreport(result.data.test);
                 setpermission(result.data.permissions);
+                setisLoading(false)
             }
-        } catch (error) {
+        }).catch((error) => {
+            setisLoading(false)
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -69,42 +70,7 @@ const WorkReportComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        } finally {
-            setTimeout(() => {
-                setisLoading(false)
-            }, 500)
-        }
-    };
-
-    // get user name
-    const get_username = async () => {
-        setisLoading(true)
-        try {
-
-            const res = await customAxios().post(`/user/username`);
-
-            if (res.data.success) {
-                let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
-                setUserName(data);
-                // getReport(data.length !== 0 ? data[0]._id : "");
-            }
-        } catch (error) {
-            if (!error.response) {
-                toast.error(error.message);
-            } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            }
-        } finally {
-            setTimeout(() => {
-                setisLoading(false)
-            }, 800)
-        }
+        })
     };
 
     useEffect(() => {
@@ -238,6 +204,7 @@ const WorkReportComponent = () => {
                             <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
                                 {permission && permission.name.toLowerCase() !== "admin" && <RequestModal />}
                                 <WorkReportModal permission={permission && permission} getReport={getReport} />
+                                {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                             </div>
                         </div>
                         <div className='container-fluid'>
@@ -249,7 +216,7 @@ const WorkReportComponent = () => {
                                                 <option value="">Select employee</option>
                                                 {userName.map((val) => {
                                                     return (
-                                                        <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
                                                     )
                                                 })}
                                             </select>
