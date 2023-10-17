@@ -21,6 +21,7 @@ import ResetPassword from '../auth/ResetPassword';
 import EmployeeViewComponent from '../Employee/Employees/view/EmployeeViewComponent';
 import EmployeeEditForm from '../Employee/Employees/edit_form/EmployeeEditForm';
 import Project from "../Employee/project/Project";
+import ReportPreview from '../time_sheet/reportPreview';
 
 const AppRoute = () => {
     return (
@@ -51,6 +52,7 @@ const AppRoute = () => {
                 {/* timesheet component */}
                 <Route exact path='/time-sheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/report-preview' element={<ProtectedRoute authentication={true} ><ReportPreview/></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>

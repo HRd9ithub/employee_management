@@ -18,15 +18,17 @@ const initialistate = {
     UserData: '',
     loader: false,
     notification: [],
-    leave:[],
-    leaveFilter : [],
-    permission : "",
-    serverError : false,
-    userName : []
+    leave: [],
+    leaveFilter: [],
+    permission: "",
+    serverError: false,
+    userName: [],
+    reportData : [],
+    summary : ""
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
-
+    const [id,setId] = useState("");
     const [logoToggle, setlogoToggle] = useState(false)
     // search state
     const [visible, setVisible] = useState(true);
@@ -86,13 +88,13 @@ const RouteContext = ({ children }) => {
         }
     }
     // leave data get
-    const getLeave = async (startDate,endDate,id) => {
+    const getLeave = async (startDate, endDate, id) => {
         setLoading(true);
         try {
             const res = await customAxios().get(`/leave?startDate=${moment(startDate || moment().clone().startOf('month')).format("YYYY-MM-DD")}&endDate=${moment(endDate || moment().clone().endOf('month')).format("YYYY-MM-DD")}&id=${id ? id : ""}`);
             if (res.data.success) {
                 dispatch({ type: "GET_LEAVE", payload: res.data });
-                if(res.data.permissions && res.data.permissions.name.toLowerCase() === "admin"){
+                if (res.data.permissions && res.data.permissions.name.toLowerCase() === "admin") {
                     getLeaveNotification();
                     get_username();
                 }
@@ -104,7 +106,7 @@ const RouteContext = ({ children }) => {
             } else if (error.response.status === 401) {
                 getCommonApi();
             } else {
-                if(error.response.status === 500){
+                if (error.response.status === 500) {
                     dispatch({ type: "SERVER_ERROR" })
                 }
                 if (error.response.data.message) {
@@ -116,35 +118,62 @@ const RouteContext = ({ children }) => {
         }
     }
 
-        // get user name
-        const get_username = async () => {
-            setLoading(true)
-            try {
-                const res = await customAxios().post('/user/username');
-    
-                if (res.data.success) {
-                    dispatch({ type: "GET_USER", payload: res.data })
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message);
+    // get user name
+    const get_username = async () => {
+        setLoading(true)
+        try {
+            const res = await customAxios().post('/user/username');
+
+            if (res.data.success) {
+                dispatch({ type: "GET_USER", payload: res.data })
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
-            } finally {
-                    setLoading(false)
             }
-        };
+        } finally {
+            setLoading(false)
+        }
+    };
+
+    // get report preview
+    const getReportPreview = async(month,id) => {
+        setLoading(true)
+        try {
+            const res = await customAxios().post('/report/report-preview',{month,id});
+
+            if (res.data.success) {
+                setId(id);
+                dispatch({ type: "GET_REPORT", payload: res.data })
+            }
+        } catch (error) {
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 401) {
+                    getCommonApi();
+                } else {
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
+                }
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const HandleFilter = (name) => {
         let data = name;
-       dispatch({type : "SERACH_FILTER",payload : data})
+        dispatch({ type: "SERACH_FILTER", payload: data })
     }
 
     // input field toggle function
@@ -168,7 +197,7 @@ const RouteContext = ({ children }) => {
 
 
     return (
-        <AppProvider.Provider value={{ ...state,HandleFilter, visible, width, logoToggle,getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state, HandleFilter,get_username,getReportPreview, visible, width, logoToggle,id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )

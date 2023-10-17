@@ -39,6 +39,14 @@ export const RouteReducer = (state, action) => {
             }
             // eslint-disable-next-line
             break;
+        case "GET_REPORT":
+            return {
+                ...state,
+                reportData: action.payload.data,
+                summary: action.payload.summary,
+            }
+            // eslint-disable-next-line
+            break;
         case "SERVER_ERROR":
             return {
                 ...state,
