@@ -3072,8 +3072,8 @@ input[type=password]::-ms-clear {
 
 .calendar-icon {
   position: absolute;
-  top: 30px;
-  right: 9px;
+  top: 26px;
+  right: 3px;
   color: #084e9c;
   background-color: #fff;
 }
@@ -3110,8 +3110,8 @@ input[type="date"]::-webkit-clear-button {
 
 .calendar-icon-holiday {
   position: absolute;
-  top: 12px;
-  right: 2px;
+  top: 5px;
+  right: 3px;
   color: #084e9c;
   background-color: #fff;
 }
@@ -3270,8 +3270,8 @@ input[type="date"]::-webkit-clear-button {
 
 .range_icon {
   position: absolute;
-  top: 14px;
-  right: 12px;
+  top: 5px;
+  right: 3px;
   font-size: 21px;
   color: #004b8f;
   pointer-events: none;
@@ -3326,12 +3326,13 @@ input[type="date"]::-webkit-clear-button {
 
 /* form-control style */
 .form-control {
-  padding: 2px 5px !important;
+  padding: 2px 3px !important;
   width: 100%;
   overflow: hidden;
   align-items: center;
   color: #000;
-  min-height: 45px !important;
+  min-height: 32px !important;
+  height: unset !important;
   border-radius: 0px !important;
   border-bottom: 1px solid #0a4a92 !important;
   margin-bottom: 5px;
@@ -3804,13 +3805,13 @@ input[type="date"],
 .calendar-icon-work {
   position: absolute;
   color: #084e9c;
-  right: 7px;
-  top: 45px;
+  right: 3px;
+  top: 40px;
   background-color: #fff;
 }
 
 .work-report-form {
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 
 .education-wrapper .fa-trash-can {
@@ -4006,6 +4007,18 @@ img {
   background-color: rgb(209, 209, 209);
   border-radius: 5px;
 }
+textarea.form-control {
+  height: auto;
+  overflow-y: auto;
+}
+.notification-list .notification-item .notification-content .notifictaion-description::-webkit-scrollbar, .work-report-description::-webkit-scrollbar, textarea.form-control::-webkit-scrollbar {
+  width: 3px !important;
+  background-color: white !important;
+}
+.notification-list .notification-item .notification-content .notifictaion-description::-webkit-scrollbar-thumb, .work-report-description::-webkit-scrollbar-thumb, textarea.form-control::-webkit-scrollbar-thumb {
+  background-color: rgb(209, 209, 209) !important;
+  border-radius: 5px !important;
+}
 
 .text-dark-secondary {
   color: #8d8d8d;
@@ -4063,4 +4076,15 @@ input[type="search"] {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   -webkit-border-radius: 5px;
+}
+.show-at-small-screen {
+  display: none;
+}
+.hide-at-small-screen {
+  display: block;
+}
+
+.dashboard-custom-date-picker .react-datepicker .react-datepicker__month {
+  padding: 0 0;
+  margin: 0px;
 }

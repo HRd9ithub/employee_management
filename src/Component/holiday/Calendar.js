@@ -228,7 +228,7 @@ const Calendar = () => {
           transition={{ duration: 0.5 }}
         >
             <div className='container-fluid pt-4 overflow-hidden'>
-              <div className="background-wrapper bg-white pt-2">
+              <div className="background-wrapper bg-white pt-4">
                 <div className="col-12 d-flex justify-content-between align-items-center pb-2">
                   <div>
                     <ul id="breadcrumb" className="mb-0">
@@ -289,7 +289,7 @@ const Calendar = () => {
                               {dateError && <div className='error'>{dateError}</div>}
                             </div>
                             <div className='add-update-button d-flex justify-content-center align-items-center'>
-                              <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold" >{!editToggle ? 'Add' : 'Update'}</button>
+                              <button type="submit" className="btn btn-gradient-primary btn-add font-weight-bold mt-0" >{!editToggle ? 'Add' : 'Update'}</button>
                               {editToggle &&
                                   <button className='delete action-icon' onClick={() => {
                                     setlist({
