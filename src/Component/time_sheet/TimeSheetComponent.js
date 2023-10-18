@@ -242,9 +242,9 @@ const TimeSheetComponent = () => {
                                     </div>
                                 </div>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={generateTimeSheet} >
-                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
-                                    </button>}
+                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateTimeSheet} >
+                                    <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
+                                </button>}
                                 <div className="search-full pr-0">
                                     <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                     <i className="fas fa-search"></i>
@@ -265,7 +265,7 @@ const TimeSheetComponent = () => {
                     <div className='container-fluid show-at-small-screen'>
                         <div className='row'>
                             {permission && permission.name.toLowerCase() === "admin" &&
-                            <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                            <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
                                 <div className="form-group mb-0">
                                     <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
                                         <option value=''>All</option>
@@ -277,7 +277,7 @@ const TimeSheetComponent = () => {
                                     </select>
                                 </div>
                             </div>}
-                            <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
+                            <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
                                 <div className="form-group mb-0 position-relative">
                                     <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >
                                         <input className="form-control mt-3" />
@@ -285,6 +285,12 @@ const TimeSheetComponent = () => {
                                     <CalendarMonthIcon className="range_icon" />
                                 </div>
                             </div>
+                            {permission && permission.name.toLowerCase() === "admin" &&
+                            <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateTimeSheet} >
+                                    <i className="fa-solid fa-plus" ></i>&nbsp;Generate Timesheet
+                                </button>
+                            </div>}
                         </div>
                     </div>
                 </div>

@@ -74,7 +74,7 @@ const ReportPreview = () => {
                                 </button >
                             </div>
                         </div>
-                        <div className="d-flex justify-content-between align-content-center flex-wrap px-4 mt-3">
+                        <div className="d-flex justify-content-start align-content-center flex-wrap px-4 mt-3" style={{gap: '7px'}}>
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">
                                 <h6 className="mb-0">Total Working Days</h6>
                                 <h6 className="mb-0">{summary.dayCount}</h6>
@@ -99,7 +99,7 @@ const ReportPreview = () => {
                         {/* table */}
                         <div className="mx-4">
                             <TableContainer >
-                                <Table className="common-table-section">
+                                <Table className="common-table-section preview-table-responsive">
                                     <TableHead className="common-header">
                                         <TableRow>
                                             <TableCell>
