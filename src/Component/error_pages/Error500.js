@@ -23,7 +23,7 @@ export class Error403 extends Component {
               Oops, something went wrong.
             </p>
             <div className="btns">
-              <NavLink to="/">Back to home</NavLink>
+              <NavLink to="/">Home</NavLink>
             </div>
           </div>
         </div>

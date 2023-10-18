@@ -212,7 +212,7 @@ const ResetPassword = () => {
                     </div>
                   }
                   <div className="col-12 login-button my-3">
-                    <button className='d-block w-100'>Set New Password</button>
+                    <button className='d-block w-100' disabled={isLoading}>Set New Password</button>
                   </div>
                   <div className="col-12 text-center mb-3">
                     <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>

@@ -132,7 +132,7 @@ const Login = () => {
                   <NavLink to="/forgot-password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
                 </div>
                 <div className="col-12 login-button">
-                  <button className='d-block w-100 mb-3' onClick={handleSubmit}>Log In</button>
+                  <button className='d-block w-100 mb-3' onClick={handleSubmit} disabled={loading}>Log In</button>
                 </div>
               </div>
             </form>

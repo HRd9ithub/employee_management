@@ -103,10 +103,13 @@ const OtpVerification = () => {
                 }
                 <div className="col-12 text-right mt-2 text-secondary-dark-200">
                   Didn't Get? &nbsp;
-                  <NavLink className='forgot-password-link' onClick={() => HandleResend(email)}>Resend Code</NavLink>
+                  <NavLink className='forgot-password-link' onClick={() => {
+                    setOtperror("");
+                    setOtp("");
+                    HandleResend(email)}}>Resend Code</NavLink>
                 </div>
                 <div className="col-12 login-button my-3">
-                  <button className='d-block w-100'>Verify</button>
+                  <button className='d-block w-100' disabled={loading}>Verify</button>
                 </div>
                 <div className="col-12 text-center mb-3">
                   <NavLink to="/login" className='back-to-login' onClick={backToLogin}>Back To Login</NavLink>

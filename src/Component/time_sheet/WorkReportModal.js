@@ -301,7 +301,7 @@ function WorkReportModal({ data, permission, getReport }) {
     // * total hours  generator
     const totalHours = useMemo(() => {
         const initialValue = 0;
-        const sumWithInitial = workData.reduce((total, num) => Number(total.hours ? total.hours : total) + Number(num.hours), initialValue);
+        const sumWithInitial = workData.reduce((total, num) => Number(total) + Number(num.hours), initialValue);
         return sumWithInitial
     }, [workData])
 
