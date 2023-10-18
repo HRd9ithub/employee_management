@@ -203,62 +203,58 @@ const Dashboard = () => {
                               <div className="row mt-3">
                                    {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
                                         <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
-                                             <NavLink className="common-box-dashboard total-employee nav-link">
+                                             <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h2>{totalEmployee}</h2>
-                                                       <FaUsers />
+                                                       <h3 className="mb-0">Employees</h3>
+                                                       <h3 className="mb-0">{totalEmployee}</h3>
+                                                       {/* <FaUsers /> */}
                                                   </div>
-                                                  <h4 className="mt-2">Total Employees</h4>
                                              </NavLink>
                                         </div>
                                         <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
-                                             <NavLink className="common-box-dashboard Present nav-link">
+                                             <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h2>{presentToday}</h2>
-                                                       <CoPresentIcon />
+                                                       <h3 className="mb-0">Present Today</h3>
+                                                       <h3 className="mb-0">{presentToday}</h3>
+                                                       {/* <CoPresentIcon /> */}
                                                   </div>
-                                                  <h4 className="mt-2">Present Today</h4>
                                              </NavLink>
                                         </div>
                                         <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
-                                             <NavLink className="common-box-dashboard Today nav-link">
+                                             <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h2>{todayLeave.length}</h2>
-                                                       <NoAccountsIcon />
+                                                       <h3 className="mb-0">Absent Today</h3>
+                                                       <h3 className="mb-0">{todayLeave.length}</h3>
+                                                       {/* <NoAccountsIcon /> */}
                                                   </div>
-                                                  <h4 className="mt-2">Absent Today</h4>
                                              </NavLink>
                                         </div>
                                         <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
-                                             <NavLink className="common-box-dashboard employee-active nav-link" onClick={allStatusChange}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link" onClick={allStatusChange}>
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h2>{leaveRequest}</h2>
-                                                       <ApprovalIcon />
+                                                       <h3 className="mb-0">Leave Request</h3>
+                                                       <h3 className="mb-0">{leaveRequest}</h3>
+                                                       {/* <ApprovalIcon /> */}
                                                   </div>
-                                                  <h4 className="mt-2">Leave Requests</h4>
                                              </NavLink>
                                         </div>
                                    </>}
-                                   <div className={`mb-3 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leave")}>
-                                        <NavLink className="common-box-dashboard on-leave-today nav-link" style={{
+                                   <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leave")}>
+                                        <NavLink className="common-box-dashboard position-relative h-100 on-leave-today nav-link" style={{
                                         cursor : UserData?.role && UserData.role.name.toLowerCase() !== "admin" && "default"
                                    }}>
                                              <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <div className="common-info-dashboard">
-                                                  <h4>On Leave Today</h4>
-                                                  <FactCheckIcon />
-                                             </div>
-
-                                             <div className='d-flex justify-content-start align-items-center flex-wrap mt-3'>
+                                             <h3 className="mb-0">On Leave Today</h3>
+                                             <div className='d-flex justify-content-start align-items-center flex-wrap'>
                                                   {todayLeave.map((val, ind) => {
-                                                       return <h5 className='mr-4' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</h5>
+                                                       return <p className='mr-4 mb-0' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</p>
                                                   })}
-                                                  {todayLeave.length === 0 && totalEmployee !== 0 && <h5 className='mr-4'>All present today</h5>}
-                                                  {totalEmployee === 0 && <h5 className='mr-4'>No employee yet</h5>}
+                                                  {todayLeave.length === 0 && totalEmployee !== 0 && <p className='mr-4 mb-0'>All present today</p>}
+                                                  {totalEmployee === 0 && <p className='mr-4 mb-0'>No employee yet</p>}
                                              </div>
                                         </NavLink>
                                    </div>
