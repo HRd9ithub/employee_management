@@ -100,7 +100,7 @@ const ForgotPassword = () => {
                   {error && <small className="form-text error text-left mt-2">{error}</small>}
                 </div>
                 <div className="col-12 login-button my-3">
-                  <button className='d-block w-100'>Reset Password</button>
+                  <button className='d-block w-100' disabled={isLoading}>Reset Password</button>
                 </div>
                 <div className="col-12 text-center mb-3">
                   <NavLink to="/login" className='back-to-login'>Back To Login</NavLink>
