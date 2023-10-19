@@ -425,9 +425,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             }
         }
     }
-
-
-
+    
     return (
         <>
             {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&

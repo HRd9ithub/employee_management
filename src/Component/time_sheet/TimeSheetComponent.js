@@ -29,7 +29,7 @@ const TimeSheetComponent = () => {
     const [searchItem, setsearchItem] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect();
-    let {get_username,userName,loading} = useContext(AppProvider);
+    let { get_username, userName, loading } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -170,11 +170,11 @@ const TimeSheetComponent = () => {
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d);
-        permission && permission.name.toLowerCase() !== "admin"  && getTimesheet(user_id, start._d, end._d)
+        permission && permission.name.toLowerCase() !== "admin" && getTimesheet(user_id, start._d, end._d)
     }
 
     const generateTimeSheet = () => {
-        getTimesheet(user_id,startDate, endDate)
+        getTimesheet(user_id, startDate, endDate)
     }
 
     let header = [
@@ -194,13 +194,9 @@ const TimeSheetComponent = () => {
 
     if (isLoading || loading) {
         return <Spinner />;
-    }
-
-    if (serverError) {
+    } else if (serverError) {
         return <Error500 />;
-    }
-
-    if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
         return <Error403 />;
     }
 
@@ -219,32 +215,32 @@ const TimeSheetComponent = () => {
                             </div>
                         </div>
                         <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                            <div className="d-flex justify-content-end align-items-center w-100" style={{gap: '15px'}}>
+                            <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                    <div className="form-group mb-0">
-                                        <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
-                                            <option value=''>All</option>
-                                            {userName.map((val) => {
-                                                return (
-                                                    val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
-                                                )
-                                            })}
-                                        </select>
-                                    </div>
-                                </div>}
+                                    <div className="search-full w-25 pr-0 hide-at-small-screen">
+                                        <div className="form-group mb-0">
+                                            <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                <option value=''>All</option>
+                                                {userName.map((val) => {
+                                                    return (
+                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>}
                                 <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
                                     <div className="form-group mb-0 position-relative">
                                         <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >
-                                            <input className="form-control mb-0"/>
+                                            <input className="form-control mb-0" />
                                         </DateRangePicker>
                                         <CalendarMonthIcon className="range_icon" />
                                     </div>
                                 </div>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateTimeSheet} >
-                                    <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
-                                </button>}
+                                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateTimeSheet} >
+                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
+                                    </button>}
                                 <div className="search-full pr-0">
                                     <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
                                     <i className="fas fa-search"></i>
@@ -265,18 +261,18 @@ const TimeSheetComponent = () => {
                     <div className='container-fluid show-at-small-screen'>
                         <div className='row'>
                             {permission && permission.name.toLowerCase() === "admin" &&
-                            <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
-                                <div className="form-group mb-0">
-                                    <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
-                                        <option value=''>All</option>
-                                        {userName.map((val) => {
-                                            return (
-                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
-                                            )
-                                        })}
-                                    </select>
-                                </div>
-                            </div>}
+                                <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                    <div className="form-group mb-0">
+                                        <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                            <option value=''>All</option>
+                                            {userName.map((val) => {
+                                                return (
+                                                    val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>}
                             <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
                                 <div className="form-group mb-0 position-relative">
                                     <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} >
@@ -286,11 +282,11 @@ const TimeSheetComponent = () => {
                                 </div>
                             </div>
                             {permission && permission.name.toLowerCase() === "admin" &&
-                            <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
-                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateTimeSheet} >
-                                    <i className="fa-solid fa-plus" ></i>&nbsp;Generate Timesheet
-                                </button>
-                            </div>}
+                                <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateTimeSheet} >
+                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate Timesheet
+                                    </button>
+                                </div>}
                         </div>
                     </div>
                 </div>

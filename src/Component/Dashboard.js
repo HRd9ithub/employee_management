@@ -1,7 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaUsers } from "react-icons/fa";
-import CoPresentIcon from '@mui/icons-material/CoPresent';
 import DatePickers from "react-datepicker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
@@ -16,9 +14,6 @@ import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
 import Spinner from './common/Spinner';
-import ApprovalIcon from '@mui/icons-material/Approval';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { dateFormat } from '../helper/dateFormat';
 import ConfettiExplosion from 'react-confetti-explosion';
 import {customAxios} from '../service/CreateApi';

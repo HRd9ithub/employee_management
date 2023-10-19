@@ -119,114 +119,110 @@ const UserRole = () => {
     return rowArray.map((el) => el[0])
   }
 
-  if(isLoading){
+  if (isLoading) {
     return <Spinner />;
-  }
-
-  if(serverError){
-    return <Error500/>;
-  }
-
-  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
-    return <Error403/>;
+  } else if (serverError) {
+    return <Error500 />;
+  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    return <Error403 />;
   }
 
   return (
     <>
-        <motion.div
-          className="box"
-          initial={{ opacity: 0, transform: "translateY(-20px)" }}
-          animate={{ opacity: 1, transform: "translateY(0px)" }}
-          transition={{ duration: 0.5 }}
-        >
-            <div className=" container-fluid pt-4">
-              <div className="background-wrapper bg-white pt-4">
-                <div className=''>
-                  <div className='row justify-content-end align-items-center row-std m-0'>
-                    <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
-                      <div>
-                        <ul id="breadcrumb" className="mb-0">
-                          <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                          <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; User Role</NavLink></li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
-                      <div className="search-full">
-                        <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
-                        <i className="fas fa-search"></i>
-                      </div>
-                      <div className="search-box mr-3">
-                        <form name="search-inner">
-                          <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
-                        </form>
-                        <i className="fas fa-search"></i>
-                      </div>
-                      <UserRoleModal getuserRole={getuserRole} permission={permission && permission} />
-                    </div>
+      <motion.div
+        className="box"
+        initial={{ opacity: 0, transform: "translateY(-20px)" }}
+        animate={{ opacity: 1, transform: "translateY(0px)" }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className=" container-fluid pt-4">
+          <div className="background-wrapper bg-white pt-4">
+            <div className=''>
+              <div className='row justify-content-end align-items-center row-std m-0'>
+                <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
+                  <div>
+                    <ul id="breadcrumb" className="mb-0">
+                      <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                      <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; User Role</NavLink></li>
+                    </ul>
                   </div>
                 </div>
-
-
-                {/* Table *********************** */}
-                <div className="mx-4">
-                  <TableContainer >
-                    <Table className="common-table-section">
-                      <TableHead className="common-header">
-                        <TableRow>
-                          <TableCell>
-                            Id
-                          </TableCell>
-                          <TableCell>
-                            <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
-                              User Role
-                            </TableSortLabel>
-                          </TableCell>
-                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                            <TableCell>
-                              Action
-                            </TableCell>}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                          return (
-                            <TableRow key={ind}>
-                              <TableCell>{ind + 1}</TableCell>
-                              <TableCell>{val.name}</TableCell>
-                              {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                <TableCell>
-                                  <div className='action'>
-                                    <UserRoleModal
-                                      data={val}
-                                      getuserRole={getuserRole}
-                                    />
-                                  </div>
-                                </TableCell>}
-                            </TableRow>
-                          )
-                        }) :
-                          <TableRow>
-                            <TableCell colSpan={3} align="center">
-                              No Records Found
-                            </TableCell>
-                          </TableRow>
-                        }
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                    component="div"
-                    onPageChange={onChangePage}
-                    onRowsPerPageChange={onChangeRowsPerPage}
-                    rowsPerPage={count}
-                    count={recordsFilter.length}
-                    page={page}>
-                  </TablePagination>
+                <div className="col-12 col-sm-7 d-flex justify-content-end" id="two">
+                  <div className="search-full">
+                    <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
+                    <i className="fas fa-search"></i>
+                  </div>
+                  <div className="search-box mr-3">
+                    <form name="search-inner">
+                      <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
+                    </form>
+                    <i className="fas fa-search"></i>
+                  </div>
+                  <UserRoleModal getuserRole={getuserRole} permission={permission && permission} />
                 </div>
               </div>
             </div>
-        </motion.div> 
+
+
+            {/* Table *********************** */}
+            <div className="mx-4">
+              <TableContainer >
+                <Table className="common-table-section">
+                  <TableHead className="common-header">
+                    <TableRow>
+                      <TableCell>
+                        Id
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                          User Role
+                        </TableSortLabel>
+                      </TableCell>
+                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                        <TableCell>
+                          Action
+                        </TableCell>}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                      return (
+                        <TableRow key={ind}>
+                          <TableCell>{ind + 1}</TableCell>
+                          <TableCell>{val.name}</TableCell>
+                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                            <TableCell>
+                              <div className='action'>
+                                <UserRoleModal
+                                  data={val}
+                                  getuserRole={getuserRole}
+                                />
+                              </div>
+                            </TableCell>}
+                        </TableRow>
+                      )
+                    }) :
+                      <TableRow>
+                        <TableCell colSpan={3} align="center">
+                          No Records Found
+                        </TableCell>
+                      </TableRow>
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                component="div"
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+                rowsPerPage={count}
+                count={recordsFilter.length}
+                page={page}>
+              </TablePagination>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </>
   );
 };

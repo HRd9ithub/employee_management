@@ -205,13 +205,9 @@ const Leave = () => {
 
     if (Loading) {
         return <Spinner />;
-    }
-
-    if (serverError) {
+    }else if(serverError){
         return <Error500 />;
-    }
-
-    if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    }else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
         return <Error403 />;
     }
 

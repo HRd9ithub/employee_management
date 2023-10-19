@@ -50,9 +50,9 @@ const WorkReportComponent = () => {
         setServerError(false);
         customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `).then((result) => {
             if (result.data.success) {
+                setpermission(result.data.permissions);
                 setData(result.data.data);
                 setDataFilter(result.data.data);
-                setpermission(result.data.permissions);
                 setisLoading(false)
             }
         }).catch((error) => {
@@ -181,15 +181,12 @@ const WorkReportComponent = () => {
 
     if (isLoading) {
         return <Spinner />;
-    }
-
-    if (serverError) {
+    }else if(serverError){
         return <Error500 />;
-    }
-
-    if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    }else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
         return <Error403 />;
     }
+    
     return (
         <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
             <div className=" container-fluid pt-4">
