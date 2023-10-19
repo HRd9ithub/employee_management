@@ -15,7 +15,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 body {
-  /* background-image: url(../../public/Images/bg-new.jpg); */
   background-color: #ebeff0;
   /* background-size: cover;
   background-repeat: no-repeat; */
@@ -362,9 +361,7 @@ span.eye-icon {
   padding-left: 0;
   padding-right: 0;
   justify-content: center;
-  background-image: url(../../public/Images/bg_image.jpg);
   background-size: cover;
-
 }
 
 .page-body-wrapper-login .form-control,
