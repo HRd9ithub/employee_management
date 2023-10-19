@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import Spinner from '.././common/Spinner';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import Spinner from '../../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
-import { customAxios } from '../../service/CreateApi';
+import { customAxios } from '../../../service/CreateApi';
 import moment from 'moment';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useContext } from 'react';
-import { AppProvider } from '../context/RouteContext';
+import { AppProvider } from '../../context/RouteContext';
 
 function WorkReportModal({ data, permission, getReport }) {
     let workDateRef = useRef(null);

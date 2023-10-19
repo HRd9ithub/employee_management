@@ -4,9 +4,9 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-hot-toast';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
-import Spinner from '../common/Spinner';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { customAxios } from '../../service/CreateApi';
+import Spinner from '../../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import { customAxios } from '../../../service/CreateApi';
 import { useMemo } from 'react';
 
 const LeaveModal = (props) => {
