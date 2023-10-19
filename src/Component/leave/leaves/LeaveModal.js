@@ -304,15 +304,21 @@ const LeaveModal = (props) => {
     }
 
     // numbers of day genrate
-    
+
     let day = useMemo(() => {
         if (from.from_date && to.to_date) {
             let text = from.from_date
             return moment(to.to_date).diff(moment(text), 'days') + 1
-        }else{
+        } else {
             return 0
         }
-    },[from,to])
+    }, [from, to])
+
+    useMemo(() => {
+        if (day > 1) {
+            status_info.leave_status === "Half" && setStatus({ ...status_info, leave_status: "0" })
+        }
+    }, [day,status_info])
 
     // reason onchange function
     const reasonChange = (e) => {
@@ -350,25 +356,25 @@ const LeaveModal = (props) => {
                                 <form className="forms-sample">
                                     <div className="row">
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label htmlFor="1">Employee</label>
-                                                <select className="form-control " id="user" name='user' disabled={data} value={info
-                                                    .user_id} onChange={(e) => {
-                                                        setinfo({ ...info, user_id: e.target.value })
-                                                    }
-                                                    } onBlur={userValidation} >
-                                                    <option value='0'>Select Employee </option>
-                                                    {user.map((val) => {
-                                                        return (
-                                                            <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                                {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
-                                                {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
-                                            </div>
-                                        </div>}
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="1">Employee</label>
+                                                    <select className="form-control " id="user" name='user' disabled={data} value={info
+                                                        .user_id} onChange={(e) => {
+                                                            setinfo({ ...info, user_id: e.target.value })
+                                                        }
+                                                        } onBlur={userValidation} >
+                                                        <option value='0'>Select Employee </option>
+                                                        {user.map((val) => {
+                                                            return (
+                                                                <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
+                                                    {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
+                                                </div>
+                                            </div>}
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label htmlFor="1"> Leave Type</label>
@@ -451,25 +457,25 @@ const LeaveModal = (props) => {
                                         </div>
 
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label htmlFor="1">Status</label>
-                                                <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
-                                                    {data && <option value="Pending"> Pending</option>}
-                                                    {data && <option value='Read'>Read </option>}
-                                                    <option value='Approved'>Approved</option>
-                                                    <option value='Declined'>Declined</option>
-                                                </select>
-                                            </div>
-                                        </div>}
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="1">Status</label>
+                                                    <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
+                                                        {data && <option value="Pending"> Pending</option>}
+                                                        {data && <option value='Read'>Read </option>}
+                                                        <option value='Approved'>Approved</option>
+                                                        <option value='Declined'>Declined</option>
+                                                    </select>
+                                                </div>
+                                            </div>}
                                         {error.length !== 0 &&
-                                        <div className="col-12">
-                                            <ol>
-                                                {error.map((val) => {
-                                                    return <li className='error' key={val} >{val}</li>
-                                                })}
-                                            </ol>
-                                        </div>}
+                                            <div className="col-12">
+                                                <ol>
+                                                    {error.map((val) => {
+                                                        return <li className='error' key={val} >{val}</li>
+                                                    })}
+                                                </ol>
+                                            </div>}
                                         <div className="col-12">
                                             <div className='d-flex justify-content-center modal-button'>
                                                 <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
