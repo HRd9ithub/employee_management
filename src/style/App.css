@@ -37,26 +37,6 @@ h6,
   font-family: 'Roboto', sans-serif;
 }
 
-/* @font-face {
-  src: url(../../public/Images/Roboto_Slab/static/RobotoSlab-Medium.ttf);
-  font-family: font_main_normal;
-}
-
-@font-face {
-  src: url(../../public/Images/Roboto_Slab/static/RobotoSlab-Regular.ttf);
-  font-family: font_main;
-}
-
-@font-face {
-  src: url(../../public/Images/Roboto_Slab/static/RobotoSlab-Bold.ttf);
-  font-family: font_main_bold;
-}
-
-@font-face {
-  src: url(../../public/Images/Roboto_Slab/static/RobotoSlab-SemiBold.ttf);
-  font-family: font_main_semi;
-} */
-
 .permission_error {
   text-align: center;
   margin: 30px auto;
