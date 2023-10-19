@@ -1,14 +1,14 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
-import Spinner from '../common/Spinner'
+import { NavLink } from 'react-router-dom';
+import Spinner from '../../common/Spinner'
 import { toast } from 'react-hot-toast'
 import LeaveTypeModal from './LeaveTypeModal';
 import { motion } from "framer-motion";
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import Error403 from '../error_pages/Error403';
-import Error500 from '../error_pages/Error500';
-import { customAxios } from '../../service/CreateApi'
+import Error403 from '../../error_pages/Error403';
+import Error500 from '../../error_pages/Error500';
+import { customAxios } from '../../../service/CreateApi'
 
 const LeaveType = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -31,7 +31,7 @@ const LeaveType = () => {
     const getLeaveType = async () => {
         setisLoading(true);
         setServerError(false);
-        customAxios().get('/designation/').then((res) => {
+        customAxios().get('/leaveType/').then((res) => {
             let { success, data, permissions } = res.data;
             if (success) {
                 setpermission(permissions);

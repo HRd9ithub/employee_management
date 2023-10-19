@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Modal from "react-bootstrap/Modal";
-import { customAxios } from "../../service/CreateApi";
+import { customAxios } from "../../../service/CreateApi";
 import Tooltip from '@mui/material/Tooltip';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import Spinner from '../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import { useRef } from 'react';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";

@@ -7,13 +7,13 @@ import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { motion } from "framer-motion";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import Spinner from '../common/Spinner';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import Spinner from '../../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { subDays } from "date-fns";
 import { NavLink } from 'react-router-dom';
-import Error403 from '../error_pages/Error403';
-import Error500 from '../error_pages/Error500';
-import { customAxios } from '../../service/CreateApi';
+import Error403 from '../../error_pages/Error403';
+import Error500 from '../../error_pages/Error500';
+import { customAxios } from '../../../service/CreateApi';
 
 const Calendar = () => {
   let DateRef = useRef();

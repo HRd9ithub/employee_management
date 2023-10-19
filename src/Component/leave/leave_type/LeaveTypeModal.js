@@ -2,9 +2,9 @@ import Modal from 'react-bootstrap/Modal';
 import React from 'react'
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import Spinner from '../common/Spinner';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { customAxios } from '../../service/CreateApi';
+import Spinner from '../../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import { customAxios } from '../../../service/CreateApi';
 
 const LeaveTypeModal = (props) => {
     let { data, getLeaveType, permission } = props;

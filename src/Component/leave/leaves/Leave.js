@@ -1,18 +1,18 @@
 import React, { useEffect, useMemo, useState, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
-import Spinner from '../common/Spinner'
+import Spinner from '../../common/Spinner'
 import { toast } from 'react-hot-toast'
 import LeaveModal from './LeaveModal'
 import { motion } from 'framer-motion'
 import { HiOutlineMinus } from "react-icons/hi";
 import Modal from 'react-bootstrap/Modal';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import Error403 from '../error_pages/Error403';
-import Error500 from '../error_pages/Error500';
-import { AppProvider } from '../context/RouteContext'
+import Error403 from '../../error_pages/Error403';
+import Error500 from '../../error_pages/Error500';
+import { AppProvider } from '../../context/RouteContext'
 import moment from 'moment'
-import { customAxios } from '../../service/CreateApi';
+import { customAxios } from '../../../service/CreateApi';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';

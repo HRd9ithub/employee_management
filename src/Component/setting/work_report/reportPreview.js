@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from 'react';
-import { AppProvider } from '../context/RouteContext';
+import { AppProvider } from '../../context/RouteContext';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { motion } from "framer-motion";
 import moment from 'moment';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import Spinner from '../common/Spinner';
+import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import Spinner from '../../common/Spinner';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 

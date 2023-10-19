@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from "react-bootstrap/Modal";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import Spinner from '../common/Spinner';
+import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AppProvider } from '../context/RouteContext';
+import { AppProvider } from '../../context/RouteContext';
 
 const DowlonadReport = () => {
     const [show, setshow] = useState(false);

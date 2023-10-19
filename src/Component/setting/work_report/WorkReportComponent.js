@@ -3,21 +3,21 @@ import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
-import Spinner from "../common/Spinner";
-import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
+import Spinner from "../../common/Spinner";
+import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from "moment";
-import Error403 from "../error_pages/Error403";
-import Error500 from '../error_pages/Error500';
+import Error403 from "../../error_pages/Error403";
+import Error500 from '../../error_pages/Error500';
 import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
-import { customAxios } from "../../service/CreateApi";
+import { customAxios } from "../../../service/CreateApi";
 import RequestModal from "./RequestModal";
 import DowlonadReport from "./dowlonadReport";
-import { AppProvider } from "../context/RouteContext";
+import { AppProvider } from "../../context/RouteContext";
 
 const WorkReportComponent = () => {
     let date_today = new Date();
