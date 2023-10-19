@@ -171,7 +171,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Dropdown alignRight>
                 <Dropdown.Toggle className="nav-link count-indicator new-notification">
-                  <i className="fa-solid fa-bell nav-icons"></i>
+                  <i className={`fa-solid fa-bell nav-icons ${notification.length === 0 && "mr-2"}`}></i>
                   {notification.length !== 0 && <span className="badge badge-light">{notification.length}</span>}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >

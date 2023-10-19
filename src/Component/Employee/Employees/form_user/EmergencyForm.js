@@ -180,7 +180,7 @@ const EmergencyForm = (props) => {
                     <div className='col-md-4'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Mobile Number</label>
-                            <input type="text" className="form-control" id="2" maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off'  onBlur={phoneVlidation}/>
+                            <input type="text" className="form-control" id="2" inputMode='numeric' maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off'  onBlur={phoneVlidation}/>
                             {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                         </div>
                     </div>

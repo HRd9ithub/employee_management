@@ -17,7 +17,6 @@ import { customAxios } from "../../../service/CreateApi";
 const Employee = () => {
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-  const [toggle, setToggle] = useState(false);
   const [permission, setPermission] = useState("");
   const [serverError, setServerError] = useState(false);
   const [searchItem, setsearchItem] = useState("");
@@ -43,10 +42,11 @@ const Employee = () => {
       const res = await customAxios().patch(`/user/${_id}`);
 
       if (res.data.success) {
-        setToggle(!toggle);
+        getAlluser();
         toast.success(res.data.message);
       }
     } catch (error) {
+      setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
       } else {
@@ -58,9 +58,7 @@ const Employee = () => {
           }
         }
       }
-    } finally {
-      setisLoading(false)
-    }
+    } 
   };
 
   // delete function
@@ -80,7 +78,7 @@ const Employee = () => {
         setisLoading(true);
         const res = await customAxios().delete(`/user/${id}`);
         if (res.data.success) {
-          setToggle(!toggle);
+          getAlluser();
           toast.success(res.data.message);
         }
       }
@@ -102,10 +100,10 @@ const Employee = () => {
   const getAlluser = () => {
     setServerError(false)
     setisLoading(true);
-    
+
     customAxios().get('/user').then((res) => {
       if (res.data.success) {
-        let {data,permissions} = res.data;
+        let { data, permissions } = res.data;
         setPermission(permissions);
         setRecords(data);
         setisLoading(false);
@@ -133,7 +131,7 @@ const Employee = () => {
   useEffect(() => {
     getAlluser();
     // eslint-disable-next-line
-  }, [toggle]);
+  }, []);
 
   // memoize filtered items
   const recordsFilter = useMemo(() => {
@@ -148,8 +146,6 @@ const Employee = () => {
       );
     })
   }, [records, searchItem]);
-
-
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -221,16 +217,11 @@ const Employee = () => {
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (serverError) {
+  } else if (serverError) {
     return <Error500 />;
-  }
-
-  if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
     return <Error403 />;
   }
-
 
   return (
     <>
