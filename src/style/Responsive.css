@@ -604,7 +604,9 @@
     .animate-celebration-content p {
         width: 75%;
     }
+}
 
+@media (max-width: 1280px) {
     .box-dashboard.col-lg-3.col-md-6 {
         max-width: 25% !important;
     }
@@ -798,6 +800,7 @@
     .show-at-small-screen {
         display: block;
     }
+
     .hide-at-small-screen {
         display: none;
     }
@@ -1374,7 +1377,8 @@
 
 @media (max-width: 768px) {
 
-    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
+    .profile-view .profile-img-wrap,
+    .profile-view .profile-img-wrap-view {
         position: relative;
         margin: 0 auto;
     }
@@ -1418,7 +1422,8 @@
         padding: 1rem 2.5rem;
     }
 
-    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
+    .profile-view .profile-img-wrap,
+    .profile-view .profile-img-wrap-view {
         height: 100px;
         width: 100px;
     }
@@ -1752,7 +1757,7 @@
         margin-left: 2px !important;
     }
 
-    .leave-notification-body .preview-item-content > div.d-flex {
+    .leave-notification-body .preview-item-content>div.d-flex {
         gap: 30px !important;
     }
 }
@@ -1995,6 +2000,7 @@
     .col-md-6.mt-3.box-dashboard:first-child {
         margin-top: 10px !important;
     }
+
     .col-md-6.mt-3.box-dashboard:last-child {
         margin-top: 10px !important;
         margin-bottom: 10px;
@@ -2029,9 +2035,11 @@
     .card.calender .add-items {
         flex-direction: column;
     }
+
     .card.calender .add-items input {
         width: 100%;
     }
+
     .card.calender .add-items .add-update-button {
         justify-content: end !important;
         width: 100%;
@@ -2482,7 +2490,7 @@
         padding-bottom: 15px;
     }
 
-    .login-right .input-group .input-group-prepend + .form-control {
+    .login-right .input-group .input-group-prepend+.form-control {
         margin-top: 0 !important;
     }
 
@@ -2494,13 +2502,16 @@
     .MuiSwitch-root.MuiSwitch-sizeMedium.css-julti5-MuiSwitch-root .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
     }
+
     .calendar-icon {
         top: 33px;
         right: 3px;
     }
+
     .add-update-button .btn-add {
         margin-top: 10px !important;
     }
+
     .summary-report {
         width: 99%;
     }
@@ -2783,7 +2794,8 @@
         height: 0.8em !important;
     }
 
-    .list-wrapper .remove, .add-update-button .delete .remove {
+    .list-wrapper .remove,
+    .add-update-button .delete .remove {
         font-size: 1.238rem;
     }
 
@@ -2838,7 +2850,7 @@
     .animate-celebration-content h2 {
         font-size: 35px;
     }
-    
+
     .animate-celebration-content p {
         font-size: 16px;
     }
@@ -3348,7 +3360,7 @@
     /* .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.5rem 2rem 0.5rem 2.4rem;
     } */
-        /* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
+    /* .sidebar .nav.sub-menu .nav-item .nav-link:hover::before, .sidebar .nav.sub-menu .nav-item .nav-link.active::before {
         padding: 10px 75% 10px 10px;
     }   */
 
@@ -3433,7 +3445,8 @@
         padding: 0px 0 5px 0 !important;
     }
 
-    .profile-view .profile-img-wrap, .profile-view .profile-img-wrap-view {
+    .profile-view .profile-img-wrap,
+    .profile-view .profile-img-wrap-view {
         left: 2%;
     }
 
@@ -3497,7 +3510,7 @@
     .modal-button .btn {
         width: 33% !important;
     }
-    
+
     .animate-celebration-content p {
         width: 95%;
     }
@@ -3567,7 +3580,7 @@
     .page-title {
         font-size: 16px;
     }
-    
+
     .form-control {
         margin-top: 7px !important;
     }
@@ -3597,7 +3610,8 @@
         width: 12% !important;
     }
 
-    .profile-standard .profile-view .profile-img-wrap, .profile-standard .profile-view .profile-img-wrap-view {
+    .profile-standard .profile-view .profile-img-wrap,
+    .profile-standard .profile-view .profile-img-wrap-view {
         height: 85px;
         width: 85px;
     }
@@ -3765,7 +3779,8 @@
         font-size: 1rem;
     }
 
-    .list-wrapper .remove, .add-update-button .delete .remove {
+    .list-wrapper .remove,
+    .add-update-button .delete .remove {
         font-size: 1.1rem;
     }
 
@@ -3807,10 +3822,11 @@
         width: 100%;
     }
 
-    .search-box + .btn{
+    .search-box+.btn {
         padding: 8px 5px !important;
     }
-    .notification-content .notification-details .ellipsis{
+
+    .notification-content .notification-details .ellipsis {
         max-width: 150px !important;
     }
 }
