@@ -135,7 +135,7 @@ const Calendar = () => {
       showCancelButton: true,
       confirmButtonColor: '#1bcfb4',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Delete it',
+      confirmButtonText: 'Delete',
       cancelButtonText: 'Cancel',
       width: '450px',
     }).then(async (result) => {
