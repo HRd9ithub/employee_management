@@ -91,7 +91,7 @@ const Navbar = () => {
   const allStatusChange = async () => {
     try {
       setisLoading(true);
-      const res = await customAxios().post('/leave/status');
+      const res = await customAxios().post('/leave/status?key=all');
       if (res.data.success) {
         if (pathname === "/leave") {
           getLeave();
