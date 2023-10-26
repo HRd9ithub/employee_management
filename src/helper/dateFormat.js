@@ -51,3 +51,25 @@ export const timeAgo = (date) => {
    let time =  moment(date).fromNow(true);
    return time;
 }
+export const timeAgos = (date) => {
+    moment.updateLocale('en', {
+        relativeTime : {
+            future: "in% second",
+            past:   "%s ago",
+            s  : 'just now',
+            ss : '%ds',
+            m:  "1min",
+            mm: "%d minute",
+            h:  "1 hours",
+            hh: "%d hours",
+            d:  "1 day",
+            dd: "%d days",
+            M:  "1 month",
+            MM: "%d months",
+            y:  "1 year",
+            yy: "%d years"
+        }
+    });
+   let time =  moment(date).fromNow(true);
+   return time;
+}

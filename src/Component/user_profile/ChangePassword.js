@@ -1,10 +1,10 @@
-import React from 'react'
-import { useState } from 'react'
-import { Globalcomponent } from '../auth_context/GlobalComponent'
+import React,{ useState } from 'react'
 import { toast } from 'react-hot-toast'
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import Spinner from '../common/Spinner';
 import { customAxios } from '../../service/CreateApi'
+import { RemoveLocalStorage } from '../../service/StoreLocalStorage'
+import { useNavigate } from 'react-router-dom'
 
 const ChangePassword = () => {
     // change password state
@@ -19,9 +19,9 @@ const ChangePassword = () => {
     const [isLoading, setisLoading] = React.useState(false);
     const [error, setError] = React.useState([]);
 
-    let { getCommonApi } = GlobalPageRedirect();
+    const navigate = useNavigate();
 
-    let { handleLogout, loading } = Globalcomponent();
+    let { getCommonApi } = GlobalPageRedirect();
 
     // ******** change password functionality part  *********
     // onchange function
@@ -82,7 +82,9 @@ const ChangePassword = () => {
 
                 if (response.data.success) {
                     toast.success(response.data.message);
-                    handleLogout();
+                    RemoveLocalStorage('token')
+                    RemoveLocalStorage('user_id')
+                    navigate('/login');
                     setList({
                         newpassword: '',
                         renewpassword: "",
@@ -146,7 +148,7 @@ const ChangePassword = () => {
             <div className="submit-section pb-3">
                 <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>
-            {(loading || isLoading) && <Spinner />}
+            {isLoading && <Spinner />}
         </form>
     )
 }

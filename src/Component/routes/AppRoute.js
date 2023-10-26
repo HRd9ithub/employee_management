@@ -22,6 +22,7 @@ import UserRole from '../setting/user_role/UserRole';
 import WorkReportComponent from '../setting/work_report/WorkReportComponent';
 import ReportPreview from '../setting/work_report/reportPreview';
 import Error404 from '../error_pages/Error404';
+import ActivityComponent from '../activity/ActivityComponent';
 
 const AppRoute = () => {
     return (
@@ -49,6 +50,8 @@ const AppRoute = () => {
                 <Route exact path='/leave' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
                 {/* document component */}
                 <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
+                {/* activity component */}
+                <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
                 {/* timesheet component */}
                 <Route exact path='/time-sheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>

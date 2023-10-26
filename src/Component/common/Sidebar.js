@@ -314,6 +314,18 @@ const Sidebar = () => {
               )
             })}
           </li>
+          {/* activity */}
+          <li className={`nav-item item-hover  ${window.location.pathname.toLowerCase() === '/activity' && 'active'}`} onClick={() => setData({})}>
+            {menu.map((elem) => {
+              return (
+                elem.name.toLowerCase().replace(/\s/g, '') === 'activitylogs' &&
+                <NavLink key={elem._id} className="nav-link" to="/activity" onClick={toggleSidebar}>
+                  <i className={`fa-solid fa-clock-rotate-left slider-hover-icon activity-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
+                  <span className={`menu-title`}>{elem.name}</span>
+                </NavLink>
+              )
+            })}
+          </li>
           {/* setting */}
           {setting &&
             <li ref={settingref} className={`nav-item item-hover  ${HandleACtive('setting') && 'active'}`} onMouseEnter={showSidebar}>
