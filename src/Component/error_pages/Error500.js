@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 
-export class Error403 extends Component {
+export class Error500 extends Component {
   render() {
     return (
       <motion.div
@@ -32,4 +32,4 @@ export class Error403 extends Component {
   }
 }
 
-export default Error403
+export default Error500

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
 
@@ -193,46 +192,7 @@ const addDuplicate = () => {
 }
 
 // delete row
-const deleteRow = (id, ind) => {
-    setError([])
-    if (id) {
-        Swal.fire({
-            title: "Delete Field",
-            text: "Are you sure you want to delete?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#1bcfb4",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Delete",
-            cancelButtonText: "Cancel",
-            width: "450px",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                setisLoading(true);
-                const res = await customAxios().delete(`/education/${id}`);
-                if (res.data.success) {
-                    toast.success(res.data.message);
-                    if (pathname.toLocaleLowerCase().includes('/profile')) {
-                        getuser();
-                    } else {
-                        getEmployeeDetail();
-                    }
-                }
-            }
-        }).catch((error) => {
-            if (!error.response) {
-                toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                } else {
-                    setError(error.response.data.error);
-                }
-            }
-        }).finally(() => setisLoading(false))
-    } else {
+const deleteRow = (ind) => {
         let deleteField = [...eduction];
         deleteField.splice(ind, 1);
         setEduction(deleteField)
@@ -240,7 +200,6 @@ const deleteRow = (id, ind) => {
         setdegree_error(university_name_error.filter((val) => val.id !== ind))
         setyear_error(university_name_error.filter((val) => val.id !== ind))
         setpercentage_error(university_name_error.filter((val) => val.id !== ind))
-    }
 }
 
 return (
@@ -249,7 +208,7 @@ return (
             {eduction.map((val, ind) => {
                 return (
                     <div className='education-wrapper mt-3' key={ind}>
-                        {ind > 0 && <div data-action="delete" className='delete text-right' onClick={() => deleteRow(val._id, ind)}>
+                        {ind > 0 && <div data-action="delete" className='delete text-right' onClick={() => deleteRow(ind)}>
                             <i className="fa-solid fa-trash-can "></i>
                         </div>}
                         <div className="row">

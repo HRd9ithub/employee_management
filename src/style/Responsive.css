@@ -804,6 +804,9 @@
     .hide-at-small-screen {
         display: none;
     }
+    .activity-date-range{
+        width: 50% !important;
+    }
 }
 
 @media (max-width: 1152px) {
@@ -1522,6 +1525,9 @@
     .navbar-dropdown {
         transform: translate3d(-10px, 53px, 0px) !important;
     }
+    .activity-date-range{
+        width: 75% !important;
+    }
 }
 
 @media (max-width:736px) {
@@ -2047,6 +2053,9 @@
 
     .delete.action-icon i {
         font-size: 1.2rem;
+    }
+    .activity-date-range{
+        width: 100% !important;
     }
 }
 
