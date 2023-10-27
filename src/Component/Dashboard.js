@@ -1,14 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DatePickers from "react-datepicker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from './auth_context/GlobalPageRedirect';
-import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
@@ -16,7 +14,7 @@ import { subDays } from 'date-fns';
 import Spinner from './common/Spinner';
 import { dateFormat } from '../helper/dateFormat';
 import ConfettiExplosion from 'react-confetti-explosion';
-import {customAxios} from '../service/CreateApi';
+import { customAxios } from '../service/CreateApi';
 
 
 const Dashboard = () => {
@@ -63,13 +61,13 @@ const Dashboard = () => {
                          let birthDayFilter = birthDay.find((item) => {
                               return item._id === userId && moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
                          });
-                         if(birthDayFilter){
-                           let data = JSON.parse(localStorage.getItem("employeeBirthday"));
-                           if(!data){
-                                setanimateLoader(true);
-                                localStorage.setItem("employeeBirthday",true);
-                           }
-                         }else{
+                         if (birthDayFilter) {
+                              let data = JSON.parse(localStorage.getItem("employeeBirthday"));
+                              if (!data) {
+                                   setanimateLoader(true);
+                                   localStorage.setItem("employeeBirthday", true);
+                              }
+                         } else {
                               localStorage.removeItem("employeeBirthday");
                          }
                          // setreportBy(reportBy)
@@ -138,7 +136,7 @@ const Dashboard = () => {
                setisLoading(true);
                const res = await customAxios().post('/leave/status')
                if (res.data.success) {
-                    navigate('/leave')
+                    navigate('/leaves')
                     setisLoading(false)
                }
           } catch (error) {
@@ -217,7 +215,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leave")}>
+                                        <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/leaves")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -238,10 +236,10 @@ const Dashboard = () => {
                                              </NavLink>
                                         </div>
                                    </>}
-                                   <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leave")}>
+                                   <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leaves")}>
                                         <NavLink className="common-box-dashboard position-relative h-100 on-leave-today nav-link" style={{
-                                        cursor : UserData?.role && UserData.role.name.toLowerCase() !== "admin" && "default"
-                                   }}>
+                                             cursor: UserData?.role && UserData.role.name.toLowerCase() !== "admin" && "default"
+                                        }}>
                                              <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                              <h3 className="mb-0">On Leave Today</h3>
                                              <div className='d-flex justify-content-start align-items-center flex-wrap'>
@@ -277,7 +275,7 @@ const Dashboard = () => {
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
-                                                            return <li key={val._id} className='my-2' style={{background: '#ff3a3a'}}><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
+                                                            return <li key={val._id} className='my-2' style={{ background: '#ff3a3a' }}><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
                                                        })}
                                                        {birthDayFilter.map((val) => {
                                                             return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
@@ -296,7 +294,7 @@ const Dashboard = () => {
                {!isLoading && animateLoader &&
                     <div className="animate-celebration">
                          <div className="animate-celebration-content">
-                              <img src="./Images/birthday-emoji.png" alt="img"/>
+                              <img src="./Images/birthday-emoji.png" alt="img" />
                               <h2 className='text-center my-3'>Happy Birthday</h2>
                               <p className='mb-0 text-center'>The warmest wishes to a great member of our team. May your special day be full of happiness, fun and cheer!</p>
                          </div>

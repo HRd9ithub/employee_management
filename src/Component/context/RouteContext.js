@@ -1,12 +1,7 @@
-import React from 'react'
-import { useReducer } from 'react';
-import { createContext } from 'react'
+import React,{useReducer, createContext, useState, useRef} from 'react'
 import { RouteReducer } from './RouteReducer';
-import { useEffect } from 'react';
-import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { useRef } from 'react';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
 import moment from 'moment';
@@ -29,11 +24,7 @@ const initialistate = {
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
     const [id,setId] = useState("");
-    const [logoToggle, setlogoToggle] = useState(false)
-    // search state
-    const [visible, setVisible] = useState(true);
-    const [width, setWidth] = useState(window.innerHeight);
-
+    const [logoToggle, setlogoToggle] = useState(false);
 
     // sidebar toggle
     const [sidebarToggle, setSidebarToggle] = useState(false)
@@ -176,28 +167,8 @@ const RouteContext = ({ children }) => {
         dispatch({ type: "SERACH_FILTER", payload: data })
     }
 
-    // input field toggle function
-    const handleVisibility = () => {
-        setVisible(prev => !prev);
-    };
-
-    // add variable width
-    const handleWidth = () => {
-        setWidth(window.innerWidth);
-    };
-
-    // screen size find for use
-    useEffect(() => {
-        window.addEventListener("resize", handleWidth);
-        width <= 360 ? setVisible(false) : setVisible(true);
-        return () => {
-            window.removeEventListener("resize", handleWidth);
-        };
-    }, [width]);
-
-
     return (
-        <AppProvider.Provider value={{ ...state, HandleFilter,get_username,getReportPreview, visible, width, logoToggle,id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, handleVisibility, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state, HandleFilter,get_username,getReportPreview, logoToggle,id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )

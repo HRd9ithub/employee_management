@@ -977,24 +977,31 @@ span.eye-icon {
   background: linear-gradient(45deg, #49914E 0%, #B2D553 100%) !important;
 }
 
-.sidebar .email-icon {
+.sidebar .setting-icon {
   background: linear-gradient(45deg, #e73d67 0%, #f98faa 100%) !important;
 }
 
-.sidebar .page-icon {
+.sidebar .password-icon {
   background: linear-gradient(45deg, #e78000 0%, #ffd26a 100%) !important;
 }
+/* .activity-logs-icon{
+  background: linear-gradient(90deg,#90caf9,#047edf 99%);
+} */
 
 .sidebar .timesheet-icon {
   background: linear-gradient(45deg, #8e77b3 0%, #6350dd 100%) !important;
 }
 
-.sidebar .report-icon {
+.sidebar .activity-logs-icon {
   background: linear-gradient(45deg, #0066e0 0%, #00d0ff 100%) !important;
 }
 
 .sidebar .document-icon {
   background: linear-gradient(45deg, #e61fe6 0%, #be59b6 100%) !important;
+}
+
+.sidebar .menu-title:hover{
+  text-decoration: none;
 }
 
 .sidebar .nav .nav-item {
@@ -4154,6 +4161,3 @@ input[type="search"] {
   background-color: rgb(209, 209, 209);
 }
 
-.activity-icon{
-  background: linear-gradient(90deg,#90caf9,#047edf 99%);
-}
