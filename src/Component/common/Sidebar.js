@@ -52,7 +52,7 @@ const Sidebar = () => {
         let result = []
         let employee = ['Employees', 'Project', 'Designation']
         let leave = ['Holiday', 'Leave Type', 'Leaves']
-        let setting = ['User Role', 'Work Report']
+        let setting = ['User Role', 'Work Report','Password']
 
         data.forEach((item) => {
           if (employee.includes(item.name)) {
@@ -156,7 +156,7 @@ const Sidebar = () => {
       return menu.route === location.pathname.toLowerCase()
     } else {
       let result = menu.child.find((cur) => {
-        return cur.route === location.pathname.toLowerCase()
+        return cur.route === (location.pathname.includes("employees") ? "/employees" : location.pathname.toLowerCase())
       })
       return result ? true : false;
     }

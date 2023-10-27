@@ -2871,6 +2871,13 @@
     .calendar-icon-holiday {
         top: 12px;
     }
+
+    .password-auth-info .auth-box p {
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 @media (max-width:414px) {
