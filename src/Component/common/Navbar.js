@@ -1,37 +1,38 @@
-import React, { useContext, useLayoutEffect } from 'react';
-import { Dropdown } from 'react-bootstrap';
+import React, { useContext, useLayoutEffect, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { AppProvider } from '../context/RouteContext';
-import { useEffect } from 'react';
-import Spinner from './Spinner';
-import { toast } from 'react-hot-toast';
-import { useState } from 'react';
 import { HiOutlineMinus } from "react-icons/hi";
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
-import Avatar from '@mui/material/Avatar';
 import { customAxios } from '../../service/CreateApi';
 import { timeAgo } from '../../helper/dateFormat';
+import { toast } from 'react-hot-toast';
+import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import Avatar from '@mui/material/Avatar';
+import Spinner from './Spinner';
 import moment from 'moment';
 // import { Trans } from 'react-i18next';
 
 const Navbar = () => {
-  let { handleLogout, loading } = Globalcomponent()
-  let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  // initialistate 
   const [sidebar, setsidebar] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-
   let { pathname } = useLocation();
+  // page redirect
+  let history = useNavigate();
+  // Global state
+  let { handleLogout, loading } = Globalcomponent();
+  let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { getCommonApi } = GlobalPageRedirect();
 
+  // mobile screen toggle sidebar 
   const toggleOffcanvas = () => {
     setSidebarToggle(!sidebarToggle)
   }
-
-  let { getCommonApi } = GlobalPageRedirect();
-
+ 
+  // sidebar toggle in localstorage
   useEffect(() => {
-    // HandleButton()
     let data = localStorage.getItem("sidebarToggle")
 
     if (!data || data === 'false') {
@@ -44,6 +45,7 @@ const Navbar = () => {
     // eslint-disable-next-line
   }, [sidebar])
 
+  // get user data for Login
   useLayoutEffect(() => {
     getUserData();
     // eslint-disable-next-line
@@ -51,14 +53,11 @@ const Navbar = () => {
 
   // get leave notification
   useEffect(() => {
-    if (GetLocalStorage("token") && UserData && UserData.role && UserData.role?.name.toLowerCase() === "admin") {
+    if (GetLocalStorage("token") && UserData && UserData?.role?.name.toLowerCase() === "admin") {
       getLeaveNotification();
     }
     // eslint-disable-next-line
   }, [UserData])
-
-  // page redirect
-  let history = useNavigate();
 
   // leave status change
   const changeStatus = async (id) => {
@@ -67,10 +66,10 @@ const Navbar = () => {
       const res = await customAxios().patch(`/leave/${id}`, { status: "Read" })
       if (res.data.success) {
         setisLoading(false);
-        if (pathname === "/leave") {
+        if (pathname === "/leaves") {
           getLeave();
         } else {
-          history('/leave')
+          history('/leaves')
         }
       }
     } catch (error) {
@@ -93,10 +92,10 @@ const Navbar = () => {
       setisLoading(true);
       const res = await customAxios().post('/leave/status?key=all');
       if (res.data.success) {
-        if (pathname === "/leave") {
+        if (pathname === "/leaves") {
           getLeave();
         } else {
-          history('/leave')
+          history('/leaves')
         }
         setisLoading(false)
       }
@@ -138,7 +137,6 @@ const Navbar = () => {
     }
   }
 
-
   const notificationToggle = (item) => {
     let { date, _id } = item;
 
@@ -152,7 +150,6 @@ const Navbar = () => {
   return (
     <nav className="navbar default-layout-navbar sticky-top">
       <div className="navbar-menu-wrapper d-flex align-items-stretch">
-        {/* <img src='/Images/d9_logo_black.png' className='logo-none' alt="logo" /> */}
         <button className="navbar-toggler navbar-toggler align-self-center text-white" type="button" >
           <span className="mdi mdi-menu" onClick={() => {
             let data = localStorage.getItem("sidebarToggle")
@@ -255,8 +252,6 @@ const Navbar = () => {
         <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center text-white" ref={sidebarRef} type="button" onClick={toggleOffcanvas}>
           <span className="mdi mdi-menu sider-menu"></span>
         </button>
-      </div>
-      <div className="nav-standard">
       </div>
       {(isLoading || loading) && <Spinner />}
     </nav>

@@ -1,31 +1,28 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
 // import { Trans } from 'react-i18next';
-import { useState } from 'react';
-import { useContext } from 'react';
 import { AppProvider } from '../context/RouteContext';
 import Spinner from './Spinner';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { useMemo } from 'react';
 import { customAxios } from '../../service/CreateApi';
 
 const Sidebar = () => {
+  // initialistate 
   const [data, setData] = useState({});
   const [menu, setMenu] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-  const [widthTogle, setWidthToggle] = useState("")
-  let { UserData, setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
+  const [widthTogle, setWidthToggle] = useState("");
+  let location = useLocation();
 
+  // Global state
+  let { setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
+
+  // global funcation for api error of 403
   let { getCommonApi } = GlobalPageRedirect();
 
-  let location = useLocation()
-
-  let menuref = useRef(null);
-  let leaveref = useRef(null);
-  let settingref = useRef(null);
 
   // eslint-disable-next-line
   useEffect(() => {
@@ -44,14 +41,58 @@ const Sidebar = () => {
     }
   })
 
+  // menu get function
   const getMenu = async () => {
     try {
       setisLoading(true);
       const res = await customAxios().get('/menu');
 
       if (res.data.success) {
-        let { data } = res.data
-        setMenu(data)
+        let { data } = res.data;
+        let result = []
+        let employee = ['Employees', 'Project', 'Designation']
+        let leave = ['Holiday', 'Leave Type', 'Leaves']
+        let setting = ['User Role', 'Work Report']
+
+        data.forEach((item) => {
+          if (employee.includes(item.name)) {
+            let abc = result.find((val) => {
+              return val.name === "employee"
+            })
+            !abc && result.push({ name: "employee", child: [], icon: item.icon, route: "#" })
+            result = result.map((val) => {
+              if (val.name === "employee") {
+                return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
+              }
+              return val
+            })
+          } else if (leave.includes(item.name)) {
+            let abc = result.find((val) => {
+              return val.name === "leave"
+            })
+            !abc && result.push({ name: "leave", child: [], icon: item.icon, route: "#" })
+            result = result.map((val) => {
+              if (val.name === "leave") {
+                return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
+              }
+              return val
+            })
+          } else if (setting.includes(item.name)) {
+            let abc = result.find((val) => {
+              return val.name === "setting"
+            })
+            !abc && result.push({ name: "setting", child: [], icon: item.icon, route: "#" })
+            result = result.map((val) => {
+              if (val.name === "setting") {
+                return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
+              }
+              return val
+            })
+          } else {
+            result.push({ _id: item._id, name: item.name, icon: item.icon, route: item.path })
+          }
+        })
+        setMenu(result)
       }
     } catch (error) {
       if (!error.response) {
@@ -66,12 +107,15 @@ const Sidebar = () => {
     }
   }
 
-
-  // hover effect
   useEffect(() => {
     if (GetLocalStorage("token")) {
       getMenu();
     }
+    // eslint-disable-next-line
+  }, [])
+
+  // hover effect
+  useEffect(() => {
     // add class 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
     const body = document.querySelector('body');
     document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
@@ -87,8 +131,7 @@ const Sidebar = () => {
         }
       });
     });
-    // eslint-disable-next-line
-  }, [])
+  })
 
   // submenu togle in click
   const toggleMenuState = (menuState) => {
@@ -107,106 +150,29 @@ const Sidebar = () => {
     }
   }
 
-  let submenu = []
-
-  const HandleACtive = (name) => {
-    if (name === 'employee') {
-      submenu = ['employees', 'project', 'designation', 'premission']
-    } else if (name === 'leave') {
-      submenu = ['holiday', 'leave-type', 'leave']
-    } else if (name === "setting") {
-      submenu = ['user-role', 'work-report']
+  // add active class 
+  const HandleACtive = (menu) => {
+    if (menu.route !== "#") {
+      return menu.route === location.pathname.toLowerCase()
+    } else {
+      let result = menu.child.find((cur) => {
+        return cur.route === location.pathname.toLowerCase()
+      })
+      return result ? true : false;
     }
-    const response = submenu.filter((val) => {
-      return val === location.pathname.toLowerCase().slice(1)
-    })
-    return response.length !== 0 ? true : false
   }
 
+  // mobile screen close for click menu
   const toggleSidebar = () => {
     document.querySelector('.sidebar-offcanvas').classList.remove('active')
-    setSidebarToggle(!sidebarToggle)
+    setSidebarToggle(!sidebarToggle);
   }
 
-
-  const showSidebar = () => {
-    const body = document.querySelector('body');
-    document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
-
-      el.addEventListener('mouseover', function () {
-        if (body.classList.contains('sidebar-icon-only')) {
-          el.classList.add('hover-open');
-        }
-      });
-      el.addEventListener('mouseout', function () {
-        if (body.classList.contains('sidebar-icon-only')) {
-          el.classList.remove('hover-open');
-        }
-      });
-    });
-  }
-
-  // employee drop down display or not 
-  let employee = useMemo(() => {
-    let submenu = ['employees', 'project', 'designation']
-    let response = ""
-    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-      response = true
-    } else {
-      response = menu.some((val) => {
-        return submenu.includes(val.name.toLowerCase())
-      })
-    }
-    return response
-    // eslint-disable-next-line
-  }, [menu])
-
-  // leave drop down display or not 
-  let leave = useMemo(() => {
-    let submenu = ['holiday', 'leavetype', 'leaves']
-    let response = ""
-    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-      response = true
-    } else {
-      response = menu.some((val) => {
-        return submenu.includes(val.name.toLowerCase())
-      })
-    }
-    return response
-    // eslint-disable-next-line
-  }, [menu])
-
-  // leave drop down display or not 
-  let setting = useMemo(() => {
-    let submenu = ['user role', "work report"]
-    let response = ""
-    if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-      response = true
-    } else {
-      response = menu.some((val) => {
-        return submenu.includes(val.name.toLowerCase())
-      })
-    }
-    return response
-    // eslint-disable-next-line
-  }, [menu])
-
-
+  // outside click close sidebar use
   useEffect(() => {
     const toggleSidebars = (e) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target) && leaveref.current && !leaveref.current.contains(e.target)) {
-        if (UserData && UserData.role && UserData.role.name.toLowerCase() === 'admin') {
-          menuref.current && !menuref.current.contains(e.target) && settingref.current && !settingref.current.contains(e.target) && setSidebarToggle(false);
-        } else {
-          if (employee && menuref.current && !menuref.current.contains(e.target)) {
-            setSidebarToggle(false);
-          }
-          if (setting && settingref.current && !settingref.current.contains(e.target)) {
-            setSidebarToggle(false);
-          } else {
-            setSidebarToggle(false);
-          }
-        }
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+        setSidebarToggle(false);
       }
     }
     document.addEventListener("mousedown", toggleSidebars);
@@ -214,10 +180,7 @@ const Sidebar = () => {
       document.removeEventListener("mousedown", toggleSidebars);
     };
     // eslint-disable-next-line
-  }, [sidebarRef, UserData]);
-
-
-
+  }, []);
 
   return (
     <>
@@ -227,128 +190,35 @@ const Sidebar = () => {
             <Link className="navbar-brand brand-logo " to="/"><img src='/Images/d9_logo_black.png' alt="logo" /></Link> :
             <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link>}
         </div>
-        <ul className="nav mt-2" style={{marginTop: '0.2rem'}}>
-          {/* dashboard */}
-          <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/' && 'active'}`} onClick={() => {
-            setData({})
-            toggleSidebar();
-          }} >
-            {menu.map((elem) => {
-              return (
-                elem.name.toLowerCase().replace(/\s/g, '') === 'dashboard' &&
-                <NavLink key={elem._id} className="nav-link" to="/">
-                  <i className={`fa-solid fa-house slider-hover-icon dashboard-icon `} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                  <span className={`menu-title`}>{elem.name}</span>
+        <ul className="nav mt-2" ref={sidebarRef}>
+          {menu.map((elem, ind) => {
+            return (
+              <li className={`nav-item item-hover ${HandleACtive(elem) ? 'active' : ''}`} key={ind}>
+                <NavLink to={elem.route} className={data.hasOwnProperty(elem.name) && data[elem.name] ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => {
+                  toggleMenuState(elem.name);
+                  elem.route === "#" && toggleSidebar();
+                }}>
+                  <i className={`${elem.icon} slider-hover-icon ${elem.name.replace(" ", "-").toLowerCase()}-icon`}></i>
+                  <div className='menu-title'>{elem.name}</div>
+                  {elem.route === "#" && <i className={`menu-arrow`}></i>}
                 </NavLink>
-              )
-            })}
-          </li>
-          {/* employee */}
-          {employee &&
-            <li ref={menuref} className={`nav-item item-hover  ${(HandleACtive('employee') || location.pathname.slice("1").toLowerCase().includes("employees/view") || location.pathname.slice("1").toLowerCase().includes("employees/edit")) && 'active'}`} onMouseEnter={showSidebar} >
-              <div className={data.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => toggleMenuState('basicUiMenuOpen')}>
-                <i className={`fa-solid fa-user slider-hover-icon employee-icon`} style={{
-                  color: "#bba8bff5", fontSize: '15px'
-                }}></i>
-                <span className={`menu-title`}>Employee</span>
-                <i className={`menu-arrow`}></i>
-              </div>
-              <Collapse in={data.basicUiMenuOpen}>
-                <ul className="nav flex-column sub-menu">
-                  {menu.map((elem) => {
-                    return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'employees' || elem.name.toLowerCase().replace(/\s/g, '') === 'project' || elem.name.toLowerCase().replace(/\s/g, '') === 'designation') &&
-                      <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'employees' && <li className="nav-item"  > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'project' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'designation' && <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={elem.path}>{elem.name}</NavLink></li>}
-                      </div>
-                    )
-                  })}
-                </ul>
-              </Collapse>
-            </li>}
-          {/* leave */}
-          {leave &&
-            <li ref={leaveref} className={`nav-item item-hover  ${HandleACtive('leave') ? 'active' : ''}`} onMouseEnter={showSidebar}>
-              <div className={data.leave ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => toggleMenuState('leave')} data-toggle="collapse">
-                <i className={`fa-regular fa-calendar slider-hover-icon leave-icon `} style={{ color: "#fff", fontSize: '15px' }}></i>
-                <span className={`menu-title`}>Leave</span>
-                <i className={`menu-arrow`}></i>
-              </div>
-              <Collapse in={data.leave}>
-                <ul className="nav flex-column sub-menu">
-                  {menu.map((elem) => {
-                    return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' || elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' || elem.name.toLowerCase().replace(/\s/g, '') === 'holiday') &&
-                      <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leaves' && <li className="nav-item" > <NavLink className="nav-link" to="/leave">{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'leavetype' && <li className="nav-item" > <NavLink className="nav-link" to="/leave-type">{elem.name.slice(0, 5)} {elem.name.slice(5)}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'holiday' && <li className="nav-item" > <NavLink className="nav-link" to="/holiday">{elem.name}</NavLink></li>}
-                      </div>
-                    )
-                  })}
-                </ul>
-              </Collapse>
-            </li>}
-          {/* timesheet */}
-          <li className={`nav-item item-hover ${window.location.pathname.toLowerCase() === '/time-sheet' && 'active'} `} onClick={() => setData({})} >
-            {menu.map((elem) => {
-              return (
-                elem.name.toLowerCase().replace(/\s/g, '') === 'timesheet' &&
-                <NavLink key={elem._id} className="nav-link" to="/time-sheet" onClick={toggleSidebar}>
-                  <i className={`fa-solid fa-clock slider-hover-icon timesheet-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                  <span className={`menu-title`}>{elem.name.slice(0, 4)} {elem.name.slice(4)}</span>
-                </NavLink>)
-            })}
-          </li>
-          {/* document */}
-          <li className={`nav-item item-hover  ${window.location.pathname.toLowerCase() === '/documents' && 'active'}`} onClick={() => setData({})}>
-            {menu.map((elem) => {
-              return (
-                elem.name.toLowerCase().replace(/\s/g, '') === 'document' &&
-                <NavLink key={elem._id} className="nav-link" to="/documents" onClick={toggleSidebar}>
-                  <i className={`fa-solid fa-book slider-hover-icon document-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                  <span className={`menu-title`}>{elem.name}</span>
-                </NavLink>
-              )
-            })}
-          </li>
-          {/* activity */}
-          <li className={`nav-item item-hover  ${window.location.pathname.toLowerCase() === '/activity' && 'active'}`} onClick={() => setData({})}>
-            {menu.map((elem) => {
-              return (
-                elem.name.toLowerCase().replace(/\s/g, '') === 'activitylogs' &&
-                <NavLink key={elem._id} className="nav-link" to="/activity" onClick={toggleSidebar}>
-                  <i className={`fa-solid fa-clock-rotate-left slider-hover-icon activity-icon`} style={{ color: "#bba8bff5", fontSize: '15px' }}></i>
-                  <span className={`menu-title`}>{elem.name}</span>
-                </NavLink>
-              )
-            })}
-          </li>
-          {/* setting */}
-          {setting &&
-            <li ref={settingref} className={`nav-item item-hover  ${HandleACtive('setting') && 'active'}`} onMouseEnter={showSidebar}>
-              <div className={data.setting ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => toggleMenuState('setting')} data-toggle="collapse">
-                <i className={`fa-solid fa-gear slider-hover-icon email-icon`} style={{
-                  color: "#bba8bff5", fontSize: '15px'
-                }}></i>
-                <span className={`menu-title`}>Setting</span>
-                <i className={`menu-arrow`}></i>
-              </div>
-              <Collapse in={data.setting}>
-                <ul className="nav flex-column sub-menu">
-                  {menu.map((elem) => {
-                    return (
-                      (elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' || elem.name.toLowerCase().replace(/\s/g, '') === 'workreport') &&
-                      <div key={elem._id}>
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'userrole' && <li className="nav-item"> <NavLink className="nav-link" to="/user-role">{elem.name}</NavLink></li>}
-                        {elem.name.toLowerCase().replace(/\s/g, '') === 'workreport' && <li className="nav-item" onClick={toggleSidebar}> <NavLink className="nav-link" to="/work-report">{elem.name}</NavLink></li>}
-                      </div>)
-                  })}
-                </ul>
-              </Collapse>
-            </li>}
+                {elem.route === "#" &&
+                  <Collapse in={data.hasOwnProperty(elem.name) && data[elem.name]}>
+                    <ul className="nav flex-column sub-menu">
+                      {elem.child.map((item) => {
+                        return (
+                          <div key={item._id}>
+                            <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={item.route}>{item.name}</NavLink></li>
+                          </div>
+                        )
+                      })}
+                    </ul>
+                  </Collapse>
+                }
+              </li>
+            )
+          })
+          }
         </ul>
       </nav>
       {isLoading && <Spinner />}

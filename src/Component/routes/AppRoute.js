@@ -47,7 +47,7 @@ const AppRoute = () => {
                 {/* leave route */}
                 <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><Calendar /></ProtectedRoute>}></Route>
                 <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
-                <Route exact path='/leave' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
+                <Route exact path='/leaves' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
                 {/* document component */}
                 <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
                 {/* activity component */}
