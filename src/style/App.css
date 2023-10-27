@@ -984,6 +984,7 @@ span.eye-icon {
 .sidebar .password-icon {
   background: linear-gradient(45deg, #e78000 0%, #ffd26a 100%) !important;
 }
+
 /* .activity-logs-icon{
   background: linear-gradient(90deg,#90caf9,#047edf 99%);
 } */
@@ -1000,7 +1001,7 @@ span.eye-icon {
   background: linear-gradient(45deg, #e61fe6 0%, #be59b6 100%) !important;
 }
 
-.sidebar .menu-title:hover{
+.sidebar .menu-title:hover {
   text-decoration: none;
 }
 
@@ -4110,7 +4111,7 @@ input[type="search"] {
 
 .activity-list {
   list-style: none;
-  padding-left : 0 !important;
+  padding-left: 0 !important;
 }
 
 .activity-box .activity-list li {
@@ -4124,6 +4125,10 @@ input[type="search"] {
   display: flex;
   gap: 15px;
   color: #000;
+}
+.activity-content{
+  display: flex;
+  align-items: center;
 }
 
 .timeline-content p {
@@ -4147,7 +4152,7 @@ input[type="search"] {
   cursor: pointer;
 }
 
-.activity-col-box{
+.activity-col-box {
   max-height: 74vh !important;
   overflow-y: auto;
 }
@@ -4161,3 +4166,72 @@ input[type="search"] {
   background-color: rgb(209, 209, 209);
 }
 
+/* ==================== Password component style ========================= */
+
+.css-13cymwt-control, .css-t3ipsp-control {
+  border: none !important ;
+  border-bottom: 1px solid #004b8f !important;
+  box-shadow: unset !important;
+  border-radius: 0px !important;
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  -ms-border-radius: 0px !important;
+  -o-border-radius: 0px !important;
+}
+
+.password-modal .modal-content{
+  overflow: unset !important ;
+}
+.password-modal .modal-content .card-body{
+  overflow: unset !important ;
+}
+/* .css-t3ipsp-control:hover {
+  border: none !important ;
+  border-bottom: 1px solid #004b8f !important;
+} */
+
+.password-info-box{
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 16px 12px;
+  cursor: pointer;
+}
+
+.password-info-box p {
+  margin-bottom: 0 !important;
+}
+
+.password-auth-info .auth-box{
+  margin-bottom: 0 !important;
+  padding: 8px 8px;
+  color: #000;
+  background-color: #f6f8fa;
+}
+ 
+.password-auth-info .auth-box p{
+  margin-bottom: 0 !important;
+}
+
+.password-auth-info label{
+  font-size: 13px;
+  color: gray;
+}
+
+.password-auth-info .fa-solid{
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #01526e;
+}
+.password-auth-info .fa-check{
+  color: green !important;
+}
+.password-auth-info .fa-solid::after{
+  content: "";
+  border: 0.5px solid rgb(128 128 128 / 10%);
+  position: absolute;
+  top: -10px;
+  right: 29px;
+  height: 38px;
+}

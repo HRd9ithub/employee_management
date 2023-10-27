@@ -23,6 +23,7 @@ import WorkReportComponent from '../setting/work_report/WorkReportComponent';
 import ReportPreview from '../setting/work_report/reportPreview';
 import Error404 from '../error_pages/Error404';
 import ActivityComponent from '../activity/ActivityComponent';
+import PasswordComponent from '../setting/password/PasswordComponent';
 
 const AppRoute = () => {
     return (
@@ -43,7 +44,6 @@ const AppRoute = () => {
                 <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
-                <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 {/* leave route */}
                 <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><Calendar /></ProtectedRoute>}></Route>
                 <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
@@ -54,8 +54,11 @@ const AppRoute = () => {
                 <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
                 {/* timesheet component */}
                 <Route exact path='/time-sheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
+                {/* setting route */}
+                <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/report-preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
+                <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>

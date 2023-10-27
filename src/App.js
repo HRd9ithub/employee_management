@@ -17,7 +17,7 @@ function App() {
   const checkRoute = () => {
     let Root = ['/login','/forgot-password','/reset-password','/otp'];
 
-    return Root.includes(pathname) || (key === "default" && !GetLocalStorage("token")) 
+    return !(Root.includes(pathname) || (key === "default" && !GetLocalStorage("token")))
   }
 
   return (
@@ -25,10 +25,10 @@ function App() {
       <div className='wrapper-container d-flex'>
         {/* <IdleTimeOutHandler/> */}
         <div className='sidebar-wrap'>
-          {checkRoute() ? '' : <Sidebar />}
+          {checkRoute() && <Sidebar />}
         </div>
         <div className='sidebar-inner'>
-          {checkRoute() ? '' : <Navbar />}
+          {checkRoute() && <Navbar />}
           <div className="main-panel">
             <div className="content-wrapper">
               {/* route file */}
