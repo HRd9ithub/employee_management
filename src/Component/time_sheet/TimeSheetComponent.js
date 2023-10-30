@@ -29,7 +29,7 @@ const TimeSheetComponent = () => {
     const [searchItem, setsearchItem] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect();
-    let { get_username, userName, loading } = useContext(AppProvider);
+    let { get_username, userName, Loading } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -192,7 +192,7 @@ const TimeSheetComponent = () => {
     })
 
 
-    if (isLoading || loading) {
+    if (isLoading || Loading) {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
@@ -223,7 +223,7 @@ const TimeSheetComponent = () => {
                                                 <option value=''>All</option>
                                                 {userName.map((val) => {
                                                     return (
-                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                     )
                                                 })}
                                             </select>
@@ -267,7 +267,7 @@ const TimeSheetComponent = () => {
                                             <option value=''>All</option>
                                             {userName.map((val) => {
                                                 return (
-                                                    val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(" ", val.last_name)}</option>
+                                                    val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                 )
                                             })}
                                         </select>

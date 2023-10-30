@@ -249,7 +249,6 @@ const PasswordComponent = () => {
                 {permission?.name.toLowerCase() === "admin" && view.hasOwnProperty("access") && view.access.length !== 0 &&
                   <div className="access-employee-list mt-4">
                     <h3>Access Employee List:</h3>
-                    {console.log(view.access)}
                     <div className="row mt-3">
                       {view.hasOwnProperty("access") && view.access.map((item, index) => (
                         <div className="col-md-4 col-sm-6" key={item._id}><span className='pr-2'>{index + 1}.</span> <label className='mb-0'>{item?.first_name.concat(" ", item.last_name)}</label></div>

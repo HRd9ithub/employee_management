@@ -44,7 +44,7 @@ function WorkReportModal({ data, permission, getReport }) {
     const [error, setError] = useState([]);
 
     let { getCommonApi } = GlobalPageRedirect();
-    let { get_username, userName, loading } = useContext(AppProvider);
+    let { get_username, userName, Loading } = useContext(AppProvider);
 
     // modal show function
     const handleShow = () => {
@@ -336,7 +336,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                         <option value='0'>Select Employee </option>
                                                         {userName.map((val) => {
                                                             return (
-                                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                             )
                                                         })}
                                                     </select>
@@ -433,7 +433,7 @@ function WorkReportModal({ data, permission, getReport }) {
                             </div>
                         </div>
                     </div>
-                    {(isLoading || loading) && <Spinner />}
+                    {(isLoading || Loading) && <Spinner />}
                 </Modal.Body>
             </Modal>
         </>
