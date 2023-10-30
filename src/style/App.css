@@ -4126,7 +4126,8 @@ input[type="search"] {
   gap: 15px;
   color: #000;
 }
-.activity-content{
+
+.activity-content {
   display: flex;
   align-items: center;
 }
@@ -4168,8 +4169,9 @@ input[type="search"] {
 
 /* ==================== Password component style ========================= */
 
-.css-13cymwt-control, .css-t3ipsp-control {
-  border: none !important ;
+.css-13cymwt-control,
+.css-t3ipsp-control {
+  border: none !important;
   border-bottom: 1px solid #004b8f !important;
   box-shadow: unset !important;
   border-radius: 0px !important;
@@ -4179,44 +4181,50 @@ input[type="search"] {
   -o-border-radius: 0px !important;
 }
 
-.password-modal .modal-content{
-  overflow: unset !important ;
+.password-modal .modal-content {
+  overflow: unset !important;
 }
-.password-modal .modal-content .card-body{
-  overflow: unset !important ;
+
+.password-modal .modal-dialog{
+  max-width: 800px !important ;
 }
+
+.password-modal .modal-content .card-body {
+  overflow: unset !important;
+}
+
 /* .css-t3ipsp-control:hover {
   border: none !important ;
   border-bottom: 1px solid #004b8f !important;
 } */
 
-.password-info-box{
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+.password-info-box {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 16px 12px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .password-info-box p {
   margin-bottom: 0 !important;
 }
 
-.password-auth-info .auth-box{
+.password-auth-info .auth-box {
   margin-bottom: 0 !important;
   padding: 8px 8px;
   color: #000;
   background-color: #f6f8fa;
 }
- 
-.password-auth-info .auth-box p{
+
+.password-auth-info .auth-box p {
   margin-bottom: 0 !important;
 }
 
-.password-auth-info label{
+.password-auth-info label {
   font-size: 13px;
   color: gray;
 }
 
-.password-auth-info .fa-solid{
+.password-auth-info .fa-solid {
   position: absolute;
   right: 12px;
   top: 10px;
@@ -4224,14 +4232,64 @@ input[type="search"] {
   font-size: 15px;
   color: #01526e;
 }
-.password-auth-info .fa-check{
+
+.password-auth-info .fa-check {
   color: green !important;
 }
-.password-auth-info .fa-solid::after{
+
+.password-auth-info .fa-solid::after {
   content: "";
   border: 0.5px solid rgb(128 128 128 / 10%);
   position: absolute;
   top: -10px;
   right: 29px;
   height: 38px;
+}
+
+.password-action--dropdown.show {
+  /* transform: translate3d(100%, 22px, 0) !important; */
+  /*-webkit-transform: translate(100%, 35px) !important;
+  -moz-transform: translate3d(100%, 22px, 0) !important;
+  -ms-transform: translate3d(100%, 22px, 0) !important;
+  -o-transform: translate3d(100%, 22px, 0) !important;
+  */
+}
+
+.password-action--dropdown.show i.fa-solid.fa-pen-to-square {
+  color: green;
+  cursor: pointer;
+}
+
+.password-action--dropdown.show i.fa-solid.fa-trash-can {
+  color: red;
+  cursor: pointer;
+}
+
+.password-action--dropdown.show i.fa-solid.fa-eye{
+  color: rgb(7, 75, 154);
+  cursor: pointer;
+}
+
+.password-action--dropdown.show i.fa-solid{
+  padding-right: 10px;
+}
+
+.password-action--dropdown.show .dropdown-item{
+  padding: 0.25rem 0.5rem !important;
+  display: flex;
+  align-items: center;
+}
+
+.password-action--dropdown.show .dropdown-item label{
+  margin-bottom: 0px !important ;
+  cursor: pointer;
+}
+
+.password-action--dropdown.show .dropdown-item:active{
+  background-color: unset !important;
+  color: #000 !important;
+}
+
+.password-action--dropdown.show .dropdown-divider{
+  margin: 0.2rem 0 !important;
 }

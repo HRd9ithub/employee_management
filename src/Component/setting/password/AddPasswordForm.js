@@ -4,14 +4,15 @@ import Select from 'react-select';
 import { AppProvider } from '../../context/RouteContext';
 import Spinner from '../../common/Spinner';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
-import { encryptPassword } from '../../../service/passwordEncrypt';
+import { decryptPassword, encryptPassword } from '../../../service/passwordEncrypt';
 import { customAxios } from '../../../service/CreateApi';
 import toast from 'react-hot-toast';
 import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import { Dropdown } from 'react-bootstrap';
 // import { toast } from "react-hot-toast";
 
 const AddPasswordForm = (props) => {
-    let { data } = props;
+    let { data, getPasswordRecord } = props;
 
     // initialistate 
     const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ const AddPasswordForm = (props) => {
     const [password, setPassword] = useState({
         title: "",
         url: "",
-        email: "",
+        user_name: "",
         password: ""
     })
     const [accessEmployee, setAccessEmployee] = useState(null);
@@ -27,7 +28,7 @@ const AddPasswordForm = (props) => {
     // errror state
     const [titleError, setTitleError] = useState("");
     const [urlError, setUrlError] = useState("");
-    const [emailError, setEmailError] = useState("");
+    const [userNameError, setuserNameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [error, setError] = useState([]);
 
@@ -37,6 +38,20 @@ const AddPasswordForm = (props) => {
 
     // *show modal
     const showModal = () => {
+        if (data) {
+            let { title, url, user_name, password, access, _id } = data;
+            setPassword({
+                title,
+                password: decryptPassword(password),
+                user_name,
+                url,
+                id: _id
+            });
+            let result = access.map((elem) => {
+                return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
+            })
+            setAccessEmployee(result);
+        }
         setShow(true);
     }
 
@@ -48,13 +63,14 @@ const AddPasswordForm = (props) => {
         setPassword({
             title: "",
             url: "",
-            email: "",
-            password: ""
+            user_name: "",
+            password: "",
+            id: ""
         });
         setAccessEmployee(null);
         setTitleError("");
         setUrlError("");
-        setEmailError("");
+        setuserNameError("");
         setPasswordError("");
         setError([]);
     }
@@ -96,8 +112,12 @@ const AddPasswordForm = (props) => {
     }
     // url 
     const urlValidation = () => {
+         // eslint-disable-next-line
+        var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
         if (!password.url.trim()) {
-            setUrlError("Url is a required field.")
+            setUrlError("URL is a required field.")
+        } else if (!expression.test(password.url)) {
+            setUrlError("URL must be a valid URL.")
         } else {
             setUrlError("");
         }
@@ -110,12 +130,12 @@ const AddPasswordForm = (props) => {
             setPasswordError("");
         }
     }
-    // email 
-    const emailValidation = () => {
-        if (!password.email.trim()) {
-            setEmailError("Email is a required field.")
+    // username 
+    const usernameValidation = () => {
+        if (!password.user_name.trim()) {
+            setuserNameError("User name is a required field.")
         } else {
-            setEmailError("");
+            setuserNameError("");
         }
     }
 
@@ -126,10 +146,10 @@ const AddPasswordForm = (props) => {
 
         titleValidation();
         urlValidation();
-        emailValidation();
+        usernameValidation();
         passwordValidation();
 
-        if (!password.title || !password.url || !password.email || !password.password || titleError || urlError || emailError || passwordError) {
+        if (!password.title || !password.url || !password.user_name || !password.password || titleError || urlError || userNameError || passwordError) {
             return false;
         }
 
@@ -140,32 +160,40 @@ const AddPasswordForm = (props) => {
 
         setError("");
         let url = "";
-        // if (id) {
-        //     url = customAxios().patch(`/project/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) })
-        // } else {
-        url = customAxios().post('/password', {
-            title: password.title,
-            url: password.url,
-            email: password.email,
-            password: epassword,
-            access_employee: user
-        })
-        // }
+        if (data) {
+            url = customAxios().put(`/password/${password.id}`, {
+                title: password.title,
+                url: password.url,
+                user_name: password.user_name,
+                password: epassword,
+                access_employee: user
+            })
+        } else {
+            url = customAxios().post('/password', {
+                title: password.title,
+                url: password.url,
+                user_name: password.user_name,
+                password: epassword,
+                access_employee: user
+            })
+        }
         setIsLoading(true);
         url.then(data => {
             if (data.data.success) {
-                toast.success(data.data.message)
+                toast.success(data.data.message);
+                getPasswordRecord();
                 setShow(false);
                 setPassword({
                     title: "",
                     url: "",
-                    email: "",
-                    password: ""
+                    user_name: "",
+                    password: "",
+                    id: ""
                 });
                 setAccessEmployee(null);
                 setTitleError("");
                 setUrlError("");
-                setEmailError("");
+                setuserNameError("");
                 setPasswordError("");
                 setError([]);
                 setIsLoading(false);
@@ -191,7 +219,8 @@ const AddPasswordForm = (props) => {
 
     return (
         <>
-            <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={showModal}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
+            {data ? <Dropdown.Item className="dropdown-item" onClick={showModal}><i className="fa-solid fa-pen-to-square"></i><label>Edit</label></Dropdown.Item> :
+                <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={showModal}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>}
 
             {/* modal  */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal password-modal' centered>
@@ -208,22 +237,22 @@ const AddPasswordForm = (props) => {
                                     <div className="row">
                                         <div className="form-group col-md-6">
                                             <label htmlFor="title" className='mt-3'>Title</label>
-                                            <input type="text" className="form-control" id="title" placeholder="Enter Title" name='title' value={password.title} onChange={handleChange} onBlur={titleValidation} />
+                                            <input type="text" autoComplete='off' className="form-control" id="title" placeholder="Enter Title" name='title' value={password.title} onChange={handleChange} onBlur={titleValidation} />
                                             {titleError && <small id="title" className="form-text error">{titleError}</small>}
                                         </div>
                                         <div className="form-group col-md-6">
                                             <label htmlFor="url" className='mt-3'>URL</label>
-                                            <input type="text" className="form-control" id="url" placeholder="Enter url" name='url' value={password.url} onChange={handleChange} onBlur={urlValidation} />
+                                            <input type="text" autoComplete='off' className="form-control" id="url" placeholder="Enter url" name='url' value={password.url} onChange={handleChange} onBlur={urlValidation} />
                                             {urlError && <small id="url" className="form-text error">{urlError}</small>}
                                         </div>
                                         <div className="form-group col-md-6">
-                                            <label htmlFor="email" className='mt-3'>Email</label>
-                                            <input type="text" className="form-control" id="email" placeholder="Enter email" name='email' value={password.email} onChange={handleChange} onBlur={emailValidation} />
-                                            {emailError && <small id="email" className="form-text error">{emailError}</small>}
+                                            <label htmlFor="user_name" className='mt-3'>User Name</label>
+                                            <input type="text" autoComplete='off' className="form-control" id="user_name" placeholder="Enter user name" name='user_name' value={password.user_name} onChange={handleChange} onBlur={usernameValidation} />
+                                            {userNameError && <small id="user_name" className="form-text error">{userNameError}</small>}
                                         </div>
                                         <div className="form-group col-md-6">
                                             <label htmlFor="password" className='mt-3'>Password</label>
-                                            <input type="text" className="form-control" id="password" placeholder="Enter password" name='password' value={password.password} onChange={handleChange} onBlur={passwordValidation} />
+                                            <input type="text" autoComplete='off' className="form-control" id="password" placeholder="Enter password" name='password' value={password.password} onChange={handleChange} onBlur={passwordValidation} />
                                             {passwordError && <small id="password" className="form-text error">{passwordError}</small>}
                                         </div>
                                         <div className="form-group col-12">
