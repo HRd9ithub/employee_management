@@ -4206,6 +4206,10 @@ input[type="search"] {
 
 .password-info-box p {
   margin-bottom: 0 !important;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .password-auth-info .auth-box {

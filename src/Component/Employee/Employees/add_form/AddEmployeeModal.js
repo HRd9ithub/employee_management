@@ -18,7 +18,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
     const history = useNavigate();
     let { getCommonApi } = GlobalPageRedirect();
-    let { get_username, userName, loading } = useContext(AppProvider);
+    let { get_username, userName, Loading } = useContext(AppProvider);
 
     let DateRef = useRef();
 
@@ -39,7 +39,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         employee_id: "",
         reporting_by: ""
     });
-    const [loader, setLoader] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [userRole, setUserRole] = useState([]);
     const [Designations, setDesignations] = useState([]);
     const [firstNameError, setfirstNameError] = useState('');
@@ -59,7 +59,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     // get department,designation,user role
     useEffect(() => {
         const get_role = async () => {
-            setLoader(true);
+            setisLoading(true);
             try {
                 const res = await customAxios().get('/role/');
                 if (res.data.success) {
@@ -78,11 +78,11 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     }
                 }
             } finally {
-                setLoader(false)
+                setisLoading(false)
             }
         };
         const get_Designations = async () => {
-            setLoader(true)
+            setisLoading(true)
             try {
                 const res = await customAxios().get('/designation/');
 
@@ -102,7 +102,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     }
                 }
             } finally {
-                setLoader(false)
+                setisLoading(false)
             }
         };
         if (page) {
@@ -195,7 +195,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         } else if (!employee.email.match(mailformat)) {
             setemailError("Email must be a valid email.");
         } else {
-            setLoader(true)
+            setisLoading(true)
 
             customAxios().post('/user/email', { email: employee.email }).then((response) => {
                 if (response.data.success) {
@@ -214,7 +214,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     }
                 }
             }).finally(() => {
-                setLoader(false)
+                setisLoading(false)
             })
         }
     }
@@ -226,7 +226,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         } else if (!employee.employee_id.match(/^[A-Za-z0-9-]+$/)) {
             setEmployeeIdError("Please enter valid employee id.");
         } else {
-            setLoader(true)
+            setisLoading(true)
             customAxios().post('/user/employeeId', { employee_id: employee.employee_id }).then((response) => {
                 if (response.data.success) {
                     setEmployeeIdError("")
@@ -244,7 +244,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     }
                 }
             }).finally(() => {
-                setLoader(false)
+                setisLoading(false)
             })
         }
     }
@@ -370,7 +370,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             return false;
         } else {
             try {
-                setLoader(true);
+                setisLoading(true);
 
                 const response = await customAxios().post('/user/', {
                     first_name: first_name.charAt(0).toUpperCase() + first_name.slice(1),
@@ -420,7 +420,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     }
                 }
             } finally {
-                setLoader(false);
+                setisLoading(false);
                 setPage(false);
             }
         }
@@ -594,7 +594,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                     <option value="report">Select Report To</option>
                                                     {userName.map((val) => {
                                                         return (
-                                                            <option key={val._id} value={val._id}>{val.first_name?.concat(" ", val.last_name)}</option>
+                                                            <option key={val._id} value={val._id}>{val.name}</option>
                                                         );
                                                     })}
                                                 </select>
@@ -617,7 +617,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                         </div>
                     </div>
                 </Modal.Body>
-                {(loader || loading) && <Spinner />}
+                {(isLoading || Loading) && <Spinner />}
             </Modal>
         </>
     )

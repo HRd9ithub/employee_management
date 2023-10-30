@@ -47,10 +47,12 @@ const AddPasswordForm = (props) => {
                 url,
                 id: _id
             });
-            let result = access.map((elem) => {
-                return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
-            })
-            setAccessEmployee(result);
+            if (data.hasOwnProperty("access")) {
+                let result = access.map((elem) => {
+                    return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
+                })
+                setAccessEmployee(result);
+            }
         }
         setShow(true);
     }
@@ -88,7 +90,7 @@ const AddPasswordForm = (props) => {
         let result = [];
         userName.forEach((val) => {
             if (val.role.toLowerCase() !== "admin") {
-                result.push({ value: val._id, label: val.first_name.concat(" ", val.last_name) })
+                result.push({ value: val._id, label: val.name })
             }
         })
         return result
@@ -112,7 +114,7 @@ const AddPasswordForm = (props) => {
     }
     // url 
     const urlValidation = () => {
-         // eslint-disable-next-line
+        // eslint-disable-next-line
         var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
         if (!password.url.trim()) {
             setUrlError("URL is a required field.")

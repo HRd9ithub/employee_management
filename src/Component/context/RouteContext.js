@@ -1,4 +1,4 @@
-import React,{useReducer, createContext, useState, useRef} from 'react'
+import React, { useReducer, createContext, useState, useRef } from 'react'
 import { RouteReducer } from './RouteReducer';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
@@ -18,12 +18,12 @@ const initialistate = {
     permission: "",
     serverError: false,
     userName: [],
-    reportData : [],
-    summary : ""
+    reportData: [],
+    summary: ""
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
-    const [id,setId] = useState("");
+    const [id, setId] = useState("");
     const [logoToggle, setlogoToggle] = useState(false);
 
     // sidebar toggle
@@ -116,6 +116,11 @@ const RouteContext = ({ children }) => {
             const res = await customAxios().post('/user/username');
 
             if (res.data.success) {
+                let user = res.data.data.map((val) => {
+                    return { _id: val._id, name: val?.first_name.concat(" ", val.last_name), role: val.role }
+                })
+                res.data.data = user;
+                console.log('user', user)
                 dispatch({ type: "GET_USER", payload: res.data })
             }
         } catch (error) {
@@ -136,10 +141,10 @@ const RouteContext = ({ children }) => {
     };
 
     // get report preview
-    const getReportPreview = async(month,id) => {
+    const getReportPreview = async (month, id) => {
         setLoading(true)
         try {
-            const res = await customAxios().post('/report/report-preview',{month,id});
+            const res = await customAxios().post('/report/report-preview', { month, id });
 
             if (res.data.success) {
                 setId(id);
@@ -168,7 +173,7 @@ const RouteContext = ({ children }) => {
     }
 
     return (
-        <AppProvider.Provider value={{ ...state, HandleFilter,get_username,getReportPreview, logoToggle,id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )
