@@ -123,7 +123,6 @@ const RouteContext = ({ children }) => {
                     return { _id: val._id, name: val?.first_name.concat(" ", val.last_name), role: val.role }
                 })
                 res.data.data = user;
-                console.log('user', user)
                 dispatch({ type: "GET_USER", payload: res.data })
             }
         } catch (error) {

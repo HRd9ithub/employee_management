@@ -315,7 +315,7 @@ function WorkReportModal({ data, permission, getReport }) {
                 </button >
             }
             {/* Department Name * */}
-            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal modal_Section' centered>
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal modal_Section' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Work Report' : 'Add Work Report'}
                     </Modal.Title>

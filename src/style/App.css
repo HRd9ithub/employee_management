@@ -3861,7 +3861,7 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 /* calender add button */
 .card.calender .add-items button {
   height: 32px !important;
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .remove-side-margin {

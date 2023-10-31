@@ -343,7 +343,7 @@ const LeaveModal = (props) => {
                 </button>
             }
 
-            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Leave ' : 'Add Leave '}
                     </Modal.Title>

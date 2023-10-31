@@ -244,7 +244,7 @@ const AddPasswordForm = (props) => {
                 <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={showModal}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>}
 
             {/* modal  */}
-            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal password-modal' centered>
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal password-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>{data ? 'Edit Password' : 'Add Password'}
                     </Modal.Title>

@@ -18,7 +18,7 @@ const EmployeeModal = ({ show, handleClose, value, data, getuser }) => {
         backdrop="static"
         keyboard={false}
         size="lg"
-        className="employee-view-modal small-modal"
+        className="employee-view-modal"
         centered
       >
 
