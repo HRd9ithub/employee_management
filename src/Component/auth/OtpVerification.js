@@ -38,12 +38,11 @@ const OtpVerification = () => {
     e.preventDefault();
     otpValidation();
 
-    if (!otp || Otperror) {
+    if (otp.length !== 4 || Otperror) {
       return false;
+    }else{
+      onSubmitOtp(email, otp);
     }
-
-    onSubmitOtp(email, otp);
-
   }
 
   // email encrypt 

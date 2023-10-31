@@ -21,7 +21,8 @@ const AddPasswordForm = (props) => {
         title: "",
         url: "",
         user_name: "",
-        password: ""
+        password: "",
+        note: ""
     })
     const [accessEmployee, setAccessEmployee] = useState(null);
 
@@ -30,6 +31,7 @@ const AddPasswordForm = (props) => {
     const [urlError, setUrlError] = useState("");
     const [userNameError, setuserNameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [noteError, setnoteError] = useState("");
     const [error, setError] = useState([]);
 
     // Global state
@@ -39,13 +41,14 @@ const AddPasswordForm = (props) => {
     // *show modal
     const showModal = () => {
         if (data) {
-            let { title, url, user_name, password, access, _id } = data;
+            let { title, url, user_name, password, access, _id, note } = data;
             setPassword({
                 title,
                 password: decryptPassword(password),
                 user_name,
                 url,
-                id: _id
+                id: _id,
+                note
             });
             if (data.hasOwnProperty("access")) {
                 let result = access.map((elem) => {
@@ -67,13 +70,15 @@ const AddPasswordForm = (props) => {
             url: "",
             user_name: "",
             password: "",
-            id: ""
+            id: "",
+            note: ""
         });
         setAccessEmployee(null);
         setTitleError("");
         setUrlError("");
         setuserNameError("");
         setPasswordError("");
+        setnoteError("");
         setError([]);
     }
 
@@ -141,6 +146,15 @@ const AddPasswordForm = (props) => {
         }
     }
 
+    // note 
+    const noteValidation = () => {
+        if (!password.note.trim()) {
+            setnoteError("Note is a required field.")
+        } else {
+            setnoteError("");
+        }
+    }
+
     // ? ========================== Form submit funcation ===========================
 
     const handleSubmit = (event) => {
@@ -150,8 +164,9 @@ const AddPasswordForm = (props) => {
         urlValidation();
         usernameValidation();
         passwordValidation();
+        noteValidation();
 
-        if (!password.title || !password.url || !password.user_name || !password.password || titleError || urlError || userNameError || passwordError) {
+        if (!password.title || !password.url || !password.note || !password.user_name || !password.password || titleError || urlError || userNameError || passwordError || noteError) {
             return false;
         }
 
@@ -168,7 +183,8 @@ const AddPasswordForm = (props) => {
                 url: password.url,
                 user_name: password.user_name,
                 password: epassword,
-                access_employee: user
+                access_employee: user,
+                note : password.note
             })
         } else {
             url = customAxios().post('/password', {
@@ -176,7 +192,8 @@ const AddPasswordForm = (props) => {
                 url: password.url,
                 user_name: password.user_name,
                 password: epassword,
-                access_employee: user
+                access_employee: user,
+                note : password.note
             })
         }
         setIsLoading(true);
@@ -190,12 +207,14 @@ const AddPasswordForm = (props) => {
                     url: "",
                     user_name: "",
                     password: "",
-                    id: ""
+                    id: "",
+                    note :""
                 });
                 setAccessEmployee(null);
                 setTitleError("");
                 setUrlError("");
                 setuserNameError("");
+                setnoteError("");
                 setPasswordError("");
                 setError([]);
                 setIsLoading(false);
@@ -266,6 +285,11 @@ const AddPasswordForm = (props) => {
                                                 value={accessEmployee}
                                                 onChange={setAccessEmployee}
                                             />
+                                        </div>
+                                        <div className="form-group col-12">
+                                            <label htmlFor="note" className='mt-3'>Note</label>
+                                            <textarea type="text" autoComplete='off' rows={2} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
+                                            {noteError && <small id="note" className="form-text error">{noteError}</small>}
                                         </div>
                                     </div>
                                     {error.length !== 0 &&

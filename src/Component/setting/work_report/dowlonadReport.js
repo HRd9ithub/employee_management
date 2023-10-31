@@ -85,7 +85,7 @@ const DowlonadReport = () => {
 
         getReportPreview(month, userId).then(() => {
             setshow(false);
-            navigate("/report-preview");
+            navigate("/work-report/preview");
             setinitialistate({
                 userId: "",
                 month: moment(new Date()).format("YYYY-MM")

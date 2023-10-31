@@ -18,17 +18,14 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const Leave = () => {
-    const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
-    const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
     const [show, setShow] = useState(false);
     const [status, setstatus] = useState("");
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
-    const [user_id, setuser_id] = useState("");
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { getLeave, leave, Loading, permission, serverError,userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave,user_id, setuser_id, leave,startDate,setStartDate,endDate,setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -39,7 +36,7 @@ const Leave = () => {
     const [orderBy, setOrderBy] = useState("createdAt");
 
     useEffect(() => {
-        getLeave();
+        getLeave(startDate, endDate,user_id)
         // eslint-disable-next-line
     }, [])
 
@@ -64,7 +61,7 @@ const Leave = () => {
             if (res.data.success) {
                 toast.success(res.data.message);
                 setShow(false);
-                getLeave();
+                getLeave(startDate,endDate,user_id);
             }
         } catch (error) {
             if (!error.response) {
@@ -81,26 +78,26 @@ const Leave = () => {
         }
     }
 
-        // calcendar option
-        const ranges = {
-            Today: [moment(), moment()],
-            Yesterday: [
-                moment().subtract(1, "days"),
-                moment().subtract(1, "days")
-            ],
-            "Last 7 Days": [moment().subtract(6, "days"), moment()],
-            "Last 30 Days": [moment().subtract(29, "days"), moment()],
-            "This Month": [moment().startOf("month"), moment().endOf("month")],
-            "Last Month": [
-                moment()
-                    .subtract(1, "month")
-                    .startOf("month"),
-                moment()
-                    .subtract(1, "month")
-                    .endOf("month")
-            ]
-        };
-    
+    // calcendar option
+    const ranges = {
+        Today: [moment(), moment()],
+        Yesterday: [
+            moment().subtract(1, "days"),
+            moment().subtract(1, "days")
+        ],
+        "Last 7 Days": [moment().subtract(6, "days"), moment()],
+        "Last 30 Days": [moment().subtract(29, "days"), moment()],
+        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last Month": [
+            moment()
+                .subtract(1, "month")
+                .startOf("month"),
+            moment()
+                .subtract(1, "month")
+                .endOf("month")
+        ]
+    };
+
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -166,13 +163,13 @@ const Leave = () => {
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d)
-        getLeave(start._d, end._d,user_id)
+        getLeave(start._d, end._d, user_id)
     }
 
-     // user change function
-     const userChange = (e) => {
+    // user change function
+    const userChange = (e) => {
         setuser_id(e.target.value)
-        getLeave(startDate,endDate,e.target.value)
+        getLeave(startDate, endDate, e.target.value)
     }
 
     // eslint-disable-next-line
@@ -205,9 +202,9 @@ const Leave = () => {
 
     if (Loading) {
         return <Spinner />;
-    }else if(serverError){
+    } else if (serverError) {
         return <Error500 />;
-    }else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
         return <Error403 />;
     }
 
@@ -232,25 +229,25 @@ const Leave = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                                    <div className="d-flex justify-content-end align-items-center w-100" style={{gap: '15px'}}>
+                                    <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
                                         {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                            <div className="form-group mb-0">
-                                                <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange}  >
-                                                    <option value=''>All</option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-                                        </div>}
+                                            <div className="search-full w-25 pr-0 hide-at-small-screen">
+                                                <div className="form-group mb-0">
+                                                    <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange}  >
+                                                        <option value=''>All</option>
+                                                        {userName.map((val) => {
+                                                            return (
+                                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                </div>
+                                            </div>}
                                         <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
                                             <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
-                                                <input className="form-control mb-0"/>
+                                                <input className="form-control mb-0" />
                                             </DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon"/>
+                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                         <div className="search-full pr-0">
                                             <input type="search" autoComplete='off' className="input-search-full" name="txt" placeholder="Search" onChange={(e) => HandleFilter(e.target.value)} />
@@ -262,31 +259,31 @@ const Leave = () => {
                                             </form>
                                             <i className="fas fa-search"></i>
                                         </div>
-                                        <LeaveModal getLeave={getLeave} permission={permission} />
+                                        <LeaveModal getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />
                                     </div>
                                 </div>
                             </div>
                             <div className='container-fluid show-at-small-screen'>
                                 <div className='row'>
                                     {permission && permission.name.toLowerCase() === "admin" &&
-                                    <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
-                                        <div className="form-group mb-0">
-                                            <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange}  >
-                                                <option value=''>All</option>
-                                                {userName.map((val) => {
-                                                    return (
-                                                        val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>}
+                                        <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6'>
+                                            <div className="form-group mb-0">
+                                                <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange}  >
+                                                    <option value=''>All</option>
+                                                    {userName.map((val) => {
+                                                        return (
+                                                            val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>}
                                     <div className='col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ml-auto'>
                                         <div className="form-group mb-0 position-relative">
                                             <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} >
                                                 <input className="form-control mt-3" />
                                             </DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon"/>
+                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
                                 </div>
@@ -359,7 +356,7 @@ const Leave = () => {
                                                     {(permission && permission.name?.toLowerCase() === "admin") &&
                                                         <TableCell>
                                                             <div className='pr-3'>
-                                                                {val.user ?<NavLink to={"/employees/view/"+ val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                                                {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
                                                             </div>
                                                         </TableCell>
                                                     }
@@ -379,7 +376,7 @@ const Leave = () => {
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
                                                                 {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
                                                                     !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
-                                                                    <LeaveModal data={val} getLeave={getLeave} permission={permission} />}
+                                                                    <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id}/>}
                                                             </div>
                                                         </TableCell>}
                                                 </TableRow>
