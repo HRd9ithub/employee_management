@@ -106,7 +106,7 @@ const DowlonadReport = () => {
                 animation={true}
                 size="md"
                 aria-labelledby="example-modal-sizes-title-sm"
-                className="small-modal department-modal work-report-view-modal"
+                className="department-modal work-report-view-modal"
                 centered
             >
                 <Modal.Header className="small-modal">

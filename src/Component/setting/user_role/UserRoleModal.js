@@ -158,7 +158,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                 permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
                 <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handleShow} ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
             }
-            <Modal show={show} animation={true} size="lg" aria-labelledby="example-modal-sizes-title-sm" className="small-modal department-modal user-modal" centered>
+            <Modal show={show} animation={true} size="lg" aria-labelledby="example-modal-sizes-title-sm" className="department-modal user-modal" centered>
                 <Modal.Header className="small-modal">
                     <Modal.Title>{data ? "Edit User Role" : "Add User Role"}</Modal.Title>
                     <p className="close-modal" onClick={handleClose}>

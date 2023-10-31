@@ -165,7 +165,7 @@ return (
                 <i className="fa-solid fa-plus" ></i>&nbsp;Add
             </button>
         }
-        <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal' centered>
+        <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
             <Modal.Header className='small-modal'>
                 <Modal.Title>{data ? 'Edit Document' : 'Add Document'}
                 </Modal.Title>

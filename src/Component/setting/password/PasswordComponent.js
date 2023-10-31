@@ -206,7 +206,7 @@ const PasswordComponent = () => {
       </motion.div>
 
       {/* modal  */}
-      <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='small-modal department-modal password-modal' centered>
+      <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal password-modal' centered>
         <Modal.Header className='small-modal'>
           <Modal.Title>Preview</Modal.Title>
           <p className='close-modal' onClick={hideModal}><i className="fa-solid fa-xmark"></i></p>
