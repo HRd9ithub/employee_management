@@ -156,7 +156,7 @@ const Sidebar = () => {
       return menu.route === location.pathname.toLowerCase()
     } else {
       let result = menu.child.find((cur) => {
-        return cur.route === (location.pathname.includes("employees") ? "/employees" : location.pathname.toLowerCase())
+       return location.pathname.includes("employees") ? cur.route === "/employees" : location.pathname.includes("work-report") ? cur.route === "/work-report" : cur.route === location.pathname.toLowerCase()
       })
       return result ? true : false;
     }

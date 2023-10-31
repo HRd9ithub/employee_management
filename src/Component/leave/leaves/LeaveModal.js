@@ -10,7 +10,7 @@ import { customAxios } from '../../../service/CreateApi';
 import { useMemo } from 'react';
 
 const LeaveModal = (props) => {
-    let { data, getLeave, permission } = props;
+    let { data, getLeave, permission, startDate, endDate, user_id_drop } = props;
     const [show, setShow] = useState(false);
     const [isLoading, setisLoading] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
@@ -155,7 +155,7 @@ const LeaveModal = (props) => {
                 setFrom({ from_date: '', from_date_error: '' })
                 setTo({ to_date: '', to_date_error: "" })
                 setinfo({ user_id: '', user_id_error: "" })
-                getLeave()
+                getLeave(startDate, endDate, user_id_drop);
             }
         }).catch((error) => {
             if (!error.response) {
@@ -318,7 +318,7 @@ const LeaveModal = (props) => {
         if (day > 1) {
             status_info.leave_status === "Half" && setStatus({ ...status_info, leave_status: "0" })
         }
-    }, [day,status_info])
+    }, [day, status_info])
 
     // reason onchange function
     const reasonChange = (e) => {

@@ -57,7 +57,7 @@ const AppRoute = () => {
                 {/* setting route */}
                 <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/report-preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
+                <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
                 <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />

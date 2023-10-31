@@ -244,6 +244,12 @@ const PasswordComponent = () => {
                           <i className="fa-solid fa-check"></i>}
                       </div>
                     </div>
+                    <div className="col-md-12 mt-2">
+                      <label >Note</label>
+                      <div className='position-relative auth-box'>
+                        <p>{view.note}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 {permission?.name.toLowerCase() === "admin" && view.hasOwnProperty("access") && view.access.length !== 0 &&

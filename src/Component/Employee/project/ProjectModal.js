@@ -115,7 +115,7 @@ function ProjectModal({ data, getProject, permission, records }) {
                                 <form className="forms-sample">
                                     <div className="form-group">
                                         <label htmlFor="exampleInputfname" className='mt-3'>Project Name</label>
-                                        <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onBlur={handleValidate} />
+                                        <input type="text" className="form-control" id="exampleInputfname" placeholder="Enter Project Name" name='name' value={name} onChange={handleChange} onBlur={handleValidate} />
                                         {(Error || error) && <small id="emailHelp" className="form-text error">{error || Error}</small>}
                                     </div>
                                     <div className='d-flex justify-content-center modal-button'>

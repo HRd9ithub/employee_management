@@ -25,6 +25,9 @@ const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
     const [id, setId] = useState("");
     const [logoToggle, setlogoToggle] = useState(false);
+    const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
+    const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
+    const [user_id, setuser_id] = useState("");
 
     // sidebar toggle
     const [sidebarToggle, setSidebarToggle] = useState(false)
@@ -79,10 +82,10 @@ const RouteContext = ({ children }) => {
         }
     }
     // leave data get
-    const getLeave = async (startDate, endDate, id) => {
+    const getLeave = async (start, end, id) => {
         setLoading(true);
         try {
-            const res = await customAxios().get(`/leave?startDate=${moment(startDate || moment().clone().startOf('month')).format("YYYY-MM-DD")}&endDate=${moment(endDate || moment().clone().endOf('month')).format("YYYY-MM-DD")}&id=${id ? id : ""}`);
+            const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}`);
             if (res.data.success) {
                 dispatch({ type: "GET_LEAVE", payload: res.data });
                 if (res.data.permissions && res.data.permissions.name.toLowerCase() === "admin") {
@@ -173,7 +176,7 @@ const RouteContext = ({ children }) => {
     }
 
     return (
-        <AppProvider.Provider value={{ ...state, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state,user_id, setuser_id, startDate, setStartDate, endDate, setendtDate, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )
