@@ -39,9 +39,14 @@ const AppRoute = () => {
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
                 {/* employee route */}
-                <Route exact path='/employees' element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>}></Route>
-                <Route exact path='/employees/edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
-                <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
+                <Route path="/employees">
+                    <Route index element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>} />
+                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
+                    <Route path="view/:id" element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>} />
+                </Route>
+                {/* <Route exact path='/employees' element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>}></Route> */}
+                {/* <Route exact path='/employees/edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route> */}
+                {/* <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route> */}
                 <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
                 {/* leave route */}

@@ -20,7 +20,7 @@ const ReportPreview = () => {
     let { getCommonApi } = GlobalPageRedirect();
 
     useEffect(() => {
-        if (reportData.length === 0) {
+        if (!id) {
             navigate("/work-report");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

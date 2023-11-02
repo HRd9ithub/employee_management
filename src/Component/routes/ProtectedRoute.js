@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import {  useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
     let navigate = useNavigate();
     // get url of page
-    // let location = useLocation();
+    let { pathname } = useLocation();
 
     let currDate = new Date().getDate();
     let { getCommonApi } = GlobalPageRedirect();
@@ -19,20 +19,20 @@ const ProtectedRoute = ({ children, authentication }) => {
         if (authentication && !GetLocalStorage("token")) {
             // redirect page
             navigate('/login');
-        }else if(!authentication && GetLocalStorage("token") ){
+        } else if (!authentication && GetLocalStorage("token")) {
             navigate('/');
-        }else if(!authentication && !GetLocalStorage("email")){
+        } else if (!authentication && !GetLocalStorage("email")) {
             navigate('/login');
-        }else if(!authentication && GetLocalStorage("email")){
+        } else if (!authentication && GetLocalStorage("email")) {
             navigate('/otp');
         }
     }
 
     useEffect(() => {
-        setInterval(async() => {
+        setInterval(async () => {
             if (currDate !== new Date().getDate()) {
-                getCommonApi(); 
-                 // eslint-disable-next-line
+                getCommonApi();
+                // eslint-disable-next-line
                 currDate = new Date().getDate()
             } else {
                 currDate = new Date().getDate()
@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children, authentication }) => {
     useEffect(() => {
         getProtectedData()
         // eslint-disable-next-line
-    }, [])
+    }, [pathname])
 
     return children
 }
