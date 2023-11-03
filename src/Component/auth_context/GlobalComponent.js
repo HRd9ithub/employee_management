@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { isDesktop } from "react-device-detect";
 import DeviceDetector from "device-detector-js";
 import GlobalPageRedirect from './GlobalPageRedirect';
-import { RemoveLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
+import { RemoveLocalStorage, SetLocalStorage, clearLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 
@@ -67,12 +67,16 @@ export const Globalcomponent = () => {
             })
 
             if (res.data.success) {
-                let { message, id, token } = res.data;
+                let { message, id, token,userVerify } = res.data;
                 RemoveLocalStorage("email")
                 SetLocalStorage("user_id", id)
                 SetLocalStorage("token", token)
                 toast.success(message);
-                navigate('/')
+                if(userVerify){
+                    navigate(`/profile/${id}`);
+                }else{
+                    navigate('/')
+                }
             }
         } catch (error) {
             if (!error.response) {
@@ -94,8 +98,7 @@ export const Globalcomponent = () => {
         setLoading(true);
         customAxios().post('/auth/logout').then((res) => {
             if (res.data.success) {
-                RemoveLocalStorage('token')
-                RemoveLocalStorage('user_id')
+                clearLocalStorage();
                 navigate('/login');
                 setLoading(false)
                 toast.success('Logged out successfully.')

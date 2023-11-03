@@ -16,6 +16,7 @@ import { customAxios } from '../../../service/CreateApi';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import Swal from 'sweetalert2'
 
 const Leave = () => {
     const [show, setShow] = useState(false);
@@ -25,7 +26,7 @@ const Leave = () => {
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let { getLeave,user_id, setuser_id, leave,startDate,setStartDate,endDate,setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave, user_id, setuser_id, leave, startDate, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -36,7 +37,7 @@ const Leave = () => {
     const [orderBy, setOrderBy] = useState("createdAt");
 
     useEffect(() => {
-        getLeave(startDate, endDate,user_id)
+        getLeave(startDate, endDate, user_id)
         // eslint-disable-next-line
     }, [])
 
@@ -61,7 +62,7 @@ const Leave = () => {
             if (res.data.success) {
                 toast.success(res.data.message);
                 setShow(false);
-                getLeave(startDate,endDate,user_id);
+                getLeave(startDate, endDate, user_id);
             }
         } catch (error) {
             if (!error.response) {
@@ -77,6 +78,43 @@ const Leave = () => {
             setsubLoading(false)
         }
     }
+
+    // delete leave
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Delete Leave",
+            text: "Are you sure you want to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1bcfb4",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel",
+            width: "450px",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setsubLoading(true);
+                const res = await customAxios().delete(`/leave/${id}`);
+                if (res.data.success) {
+                    getLeave(startDate, endDate, user_id);
+                    toast.success(res.data.message);
+                    setsubLoading(false);
+                }
+            }
+        }).catch((error) => {
+            setsubLoading(false);
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
+    };
+
 
     // calcendar option
     const ranges = {
@@ -200,7 +238,7 @@ const Leave = () => {
         // eslint-disable-next-line
     }, [leave]);
 
-    if (Loading) {
+    if (Loading || (subLoading && !show)) {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
@@ -376,7 +414,8 @@ const Leave = () => {
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
                                                                 {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
                                                                     !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
-                                                                    <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id}/>}
+                                                                    <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />}
+                                                                {permission && permission.name.toLowerCase() !== "admin" && (val.status === "Read" || val.status === "Pending") && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                             </div>
                                                         </TableCell>}
                                                 </TableRow>
@@ -432,7 +471,7 @@ const Leave = () => {
                             </div>
                         </div>
                     </Modal.Body>
-                    {subLoading && <Spinner />}
+                    {(subLoading && show) && <Spinner />}
                 </Modal>
             </motion.div>
         </>

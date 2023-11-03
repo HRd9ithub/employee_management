@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { RemoveLocalStorage } from "../../service/StoreLocalStorage";
+import { clearLocalStorage } from "../../service/StoreLocalStorage";
 
 const GlobalPageRedirect = () => {
 
@@ -7,8 +7,7 @@ const GlobalPageRedirect = () => {
 
     const getCommonApi = async () => {
         history('/login');
-        RemoveLocalStorage("user_id");
-        RemoveLocalStorage("token");
+        clearLocalStorage();
     }
 
 

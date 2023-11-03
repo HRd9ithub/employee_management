@@ -33,11 +33,10 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         password: "",
         role_id: "",
         designation_id: "",
-        department_id: "",
-        status: "Active",
         confirmPassword: "",
         employee_id: "",
-        reporting_by: ""
+        reporting_by: "",
+        gender: ""
     });
     const [isLoading, setisLoading] = useState(false);
     const [userRole, setUserRole] = useState([]);
@@ -46,11 +45,11 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const [lastNameError, setlastNameError] = useState('');
     const [emailError, setemailError] = useState('');
     const [phoneError, setphoneError] = useState('');
-    const [passwordError, setpasswordError] = useState("");
     const [confirmPasswordError, setconfirmPasswordError] = useState('');
-    const [departmentError, setdepartmentError] = useState('');
+    const [passwordError, setpasswordError] = useState("");
     const [designationError, setdesignationError] = useState('');
     const [roleError, setroleError] = useState('');
+    const [genderError, setgenderError] = useState('');
     const [reportToerror, setreporttoError] = useState('');
     const [EmployeeIdError, setEmployeeIdError] = useState('');
     const [joningDateError, setjoningDateError] = useState('');
@@ -129,8 +128,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             password: "",
             role_id: "",
             designation_id: "",
-            department_id: "",
-            status: "Active",
+            gender: "",
             confirmPassword: "",
             employee_id: "",
             reporting_by: ""
@@ -141,12 +139,12 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         setphoneError("");
         setpasswordError("");
         setconfirmPasswordError("");
-        setdepartmentError("");
         setdesignationError("");
         setroleError("");
         setEmployeeIdError("");
         setreporttoError("")
         setjoningDateError("");
+        setgenderError("");
         setError([]);
     }
 
@@ -283,24 +281,12 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         }
     }
 
-    // department validation
-    // const departmentValidation = () => {
-    //     if (Department.length !== 0) {
-    //         if (!employee.department_id || employee.department_id === "department") {
-    //             setdepartmentError("Please select a department.");
-    //         } else {
-    //             setdepartmentError("")
-    //         }
-    //     }
-    // }
     // DESIGNATION validation
     const designationValidation = () => {
-        if (Designations.length !== 0) {
-            if (!employee.designation_id || employee.designation_id === "designation") {
-                setdesignationError("Designation is a required field.");
-            } else {
-                setdesignationError("")
-            }
+        if (!employee.designation_id || employee.designation_id === "designation") {
+            setdesignationError("Designation is a required field.");
+        } else {
+            setdesignationError("")
         }
     }
 
@@ -342,6 +328,15 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         }
     }
 
+    // gender validation 
+    const genderValidation = () => {
+        if (!employee.gender || employee.gender === "Select Gender") {
+            setgenderError("Gender is a required field.");
+        } else {
+            setgenderError("");
+        }
+    }
+
     // submit function
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -361,12 +356,13 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
         }
         handleJoinDatevalidation();
         reportValidation();
+        genderValidation();
 
-        let { first_name, last_name, email, mobile_no, join_date, password, role_id, designation_id, status, confirmPassword, employee_id, reporting_by } = employee;
+        let { first_name, last_name, email, mobile_no, join_date, gender, password, role_id, designation_id, confirmPassword, employee_id, reporting_by } = employee;
 
-        if (!first_name || !last_name || !email || !mobile_no || !join_date || !password || !role_id || !status || !confirmPassword || !employee_id || !designation_id || !reporting_by) {
+        if (!first_name || !last_name || !email || !mobile_no || !join_date || !gender || !password || !role_id || !confirmPassword || !employee_id || !designation_id || !reporting_by) {
             return false;
-        } else if (firstNameError || lastNameError || emailError || phoneError || joningDateError || passwordError.length !== 0 || roleError || designationError || departmentError || confirmPasswordError || EmployeeIdError || reportToerror) {
+        } else if (firstNameError || lastNameError || emailError || phoneError || joningDateError || passwordError || roleError || designationError || genderError || confirmPasswordError || EmployeeIdError || reportToerror) {
             return false;
         } else {
             try {
@@ -381,7 +377,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                     password,
                     role_id,
                     designation_id,
-                    status,
+                    gender,
                     confirmPassword,
                     employee_id,
                     report_by: reporting_by
@@ -399,7 +395,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                         password: "",
                         role_id: "",
                         designation_id: "",
-                        status: "Active",
+                        gender: "",
                         confirmPassword: "",
                         employee_id: "",
                         reporting_by: ""
@@ -425,7 +421,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             }
         }
     }
-    
+
     return (
         <>
             {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
@@ -524,29 +520,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                 {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                                             </div>
                                         </div>
-                                        {/* <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <Form.Group>
-                                                <label htmlFor="exampleFormControldepartment">Department</label>
-                                                <select className="form-control" id="exampleFormControldepartment" name="department_id" value={employee.department_id} onChange={(e) => {
-                                                    handleChange(e);
-                                                    if (e.target.value && e.target.value !== "department") {
-                                                        setdepartmentError("");
-                                                    } else {
-                                                        setdepartmentError("Please select a department.");
-                                                    }
-                                                }} onClick={departmentValidation} >
-                                                    <option value="department">Select Department</option>
-                                                    {Department.map((val) => {
-                                                        return (
-                                                            <option key={val._id} value={val._id}>
-                                                                {val.name}
-                                                            </option>
-                                                        );
-                                                    })}
-                                                </select>
-                                                <small id="emailHelp" className="form-text error">{departmentError}</small>
-                                            </Form.Group>
-                                        </div> */}
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
                                                 <label htmlFor="exampleFormControldesignation">Designation</label>
@@ -580,11 +553,13 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <Form.Group>
-                                                <label htmlFor="exampleFormControlStatus">Status</label>
-                                                <select className="form-control" id="exampleFormControlStatus" name="status" onChange={handleChange} >
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
+                                                <label htmlFor="gender">Gender</label>
+                                                <select className="form-control" id="gender" name="gender" onChange={handleChange} onBlur={genderValidation} >
+                                                    <option value="Select Gender">Select Gender</option>
+                                                    <option value="Male"> Male</option>
+                                                    <option value="Female">Female</option>
                                                 </select>
+                                                {genderError && <small id="emailHelp" className="form-text error">{genderError}</small>}
                                             </Form.Group>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">

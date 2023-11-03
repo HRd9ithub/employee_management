@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import Spinner from '../common/Spinner';
 import ProtectedRoute from './ProtectedRoute';
@@ -15,7 +15,6 @@ import Project from "../Employee/project/Project";
 import Designation from '../Employee/designation/Designation';
 import Leave from '../leave/leaves/Leave';
 import LeaveType from '../leave/leave_type/LeaveType';
-import Calendar from "../leave/holiday/Calendar";
 import TimeSheetComponent from '../time_sheet/TimeSheetComponent';
 import DocumentComponent from '../document/DocumentComponent';
 import UserRole from '../setting/user_role/UserRole';
@@ -24,6 +23,8 @@ import ReportPreview from '../setting/work_report/reportPreview';
 import Error404 from '../error_pages/Error404';
 import ActivityComponent from '../activity/ActivityComponent';
 import PasswordComponent from '../setting/password/PasswordComponent';
+import HolidayComponent from '../leave/holiday/HolidayComponent';
+import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 const AppRoute = () => {
     return (
@@ -37,7 +38,7 @@ const AppRoute = () => {
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}
-                <Route exact path='/profile/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/profile/:id' element={GetLocalStorage("token") ? <EmployeeViewComponent /> : <Navigate to="/login" />}></Route>
                 {/* employee route */}
                 <Route path="/employees">
                     <Route index element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>} />
@@ -50,7 +51,7 @@ const AppRoute = () => {
                 <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
                 {/* leave route */}
-                <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><Calendar /></ProtectedRoute>}></Route>
+                <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><HolidayComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
                 <Route exact path='/leaves' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
                 {/* document component */}

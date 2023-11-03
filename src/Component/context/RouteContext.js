@@ -2,7 +2,7 @@ import React, { useReducer, createContext, useState, useRef } from 'react'
 import { RouteReducer } from './RouteReducer';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
-import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import { GetLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
 import moment from 'moment';
 
@@ -19,7 +19,7 @@ const initialistate = {
     serverError: false,
     userName: [],
     reportData: [],
-    summary: ""
+    summary: "",
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
@@ -44,8 +44,9 @@ const RouteContext = ({ children }) => {
             let id = GetLocalStorage('user_id');
 
             let res = await customAxios().get(`/user/${id}`)
-            let result = await res.data.data;
-            dispatch({ type: "GET_USER_DATA", payload: result })
+            let result = await res.data;
+            dispatch({ type: "GET_USER_DATA", payload: result.data })
+            SetLocalStorage("userVerify", result.userVerify ? "true" : "false")
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
@@ -175,7 +176,7 @@ const RouteContext = ({ children }) => {
     }
 
     return (
-        <AppProvider.Provider value={{ ...state,user_id, setuser_id, startDate, setStartDate, endDate, setendtDate, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
+        <AppProvider.Provider value={{ ...state, user_id, setuser_id, startDate, setStartDate, endDate, setendtDate, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>
             {children}
         </AppProvider.Provider>
     )

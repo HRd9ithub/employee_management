@@ -526,6 +526,11 @@
         margin: 1.25em auto 0 !important;
     }
 
+    .swal2-popup.swal2-modal.swal2-show {
+        width: 460px !important;
+        height: 220px !important;
+    }
+
     .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
         width: 350px !important;
         height: 252px !important;
@@ -605,12 +610,12 @@
         width: 75%;
     }
 }
-
+/* 
 @media (max-width: 1280px) {
     .box-dashboard.col-lg-3.col-md-6 {
         max-width: 25% !important;
     }
-}
+} */
 
 @media (max-width: 1200px) {
 
@@ -836,9 +841,9 @@
         font-size: 13px;
     }
 
-    .box-dashboard.col-lg-3.col-md-6 {
+    /* .box-dashboard.col-lg-3.col-md-6 {
         max-width: unset !important;
-    }
+    } */
 }
 
 @media (max-width: 1067px) {
@@ -1204,6 +1209,11 @@
     .common-info-dashboard svg,
     .common-info-dashboard i {
         font-size: 1.9rem;
+    }
+
+    .swal2-popup.swal2-modal.swal2-show {
+        width: 437px !important;
+        height: 190px !important;
     }
 
     .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
@@ -1731,9 +1741,9 @@
         padding: 0.675rem 1.6rem;
     }
 
-    .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
-        width: 300px !important;
-        height: 192px !important;
+    .swal2-popup.swal2-modal.swal2-show {
+        width: 380px !important;
+        height: 155px !important;
     }
 
     .swal2-actions {
@@ -1970,6 +1980,11 @@
 
     .swal2-title {
         padding: 0.6em 1em 0;
+    }
+
+    .swal2-popup.swal2-modal.swal2-show {
+        width: 340px !important;
+        height: 150px !important;
     }
 
     .swal2-popup.swal2-modal.swal2-icon-warning.swal2-show {
@@ -2879,10 +2894,10 @@
     .calendar-icon {
         top: 29px;
     }
-
+/* 
     .calendar-icon-holiday {
         top: 12px;
-    }
+    } */
 
     .password-auth-info .auth-box p {
         width: 80%;

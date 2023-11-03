@@ -1,9 +1,9 @@
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import Spinner from '../common/Spinner';
 import { customAxios } from '../../service/CreateApi'
-import { RemoveLocalStorage } from '../../service/StoreLocalStorage'
+import { clearLocalStorage } from '../../service/StoreLocalStorage'
 import { useNavigate } from 'react-router-dom'
 
 const ChangePassword = () => {
@@ -82,8 +82,7 @@ const ChangePassword = () => {
 
                 if (response.data.success) {
                     toast.success(response.data.message);
-                    RemoveLocalStorage('token')
-                    RemoveLocalStorage('user_id')
+                    clearLocalStorage();
                     navigate('/login');
                     setList({
                         newpassword: '',
@@ -139,12 +138,12 @@ const ChangePassword = () => {
                     {renewpasswordError && <small className="error">{renewpasswordError}</small>}
                 </div>
             </div>
-            {error.length !== 0 && 
-            <ol>
-                {error.map((val) => {
-                    return <li className='error' key={val} >{val}</li>
-                })}
-            </ol>}
+            {error.length !== 0 &&
+                <ol>
+                    {error.map((val) => {
+                        return <li className='error' key={val} >{val}</li>
+                    })}
+                </ol>}
             <div className="submit-section pb-3">
                 <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
             </div>

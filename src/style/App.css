@@ -2142,7 +2142,7 @@ svg {
   height: 100px;
   width: 100px;
   position: absolute;
-  top: 1%;
+  top: 12%;
   background: #fff;
   overflow: hidden;
   border-radius: 50%;
@@ -3106,8 +3106,8 @@ input[type="date"]::-webkit-clear-button {
 
 .calendar-icon-holiday {
   position: absolute;
-  top: 5px;
-  right: 3px;
+  top: 40px;
+  right: 20px;
   color: #084e9c;
   background-color: #fff;
 }
@@ -4099,7 +4099,7 @@ input[type="search"] {
 }
 
 .box-dashboard.col-lg-3.col-md-6 {
-  max-width: 20% !important;
+  /* max-width: 20% !important; */
 }
 
 .w-35.hide-at-small-screen {
@@ -4223,6 +4223,21 @@ input[type="search"] {
   margin-bottom: 0 !important;
 }
 
+.password-auth-info .auth-box input{
+  border: none ;
+  background-color: #f6f8fa;
+}
+
+.auth-box span.eye-icon-password {
+  position: absolute;
+  top: 7px;
+  right: 50px;
+  color: #00536c;
+  cursor: pointer;
+}
+.auth-box span.eye-icon-password svg {
+  font-size: 18px;
+}
 .password-auth-info label {
   font-size: 13px;
   color: gray;
