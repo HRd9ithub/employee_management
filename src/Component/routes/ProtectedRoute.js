@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
-
 const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
     let navigate = useNavigate();
@@ -13,12 +12,13 @@ const ProtectedRoute = ({ children, authentication }) => {
     let currDate = new Date().getDate();
     let { getCommonApi } = GlobalPageRedirect();
 
-
     const getProtectedData = async () => {
         // get localstorage in token
         if (authentication && !GetLocalStorage("token")) {
             // redirect page
             navigate('/login');
+        } else if (authentication && GetLocalStorage("userVerify") === "true") {
+            navigate(`/profile/${GetLocalStorage("user_id")}`);
         } else if (!authentication && GetLocalStorage("token")) {
             navigate('/');
         } else if (!authentication && !GetLocalStorage("email")) {
@@ -41,11 +41,15 @@ const ProtectedRoute = ({ children, authentication }) => {
     }, [currDate])
 
     useEffect(() => {
-        getProtectedData()
+        getProtectedData();
         // eslint-disable-next-line
     }, [pathname])
 
-    return children
+    if (GetLocalStorage("userVerify") !== "true" && authentication) {
+        return children
+    } else if (!authentication) {
+        return children
+    }
 }
 
 export default ProtectedRoute;

@@ -188,18 +188,18 @@ const Dashboard = () => {
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                     {!isLoading && <div className=''>
                          <div className='container-fluid inner-pages py-3'>
-                              <div className='row p-3 align-items-center row-std'>
+                              {/* <div className='row p-3 align-items-center row-std'>
                                    <div className='col-12 employee-path px-2' id="one">
                                         <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
                                    </div>
-                              </div>
-                              <div className="row mt-3">
-                                   {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
+                              </div> */}
+                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
+                                   <div className="row mt-3">
                                         <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
-                                                       <h3 className="mb-0">Employees</h3>
+                                                       <h3 className="mb-0">Total Employees</h3>
                                                        <h3 className="mb-0">{totalEmployee}</h3>
                                                        {/* <FaUsers /> */}
                                                   </div>
@@ -235,26 +235,11 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                   </>}
-                                   <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => UserData?.role && UserData.role.name.toLowerCase() === "admin" && navigate("/leaves")}>
-                                        <NavLink className="common-box-dashboard position-relative h-100 on-leave-today nav-link" style={{
-                                             cursor: UserData?.role && UserData.role.name.toLowerCase() !== "admin" && "default"
-                                        }}>
-                                             <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
-                                             <h3 className="mb-0">On Leave Today</h3>
-                                             <div className='d-flex justify-content-start align-items-center flex-wrap'>
-                                                  {todayLeave.map((val, ind) => {
-                                                       return <p className='mr-4 mb-0' key={val._id}>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</p>
-                                                  })}
-                                                  {todayLeave.length === 0 && totalEmployee !== 0 && <p className='mr-4 mb-0'>All present today</p>}
-                                                  {totalEmployee === 0 && <p className='mr-4 mb-0'>No employee yet</p>}
-                                             </div>
-                                        </NavLink>
                                    </div>
-                              </div>
+                              </>}
 
                               <div className='row'>
-                                   <div className='col-md-6 mt-3 box-dashboard'>
+                                   <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                         <div className="dashboard-custom-date-picker shadow">
                                              {(() => {
                                                   let highlight = [];
@@ -268,7 +253,7 @@ const Dashboard = () => {
                                              })()}
                                         </div>
                                    </div>
-                                   <div className='col-md-6 mt-3 box-dashboard'>
+                                   <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                         <div className='my-chart'>
                                              <div className='my-chart-head text-center'>Holiday</div>
                                              {/* <div className='my-chart-head text-center'>Bookmarks</div> */}
@@ -283,6 +268,22 @@ const Dashboard = () => {
                                                   </ul>
                                                   {holiday.length === 0 && birthDayFilter.length === 0 &&
                                                        <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No Records Found !</h3>}
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
+                                        <div className='my-chart'>
+                                             <div className='my-chart-head text-center'>Leave</div>
+                                             {/* <div className='my-chart-head text-center'>Bookmarks</div> */}
+                                             <div className='p-3'>
+                                                  <ul>
+                                                       {todayLeave.map((val, ind) => {
+                                                            return <li key={val._id} className='my-2' ><h4 className='my-1'>{ind + 1}. {val.user.first_name.concat(" ", val.user.last_name)}</h4></li>
+                                                       })}
+                                                       {todayLeave.length === 0 && totalEmployee !== 0 && <h3 className='text-center' style={{ 'color': '#a3aab1' }}>All present today</h3>}
+                                                  </ul>
+                                                  {totalEmployee === 0 &&
+                                                       <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No employee yet</h3>}
                                              </div>
                                         </div>
                                    </div>

@@ -9,7 +9,7 @@ import UserDoumentForm from '../Employee/Employees/form_user/userDoumentForm';
 
 const EmployeeModal = ({ show, handleClose, value, data, getuser }) => {
   return (
-    <div>
+    <>
       {/* view modal */}
       <Modal
         show={show}
@@ -57,7 +57,7 @@ const EmployeeModal = ({ show, handleClose, value, data, getuser }) => {
           </div>
         </Modal.Body>
       </Modal>
-    </div >
+    </>
   )
 }
 

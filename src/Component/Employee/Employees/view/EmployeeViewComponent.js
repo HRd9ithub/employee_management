@@ -15,6 +15,8 @@ import { AppProvider } from '../../../context/RouteContext';
 import Error403 from '../../../error_pages/Error403';
 import { dateFormat } from '../../../../helper/dateFormat';
 import { customAxios, customAxios1 } from '../../../../service/CreateApi';
+import { GetLocalStorage, SetLocalStorage } from '../../../../service/StoreLocalStorage';
+import Swal from 'sweetalert2';
 
 const EmployeeViewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -25,18 +27,18 @@ const EmployeeViewComponent = () => {
     const [permission, setpermission] = useState("");
 
     let navigate = useNavigate();
-    
+
     // eslint-disable-next-line
     const [image, setimage] = useState("")
-    
+
     let { getCommonApi } = GlobalPageRedirect();
     let { getUserData } = useContext(AppProvider);
-    
+
     const ref = useRef(null);
-    
+
     // get parameter 
     const { id } = useParams();
-    
+
     // get path name
     const match = useMatch("/profile/" + id)
 
@@ -59,7 +61,10 @@ const EmployeeViewComponent = () => {
                 if (response.data.data.profile_image) {
                     setimage(`${process.env.REACT_APP_IMAGE_API}/${response.data.data.profile_image}`)
                 }
-                setdata(response.data.data)
+                setdata(response.data.data);
+                if (match) {
+                    SetLocalStorage("userVerify", response.data.userVerify ? "true" : "false")
+                }
             }
             setisLoading(false);
         } catch (error) {
@@ -79,6 +84,19 @@ const EmployeeViewComponent = () => {
     // # get user data
     useEffect(() => {
         getuser();
+        if(GetLocalStorage("userVerify") === "true"){
+            Swal.fire({
+                title: "Necessary Action",
+                text: "Before accessing other features, it is necessary to fill out your account and emergency contact details.",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                cancelButtonText: "Ok",
+                width: "450px",
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                }
+              })
+        }
         // eslint-disable-next-line
     }, [match]);
 
@@ -141,6 +159,7 @@ const EmployeeViewComponent = () => {
                             <div className="col-12 col-sm-6 d-flex justify-content-end pr-0" id="two">
                                 {!match &&
                                     <div>
+                                        <button className='btn-gradient-primary mr-2' onClick={() => navigate(`/employees/edit/${id}`)}><i className="fa-solid fa-pen"></i>&nbsp; Edit</button>
                                         <button className='btn-gradient-primary' onClick={() => navigate("/employees")}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
                                     </div>}
                             </div>
@@ -167,7 +186,7 @@ const EmployeeViewComponent = () => {
                                                             <small className="text-muted">{data && data.designation ? data.designation.name : <AiOutlineMinus />}</small>
                                                             <div className="small doj text-muted">Date of Join :  {dateFormat(data.joining_date)}</div>
                                                             <div className="staff-id">Employee ID : {data.employee_id}</div>
-                                                            <div className="staff-msg"><button className="btn btn-custom btn-gradient-primary" disabled>Send Message</button></div>
+                                                            {/* <div className="staff-msg"><button className="btn btn-custom btn-gradient-primary" disabled>Send Message</button></div> */}
                                                         </div>
                                                     </div>
                                                     <div className="col-md-7 col-lg-6 col-12 p-0">
@@ -377,10 +396,6 @@ const EmployeeViewComponent = () => {
                                                                                     <div className="title">Employee Id</div>
                                                                                     <div className="text">{data.employee_id}</div>
                                                                                 </li>
-                                                                                {/* <li>
-                                                                                    <div className="title">Department</div>
-                                                                                    <div className="text">{data?.department ? data.department.name : <AiOutlineMinus />}</div>
-                                                                                </li> */}
                                                                                 <li>
                                                                                     <div className="title">Designation</div>
                                                                                     <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>
@@ -390,23 +405,19 @@ const EmployeeViewComponent = () => {
                                                                                     <div className="text">{data?.role ? data.role.name : <AiOutlineMinus />}</div>
                                                                                 </li>
                                                                                 <li>
-                                                                                    <div className="title">Status</div>
-                                                                                    <div className="text">{data.status && data.status}</div>
-                                                                                </li>
-                                                                                <li>
                                                                                     <div className="title">Joining Date</div>
                                                                                     {data.joining_date ?
                                                                                         <div className="text"> {dateFormat(data.joining_date)}</div> :
                                                                                         <div className='text'><AiOutlineMinus /></div>
                                                                                     }
                                                                                 </li>
-                                                                                <li>
+                                                                                {/* <li>
                                                                                     <div className="title">Leaving Date</div>
                                                                                     {data.leaveing_date ?
                                                                                         <div className="text">{dateFormat(data.leaveing_date)}</div> :
                                                                                         <div className='text'><AiOutlineMinus /></div>
                                                                                     }
-                                                                                </li>
+                                                                                </li> */}
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -426,6 +437,26 @@ const EmployeeViewComponent = () => {
                                                                             </h3>
                                                                             {data.user_document.length > 0 ?
                                                                                 <div className='d-flex'>
+                                                                                    {data.user_document[0].photo &&
+                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                            <img
+                                                                                                className='mt-1 '
+                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                src={(data.user_document[0].photo.split(".").pop() !== 'doc' && data.user_document[0].photo.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}` : data.user_document[0].joining_letter.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                alt="file"
+                                                                                            />
+                                                                                            <p className='document-title'> Photo</p>
+                                                                                        </NavLink>}
+                                                                                    {data.user_document[0].id_proof &&
+                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].id_proof}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                            <img
+                                                                                                className='mt-1 '
+                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                src={(data.user_document[0].id_proof.split(".").pop() !== 'doc' && data.user_document[0].id_proof.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].id_proof}` : data.user_document[0].id_proof.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                alt="file"
+                                                                                            />
+                                                                                            <p className='document-title'>Identity Proof</p>
+                                                                                        </NavLink>}
                                                                                     {data.user_document[0].joining_letter &&
                                                                                         <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].joining_letter}`} target='_blank' className="mr-3 text-decoration-none">
                                                                                             <img
@@ -520,7 +551,6 @@ const EmployeeViewComponent = () => {
                     </div>
                 </div> : <Error403 /> : <Spinner />}
             <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getuser} />
-
         </>
     )
 }

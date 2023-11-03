@@ -12,6 +12,8 @@ import Error403 from '../../error_pages/Error403';
 import { Dropdown } from 'react-bootstrap';
 import { decryptPassword } from '../../../service/passwordEncrypt';
 import Swal from 'sweetalert2';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const PasswordComponent = () => {
 
@@ -24,8 +26,15 @@ const PasswordComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [records, setRecords] = useState([]);
   const [view, setView] = useState("");
+  // toggle state
+  const [eyeToggle, setEyeToggle] = useState(false);
 
   let { getCommonApi } = GlobalPageRedirect();
+
+  // password show and hide 
+  const passwordToggle = () => {
+    setEyeToggle(!eyeToggle)
+  }
 
   // *show modal
   const showModal = (data) => {
@@ -230,10 +239,12 @@ const PasswordComponent = () => {
                     <div className="col-md-6 mt-1">
                       <label >Password</label>
                       <div className='position-relative auth-box'>
-                        <p>{decryptPassword(view.password)}</p>
+                        <input type={eyeToggle ? 'text' : "password"} value={decryptPassword(view.password)} readOnly />
                         {!passwordCopy ?
                           <i className="fa-solid fa-copy" onClick={() => textCopy("password", decryptPassword(view.password))}></i> :
                           <i className="fa-solid fa-check"></i>}
+                        {eyeToggle ? <span className='eye-icon-password' onClick={passwordToggle}><VisibilityIcon /></span> :
+                          <span className='eye-icon-password' onClick={passwordToggle}><VisibilityOffIcon /></span>}
                       </div>
                     </div>
                     <div className="col-md-12 mt-2">
