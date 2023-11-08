@@ -139,7 +139,7 @@ const ActivityComponent = () => {
                                                     <div className="activity-content">
                                                         <div className="timeline-content">
                                                             <p>{item.title}
-                                                                <strong className='pl-1'>{item.User?.first_name.concat(" ", item.User?.first_name)}</strong>
+                                                                <strong className='pl-1'>{item.User?.first_name.concat(" ", item.User?.last_name)}</strong>
                                                             </p>
                                                             <span className="time">{timeAgos(item.createdAt)} ago</span>
                                                         </div>

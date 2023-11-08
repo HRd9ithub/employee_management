@@ -170,7 +170,7 @@ const AddPasswordForm = (props) => {
             return false;
         }
 
-        let epassword = encryptPassword(password.password);
+        // let epassword = encryptPassword(password.password);
         let user = accessEmployee?.map((val) => {
             return val.value
         })
@@ -182,7 +182,7 @@ const AddPasswordForm = (props) => {
                 title: password.title,
                 url: password.url,
                 user_name: password.user_name,
-                password: epassword,
+                password: password.password,
                 access_employee: user,
                 note : password.note
             })
@@ -191,7 +191,7 @@ const AddPasswordForm = (props) => {
                 title: password.title,
                 url: password.url,
                 user_name: password.user_name,
-                password: epassword,
+                password: password.password,
                 access_employee: user,
                 note : password.note
             })

@@ -194,7 +194,8 @@ const Sidebar = () => {
           {menu.map((elem, ind) => {
             return (
               <li className={`nav-item item-hover ${HandleACtive(elem) ? 'active' : ''}`} key={ind}>
-                <NavLink to={elem.route} className={data.hasOwnProperty(elem.name) && data[elem.name] ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => {
+                {/* <NavLink to={elem.route} className={data.hasOwnProperty(elem.name) && data[elem.name] ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => { */}
+                <NavLink to={elem.route} className='nav-link' data-toggle="collapse" onClick={() => {
                   toggleMenuState(elem.name);
                   elem.route === "#" && toggleSidebar();
                 }}>
