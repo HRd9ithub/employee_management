@@ -158,12 +158,6 @@ const DowlonadReport = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* {error.length !== 0 &&
-                                        <ol>
-                                            {error?.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>} */}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" >Preview</button>
                                         <button className="btn btn-light" onClick={handleHideModal}>Cancel</button>

@@ -41,6 +41,7 @@ const RouteContext = ({ children }) => {
     // get user data
     const getUserData = async () => {
         try {
+            setLoading(true)
             let id = GetLocalStorage('user_id');
 
             let res = await customAxios().get(`/user/${id}`)
@@ -57,6 +58,8 @@ const RouteContext = ({ children }) => {
                     toast.error(error.response.data.message)
                 }
             }
+        }finally{
+            setLoading(false);
         }
     }
 

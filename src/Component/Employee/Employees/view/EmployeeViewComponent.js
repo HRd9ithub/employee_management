@@ -15,7 +15,7 @@ import { AppProvider } from '../../../context/RouteContext';
 import Error403 from '../../../error_pages/Error403';
 import { dateFormat } from '../../../../helper/dateFormat';
 import { customAxios, customAxios1 } from '../../../../service/CreateApi';
-import { GetLocalStorage, SetLocalStorage } from '../../../../service/StoreLocalStorage';
+import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import Swal from 'sweetalert2';
 
 const EmployeeViewComponent = () => {
@@ -32,7 +32,7 @@ const EmployeeViewComponent = () => {
     const [image, setimage] = useState("")
 
     let { getCommonApi } = GlobalPageRedirect();
-    let { getUserData } = useContext(AppProvider);
+    let { getUserData, UserData, Loading } = useContext(AppProvider);
 
     const ref = useRef(null);
 
@@ -62,9 +62,9 @@ const EmployeeViewComponent = () => {
                     setimage(`${process.env.REACT_APP_IMAGE_API}/${response.data.data.profile_image}`)
                 }
                 setdata(response.data.data);
-                if (match) {
-                    SetLocalStorage("userVerify", response.data.userVerify ? "true" : "false")
-                }
+                // if (match) {
+                //     SetLocalStorage("userVerify", response.data.userVerify ? "true" : "false")
+                // }
             }
             setisLoading(false);
         } catch (error) {
@@ -83,8 +83,10 @@ const EmployeeViewComponent = () => {
 
     // # get user data
     useEffect(() => {
-        getuser();
-        if(GetLocalStorage("userVerify") === "true"){
+        if (!match) {
+            getuser();
+        }
+        if (GetLocalStorage("userVerify") === "true") {
             Swal.fire({
                 title: "Necessary Action",
                 text: "Before accessing other features, it is necessary to fill out your account and emergency contact details.",
@@ -92,10 +94,17 @@ const EmployeeViewComponent = () => {
                 confirmButtonText: "Ok",
                 cancelButtonText: "Ok",
                 width: "450px",
-              })
+            })
         }
         // eslint-disable-next-line
     }, [match]);
+
+    useEffect(() => {
+        if (match) {
+            setdata(UserData);
+            setimage(`${process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`)
+        }
+    }, [UserData, match])
 
     // **** modal close function ****
     const handleClose = () => {
@@ -116,8 +125,9 @@ const EmployeeViewComponent = () => {
                 const response = await customAxios1().post('/user/image', formdata);
                 if (response.data.success) {
                     toast.success(response.data.message)
-                    getuser();
+                    // getuser();
                     getUserData();
+                    setisLoading(false);
                 }
             } catch (error) {
                 setisLoading(false)
@@ -134,12 +144,14 @@ const EmployeeViewComponent = () => {
         }
     }
 
+    if (isLoading || Loading) {
+        return <Spinner />
+    }
+
     return (
         <>
-
-            {/* ................................................................... */}
             {/* <div className=" container-fluid pt-4"> */}
-            {!isLoading ? (match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
+            {(match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
                 <div className="background-wrapper bg-white py-4">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
@@ -169,7 +181,7 @@ const EmployeeViewComponent = () => {
                                         <div className="profile-view col-12">
                                             <div className={match ? "profile-img-wrap" : "profile-img-wrap-view"}>
                                                 <div className="profile-img w-100 h-100">
-                                                    <Avatar alt={data.first_name} className='text-capitalize img text-center' src={`${image && image}`} onClick={() => ref.current?.click()} />
+                                                    {image && <Avatar alt={data.first_name} className='text-capitalize img text-center' src={image} onClick={() => ref.current?.click()} />}
                                                     {match &&
                                                         <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
                                                     }
@@ -546,8 +558,8 @@ const EmployeeViewComponent = () => {
                             </div>
                         </div>
                     </div>
-                </div> : <Error403 /> : <Spinner />}
-            <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getuser} />
+                </div> : <Error403 />}
+            <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getUserData} />
         </>
     )
 }

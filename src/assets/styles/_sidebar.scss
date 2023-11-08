@@ -13,10 +13,10 @@
     overflow: hidden;
     flex-wrap: nowrap;
     flex-direction: column;
-    &:not(.sub-menu) {
-      padding-bottom: 60px;
+    // &:not(.sub-menu) {
+      // padding-bottom: 60px;
       // margin-top: 13px;
-    }
+    // }
 
     .nav-item {
       padding:0 $sidebar-menu-padding-x;
