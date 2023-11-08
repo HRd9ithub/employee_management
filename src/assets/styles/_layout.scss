@@ -159,7 +159,10 @@
                 margin-left: 0;
               }
               &.menu-arrow {
-                display: none;
+                // display: none;   ===>  sidebar arrow remove
+                position: absolute;
+                right: -9px;
+                top: 11px;
               }
             }
             &[aria-expanded] {

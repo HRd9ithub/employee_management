@@ -92,9 +92,6 @@ const EmployeeViewComponent = () => {
                 confirmButtonText: "Ok",
                 cancelButtonText: "Ok",
                 width: "450px",
-              }).then(async (result) => {
-                if (result.isConfirmed) {
-                }
               })
         }
         // eslint-disable-next-line

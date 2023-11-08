@@ -239,9 +239,9 @@ const PasswordComponent = () => {
                     <div className="col-md-6 mt-1">
                       <label >Password</label>
                       <div className='position-relative auth-box'>
-                        <input type={eyeToggle ? 'text' : "password"} value={decryptPassword(view.password)} readOnly />
+                        <input type={eyeToggle ? 'text' : "password"} value={view.password} readOnly />
                         {!passwordCopy ?
-                          <i className="fa-solid fa-copy" onClick={() => textCopy("password", decryptPassword(view.password))}></i> :
+                          <i className="fa-solid fa-copy" onClick={() => textCopy("password",view.password)}></i> :
                           <i className="fa-solid fa-check"></i>}
                         {eyeToggle ? <span className='eye-icon-password' onClick={passwordToggle}><VisibilityIcon /></span> :
                           <span className='eye-icon-password' onClick={passwordToggle}><VisibilityOffIcon /></span>}

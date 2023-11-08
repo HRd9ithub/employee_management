@@ -12,6 +12,11 @@
   }
 }
 
+body.modal-open {
+  height: 100vh;
+  overflow-y: hidden;
+}
+
 ::selection {
   background-color: #004b8f;
   color: #fff;
@@ -949,7 +954,7 @@ span.eye-icon {
 .sidebar .nav.sub-menu .nav-item .nav-link.active {
   color: #012970;
   background: transparent;
-  font-weight: 600;
+  font-weight: 600 !important;
 }
 
 .ghLWkf div:first-child {
@@ -3353,8 +3358,8 @@ select.form-control {
   outline: transparent;
   padding: 2px 1px !important;
   border-bottom: 1px solid #0a4a92;
-  /* opera browser border issue */
   border-radius: 1px !important;
+  /* *opera browser border issue */
   -webkit-appearance: none;
   -moz-appearance: none;
   background: transparent;
@@ -4185,8 +4190,8 @@ input[type="search"] {
   overflow: unset !important;
 }
 
-.password-modal .modal-dialog{
-  max-width: 800px !important ;
+.password-modal .modal-dialog {
+  max-width: 800px !important;
 }
 
 .password-modal .modal-content .card-body {
@@ -4223,8 +4228,8 @@ input[type="search"] {
   margin-bottom: 0 !important;
 }
 
-.password-auth-info .auth-box input{
-  border: none ;
+.password-auth-info .auth-box input {
+  border: none;
   background-color: #f6f8fa;
 }
 
@@ -4235,9 +4240,11 @@ input[type="search"] {
   color: #00536c;
   cursor: pointer;
 }
+
 .auth-box span.eye-icon-password svg {
   font-size: 18px;
 }
+
 .password-auth-info label {
   font-size: 13px;
   color: gray;
@@ -4265,15 +4272,6 @@ input[type="search"] {
   height: 38px;
 }
 
-.password-action--dropdown.show {
-  /* transform: translate3d(100%, 22px, 0) !important; */
-  /*-webkit-transform: translate(100%, 35px) !important;
-  -moz-transform: translate3d(100%, 22px, 0) !important;
-  -ms-transform: translate3d(100%, 22px, 0) !important;
-  -o-transform: translate3d(100%, 22px, 0) !important;
-  */
-}
-
 .password-action--dropdown.show i.fa-solid.fa-pen-to-square {
   color: green;
   cursor: pointer;
@@ -4284,31 +4282,36 @@ input[type="search"] {
   cursor: pointer;
 }
 
-.password-action--dropdown.show i.fa-solid.fa-eye{
+.password-action--dropdown.show i.fa-solid.fa-eye {
   color: rgb(7, 75, 154);
   cursor: pointer;
 }
 
-.password-action--dropdown.show i.fa-solid{
+.password-action--dropdown.show i.fa-solid {
   padding-right: 10px;
 }
 
-.password-action--dropdown.show .dropdown-item{
+.password-action--dropdown.show .dropdown-item {
   padding: 0.25rem 0.5rem !important;
   display: flex;
   align-items: center;
 }
 
-.password-action--dropdown.show .dropdown-item label{
-  margin-bottom: 0px !important ;
+.password-action--dropdown.show .dropdown-item label {
+  margin-bottom: 0px !important;
   cursor: pointer;
 }
 
-.password-action--dropdown.show .dropdown-item:active{
+.password-action--dropdown.show .dropdown-item:active {
   background-color: unset !important;
   color: #000 !important;
 }
 
-.password-action--dropdown.show .dropdown-divider{
+.password-action--dropdown.show .dropdown-divider {
   margin: 0.2rem 0 !important;
+}
+
+.nav-profile-img{
+  display : flex;
+  align-items : center;
 }
