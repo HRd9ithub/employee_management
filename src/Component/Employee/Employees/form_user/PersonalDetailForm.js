@@ -13,7 +13,7 @@ import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
 
-function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuser, value }) {
+function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value }) {
 
     const [employee, setEmployee] = useState({
         first_name: "",
@@ -236,7 +236,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                 report_by
             });
             if (response.data.success) {
-                if (userDetail._id === GetLocalStorage('user_id') && (match || value === "Profile")) {
+                if (userDetail._id === GetLocalStorage('user_id') && match) {
                     getUserData()
                 }
                 if (match) {
@@ -244,8 +244,8 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, getuse
                     toast.success("Data updated Successfully");
                 } else {
                     toast.success("Profile details updated successfully.");
+                    getUserData()
                     handleClose()
-                    getuser()
                 }
                 setisLoading(false)
             }

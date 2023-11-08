@@ -23,7 +23,7 @@ const Navbar = () => {
   let history = useNavigate();
   // Global state
   let { handleLogout, loading } = Globalcomponent();
-  let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle } = useContext(AppProvider);
+  let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle ,Loading} = useContext(AppProvider);
   let { getCommonApi } = GlobalPageRedirect();
 
   // mobile screen toggle sidebar 
@@ -47,7 +47,9 @@ const Navbar = () => {
 
   // get user data for Login
   useLayoutEffect(() => {
-    getUserData();
+    if (GetLocalStorage("token")) {
+      getUserData();
+    }
     // eslint-disable-next-line
   }, [])
 
@@ -223,7 +225,7 @@ const Navbar = () => {
             <Dropdown alignRight>
               <Dropdown.Toggle className="nav-link" >
                 <div className="nav-profile-img">
-                  {UserData && <Avatar alt={UserData.first_name} className='text-capitalize' src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`} sx={{ width: 30, height: 30 }} />}
+                  {UserData.profile_image && <Avatar alt={UserData.first_name} className='text-capitalize' src={`${UserData.profile_image && process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`} sx={{ width: 30, height: 30 }} />}
                   <span className="availability-status online"></span>
                 </div>
                 <div className="nav-profile-text">
@@ -253,7 +255,7 @@ const Navbar = () => {
           <span className="mdi mdi-menu sider-menu"></span>
         </button>
       </div>
-      {(isLoading || loading) && <Spinner />}
+      {(isLoading || loading || Loading) && <Spinner />}
     </nav>
   );
 }
