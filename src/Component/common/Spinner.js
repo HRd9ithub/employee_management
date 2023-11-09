@@ -5,7 +5,7 @@ export class Spinner extends Component {
     return (
       <div className='spinner'>
             <div className="spinner-box">
-                <img src='./images/d9.png' alt='spinner' />
+                <img src='/Images/d9.png' alt='spinner' />
                 <div className='dot-one'></div>
                 <div className='dot-two'></div>
             </div>
