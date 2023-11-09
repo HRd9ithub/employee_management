@@ -58,7 +58,7 @@ const Employee = () => {
           }
         }
       }
-    } 
+    }
   };
 
   // delete function
@@ -219,7 +219,7 @@ const Employee = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+  } else if (!permission || permission.permissions.list !== 1) {
     return <Error403 />;
   }
 
@@ -293,7 +293,7 @@ const Employee = () => {
                       <TableCell>
                         Status
                       </TableCell>
-                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                      {permission && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1) &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -321,16 +321,16 @@ const Employee = () => {
                             <Switch color="success"
                               checked={val.status === "Active" ? true : false}
                               onChange={() => handleStatus(val)}
-                              disabled={permission && permission.name.toLowerCase() !== "admin"}
+                              disabled={!permission || permission.name.toLowerCase() !== "admin"}
                             />
                           </TableCell>
-                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1))) &&
+                          {permission && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1) &&
                             <TableCell>
                               <div className='action'>
                                 <i className="fa-solid fa-eye" onClick={() => history('/employees/view/' + val._id)}></i>
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                {permission && permission.permissions.update === 1 &&
                                   <i className="fa-solid fa-pen-to-square" onClick={() => history('/employees/edit/' + val._id)}></i>}
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) &&
+                                {permission && permission.permissions.delete === 1 &&
                                   <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                               </div>
                             </TableCell>}

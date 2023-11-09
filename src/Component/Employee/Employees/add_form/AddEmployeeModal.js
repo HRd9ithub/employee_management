@@ -424,7 +424,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
 
     return (
         <>
-            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+            {permission && permission.permissions.create === 1 &&
                 <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
                     setPage(true)
                     setModalShow(true)

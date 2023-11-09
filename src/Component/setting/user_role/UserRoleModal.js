@@ -155,7 +155,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
-                permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+                permission && permission.permissions.create === 1 &&
                 <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handleShow} ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
             }
             <Modal show={show} animation={true} size="lg" aria-labelledby="example-modal-sizes-title-sm" className="department-modal user-modal" centered>

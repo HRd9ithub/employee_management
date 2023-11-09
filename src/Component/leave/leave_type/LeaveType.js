@@ -117,7 +117,7 @@ const LeaveType = () => {
         return <Spinner />;
     }else if(serverError){
         return <Error500 />;
-    }else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    }else if (!permission || permission.permissions.list !== 1) {
         return <Error403 />;
     }
 
@@ -171,7 +171,7 @@ const LeaveType = () => {
                                                     LeaveType
                                                 </TableSortLabel>
                                             </TableCell>
-                                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                            {permission && permission.permissions.update === 1 &&
                                                 <TableCell>
                                                     Action
                                                 </TableCell>}
@@ -183,7 +183,7 @@ const LeaveType = () => {
                                                 <TableRow key={val._id}>
                                                     <TableCell>{ind + 1}</TableCell>
                                                     <TableCell>{val.name}</TableCell>
-                                                    {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                                                    {permission && permission.permissions.update === 1 &&
                                                         <TableCell>
                                                             <div className='action'>
                                                                 <LeaveTypeModal data={val} getLeaveType={getLeaveType} />

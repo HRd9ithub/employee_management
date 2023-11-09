@@ -4,7 +4,6 @@ import DatePickers from "react-datepicker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import GlobalPageRedirect from './auth_context/GlobalPageRedirect';
 import moment from 'moment';
@@ -15,7 +14,6 @@ import Spinner from './common/Spinner';
 import { dateFormat } from '../helper/dateFormat';
 import ConfettiExplosion from 'react-confetti-explosion';
 import { customAxios } from '../service/CreateApi';
-
 
 const Dashboard = () => {
      let userId = GetLocalStorage("user_id");
@@ -70,7 +68,6 @@ const Dashboard = () => {
                          } else {
                               localStorage.removeItem("employeeBirthday");
                          }
-                         // setreportBy(reportBy)
                     }
                } catch (error) {
                     if (!error.response) {
@@ -93,12 +90,11 @@ const Dashboard = () => {
           // eslint-disable-next-line
      }, [])
 
+     // * ======== Default get holiday and BirthDate data  ========
      useEffect(() => {
-          // datefilter(new Date());
           const startOfMonth = moment(new Date()).format('YYYY-MM-DD');
           const endOfMonth = moment().endOf('month').format('YYYY-MM-DD');
-          // const startOfDate = moment().startOf('month').format('DD-MM');
-          // const endOfDate = moment().endOf('month').format('DD-MM');
+
           if (holidayfilter.length !== 0) {
                let data = holidayfilter.filter((val) => {
                     return val.date >= startOfMonth && val.date <= endOfMonth
@@ -106,15 +102,12 @@ const Dashboard = () => {
                setHoliday(data)
           }
           if (birthDay.length !== 0) {
-               // let birth = birthDay.filter((val) => {
-               //      return moment(val.date_of_birth).format("DD-MM") >= startOfDate && moment(val.date_of_birth).format("DD-MM") <= endOfDate
-               // })
-               // setBirthDayFilter(birth)
                birthFilter(new Date())
           }
           // eslint-disable-next-line
      }, [holidayfilter])
 
+     // Filtering the date of Holiday
      const datefilter = (date) => {
           let data = holidayfilter.filter((val) => {
                return val.date === moment(date).format("YYYY-MM-DD")
@@ -123,6 +116,7 @@ const Dashboard = () => {
           setHoliday(data)
      }
 
+     // Filtering the date of birth
      const birthFilter = (date) => {
           let birth = birthDay.filter((val) => {
                return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM") && val._id !== userId
@@ -153,47 +147,13 @@ const Dashboard = () => {
           }
      }
 
-     var bdcApi = "https://api.bigdatacloud.net/data/reverse-geocode-client"
-
-     // eslint-disable-next-line
-     const getLoau = () => {
-          navigator.geolocation.getCurrentPosition(
-               (position) => {
-                    bdcApi = bdcApi
-                         + "?latitude=" + position.coords.latitude
-                         + "&longitude=" + position.coords.longitude
-                         + "&localityLanguage=en";
-                    getApi(bdcApi);
-
-               },
-               (err) => { getApi(bdcApi); },
-               {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-               });
-     }
-
-     const getApi = async (bdcApi) => {
-          try {
-               axios.get(bdcApi).then((data) => console.log(data))
-          } catch (error) {
-               console.log(error)
-          }
-     }
-
-
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                     {!isLoading && <div className=''>
                          <div className='container-fluid inner-pages py-3'>
-                              {/* <div className='row p-3 align-items-center row-std'>
-                                   <div className='col-12 employee-path px-2' id="one">
-                                        <h2 className='page-title pb-2' style={{ borderBottom: "2px solid" }}>Dashboard</h2>
-                                   </div>
-                              </div> */}
-                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
+                              {/* Summary part of dashboard */}
+                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" &&
                                    <div className="row mt-3">
                                         <div className={`mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6`} onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
@@ -201,7 +161,6 @@ const Dashboard = () => {
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Total Employees</h3>
                                                        <h3 className="mb-0">{totalEmployee}</h3>
-                                                       {/* <FaUsers /> */}
                                                   </div>
                                              </NavLink>
                                         </div>
@@ -211,7 +170,6 @@ const Dashboard = () => {
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Present Today</h3>
                                                        <h3 className="mb-0">{presentToday}</h3>
-                                                       {/* <CoPresentIcon /> */}
                                                   </div>
                                              </NavLink>
                                         </div>
@@ -221,7 +179,6 @@ const Dashboard = () => {
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Absent Today</h3>
                                                        <h3 className="mb-0">{todayLeave.length}</h3>
-                                                       {/* <NoAccountsIcon /> */}
                                                   </div>
                                              </NavLink>
                                         </div>
@@ -231,14 +188,14 @@ const Dashboard = () => {
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Leave Request</h3>
                                                        <h3 className="mb-0">{leaveRequest}</h3>
-                                                       {/* <ApprovalIcon /> */}
                                                   </div>
                                              </NavLink>
                                         </div>
                                    </div>
-                              </>}
+                              }
 
                               <div className='row'>
+                                   {/* calcendar display */}
                                    <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                         <div className="dashboard-custom-date-picker shadow">
                                              {(() => {
@@ -253,10 +210,10 @@ const Dashboard = () => {
                                              })()}
                                         </div>
                                    </div>
+                                   {/* holiday box */}
                                    <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                         <div className='my-chart'>
                                              <div className='my-chart-head text-center'>Holiday</div>
-                                             {/* <div className='my-chart-head text-center'>Bookmarks</div> */}
                                              <div className='p-3'>
                                                   <ul>
                                                        {holiday.map((val) => {
@@ -271,10 +228,10 @@ const Dashboard = () => {
                                              </div>
                                         </div>
                                    </div>
+                                   {/* leave box */}
                                    <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                         <div className='my-chart'>
                                              <div className='my-chart-head text-center'>Leave</div>
-                                             {/* <div className='my-chart-head text-center'>Bookmarks</div> */}
                                              <div className='p-3'>
                                                   <ul>
                                                        {todayLeave.map((val, ind) => {
@@ -292,6 +249,7 @@ const Dashboard = () => {
                     </div>}
                </motion.div>
                {isLoading && <Spinner />}
+               {/* birthday animation */}
                {!isLoading && animateLoader &&
                     <div className="animate-celebration">
                          <div className="animate-celebration-content">

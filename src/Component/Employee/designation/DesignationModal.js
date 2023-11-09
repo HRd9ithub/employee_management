@@ -101,7 +101,7 @@ function DesignationModal({ data, getdesignation, permission }) {
   return (
     <>
       {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
-        : permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) &&
+        : permission && permission.permissions.create === 1 &&
         <button
           className="btn btn-gradient-primary btn-rounded btn-fw text-center "
           onClick={handleShow}

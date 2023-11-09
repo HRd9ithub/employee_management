@@ -10,7 +10,6 @@ import Spinner from '../../common/Spinner';
 import Error500 from '../../error_pages/Error500';
 import Error403 from '../../error_pages/Error403';
 import { Dropdown } from 'react-bootstrap';
-import { decryptPassword } from '../../../service/passwordEncrypt';
 import Swal from 'sweetalert2';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -149,7 +148,7 @@ const PasswordComponent = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+  } else if (!permission || permission.permissions.list !== 1) {
     return <Error403 />;
   }
 
@@ -173,7 +172,7 @@ const PasswordComponent = () => {
                 </div>
               </div>
               <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.create === 1)) && <AddPasswordForm getPasswordRecord={getPasswordRecord} />}
+                {permission && permission.permissions.create === 1 && <AddPasswordForm getPasswordRecord={getPasswordRecord} />}
               </div>
             </div>
             {records.length !== 0 ?
@@ -187,11 +186,11 @@ const PasswordComponent = () => {
                           <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                           <div className="dropdown-menu password-action--dropdown">
                             <Dropdown.Item className="dropdown-item" onClick={() => showModal(item)} ><i className="fa-solid fa-eye"></i><label>View</label></Dropdown.Item>
-                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <>
+                            {permission && permission.permissions.update === 1 && <>
                               <div className="dropdown-divider"></div>
                               <AddPasswordForm data={item} getPasswordRecord={getPasswordRecord} />
                             </>}
-                            {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <>
+                            {permission && permission.permissions.delete === 1 && <>
                               <div className="dropdown-divider"></div>
                               <Dropdown.Item className="dropdown-item" onClick={() => handleDelete(item._id)}><i className="fa-solid fa-trash-can"></i><label>Delete</label></Dropdown.Item>
                             </>}

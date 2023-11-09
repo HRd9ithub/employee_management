@@ -117,7 +117,7 @@ const Project = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+  } else if (!permission || permission.permissions.list !== 1) {
     return <Error403 />;
   }
 
@@ -165,7 +165,7 @@ const Project = () => {
                           Project Name
                         </TableSortLabel>
                       </TableCell>
-                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                      {permission && permission.permissions.update === 1 &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -177,11 +177,10 @@ const Project = () => {
                         <TableRow key={ind}>
                           <TableCell>{ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
-                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                          {permission && permission.permissions.update === 1 &&
                             <TableCell>
                               <div className='action'>
-                                {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
-                                  <ProjectModal data={val} getProject={getProject} />}
+                                  <ProjectModal data={val} getProject={getProject} />
                               </div>
                             </TableCell>}
                         </TableRow>

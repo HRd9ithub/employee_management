@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { AppProvider } from '../../context/RouteContext';
 import Spinner from '../../common/Spinner';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
-import { decryptPassword, encryptPassword } from '../../../service/passwordEncrypt';
 import { customAxios } from '../../../service/CreateApi';
 import toast from 'react-hot-toast';
 import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
@@ -44,7 +43,7 @@ const AddPasswordForm = (props) => {
             let { title, url, user_name, password, access, _id, note } = data;
             setPassword({
                 title,
-                password: decryptPassword(password),
+                password,
                 user_name,
                 url,
                 id: _id,
@@ -170,7 +169,6 @@ const AddPasswordForm = (props) => {
             return false;
         }
 
-        // let epassword = encryptPassword(password.password);
         let user = accessEmployee?.map((val) => {
             return val.value
         })
@@ -184,7 +182,7 @@ const AddPasswordForm = (props) => {
                 user_name: password.user_name,
                 password: password.password,
                 access_employee: user,
-                note : password.note
+                note: password.note
             })
         } else {
             url = customAxios().post('/password', {
@@ -193,7 +191,7 @@ const AddPasswordForm = (props) => {
                 user_name: password.user_name,
                 password: password.password,
                 access_employee: user,
-                note : password.note
+                note: password.note
             })
         }
         setIsLoading(true);
@@ -208,7 +206,7 @@ const AddPasswordForm = (props) => {
                     user_name: "",
                     password: "",
                     id: "",
-                    note :""
+                    note: ""
                 });
                 setAccessEmployee(null);
                 setTitleError("");

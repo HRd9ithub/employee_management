@@ -58,13 +58,10 @@ const EmployeeViewComponent = () => {
             const response = await customAxios().get(`/user/${id}`)
             if (response.data.success) {
                 setpermission(response.data.permissions)
-                if (response.data.data.profile_image) {
+                if (response.data.data && response.data.data.profile_image) {
                     setimage(`${process.env.REACT_APP_IMAGE_API}/${response.data.data.profile_image}`)
                 }
                 setdata(response.data.data);
-                // if (match) {
-                //     SetLocalStorage("userVerify", response.data.userVerify ? "true" : "false")
-                // }
             }
             setisLoading(false);
         } catch (error) {
@@ -151,7 +148,7 @@ const EmployeeViewComponent = () => {
     return (
         <>
             {/* <div className=" container-fluid pt-4"> */}
-            {(match || (!match && permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.list === 1)))) ?
+            {(match || (!match && permission &&  permission.permissions.list === 1)) ?
                 <div className="background-wrapper bg-white py-4">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
