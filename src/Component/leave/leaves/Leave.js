@@ -17,6 +17,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Swal from 'sweetalert2'
+import ranges from '../../../helper/calcendarOption'
 
 const Leave = () => {
     const [show, setShow] = useState(false);
@@ -115,28 +116,6 @@ const Leave = () => {
         })
     };
 
-
-    // calcendar option
-    const ranges = {
-        Today: [moment(), moment()],
-        Yesterday: [
-            moment().subtract(1, "days"),
-            moment().subtract(1, "days")
-        ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
-        "Last Month": [
-            moment()
-                .subtract(1, "month")
-                .startOf("month"),
-            moment()
-                .subtract(1, "month")
-                .endOf("month")
-        ]
-    };
-
-
     // pagination function
     const onChangePage = (e, page) => {
         setpage(page)
@@ -213,8 +192,8 @@ const Leave = () => {
     // eslint-disable-next-line
     const actionToggle = useMemo(() => {
         if (permission) {
-            if ((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1)) {
-                if (permission && permission.name?.toLowerCase() === "admin") {
+            if (permission.permissions.update === 1 || permission.permissions.delete === 1) {
+                if (permission.name?.toLowerCase() === "admin") {
                     let data = leave.find((val) => {
                         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
                     })
@@ -242,7 +221,7 @@ const Leave = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission || permission.permissions.list !== 1) {
         return <Error403 />;
     }
 
@@ -412,7 +391,7 @@ const Leave = () => {
                                                         <TableCell>
                                                             <div className='action'>
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
-                                                                {((permission && permission.name?.toLowerCase() === "admin") || (permission.permissions.length !== 0 && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined")) &&
+                                                                {(permission && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined") &&
                                                                     !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
                                                                     <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />}
                                                                 {permission && permission.name.toLowerCase() !== "admin" && (val.status === "Read" || val.status === "Pending") && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}

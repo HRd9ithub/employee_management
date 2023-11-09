@@ -12,6 +12,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
+import ranges from '../../helper/calcendarOption';
 
 const ActivityComponent = () => {
     let date_today = new Date();
@@ -69,31 +70,11 @@ const ActivityComponent = () => {
         getActivity(start._d, end._d)
     }
 
-    // calcendar option
-    const ranges = {
-        Today: [moment(), moment()],
-        Yesterday: [
-            moment().subtract(1, "days"),
-            moment().subtract(1, "days")
-        ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
-        "Last Month": [
-            moment()
-                .subtract(1, "month")
-                .startOf("month"),
-            moment()
-                .subtract(1, "month")
-                .endOf("month")
-        ]
-    };
-
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission|| permission.permissions.list !== 1) {
         return <Error403 />;
     }
 

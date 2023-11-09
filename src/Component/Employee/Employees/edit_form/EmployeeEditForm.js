@@ -53,7 +53,9 @@ const EmployeeEditForm = () => {
         let result = await res.data.data;
         setpermission(res.data.permissions)
         setUserDetail(result);
-        setUserId(result._id);
+        if(result){
+          setUserId(result._id);
+        }
       }
     } catch (error) {
       if (!error.response) {
@@ -87,7 +89,7 @@ const EmployeeEditForm = () => {
     return <Error500/>;
   }
 
-  if(!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))){
+  if(!permission || permission.permissions.update === 0){
     return <Error403/>;
   }
 

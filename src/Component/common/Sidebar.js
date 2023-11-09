@@ -18,7 +18,7 @@ const Sidebar = () => {
   let location = useLocation();
 
   // Global state
-  let { setSidebarToggle, sidebarToggle, sidebarRef, logoToggle } = useContext(AppProvider)
+  let { setSidebarToggle, sidebarToggle, sidebarRef } = useContext(AppProvider)
 
   // global funcation for api error of 403
   let { getCommonApi } = GlobalPageRedirect();
@@ -28,10 +28,6 @@ const Sidebar = () => {
   useEffect(() => {
     if (window.innerWidth < 992) {
       document.body.classList.remove('sidebar-icon-only');
-    } else {
-      if (!logoToggle) {
-        document.body.classList.add('sidebar-icon-only');
-      }
     }
     let data = document.getElementsByClassName('sidebar-icon-only');
     if (data.length !== 0) {

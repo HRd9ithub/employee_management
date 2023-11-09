@@ -117,9 +117,10 @@ const Designation = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+  } else if (!permission || permission.permissions.list !== 1) {
     return <Error403 />;
   }
+
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
@@ -164,7 +165,7 @@ const Designation = () => {
                           Designation Name
                         </TableSortLabel>
                       </TableCell>
-                      {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                      {permission && permission.permissions.update === 1 &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -176,7 +177,7 @@ const Designation = () => {
                         <TableRow key={ind}>
                           <TableCell>{ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
-                          {permission && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) &&
+                          {permission && permission.permissions.update === 1 &&
                             <TableCell>
                               <div className='action'>
                                 <DesignationModal

@@ -23,7 +23,6 @@ const ChangePassword = () => {
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    // ******** change password functionality part  *********
     // onchange function
     const InputEvent = (e) => {
         let { name, value } = e.target;

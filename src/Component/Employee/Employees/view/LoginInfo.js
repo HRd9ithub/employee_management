@@ -10,6 +10,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import { useNavigate } from 'react-router-dom';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { customAxios } from '../../../../service/CreateApi';
+import ranges from '../../../../helper/calcendarOption';
 
 
 const LoginInfo = ({ userId }) => {
@@ -107,27 +108,7 @@ const LoginInfo = ({ userId }) => {
         setendtDate(end._d)
         getLoginInfo(start._d, end._d)
     }
-    
-    // calcendar option
-    const ranges = {
-        Today: [moment(), moment()],
-        Yesterday: [
-          moment().subtract(1, "days"),
-          moment().subtract(1, "days")
-        ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
-        "Last Month": [
-          moment()
-            .subtract(1, "month")
-            .startOf("month"),
-          moment()
-            .subtract(1, "month")
-            .endOf("month")
-        ]
-      };
-      
+   
     return (
         <div>
 

@@ -16,6 +16,7 @@ import Error500 from '../error_pages/Error500';
 import { customAxios } from "../../service/CreateApi";
 import Spinner from "../common/Spinner";
 import { AppProvider } from "../context/RouteContext";
+import ranges from "../../helper/calcendarOption";
 
 const TimeSheetComponent = () => {
     let date_today = new Date();
@@ -68,26 +69,6 @@ const TimeSheetComponent = () => {
                 setisLoading(false)
             }, 500)
         }
-    };
-
-    // calcendar option
-    const ranges = {
-        Today: [moment(), moment()],
-        Yesterday: [
-            moment().subtract(1, "days"),
-            moment().subtract(1, "days")
-        ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-        "Last 30 Days": [moment().subtract(29, "days"), moment()],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
-        "Last Month": [
-            moment()
-                .subtract(1, "month")
-                .startOf("month"),
-            moment()
-                .subtract(1, "month")
-                .endOf("month")
-        ]
     };
 
     useEffect(() => {
@@ -196,10 +177,9 @@ const TimeSheetComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission || permission.permissions.list !== 1) {
         return <Error403 />;
-    }
-
+      }
 
     return (<motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
         <div className=" container-fluid pt-4">

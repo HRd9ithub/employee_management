@@ -184,9 +184,9 @@ const DocumentComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || (permission.name.toLowerCase() !== "admin" && (permission.permissions.length !== 0 && permission.permissions.list === 0))) {
+    } else if (!permission || permission.permissions.list !== 1) {
         return <Error403 />;
-    }
+      }
 
     return (
         <>
@@ -261,8 +261,8 @@ const DocumentComponent = () => {
                                                     <TableCell>
                                                         <div className='action'>
                                                             <i className="fa-solid fa-download" onClick={() => downloadFile(val.image, val.name)}></i>
-                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.update === 1)) && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
-                                                            {permission && permission.name && (permission.name.toLowerCase() === "admin" || (permission.permissions.length !== 0 && permission.permissions.delete === 1)) && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                                            {permission && permission.permissions.update === 1 && <DocumentModalComponent data={val} setToggle={setToggle} toggle={toggle} />}
+                                                            {permission && permission.permissions.delete === 1 && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>
