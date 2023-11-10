@@ -3272,7 +3272,7 @@ input[type="date"]::-webkit-clear-button {
 .range_icon {
   position: absolute;
   top: 5px;
-  right: 3px;
+  right: 0;
   font-size: 21px;
   color: #004b8f;
   pointer-events: none;
