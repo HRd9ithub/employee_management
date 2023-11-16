@@ -19,11 +19,11 @@ export class Error403 extends Component {
             <h4 data-text="Opps! Page not found">
               Access denied!
             </h4>
-            <p>
+            <p className='error-para--line'>
               You are not authorized to access page.
             </p>
             <div className="btns">
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/">Back Home</NavLink>
             </div>
           </div>
         </div>

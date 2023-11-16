@@ -2794,7 +2794,7 @@ svg {
 
 .content h4 {
   font-size: 1.5em;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   color: #012970;
   font-size: 2em;
@@ -2813,13 +2813,14 @@ svg {
   -webkit-text-fill-color: transparent;
 }
 
-.content p {
-  font-size: 1.2em;
-  color: #0d0d0d;
+.error-para--line{
+  letter-spacing: 0.2px;
+  color: #aaaa;
+  font-size: 1.2rem;
 }
 
 .content .btns {
-  margin: 25px 0;
+  margin: 20px 0;
   display: inline-flex;
 }
 
@@ -2832,7 +2833,7 @@ svg {
   font-weight: 500;
   padding: 10px 25px;
   border-radius: 25px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   transition: all 0.3s ease;
 }
 

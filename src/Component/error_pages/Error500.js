@@ -14,16 +14,16 @@ export class Error500 extends Component {
         <div id="error-page" className="mx-4 my-3">
           <div className="content">
             <h2 className="header" data-text="500">
-              500 
+              500
             </h2>
             <h4 data-text="Opps! Page not found">
-            Internal server Error
+              Internal server Error
             </h4>
-            <p>
-              Oops, something went wrong.
+            <p className='error-para--line'>
+              Something goes wrong with our servers, please try again later.
             </p>
             <div className="btns">
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/">Back Home</NavLink>
             </div>
           </div>
         </div>
