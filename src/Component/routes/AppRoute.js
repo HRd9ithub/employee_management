@@ -33,8 +33,8 @@ const AppRoute = () => {
                 {/* login route */}
                 <Route exact path='/login' element={<ProtectedRoute authentication={false}><Login /></ProtectedRoute>}></Route>
                 <Route exact path='/otp' element={<ProtectedRoute authentication={false}><OtpVerification /></ProtectedRoute>}></Route>
-                <Route exact path='/forgot-password' element={<ForgotPassword />}></Route>
-                <Route exact path='/reset-password' element={<ResetPassword />}></Route>
+                <Route exact path='/forgot-password' element={<ProtectedRoute authentication={false}><ForgotPassword /></ProtectedRoute>}></Route>
+                <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><ResetPassword /></ProtectedRoute>}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
                 {/* profile path */}
