@@ -56,40 +56,42 @@ function ProjectModal({ data, getProject, permission, records }) {
             handleValidate()
         }
         setError("");
+        if (!name || error) {
+           return false
+        }
         let url = "";
         if (id) {
             url = customAxios().patch(`/project/${id}`, { name: name.charAt(0).toUpperCase() + name.slice(1) })
         } else {
             url = customAxios().post('/project/', { name: name.charAt(0).toUpperCase() + name.slice(1) })
         }
-        if (name && !error) {
-            setisLoading(true);
-            url.then(data => {
-                if (data.data.success) {
-                    toast.success(data.data.message)
-                    setShow(false)
-                    setisLoading(false);
-                    getProject();
-                    setName('');
-                    setId('');
-                }
-            }).catch((error) => {
+
+        setisLoading(true);
+        url.then(data => {
+            if (data.data.success) {
+                toast.success(data.data.message)
+                setShow(false)
                 setisLoading(false);
-                if (!error.response) {
-                    toast.error(error.message);
+                getProject();
+                setName('');
+                setId('');
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 401) {
+                    getCommonApi();
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        } else {
-                            setError(error.response.data.error);
-                        }
+                        setError(error.response.data.error);
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     return (
