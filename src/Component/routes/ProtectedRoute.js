@@ -21,10 +21,6 @@ const ProtectedRoute = ({ children, authentication }) => {
             navigate(`/profile/${GetLocalStorage("user_id")}`);
         } else if (!authentication && GetLocalStorage("token")) {
             navigate('/');
-        } else if (!authentication && !GetLocalStorage("email")) {
-            navigate('/login');
-        } else if (!authentication && GetLocalStorage("email")) {
-            navigate('/otp');
         }
     }
 

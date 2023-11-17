@@ -180,8 +180,8 @@ return (
                                     <label>File</label>
                                     <div className='d-flex justify-content-between'>
                                         <div className="custom-file">
-                                            <Form.Control type="file" className="form-control visibility-hidden" id="customFileLang2" name='offer_letter' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
-                                            <label className="custom-file-label" htmlFor="customFileLang2">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
+                                            <Form.Control type="file" className="form-control visibility-hidden" id="document" name='file' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
+                                            <label className="custom-file-label" htmlFor="document">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
                                         </div>
                                         {data && <button disabled={!document.imageName || document.image} className='custom-file-btn'>
                                             <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
