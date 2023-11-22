@@ -5,6 +5,7 @@ import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
+import { alphSpaceDotFormat, numberFormat, percentageFormat } from '../../../common/RegaulrExp';
 
 const EductionForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
@@ -78,7 +79,7 @@ const EductionForm = (props) => {
                 return val.id !== ind
             }), { name: "University name is a required field.", id: ind }]);
 
-        } else if (!eduction[ind].university_name.match(/^[a-zA-Z. ]*$/) || !eduction[ind].university_name.trim()) {
+        } else if (!eduction[ind].university_name.match(alphSpaceDotFormat) || !eduction[ind].university_name.trim()) {
             setuniversity_name_error([...university_name_error.filter((val) => {
                 return val.id !== ind
             }), { name: "University name must be an alphabet,dot and space only.", id: ind }])
@@ -96,7 +97,7 @@ const EductionForm = (props) => {
                 return val.id !== ind
             }), { name: "Year is a required field.", id: ind }]);
  
-        } else if (!eduction[ind].year.toString().match(/^[0-9]*$/) || eduction[ind].year > new Date().getFullYear()) {
+        } else if (!eduction[ind].year.toString().match(numberFormat) || eduction[ind].year > new Date().getFullYear()) {
             setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Year must be a number.", id: ind }])
@@ -112,7 +113,6 @@ const EductionForm = (props) => {
         }
     }
 
-
     // percentage  validation
     const handlepercentageValidate = (ind) => {
         if (!eduction[ind].percentage) {
@@ -120,7 +120,7 @@ const EductionForm = (props) => {
                 return val.id !== ind
             }), { name: "Percentage is a required field.", id: ind }]);
 
-        } else if (!eduction[ind].percentage.match(/(^100(\.0{1,2})?$)|(^([1-9]([0-9])?|0)(\.[0-9]{1,2})?$)/)) {
+        } else if (!eduction[ind].percentage.match(percentageFormat)) {
             setpercentage_error([...percentage_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Percentage must be a valid.", id: ind }])
@@ -132,7 +132,7 @@ const EductionForm = (props) => {
         }
     }
 
-    let history = useNavigate();
+    const history = useNavigate();
     // back btn
     const BackBtn = (e) => {
         e.preventDefault();
@@ -180,7 +180,7 @@ const EductionForm = (props) => {
 
 // add row of form
 const addDuplicate = () => {
-    let data = [...eduction, {
+    const data = [...eduction, {
         degree: '',
         university_name: '',
         year: '',

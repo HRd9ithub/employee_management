@@ -12,6 +12,7 @@ import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
+import { alphabetFormat, emailFormat, numberFormat } from "../../../common/RegaulrExp.js";
 
 function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value }) {
 
@@ -125,9 +126,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
         // eslint-disable-next-line
     }, []);
 
+    // null value remove for data
     useEffect(() => {
         if (userDetail) {
-            let dataFilter = Object.fromEntries(Object.entries(userDetail).filter(([_, v]) => v != null))
+            const dataFilter = Object.fromEntries(Object.entries(userDetail).filter(([_, v]) => v != null))
             setEmployee(dataFilter);
         }
     }, [userDetail])
@@ -141,17 +143,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
 
     // validate and onchange date of birth
     const handleagechange = (date) => {
-        var today = new Date();
-        var birthDate = new Date(date);
-        var age_now = today.getFullYear() - birthDate.getFullYear();
-        setEmployee({ ...employee, age: age_now, date_of_birth: date });
-    };
-
-
-    // validate in button click
-    // eslint-disable-next-line
-    // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const today = new Date().getFullYear();
+        const birthDate = new Date(date).getFullYear();
+        setEmployee({ ...employee, age: today - birthDate, date_of_birth: date });
+    }; 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -272,7 +267,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const firstNameValidation = () => {
         if (!employee.first_name) {
             setfirstNameError("First Name is a required field.");
-        } else if (!employee.first_name.match(/^[A-Za-z]+$/)) {
+        } else if (!employee.first_name.match(alphabetFormat)) {
             setfirstNameError("First Name must be alphabetic.");
         } else {
             setfirstNameError("");
@@ -282,7 +277,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const lastNameValidation = () => {
         if (!employee.last_name) {
             setlastNameError("Last Name is a required field.");
-        } else if (!employee.last_name.match(/^[A-Za-z]+$/)) {
+        } else if (!employee.last_name.match(alphabetFormat)) {
             setlastNameError("Last Name must be alphabetic.");
         } else {
             setlastNameError("");
@@ -292,7 +287,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const emailValidation = () => {
         if (!employee.email) {
             setemailError("Email is a required field.");
-        } else if (!employee.email.match(mailformat)) {
+        } else if (!emailFormat.test(employee.email)) {
             setemailError("Email must be a valid email.");
         } else {
             setemailError("");
@@ -303,7 +298,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const checkEmail = async () => {
         if (!employee.email) {
             setemailError("Email is a required field.");
-        } else if (!employee.email.match(mailformat)) {
+        } else if (!emailFormat.test(employee.email)) {
             setemailError("Email must be a valid email.");
         } else {
             if (userDetail.email === employee.email) {
@@ -337,7 +332,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const phoneValidation = () => {
         if (!employee.phone) {
             setphoneError("Mobile number is a required field.");
-        } else if (!employee.phone.toString().match(/^[0-9]+$/)) {
+        } else if (!numberFormat.test(employee.phone.toString())) {
             setphoneError("Mobile number must be a number");
         } else if (employee.phone.toString().length !== 10) {
             setphoneError("Your mobile number must be 10 characters.");
@@ -408,7 +403,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const cityValidate = () => {
         if (!employee.city) {
             setcityError("City is a required field.");
-        } else if (!employee.city.match(/^[A-Za-z]+$/)) {
+        } else if (!employee.city.match(alphabetFormat)) {
             setcityError("City must be alphabetic.");
         } else { setcityError("") }
     }
@@ -417,7 +412,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const stateValidation = () => {
         if (!employee.state) {
             setstateError("State is a required field.");
-        } else if (!employee.state.match(/^[A-Za-z]+$/)) {
+        } else if (!employee.state.match(alphabetFormat)) {
             setstateError("State must be alphabetic.");
         } else {
             setstateError("");
@@ -428,7 +423,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const postcodeValidation = () => {
         if (!employee.postcode) {
             setpostcodeError("Postcode is a required field.");
-        } else if (!employee.postcode.toString().match(/^[0-9]+$/)) {
+        } else if (!employee.postcode.toString().match(numberFormat)) {
             setpostcodeError("Postcode must be a number.");
         } else if (employee.postcode.toString().length !== 6) {
             setpostcodeError("Your postcode must be 6 characters.");

@@ -6,13 +6,15 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Spinner from '../common/Spinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { passwordFormat } from '../common/RegaulrExp';
 
 const ResetPassword = () => {
   // get url for email and token
   const query = new URLSearchParams(useLocation().search);
   let email = query.get("email");
-  let token = query.get("token");
-  email = email.replace(" ", "+")
+  const token = query.get("token");
+  email = email.replace(" ", "+");
+
   // common header for api
   const request = {
     headers: {
@@ -72,7 +74,7 @@ const ResetPassword = () => {
   // onchange function 
   const HandleChange = (event) => {
     // object destructuring
-    let { name, value } = event.target
+    const { name, value } = event.target
     setData({ ...data, [name]: value })
   }
 
@@ -80,7 +82,7 @@ const ResetPassword = () => {
   const newPassswordValidation = () => {
     if (!data.new_password) {
       setnew_password_error('Password is a required field.')
-    } else if (!data.new_password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
+    } else if (!data.new_password.match(passwordFormat)) {
       setnew_password_error("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
     } else {
       setnew_password_error('')
@@ -106,7 +108,7 @@ const ResetPassword = () => {
     seterror([]);
 
     // object destructuring
-    let { new_password, confirm_password } = data;
+    const { new_password, confirm_password } = data;
 
     if (!new_password || !confirm_password || new_password_error || confirm_password_error) {
       return false;

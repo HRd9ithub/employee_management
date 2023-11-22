@@ -78,7 +78,6 @@ const Designation = () => {
     setCount(e.target.value)
   }
 
-
   // sort function
   const handleRequestSort = (name) => {
     const isAsc = (orderBy === name && order === "asc");

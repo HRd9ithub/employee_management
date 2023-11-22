@@ -3,12 +3,9 @@ import toast from 'react-hot-toast';
 import { NavLink, useNavigate } from "react-router-dom";
 import Spinner from '../common/Spinner';
 import { customAxios } from '../../service/CreateApi';
+import { emailFormat } from '../common/RegaulrExp';
 
 const ForgotPassword = () => {
-  // eslint-disable-next-line
-  // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
   //initialistate state
   const [isLoading, setisLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -27,7 +24,7 @@ const ForgotPassword = () => {
   const emailValidation = () => {
     if (!email) {
       setError('Email is a required field.');
-    } else if (!mailformat.test(email)) {
+    } else if (!emailFormat.test(email)) {
       setError("Email must be a valid email.");
     } else {
       setError('');

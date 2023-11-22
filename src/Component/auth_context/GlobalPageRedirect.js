@@ -3,7 +3,7 @@ import { clearLocalStorage } from "../../service/StoreLocalStorage";
 
 const GlobalPageRedirect = () => {
 
-    let history = useNavigate();
+    const history = useNavigate();
 
     const getCommonApi = async () => {
         history('/login');

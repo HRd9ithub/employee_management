@@ -10,17 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from "../../../../service/CreateApi";
 import { AppProvider } from '../../../context/RouteContext';
+import { alphaNumDeshFormat, alphabetFormat, emailFormat, numberFormat, passwordFormat } from '../../../common/RegaulrExp';
 
 const AddEmployeeModal = ({ getAlluser, permission }) => {
-    // eslint-disable-next-line
-    // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     const history = useNavigate();
     let { getCommonApi } = GlobalPageRedirect();
+    let DateRef = useRef();
     let { get_username, userName, Loading } = useContext(AppProvider);
 
-    let DateRef = useRef();
 
     const [modalShow, setModalShow] = useState(false);
     const [page, setPage] = useState(false)
@@ -159,7 +156,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const firstNameValidation = () => {
         if (!employee.first_name) {
             setfirstNameError("First Name is a required field.");
-        } else if (!employee.first_name.match(/^[A-Za-z]+$/)) {
+        } else if (!alphabetFormat.test(employee.first_name)) {
             setfirstNameError("First Name must be alphabetic.");
         } else {
             setfirstNameError("");
@@ -169,7 +166,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const lastNameValidation = () => {
         if (!employee.last_name) {
             setlastNameError("Last Name is a required field.");
-        } else if (!employee.last_name.match(/^[A-Za-z]+$/)) {
+        } else if (!alphabetFormat.test(employee.last_name)) {
             setlastNameError("Last Name must be alphabetic.");
         } else {
             setlastNameError("");
@@ -179,7 +176,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const emailValidation = () => {
         if (!employee.email) {
             setemailError("Email is a required field.");
-        } else if (!employee.email.match(mailformat)) {
+        } else if (!emailFormat.test(employee.email)) {
             setemailError("Email must be a valid email.");
         } else {
             setemailError("");
@@ -190,7 +187,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const checkEmail = async () => {
         if (!employee.email) {
             setemailError("Email is a required field.");
-        } else if (!employee.email.match(mailformat)) {
+        } else if (!emailFormat.test(employee.email)) {
             setemailError("Email must be a valid email.");
         } else {
             setisLoading(true)
@@ -221,7 +218,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const checkEmployeeId = async () => {
         if (!employee.employee_id) {
             setEmployeeIdError("Employee id is a required field.");
-        } else if (!employee.employee_id.match(/^[A-Za-z0-9-]+$/)) {
+        } else if (!alphaNumDeshFormat.test(employee.employee_id)) {
             setEmployeeIdError("Please enter valid employee id.");
         } else {
             setisLoading(true)
@@ -251,7 +248,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const phoneValidation = () => {
         if (!employee.mobile_no) {
             setphoneError("Mobile number is a required field.");
-        } else if (!employee.mobile_no.match(/^[0-9]+$/)) {
+        } else if (!numberFormat.test(employee.mobile_no)) {
             setphoneError("Mobile number must be a number.");
         } else if (employee.mobile_no.length !== 10) {
             setphoneError("Your mobile number must be 10 characters.");
@@ -263,7 +260,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const passwordValidation = () => {
         if (!employee.password) {
             setpasswordError("Password is a required field.");
-        } else if (!employee.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
+        } else if (!employee.password.match(passwordFormat)) {
             setpasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
             setpasswordError("");
@@ -312,7 +309,7 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const employeeIdValidation = () => {
         if (!employee.employee_id) {
             setEmployeeIdError("Employee id is a required field.");
-        } else if (!employee.employee_id.trim().match(/^[A-Za-z0-9-]+$/)) {
+        } else if (!employee.employee_id.match(alphaNumDeshFormat)) {
             setEmployeeIdError("Please enter valid employee id.");
         } else {
             setEmployeeIdError("")
