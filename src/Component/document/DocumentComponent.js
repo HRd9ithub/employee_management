@@ -151,7 +151,7 @@ const DocumentComponent = () => {
     }
 
     const downloadFile = async (file, name) => {
-        let ext = file.split(".").pop();
+        const ext = file.split(".").pop();
         setisLoading(true)
         axios.get(`${process.env.REACT_APP_API_KEY}/document/download?file=${file}`, {
             responseType: 'blob',

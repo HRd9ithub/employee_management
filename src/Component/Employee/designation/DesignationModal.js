@@ -4,6 +4,7 @@ import Spinner from "../../common/Spinner";
 import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { toast } from "react-hot-toast";
 import { customAxios } from "../../../service/CreateApi";
+import { alphSpaceFormat } from "../../common/RegaulrExp";
 
 function DesignationModal({ data, getdesignation, permission }) {
   const [show, setShow] = useState(false);
@@ -46,7 +47,7 @@ function DesignationModal({ data, getdesignation, permission }) {
   const handlenameValidate = () => {
     if (!name) {
       setNameError("Designation name is a required field.");
-    } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
+    } else if (!name.trim() || !name.match(alphSpaceFormat)) {
       setNameError("Designation name must be an alphabet and space only..");
     } else {
       setNameError("");

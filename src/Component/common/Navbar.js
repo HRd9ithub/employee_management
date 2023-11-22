@@ -33,7 +33,7 @@ const Navbar = () => {
  
   // sidebar toggle in localstorage
   useEffect(() => {
-    let data = localStorage.getItem("sidebarToggle")
+    const data = localStorage.getItem("sidebarToggle")
 
     if (!data || data === 'false') {
       document.body.classList.remove('sidebar-icon-only');
@@ -140,7 +140,7 @@ const Navbar = () => {
   }
 
   const notificationToggle = (item) => {
-    let { date, _id } = item;
+    const { date, _id } = item;
 
     if (date) {
       handleDeleteRequestReportClick(_id);

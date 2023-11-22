@@ -4,11 +4,9 @@ import { Globalcomponent } from '../auth_context/GlobalComponent';
 import Spinner from '../common/Spinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { emailFormat } from '../common/RegaulrExp';
 
 const Login = () => {
-  // eslint-disable-next-line
-  // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  var mailformat =/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   //initialistate state
   const [data, setData] = useState({
     email: '',
@@ -20,7 +18,7 @@ const Login = () => {
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
 
-  let { onSubmit, loading, Error } = Globalcomponent();
+  const { onSubmit, loading, Error } = Globalcomponent();
 
 
   //onchange function
@@ -33,7 +31,7 @@ const Login = () => {
   const emailValidation = () => {
     if (!data.email) {
       setEmailError('Email is a required field.')
-    } else if (!mailformat.test(data.email)) {
+    } else if (!emailFormat.test(data.email)) {
       setEmailError("Email must be a valid email.")
     } else {
       setEmailError('')

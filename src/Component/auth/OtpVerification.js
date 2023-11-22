@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import { GetLocalStorage, RemoveLocalStorage } from '../../service/StoreLocalStorage';
 import Spinner from '../common/Spinner';
+import {numberFormat} from "../common/RegaulrExp";
 
 const OtpVerification = () => {
   //initialistate state
@@ -21,10 +22,9 @@ const OtpVerification = () => {
 
   // otp validation
   const otpValidation = () => {
-    let reg = /^[0-9]+$/;
     if (!otp) {
       setOtperror('OTP is a required field.')
-    } else if (!reg.test(otp)) {
+    } else if (!numberFormat.test(otp)) {
       setOtperror("OTP must be a number.")
     } else if (otp.length !== 4) {
       setOtperror('OTP must be at least 4 characters.')

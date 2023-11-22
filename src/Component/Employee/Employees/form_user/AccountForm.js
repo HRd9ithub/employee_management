@@ -5,6 +5,7 @@ import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
+import {alphSpaceFormat, alphaNumFormat, numberFormat} from "../../../common/RegaulrExp";
 
 const AccountForm = (props) => {
     let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
@@ -45,7 +46,7 @@ const AccountForm = (props) => {
     const handleBankNameValidate = () => {
         if (!account.bank_name) {
             setBank_name_error("Bank name is a required field.")
-        } else if (!account.bank_name.match(/^[a-zA-Z ]*$/) || account.bank_name.trim().length <= 0) {
+        } else if (!account.bank_name.match(alphSpaceFormat) || account.bank_name.trim().length <= 0) {
             setBank_name_error("Bank name must be an alphabet and space only.")
         } else {
             setBank_name_error('')
@@ -55,7 +56,7 @@ const AccountForm = (props) => {
     const handlenameValidate = () => {
         if (!account.name || !account.name.trim()) {
             setname_error("Name is a required field.")
-        } else if (!account.name.match(/^[a-zA-Z ]*$/)) {
+        } else if (!account.name.match(alphSpaceFormat)) {
             setname_error("Name must be an alphabet and space only.")
         } else {
             setname_error('')
@@ -65,7 +66,7 @@ const AccountForm = (props) => {
     const handleAccountNumberValidate = () => {
         if (!account.account_number) {
             setaccount_number_error("Account number is a required field.")
-        } else if (!account.account_number.toString().match(/^[0-9]*$/)) {
+        } else if (!account.account_number.toString().match(numberFormat)) {
             setaccount_number_error("Account number must be a number.")
         } else if (account.account_number.toString().length < 12) {
             setaccount_number_error("Your account number must be 12 characters.")
@@ -78,7 +79,7 @@ const AccountForm = (props) => {
     const handleIfscCodeValidate = () => {
         if (!account.ifsc_code) {
             setifsc_code_error("Ifsc code is a required field.")
-        } else if (!account.ifsc_code.match(/^[a-zA-Z0-9]*$/)) {
+        } else if (!account.ifsc_code.match(alphaNumFormat)) {
             setifsc_code_error("Ifsc code must be a number or alphabetic.")
         } else if (account.ifsc_code.length < 11) {
             setifsc_code_error("Your Ifsc code must be 11 characters.")
@@ -92,7 +93,7 @@ const AccountForm = (props) => {
     const handleBranchNameValidate = () => {
         if (!account.branch_name || !account.branch_name.trim()) {
             setbranch_name_error("Branch name is a required field.")
-        } else if (!account.branch_name.match(/^[a-zA-Z ]*$/)) {
+        } else if (!account.branch_name.match(alphSpaceFormat)) {
             setbranch_name_error("Branch name must be an alphabet and space only.")
         } else {
             setbranch_name_error('')
@@ -146,7 +147,7 @@ const AccountForm = (props) => {
         }
     }
 
-    let history = useNavigate();
+    const history = useNavigate();
     // back btn
     const BackBtn = (e) => {
         e.preventDefault();

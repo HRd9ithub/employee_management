@@ -29,7 +29,7 @@ const Sidebar = () => {
     if (window.innerWidth < 992) {
       document.body.classList.remove('sidebar-icon-only');
     }
-    let data = document.getElementsByClassName('sidebar-icon-only');
+    const data = document.getElementsByClassName('sidebar-icon-only');
     if (data.length !== 0) {
       setWidthToggle(false)
     } else {
@@ -44,11 +44,11 @@ const Sidebar = () => {
       const res = await customAxios().get('/menu');
 
       if (res.data.success) {
-        let { data } = res.data;
-        let result = []
-        let employee = ['Employees', 'Project', 'Designation']
-        let leave = ['Holiday', 'Leave Type', 'Leaves']
-        let setting = ['User Role', 'Work Report','Password']
+        const { data } = res.data;
+        let result = [];
+        const employee = ['Employees', 'Project', 'Designation']
+        const leave = ['Holiday', 'Leave Type', 'Leaves']
+        const setting = ['User Role', 'Work Report','Password']
 
         data.forEach((item) => {
           if (employee.includes(item.name)) {
@@ -152,7 +152,8 @@ const Sidebar = () => {
       return menu.route === location.pathname.toLowerCase()
     } else {
       let result = menu.child.find((cur) => {
-       return location.pathname.includes("employees") ? cur.route === "/employees" : location.pathname.includes("work-report") ? cur.route === "/work-report" : cur.route === location.pathname.toLowerCase()
+       return cur.route === location.pathname.split("/")[1]
+      //  return location.pathname.includes("employees") ? cur.route === "/employees" : location.pathname.includes("work-report") ? cur.route === "/work-report" : cur.route === location.pathname.toLowerCase()
       })
       return result ? true : false;
     }

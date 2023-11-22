@@ -14,7 +14,7 @@ export const Globalcomponent = () => {
 
     const navigate = useNavigate();
 
-    let { getCommonApi } = GlobalPageRedirect();
+    const { getCommonApi } = GlobalPageRedirect();
 
     //  login function
     const onSubmit = async (data) => {

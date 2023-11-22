@@ -7,6 +7,7 @@ import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
+import { alphSpaceFormat, alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 
 const EmergencyForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props
@@ -93,7 +94,7 @@ const EmergencyForm = (props) => {
     const nameValidation = () => {
         if (!emergency.name) {
             setNameError("Name is a required field.");
-        } else if (!emergency.name.match(/^[A-Za-z ]+$/) || emergency.name.trim().length === 0) {
+        } else if (!alphSpaceFormat.test(emergency.name) || emergency.name.trim().length === 0) {
             setNameError("Name must be an alphabet and space only.");
         } else {
             setNameError("");
@@ -102,12 +103,9 @@ const EmergencyForm = (props) => {
 
     // # validation for email
     const emailValidation = () => {
-        // eslint-disable-next-line
-       // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  var mailformat =/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emergency.email) {
             setemailError("Email is a required field.");
-        } else if (!emergency.email.match(mailformat)) {
+        } else if (!emailFormat.test(emergency.email)) {
             setemailError("Email must be a valid email.");
         } else {
             setemailError("")
@@ -118,7 +116,7 @@ const EmergencyForm = (props) => {
     const phoneVlidation = () => {
         if (!emergency.phone) {
             setphoneError("Mobile number is a required field.");
-        } else if (!emergency.phone.match(/^[0-9]+$/)) {
+        } else if (!numberFormat.test(emergency.phone.toString())) {
             setphoneError("Mobile number must be a number");
         } else if(emergency.phone.length !== 10){
             setphoneError("Your mobile number must be 10 characters.")
@@ -131,7 +129,7 @@ const EmergencyForm = (props) => {
     const relationshipValidtion = () => {
         if (!emergency.relationship) {
             setrelationshipError("Relation ship is a required field.");
-        } else if (!emergency.relationship.match(/^[A-Za-z]+$/)) {
+        } else if (!alphabetFormat.test(emergency.relationship)) {
             setrelationshipError("Relation ship must be alphabetic.");
         } else {
             setrelationshipError("")
@@ -148,7 +146,7 @@ const EmergencyForm = (props) => {
         }
     }
 
-    let history = useNavigate();
+    const history = useNavigate();
     // back btn
     const BackBtn = (e) => {
         e.preventDefault();
