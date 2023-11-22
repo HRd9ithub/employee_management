@@ -4316,3 +4316,54 @@ input[type="search"] {
   display : flex;
   align-items : center;
 }
+
+/* attendance page */
+.attendance-list-item {
+  box-shadow: 0 0 4px rgba(0, 0, 0, .2);
+}
+.attendance-list-item .bordered {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+.attendance-body .clock {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 5px solid rgba(0, 0, 0, .2);
+  margin: 0 auto;
+}
+.attendance-list-item ul li {
+  list-style: none;
+  margin-bottom: 10px;
+}
+.attendance-list-item ul li::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: -8px;
+  border-radius: 5px;
+  height: 100%;
+  width: 3px;
+  background-color: #dedede;
+}
+.attendance-list-item ul li:last-child::before {
+  content: unset;
+}
+.attendance-list-item ul li::after {
+  content: "\f04d";
+  position: absolute;
+  top: -4px;
+  left: -12px;
+  color: #004392;
+  background-color: white;
+  font-family: FontAwesome;
+}
+.attendance-list-item ul li div {
+  margin-left: 10px;
+  border-bottom: 3px solid #dedede;
+  padding-bottom: 10px;
+}
+.attendance-list-item ul li:last-child, .attendance-list-item ul li:last-child div {
+  border-bottom: none;
+  padding-bottom: 0;
+}

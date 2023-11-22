@@ -24,6 +24,7 @@ import Error404 from '../error_pages/Error404';
 import ActivityComponent from '../activity/ActivityComponent';
 import PasswordComponent from '../setting/password/PasswordComponent';
 import HolidayComponent from '../leave/holiday/HolidayComponent';
+import AttendanceComponent from '../attendance/AttendanceComponent';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 const AppRoute = () => {
@@ -65,6 +66,8 @@ const AppRoute = () => {
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
                 <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
+                {/* attendance route */}
+                <Route exact path='/attendance' element={<AttendanceComponent></AttendanceComponent>}></Route>
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>
