@@ -97,9 +97,12 @@ h6,
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, .3);
 }
 
+/* placeholder */
+::placeholder {
+  text-transform: capitalize !important;
+}
+
 /* button */
-
-
 .error {
   color: #e50914;
   font-size: 13px;
@@ -3028,7 +3031,8 @@ input[type=password]::-ms-clear {
 }
 
 .action i.fa-solid.fa-eye,
-.action i.fa-solid.fa-download {
+.action i.fa-solid.fa-download, 
+.action i.fa-solid.fa-user-clock {
   color: rgb(7, 75, 154);
   cursor: pointer;
 }
@@ -4205,9 +4209,9 @@ input[type="search"] {
 } */
 
 .password-info-box {
+  border-radius: 4px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 16px 12px;
-  /* cursor: pointer; */
 }
 
 .password-info-box p {
@@ -4312,6 +4316,17 @@ input[type="search"] {
   margin: 0.2rem 0 !important;
 }
 
+.css-1fdsijx-ValueContainer, .css-3w2yfm-ValueContainer {
+  padding: 2px 2px !important;
+}
+
+.css-1jqq78o-placeholder {
+  color: #d4d1d1 !important;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+
 .nav-profile-img{
   display : flex;
   align-items : center;
@@ -4329,8 +4344,12 @@ input[type="search"] {
   width: 160px;
   height: 160px;
   border-radius: 50%;
+  /* border: 5px solid #004392; */
   border: 5px solid rgba(0, 0, 0, .2);
   margin: 0 auto;
+}
+.attendance-body .clock h2 {
+  color: #004392;
 }
 .attendance-list-item ul li {
   list-style: none;
@@ -4366,4 +4385,11 @@ input[type="search"] {
 .attendance-list-item ul li:last-child, .attendance-list-item ul li:last-child div {
   border-bottom: none;
   padding-bottom: 0;
+}
+.form-check {
+  margin: 0 !important;
+}
+.form-check .form-check-input {
+  margin-left: 0 !important;
+  margin-top: 0.2rem !important;
 }
