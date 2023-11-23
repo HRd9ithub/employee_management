@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
@@ -7,6 +7,9 @@ import moment from 'moment';
 import { customAxios } from '../../service/CreateApi';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from "../common/Spinner";
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import { calculatorBreakTime, calculatorOverTime } from '../../helper/breakAndOverTime';
+import Error500 from '../error_pages/Error500';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -15,10 +18,15 @@ import AttendanceModal from './AttendanceModal';
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
     const [records, setRecords] = useState([]);
-    const [searchItem, setsearchItem] = useState("");
     const [permission, setpermission] = useState("");
     const [serverError, setServerError] = useState(false);
     const [toggle, settoggle] = useState(false);
+    const [id, setId] = useState("");
+    const [currentData, setcurrentData] = useState("");
+    const [currentDataAll, setcurrentDataAll] = useState([]);
+    const [time, setTime] = useState("");
+    const [overTime, setOverTime] = useState(0);
+    const [breakTime, setbreakTime] = useState(0);
 
     let { getCommonApi } = GlobalPageRedirect();
 
@@ -29,9 +37,56 @@ const AttendanceComponent = () => {
             setServerError(false);
             const res = await customAxios().get('/attendance/');
             if (res.data.success) {
-                setRecords(res.data.data)
-                setpermission(res.data.permissions)
-                settoggle(res.data.toggle)
+                const { data, permissions, currentData } = res.data;
+                setRecords(data)
+                setpermission(permissions);
+                let temp = [];
+                if (currentData.length === 0) {
+                    settoggle(false);
+                } else {
+                    settoggle(!currentData[0].hasOwnProperty("clock_out"));
+                    setId(currentData[0]._id);
+                    setcurrentData(currentData[0]);
+
+                    // activity data store
+                    for (let i = 0; i < currentData.length; i++) {
+                        if (currentData[i].clock_out) {
+                            temp.push({
+                                _id: currentData[i]._id,
+                                userId: currentData[i].userId,
+                                timestamp: currentData[i].timestamp,
+                                time: currentData[i].clock_out,
+                                title: "Punch Out Time"
+                            })
+                        }
+                        temp.push({
+                            _id: currentData[i]._id,
+                            userId: currentData[i].userId,
+                            timestamp: currentData[i].timestamp,
+                            time: currentData[i].clock_in,
+                            title: "Punch In Time"
+                        })
+                    }
+                    setcurrentDataAll(temp);
+
+                    // overtime get
+                    const filterData = currentData.filter((val) => val.hasOwnProperty("totalHours"))
+                    
+                    setOverTime(calculatorOverTime(filterData));
+
+                    // generate break time
+                    if (currentData.length > 1) {
+                        const ascendingData = currentData.sort(function (a, b) {
+                            // Convert the date strings to Date objects
+                            let dateA = new Date(a.createdAt);
+                            let dateB = new Date(b.createdAt);
+
+                            // Subtract the dates to get a value that is either negative, positive, or zero
+                            return dateA - dateB;
+                        });                        
+                        setbreakTime(calculatorBreakTime(ascendingData));
+                    }
+                }
             }
         } catch (error) {
             if (!error.response) {
@@ -54,22 +109,24 @@ const AttendanceComponent = () => {
 
     useEffect(() => {
         getAttendance();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
     // punch in and puch out click function
     const handleClick = () => {
         // cuurent time get
-        const today = new Date();
-        const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        const time = moment(new Date()).format("hh:mm:ss A");
 
         // check if punch in or punch out
         let URL = "";
         if (toggle) {
-            URL = customAxios().put(`/attendance/${1}`)
+            URL = customAxios().put(`/attendance/${id}`, {
+                clock_out: time
+            })
         } else {
             URL = customAxios().post('/attendance/', {
-                login_time: time
+                clock_in: time
             })
         }
         setisLoading(true);
@@ -94,8 +151,19 @@ const AttendanceComponent = () => {
         })
     }
 
+    // timer logic
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setTime(moment(new Date()).format("hh:mm:ss A"));
+        }, 1000)
+
+        return () => clearInterval(intervalId);
+    }, [])
+
     if (isLoading) {
-        return <Spinner />
+        return <Spinner />;
+    } else if (serverError) {
+        return <Error500 />;
     }
 
 
@@ -134,12 +202,14 @@ const AttendanceComponent = () => {
                                                 <div className="bordered p-3 mt-3">
                                                     <div className="d-flex flex-wrap">
                                                         <h4 className="mb-0 mr-2 text-gray">Punch In Time:</h4>
-                                                        <h4 className="mb-0 text-black">Wed, 11th Mar 2023 10.00 AM</h4>
+                                                        <h4 className="mb-0 text-black">
+                                                            {currentData.createdAt ? moment(currentData.createdAt).format('DD MMM YYYY hh:mm A') : <HorizontalRuleIcon />}
+                                                        </h4>
                                                     </div>
                                                 </div>
                                                 <div className="mt-3 text-center">
                                                     <div className="clock d-flex justify-content-center align-items-center">
-                                                        <h2 className="mb-0 text-center">6.20 hrs</h2>
+                                                        <h2 className="mb-0 text-center">{time}</h2>
                                                     </div>
                                                     <div className="mt-3">
                                                         <button type="submit" className="btn btn-gradient-primary" onClick={handleClick}>{toggle ? "Punch Out" : "Punch In"}</button>
@@ -150,7 +220,7 @@ const AttendanceComponent = () => {
                                                         <div className="bordered p-3">
                                                             <div className="w-100 d-flex flex-wrap">
                                                                 <h4 className="mb-0 mr-2 text-gray">Break Time:</h4>
-                                                                <h4 className="mb-0 text-black">1.22 hrs</h4>
+                                                                <h4 className="mb-0 text-black">{breakTime} hrs</h4>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,7 +228,7 @@ const AttendanceComponent = () => {
                                                         <div className="bordered p-3">
                                                             <div className="w-100 d-flex flex-wrap">
                                                                 <h4 className="mb-0 mr-2 text-gray">Overtime:</h4>
-                                                                <h4 className="mb-0 text-black">3.10 hrs</h4>
+                                                                <h4 className="mb-0 text-black">{overTime} hrs</h4>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -171,24 +241,17 @@ const AttendanceComponent = () => {
                                                     <h3 className="mb-0">Activities</h3>
                                                 </div>
                                                 <ul>
-                                                    <li className="position-relative">
-                                                        <div>
-                                                            <h5 className="mb-0">Punch In Time</h5>
-                                                            <p className="text-gray mb-0">10:00 AM</p>
-                                                        </div>
-                                                    </li>
-                                                    <li className="position-relative">
-                                                        <div>
-                                                            <h5 className="mb-0">Punch In Time</h5>
-                                                            <p className="text-gray mb-0">10:00 AM</p>
-                                                        </div>
-                                                    </li>
-                                                    <li className="position-relative">
-                                                        <div>
-                                                            <h5 className="mb-0">Punch In Time</h5>
-                                                            <p className="text-gray mb-0">10:00 AM</p>
-                                                        </div>
-                                                    </li>
+                                                    {currentDataAll.map((val, ind) => {
+                                                        return (
+                                                            <li className={`position-relative ${val.title === "Punch Out Time" && "punch-out"}`} key={ind}>
+                                                                <div>
+                                                                    <h5 className="mb-0">{val.title}</h5>
+                                                                    <p className="text-gray mb-0">{val.time}</p>
+                                                                </div>
+                                                            </li>
+                                                        )
+                                                    })}
+
                                                 </ul>
                                             </div>
                                         </div>
