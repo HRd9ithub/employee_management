@@ -7,6 +7,10 @@ import moment from 'moment';
 import { customAxios } from '../../service/CreateApi';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from "../common/Spinner";
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AttendanceModal from './AttendanceModal';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -117,8 +121,6 @@ const AttendanceComponent = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* table */}
                         <div className="mx-4 mt-4">
                             <div className="attendance">
                                 <div className="attendance-body">
@@ -127,7 +129,7 @@ const AttendanceComponent = () => {
                                             <div className="attendance-list-item p-4">
                                                 <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
                                                     <h3 className="mb-0">Attendance</h3>
-                                                    <h4 className="text-gray mb-0">{moment(new Date()).format('DD MMM YYYY')}</h4>
+                                                    <h4 className="text-gray mb-0">{new Date().toDateString()}</h4>
                                                 </div>
                                                 <div className="bordered p-3 mt-3">
                                                     <div className="d-flex flex-wrap">
@@ -193,6 +195,76 @@ const AttendanceComponent = () => {
                                     </div>
                                 </div>
                             </div>
+                        </div >
+                    </div >
+                    {/* table */}
+                    <div className="background-wrapper bg-white py-4 mt-4">
+                        <div className="mx-4">
+                            <div className="row align-items-center">
+                                <div className="col-md-8">
+                                    <h5 className="mb-0">11/23/2023 - 11/23/2023</h5>
+                                </div>
+                                <div className="col-md-4 ml-auto">
+                                    <div className="form-group mb-0 position-relative">
+                                        <DateRangePicker>
+                                            <input className="form-control mb-0" />
+                                        </DateRangePicker>
+                                        <CalendarMonthIcon className="range_icon" />
+                                    </div>
+                                </div>
+                            </div>
+                            <TableContainer >
+                                <Table className="common-table-section">
+                                    <TableHead className="common-header">
+                                        <TableRow>
+                                            <TableCell>
+                                                <TableSortLabel>
+                                                    Date
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel>
+                                                    Clock In
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel>
+                                                    Clock Out
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                <TableSortLabel>
+                                                    Total Hours
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                Action
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>
+                                                23 Nov, 2023
+                                            </TableCell>
+                                            <TableCell>
+                                                9:30 AM
+                                            </TableCell>
+                                            <TableCell>
+                                                1:00 PM
+                                            </TableCell>
+                                            <TableCell>
+                                                3.30 Hrs
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className='action'>
+                                                    <AttendanceModal/>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </div >
                     </div >
                 </div>
