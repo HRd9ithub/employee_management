@@ -4350,13 +4350,18 @@ input[type="search"] {
   content: unset;
 }
 .attendance-list-item ul li::after {
-  content: "\f04d";
+  content: "\f061";
   position: absolute;
   top: -4px;
   left: -12px;
   color: #004392;
   background-color: white;
   font-family: FontAwesome;
+  transform:rotate(320deg);
+  -webkit-transform:rotate(320deg);
+  -moz-transform:rotate(320deg);
+  -ms-transform:rotate(320deg);
+  -o-transform:rotate(320deg);
 }
 .attendance-list-item ul li div {
   margin-left: 10px;
@@ -4366,4 +4371,12 @@ input[type="search"] {
 .attendance-list-item ul li:last-child, .attendance-list-item ul li:last-child div {
   border-bottom: none;
   padding-bottom: 0;
+}
+.attendance-list-item ul li.punch-out::after {
+  color: red;
+  transform: rotate(140deg);
+  -webkit-transform: rotate(140deg);
+  -moz-transform: rotate(140deg);
+  -ms-transform: rotate(140deg);
+  -o-transform: rotate(140deg);
 }
