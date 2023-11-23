@@ -4,10 +4,96 @@ import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from 'moment';
-
+import { customAxios } from '../../service/CreateApi';
+import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import Spinner from "../common/Spinner";
 
 const AttendanceComponent = () => {
-    
+    const [isLoading, setisLoading] = useState(false);
+    const [records, setRecords] = useState([]);
+    const [searchItem, setsearchItem] = useState("");
+    const [permission, setpermission] = useState("");
+    const [serverError, setServerError] = useState(false);
+    const [toggle, settoggle] = useState(false);
+
+    let { getCommonApi } = GlobalPageRedirect();
+
+    //get attendance
+    const getAttendance = async () => {
+        try {
+            setisLoading(true);
+            setServerError(false);
+            const res = await customAxios().get('/attendance/');
+            if (res.data.success) {
+                setRecords(res.data.data)
+                setpermission(res.data.permissions)
+                settoggle(res.data.toggle)
+            }
+        } catch (error) {
+            if (!error.response) {
+                setServerError(true)
+                toast.error(error.message)
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        } finally {
+            setisLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        getAttendance();
+    }, []);
+
+
+    // punch in and puch out click function
+    const handleClick = () => {
+        // cuurent time get
+        const today = new Date();
+        const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+        // check if punch in or punch out
+        let URL = "";
+        if (toggle) {
+            URL = customAxios().put(`/attendance/${1}`)
+        } else {
+            URL = customAxios().post('/attendance/', {
+                login_time: time
+            })
+        }
+        setisLoading(true);
+        setServerError(false);
+        URL.then(res => {
+            if (res.data.success) {
+                getAttendance();
+            }
+        }).catch(error => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message);
+            } else if (error.response.status === 401) {
+                getCommonApi();
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                } else {
+                    // setError(error.response.data.error);
+                }
+            }
+        })
+    }
+
+    if (isLoading) {
+        return <Spinner />
+    }
+
 
     return (
         <>
@@ -41,7 +127,7 @@ const AttendanceComponent = () => {
                                             <div className="attendance-list-item p-4">
                                                 <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
                                                     <h3 className="mb-0">Attendance</h3>
-                                                    <h4 class="text-gray mb-0">{moment(new Date()).format('DD MMM YYYY')}</h4>
+                                                    <h4 className="text-gray mb-0">{moment(new Date()).format('DD MMM YYYY')}</h4>
                                                 </div>
                                                 <div className="bordered p-3 mt-3">
                                                     <div className="d-flex flex-wrap">
@@ -54,7 +140,7 @@ const AttendanceComponent = () => {
                                                         <h2 className="mb-0 text-center">6.20 hrs</h2>
                                                     </div>
                                                     <div className="mt-3">
-                                                        <button type="submit" className="btn btn-gradient-primary">Punch Out</button>
+                                                        <button type="submit" className="btn btn-gradient-primary" onClick={handleClick}>{toggle ? "Punch Out" : "Punch In"}</button>
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -83,22 +169,22 @@ const AttendanceComponent = () => {
                                                     <h3 className="mb-0">Activities</h3>
                                                 </div>
                                                 <ul>
-                                                    <li class="position-relative">
+                                                    <li className="position-relative">
                                                         <div>
-                                                            <h5 class="mb-0">Punch In Time</h5>
-                                                            <p class="text-gray mb-0">10:00 AM</p>
+                                                            <h5 className="mb-0">Punch In Time</h5>
+                                                            <p className="text-gray mb-0">10:00 AM</p>
                                                         </div>
                                                     </li>
-                                                    <li class="position-relative">
+                                                    <li className="position-relative">
                                                         <div>
-                                                            <h5 class="mb-0">Punch In Time</h5>
-                                                            <p class="text-gray mb-0">10:00 AM</p>
+                                                            <h5 className="mb-0">Punch In Time</h5>
+                                                            <p className="text-gray mb-0">10:00 AM</p>
                                                         </div>
                                                     </li>
-                                                    <li class="position-relative">
+                                                    <li className="position-relative">
                                                         <div>
-                                                            <h5 class="mb-0">Punch In Time</h5>
-                                                            <p class="text-gray mb-0">10:00 AM</p>
+                                                            <h5 className="mb-0">Punch In Time</h5>
+                                                            <p className="text-gray mb-0">10:00 AM</p>
                                                         </div>
                                                     </li>
                                                 </ul>
