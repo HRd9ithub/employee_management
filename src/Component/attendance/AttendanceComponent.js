@@ -14,6 +14,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttendanceModal from './AttendanceModal';
+import ranges from '../../helper/calcendarOption';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -27,15 +28,25 @@ const AttendanceComponent = () => {
     const [time, setTime] = useState("");
     const [overTime, setOverTime] = useState(0);
     const [breakTime, setbreakTime] = useState(0);
+    const [startDate, setStartDate] = useState(moment(new Date()).subtract(1, "day"));
+    const [endDate, setendtDate] = useState(moment(new Date()).subtract(1, "day"));
+
+    // pagination state
+    const [count, setCount] = useState(5)
+    const [page, setpage] = useState(0)
+
+    // sort state
+    const [order, setOrder] = useState("asc")
+    const [orderBy, setOrderBy] = useState("date")
 
     let { getCommonApi } = GlobalPageRedirect();
 
     //get attendance
-    const getAttendance = async () => {
+    const getAttendance = async (start, end) => {
         try {
             setisLoading(true);
             setServerError(false);
-            const res = await customAxios().get('/attendance/');
+            const res = await customAxios().get(`/attendance/?startDate=${start || startDate}&endDate=${end || endDate}`);
             if (res.data.success) {
                 const { data, permissions, currentData } = res.data;
                 setRecords(data)
@@ -71,7 +82,7 @@ const AttendanceComponent = () => {
 
                     // overtime get
                     const filterData = currentData.filter((val) => val.hasOwnProperty("totalHours"))
-                    
+
                     setOverTime(calculatorOverTime(filterData));
 
                     // generate break time
@@ -83,7 +94,7 @@ const AttendanceComponent = () => {
 
                             // Subtract the dates to get a value that is either negative, positive, or zero
                             return dateA - dateB;
-                        });                        
+                        });
                         setbreakTime(calculatorBreakTime(ascendingData));
                     }
                 }
@@ -158,7 +169,67 @@ const AttendanceComponent = () => {
         }, 1000)
 
         return () => clearInterval(intervalId);
-    }, [])
+    }, []);
+
+    // pagination function
+    const onChangePage = (e, page) => {
+        setpage(page)
+    }
+
+    const onChangeRowsPerPage = (e) => {
+        setCount(e.target.value)
+    }
+
+
+    // sort function
+    const handleRequestSort = (name) => {
+        const isAsc = (orderBy === name && order === "asc");
+
+        setOrderBy(name)
+        setOrder(isAsc ? "desc" : "asc")
+    }
+
+    const descedingComparator = (a, b, orderBy) => {
+        if(orderBy === "user"){
+            if (b[orderBy]["name"] < a[orderBy]["name"]) {
+                return -1
+            }
+            if (b[orderBy]["name"] > a[orderBy]["name"]) {
+                return 1
+            }
+            return 0
+        }else{
+            if (b[orderBy] < a[orderBy]) {
+                return -1
+            }
+            if (b[orderBy] > a[orderBy]) {
+                return 1
+            }
+            return 0
+        }
+    }
+
+    const getComparator = (order, orderBy) => {
+        return order === "desc" ? (a, b) => descedingComparator(a, b, orderBy) : (a, b) => -descedingComparator(a, b, orderBy)
+    }
+
+    const sortRowInformation = (array, comparator) => {
+        const rowArray = array.map((elem, ind) => [elem, ind])
+
+        rowArray.sort((a, b) => {
+            const order = comparator(a[0], b[0])
+            if (order !== 0) return order
+            return a[1] - b[1]
+        })
+        return rowArray.map((el) => el[0])
+    }
+
+    // date range change function
+    const handleCallback = (start, end, label) => {
+        setStartDate(start._d)
+        setendtDate(end._d);
+        getAttendance(start._d, end._d)
+    }
 
     if (isLoading) {
         return <Spinner />;
@@ -175,7 +246,7 @@ const AttendanceComponent = () => {
                 animate={{ opacity: 1, transform: 'translateY(0px)' }}
                 transition={{ duration: 0.5 }}
             >
-                <div className=" container-fluid pt-4">
+                <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white py-4">
                         <div className=''>
                             <div className='row align-items-center row-std m-0'>
@@ -189,87 +260,88 @@ const AttendanceComponent = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="mx-4 mt-4">
-                            <div className="attendance">
-                                <div className="attendance-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="attendance-list-item p-4">
-                                                <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
-                                                    <h3 className="mb-0">Attendance</h3>
-                                                    <h4 className="text-gray mb-0">{new Date().toDateString()}</h4>
-                                                </div>
-                                                <div className="bordered p-3 mt-3">
-                                                    <div className="d-flex flex-wrap">
-                                                        <h4 className="mb-0 mr-2 text-gray">Punch In Time:</h4>
-                                                        <h4 className="mb-0 text-black">
-                                                            {currentData.createdAt ? moment(currentData.createdAt).format('DD MMM YYYY hh:mm A') : <HorizontalRuleIcon />}
-                                                        </h4>
+                        {permission && permission.name.toLowerCase() !== "admin" &&
+                            <div className="mx-4 mt-4">
+                                <div className="attendance">
+                                    <div className="attendance-body">
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="attendance-list-item p-4">
+                                                    <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
+                                                        <h3 className="mb-0">Attendance</h3>
+                                                        <h4 className="text-gray mb-0">{new Date().toDateString()}</h4>
                                                     </div>
-                                                </div>
-                                                <div className="mt-3 text-center">
-                                                    <div className="clock d-flex justify-content-center align-items-center">
-                                                        <h2 className="mb-0 text-center">{time}</h2>
-                                                    </div>
-                                                    <div className="mt-3">
-                                                        <button type="submit" className="btn btn-gradient-primary" onClick={handleClick}>{toggle ? "Punch Out" : "Punch In"}</button>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-lg-6 col-md-12 col-sm-6 mt-3">
-                                                        <div className="bordered p-3">
-                                                            <div className="w-100 d-flex flex-wrap">
-                                                                <h4 className="mb-0 mr-2 text-gray">Break Time:</h4>
-                                                                <h4 className="mb-0 text-black">{breakTime} hrs</h4>
-                                                            </div>
+                                                    <div className="bordered p-3 mt-3">
+                                                        <div className="d-flex flex-wrap">
+                                                            <h4 className="mb-0 mr-2 text-gray">Punch In Time:</h4>
+                                                            <h4 className="mb-0 text-black">
+                                                                {currentData.createdAt ? moment(currentData.createdAt).format('DD MMM YYYY hh:mm A') : <HorizontalRuleIcon />}
+                                                            </h4>
                                                         </div>
                                                     </div>
-                                                    <div className="col-lg-6 col-md-12 col-sm-6 mt-3">
-                                                        <div className="bordered p-3">
-                                                            <div className="w-100 d-flex flex-wrap">
-                                                                <h4 className="mb-0 mr-2 text-gray">Overtime:</h4>
-                                                                <h4 className="mb-0 text-black">{overTime} hrs</h4>
+                                                    <div className="mt-3 text-center">
+                                                        <div className="clock d-flex justify-content-center align-items-center">
+                                                            <h2 className="mb-0 text-center">{time}</h2>
+                                                        </div>
+                                                        <div className="mt-3">
+                                                            <button type="submit" className="btn btn-gradient-primary" onClick={handleClick}>{toggle ? "Punch Out" : "Punch In"}</button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-lg-6 col-md-12 col-sm-6 mt-3">
+                                                            <div className="bordered p-3">
+                                                                <div className="w-100 d-flex flex-wrap">
+                                                                    <h4 className="mb-0 mr-2 text-gray">Break Time:</h4>
+                                                                    <h4 className="mb-0 text-black">{breakTime} hrs</h4>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-lg-6 col-md-12 col-sm-6 mt-3">
+                                                            <div className="bordered p-3">
+                                                                <div className="w-100 d-flex flex-wrap">
+                                                                    <h4 className="mb-0 mr-2 text-gray">Overtime:</h4>
+                                                                    <h4 className="mb-0 text-black">{overTime} hrs</h4>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="attendance-list-item p-4">
-                                                <div className="attendance-header d-flex justify-content-between align-items-center mb-3">
-                                                    <h3 className="mb-0">Activities</h3>
-                                                </div>
-                                                <ul>
-                                                    {currentDataAll.map((val, ind) => {
-                                                        return (
-                                                            <li className={`position-relative ${val.title === "Punch Out Time" && "punch-out"}`} key={ind}>
-                                                                <div>
-                                                                    <h5 className="mb-0">{val.title}</h5>
-                                                                    <p className="text-gray mb-0">{val.time}</p>
-                                                                </div>
-                                                            </li>
-                                                        )
-                                                    })}
+                                            <div className="col-md-6">
+                                                <div className="attendance-list-item p-4">
+                                                    <div className="attendance-header d-flex justify-content-between align-items-center mb-3">
+                                                        <h3 className="mb-0">Activities</h3>
+                                                    </div>
+                                                    <ul>
+                                                        {currentDataAll.map((val, ind) => {
+                                                            return (
+                                                                <li className={`position-relative ${val.title === "Punch Out Time" && "punch-out"}`} key={ind}>
+                                                                    <div>
+                                                                        <h5 className="mb-0">{val.title}</h5>
+                                                                        <p className="text-gray mb-0">{val.time}</p>
+                                                                    </div>
+                                                                </li>
+                                                            )
+                                                        })}
 
-                                                </ul>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div >
+                            </div >}
                     </div >
                     {/* table */}
                     <div className="background-wrapper bg-white py-4 mt-4">
                         <div className="mx-4">
                             <div className="row align-items-center">
                                 <div className="col-md-8">
-                                    <h5 className="mb-0">11/23/2023 - 11/23/2023</h5>
+                                    <h5 className="mb-0">{moment(startDate).format("DD MMM YYYY").toString().concat(" - ", moment(endDate).format("DD MMM YYYY"))}</h5>
                                 </div>
                                 <div className="col-md-4 ml-auto">
                                     <div className="form-group mb-0 position-relative">
-                                        <DateRangePicker>
+                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback}>
                                             <input className="form-control mb-0" />
                                         </DateRangePicker>
                                         <CalendarMonthIcon className="range_icon" />
@@ -280,23 +352,29 @@ const AttendanceComponent = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
+                                            {permission && permission.name.toLowerCase() === "admin" &&
+                                                <TableCell>
+                                                    <TableSortLabel active={orderBy === "user"} direction={orderBy === "user" ? order : "asc"} onClick={() => handleRequestSort("user")}>
+                                                        Employee
+                                                    </TableSortLabel>
+                                                </TableCell>}
                                             <TableCell>
-                                                <TableSortLabel>
+                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                     Date
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel>
+                                                <TableSortLabel active={orderBy === "clock_in"} direction={orderBy === "clock_in" ? order : "asc"} onClick={() => handleRequestSort("clock_in")}>
                                                     Clock In
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel>
+                                                <TableSortLabel active={orderBy === "clock_out"} direction={orderBy === "clock_out" ? order : "asc"} onClick={() => handleRequestSort("clock_out")}>
                                                     Clock Out
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel>
+                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
                                                     Total Hours
                                                 </TableSortLabel>
                                             </TableCell>
@@ -306,28 +384,39 @@ const AttendanceComponent = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        <TableRow>
-                                            <TableCell>
-                                                23 Nov, 2023
-                                            </TableCell>
-                                            <TableCell>
-                                                9:30 AM
-                                            </TableCell>
-                                            <TableCell>
-                                                1:00 PM
-                                            </TableCell>
-                                            <TableCell>
-                                                3.30 Hrs
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className='action'>
-                                                    <AttendanceModal/>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
+                                        {records.length !== 0 ? sortRowInformation(records, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                            return (
+                                                <TableRow key={val._id}>
+                                                    {permission && permission.name.toLowerCase() === "admin" && <TableCell>{val.user.name}</TableCell>}
+                                                    <TableCell>{moment(val.timestamp).format("DD MMM YYYY")}</TableCell>
+                                                    <TableCell>{val.clock_in}</TableCell>
+                                                    <TableCell>{val.clock_out ? val.clock_out : <HorizontalRuleIcon />}</TableCell>
+                                                    <TableCell>{val.totalHours ? val.totalHours : <HorizontalRuleIcon />}</TableCell>
+                                                    <TableCell>
+                                                        <div className='action'>
+                                                            <AttendanceModal />
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        }) :
+                                            <TableRow>
+                                                <TableCell colSpan={5} align="center">
+                                                    No Records Found
+                                                </TableCell>
+                                            </TableRow>
+                                        }
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+                            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                                component="div"
+                                onPageChange={onChangePage}
+                                onRowsPerPageChange={onChangeRowsPerPage}
+                                rowsPerPage={count}
+                                count={records.length}
+                                page={page}>
+                            </TablePagination>
                         </div >
                     </div >
                 </div>
