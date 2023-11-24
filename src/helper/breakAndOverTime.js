@@ -28,7 +28,6 @@ export const calculatorOverTime = (data) => {
 export const calculatorBreakTime = (data) => {
     const breakTimes = data.map((val, index) => {
         if (index < data.length - 1) {
-            console.log('val.clock_out', val.clock_out)
             const diff = moment.utc(moment(data[index + 1].clock_in, "HH:mm:ss A").diff(moment(val.clock_out, "HH:mm:ss A"))).format("HH:mm")
             return diff;
         }
