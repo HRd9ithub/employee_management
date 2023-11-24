@@ -989,7 +989,7 @@ span.eye-icon {
   background: linear-gradient(45deg, #e73d67 0%, #f98faa 100%) !important;
 }
 
-.sidebar .password-icon {
+.sidebar .attendance-icon {
   background: linear-gradient(45deg, #e78000 0%, #ffd26a 100%) !important;
 }
 
@@ -4369,7 +4369,7 @@ input[type="search"] {
   content: unset;
 }
 .attendance-list-item ul li::after {
-  content: "\f04d";
+  content: "\f0c8";
   position: absolute;
   top: -4px;
   left: -12px;
@@ -4386,9 +4386,9 @@ input[type="search"] {
   border-bottom: none;
   padding-bottom: 0;
 }
-/* .attendance-list-item ul li.punch-out::after {
+.attendance-list-item ul li.punch-out::after {
   color: red;
-} */
+}
 .form-check {
   margin: 0 !important;
 }

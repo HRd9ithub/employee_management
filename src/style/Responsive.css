@@ -1549,6 +1549,10 @@
     .activity-date-range {
         width: 75% !important;
     }
+
+    .attendance-body .col-md-6:last-child {
+        margin-top: 20px;
+    }
 }
 
 @media (max-width:736px) {

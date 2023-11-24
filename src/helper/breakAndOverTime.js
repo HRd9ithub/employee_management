@@ -52,5 +52,9 @@ export const calculatorBreakTime = (data) => {
             sumHoras[1] += minutes;
         }
     }
-    return sumHoras.join(':');
+    if (sumHoras.join(':') !== "0:0") {
+        return sumHoras.join(':');
+    } else {
+        return 0
+    }
 }
