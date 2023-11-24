@@ -396,7 +396,7 @@ const AttendanceComponent = () => {
                                                     {permission && permission.name.toLowerCase() !== "admin" && 
                                                         <TableCell>
                                                             <div className='action'>
-                                                                <AttendanceModal />
+                                                                <AttendanceModal data={val}/>
                                                             </div>
                                                         </TableCell>
                                                     }
