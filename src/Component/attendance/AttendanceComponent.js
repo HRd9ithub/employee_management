@@ -28,8 +28,8 @@ const AttendanceComponent = () => {
     const [time, setTime] = useState("");
     const [overTime, setOverTime] = useState(0);
     const [breakTime, setbreakTime] = useState(0);
-    const [startDate, setStartDate] = useState(moment(new Date()).subtract(1, "day"));
-    const [endDate, setendtDate] = useState(moment(new Date()).subtract(1, "day"));
+    const [startDate, setStartDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
+    const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -261,7 +261,7 @@ const AttendanceComponent = () => {
                             </div>
                         </div>
                         {permission && permission.name.toLowerCase() !== "admin" &&
-                            <div className="mx-4 mt-4">
+                            <div className="mx-4 my-4">
                                 <div className="attendance">
                                     <div className="attendance-body">
                                         <div className="row">
@@ -330,11 +330,10 @@ const AttendanceComponent = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div >}
-                    </div >
-                    {/* table */}
-                    <div className="background-wrapper bg-white py-4 mt-4">
-                        <div className="mx-4">
+                            </div >
+                        }
+                        {/* table */}
+                        <div className="mx-4 pt-4">
                             <div className="row align-items-center">
                                 <div className="col-md-8">
                                     <h5 className="mb-0">{moment(startDate).format("DD MMM YYYY").toString().concat(" - ", moment(endDate).format("DD MMM YYYY"))}</h5>
@@ -378,9 +377,11 @@ const AttendanceComponent = () => {
                                                     Total Hours
                                                 </TableSortLabel>
                                             </TableCell>
-                                            <TableCell>
-                                                Action
-                                            </TableCell>
+                                            {permission && permission.name.toLowerCase() !== "admin" && 
+                                                <TableCell>
+                                                    Action
+                                                </TableCell>
+                                            }
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -392,16 +393,18 @@ const AttendanceComponent = () => {
                                                     <TableCell>{val.clock_in}</TableCell>
                                                     <TableCell>{val.clock_out ? val.clock_out : <HorizontalRuleIcon />}</TableCell>
                                                     <TableCell>{val.totalHours ? val.totalHours : <HorizontalRuleIcon />}</TableCell>
-                                                    <TableCell>
-                                                        <div className='action'>
-                                                            <AttendanceModal />
-                                                        </div>
-                                                    </TableCell>
+                                                    {permission && permission.name.toLowerCase() !== "admin" && 
+                                                        <TableCell>
+                                                            <div className='action'>
+                                                                <AttendanceModal />
+                                                            </div>
+                                                        </TableCell>
+                                                    }
                                                 </TableRow>
                                             )
                                         }) :
                                             <TableRow>
-                                                <TableCell colSpan={5} align="center">
+                                                <TableCell colSpan={6} align="center">
                                                     No Records Found
                                                 </TableCell>
                                             </TableRow>
