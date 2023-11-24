@@ -4396,3 +4396,12 @@ input[type="search"] {
   margin-left: 0 !important;
   margin-top: 0.2rem !important;
 }
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+  filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(180deg) brightness(95%) contrast(80%);
+  -webkit-filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(180deg) brightness(95%) contrast(80%);
+}
+
+.regulation-radio{
+  accent-color: #004b8f;
+}
