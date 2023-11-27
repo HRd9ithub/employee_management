@@ -358,7 +358,7 @@ const AttendanceComponent = () => {
                                                     </TableSortLabel>
                                                 </TableCell>}
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
+                                                <TableSortLabel active={orderBy === "timestamp"} direction={orderBy === "timestamp" ? order : "asc"} onClick={() => handleRequestSort("timestamp")}>
                                                     Date
                                                 </TableSortLabel>
                                             </TableCell>
