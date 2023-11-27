@@ -2671,6 +2671,8 @@
 
     .submit-section {
         justify-content: center !important;
+        flex-direction: column;
+        gap: 10px;
         margin-bottom: 0px;
     }
 
