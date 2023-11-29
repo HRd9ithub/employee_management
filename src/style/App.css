@@ -4405,3 +4405,9 @@ input[type="time"]::-webkit-calendar-picker-indicator{
 .regulation-radio{
   accent-color: #004b8f;
 }
+
+/* child table - collapsed */
+.MuiCollapse-wrapperInner.css-9l5vo-MuiCollapse-wrapperInner {
+  padding: 20px;
+  border-bottom: none !important;
+}

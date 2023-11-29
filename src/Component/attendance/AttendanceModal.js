@@ -6,10 +6,11 @@ import toast from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
+import { Dropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-const AttendanceModal = ({ data }) => {
+const AttendanceModal = ({ data,permission }) => {
     const [show, setShow] = useState(false);
-    const [selectedOption, setselectedOption] = useState("attendance");
     const [initialState, setInitialState] = useState({
         clockIn: "",
         clockOut: "",
@@ -28,6 +29,8 @@ const AttendanceModal = ({ data }) => {
 
     const {getCommonApi} = GlobalPageRedirect();
 
+    const navigate = useNavigate();
+
     // modal show function
     const handleShow = () => {
         setShow(true);
@@ -37,20 +40,6 @@ const AttendanceModal = ({ data }) => {
     const handleClose = (e) => {
         e.preventDefault();
         setShow(false)
-        setInitialState({
-            clockIn: "",
-            clockOut: "",
-            explanation: ""
-        });
-        setClockInError("");
-        setClockOutError("");
-        setExplanationError("");
-        setError([]);
-    }
-
-    // radio button onchange 
-    const onValueChange = (e) => {
-        setselectedOption(e.target.value);
         setInitialState({
             clockIn: "",
             clockOut: "",
@@ -106,18 +95,11 @@ const AttendanceModal = ({ data }) => {
         const { _id, userId, timestamp } = data;
 
         explanationValidation();
+        clockInValidation();
+        clockOutValidation();
 
-        if (selectedOption === "attendance") {
-            clockInValidation();
-            clockOutValidation();
-
-            if (!clockIn || !clockOut || clockInError || clockOutError) {
-                return false;
-            }
-        }
-
-        if (!explanation || explanationError) {
-            return false;
+        if (!clockIn || !clockOut || clockInError || clockOutError || !explanation || explanationError) {
+           return false;
         }
 
         setisLoading(true);
@@ -155,20 +137,23 @@ const AttendanceModal = ({ data }) => {
 
     return (
         <>
-            {/* <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
             <div className="dropdown-menu password-action--dropdown">
-                <Dropdown.Item className="dropdown-item" ><i className="fa-solid fa-eye"></i><label>Regularize</label></Dropdown.Item>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-divider"></div>
-                <Dropdown.Item className="dropdown-item"><i className="fa-solid fa-trash-can"></i><label>WFH Request</label></Dropdown.Item>
-            </div> */}
+                {permission && permission.name.toLowerCase() !== "admin" && data && <>
+                <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
+                </>}
+                {/* <div className="dropdown-divider"></div> */}
+                {permission && permission.name.toLowerCase() === "admin" &&<>
+                {/* <div className="dropdown-divider"></div> */}
+                <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
+            </div>
 
 
-            <i className="fa-solid fa-user-clock" title="Regularize" onClick={handleShow}></i>
+            {/* <i className="fa-solid fa-user-clock" title="Regularize" onClick={handleShow}></i> */}
 
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
-                    <Modal.Title>Attendance Regulation - {moment(data.timestamp).format("DD MMM YYYY")}</Modal.Title>
+                    <Modal.Title>Attendance Regulation - {data && moment(data.timestamp).format("DD MMM YYYY")}</Modal.Title>
                     <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
                 </Modal.Header>
                 <Modal.Body>
@@ -177,23 +162,6 @@ const AttendanceModal = ({ data }) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="form-group">
-                                                <div className="form-check">
-                                                    <input className="form-check-input regulation-radio" type="radio" name="exampleRadios" id="regulation-radio" value="attendance" onChange={onValueChange} checked={selectedOption === "attendance"} />
-                                                    <label className="form-check-label" htmlFor="regulation-radio">
-                                                        Add & update time entries to adjust attendance.
-                                                    </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <input className="form-check-input regulation-radio" type="radio" name="exampleRadios" id="regulation-radio1" value="policy" onChange={onValueChange} checked={selectedOption === "policy"} />
-                                                    <label className="form-check-label" htmlFor="regulation-radio1">
-                                                        Raise regularization request to exempt this day from tracking policy penalization.
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {selectedOption === "attendance" &&
                                             <div className="col-md-12">
                                                 <label className="mb-2">Attendance Adjustment</label>
                                                 <div className="row">
@@ -212,7 +180,7 @@ const AttendanceModal = ({ data }) => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            </div>
                                         <div className="col-md-12">
                                             <div className="form-group">
                                                 <label htmlFor="explanation">Explanation</label>
