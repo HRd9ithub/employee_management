@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, Collapse, TablePagination, IconButton, TableRow, TableSortLabel } from "@mui/material";
 import moment from 'moment';
 import { customAxios } from '../../service/CreateApi';
 import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from "../common/Spinner";
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
-import { calculatorBreakTime, calculatorOverTime } from '../../helper/breakAndOverTime';
+import { calculatorBreakTime, calculatorOverTime, sum } from '../../helper/breakAndOverTime';
 import Error500 from '../error_pages/Error500';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttendanceModal from './AttendanceModal';
 import ranges from '../../helper/calcendarOption';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Error403 from '../error_pages/Error403';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -30,6 +33,7 @@ const AttendanceComponent = () => {
     const [breakTime, setbreakTime] = useState(0);
     const [startDate, setStartDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
     const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
+    const [open, setOpen] = useState("");
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -81,21 +85,11 @@ const AttendanceComponent = () => {
                     setcurrentDataAll(temp);
 
                     // overtime get
-                    const filterData = currentData.filter((val) => val.hasOwnProperty("totalHours"))
-
-                    setOverTime(calculatorOverTime(filterData));
+                    setOverTime(calculatorOverTime(currentData));
 
                     // generate break time
                     if (currentData.length > 1) {
-                        const ascendingData = currentData.sort(function (a, b) {
-                            // Convert the date strings to Date objects
-                            let dateA = new Date(a.createdAt);
-                            let dateB = new Date(b.createdAt);
-
-                            // Subtract the dates to get a value that is either negative, positive, or zero
-                            return dateA - dateB;
-                        });
-                        setbreakTime(calculatorBreakTime(ascendingData));
+                        setbreakTime(calculatorBreakTime(currentData));
                     }
                 }
             }
@@ -190,7 +184,7 @@ const AttendanceComponent = () => {
     }
 
     const descedingComparator = (a, b, orderBy) => {
-        if(orderBy === "user"){
+        if (orderBy === "user") {
             if (b[orderBy]["name"] < a[orderBy]["name"]) {
                 return -1
             }
@@ -198,7 +192,7 @@ const AttendanceComponent = () => {
                 return 1
             }
             return 0
-        }else{
+        } else {
             if (b[orderBy] < a[orderBy]) {
                 return -1
             }
@@ -231,10 +225,21 @@ const AttendanceComponent = () => {
         getAttendance(start._d, end._d)
     }
 
+    // Collapse onchange
+    const handleCollapse = (id) => {
+        if (open === id) {
+            setOpen("");
+        } else {
+            setOpen(id);
+        }
+    }
+
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
+    } else if (!permission || permission.permissions.list !== 1) {
+        return <Error403 />;
     }
 
 
@@ -348,9 +353,10 @@ const AttendanceComponent = () => {
                                 </div>
                             </div>
                             <TableContainer >
-                                <Table className="common-table-section">
+                                <Table className="common-table-section expanted-table">
                                     <TableHead className="common-header">
                                         <TableRow>
+                                            <TableCell style={{ width: "10px", padding: "16px 0" }} />
                                             {permission && permission.name.toLowerCase() === "admin" &&
                                                 <TableCell>
                                                     <TableSortLabel active={orderBy === "user"} direction={orderBy === "user" ? order : "asc"} onClick={() => handleRequestSort("user")}>
@@ -363,44 +369,77 @@ const AttendanceComponent = () => {
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "clock_in"} direction={orderBy === "clock_in" ? order : "asc"} onClick={() => handleRequestSort("clock_in")}>
-                                                    Clock In
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
-                                                <TableSortLabel active={orderBy === "clock_out"} direction={orderBy === "clock_out" ? order : "asc"} onClick={() => handleRequestSort("clock_out")}>
-                                                    Clock Out
-                                                </TableSortLabel>
-                                            </TableCell>
-                                            <TableCell>
                                                 <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
                                                     Total Hours
                                                 </TableSortLabel>
                                             </TableCell>
-                                            {permission && permission.name.toLowerCase() !== "admin" && 
-                                                <TableCell>
-                                                    Action
-                                                </TableCell>
-                                            }
+                                            <TableCell>
+                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
+                                                    Break Time
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell>
+                                                Action
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {records.length !== 0 ? sortRowInformation(records, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
-                                                <TableRow key={val._id}>
-                                                    {permission && permission.name.toLowerCase() === "admin" && <TableCell>{val.user.name}</TableCell>}
-                                                    <TableCell>{moment(val.timestamp).format("DD MMM YYYY")}</TableCell>
-                                                    <TableCell>{val.clock_in}</TableCell>
-                                                    <TableCell>{val.clock_out ? val.clock_out : <HorizontalRuleIcon />}</TableCell>
-                                                    <TableCell>{val.totalHours ? val.totalHours : <HorizontalRuleIcon />}</TableCell>
-                                                    {permission && permission.name.toLowerCase() !== "admin" && 
-                                                        <TableCell>
-                                                            <div className='action'>
-                                                                <AttendanceModal data={val}/>
-                                                            </div>
+                                                <React.Fragment key={ind}>
+                                                    <TableRow>
+                                                        <TableCell style={{ width: "10px", padding: "16px 0" }}>
+                                                            <IconButton
+                                                                aria-label="expand row"
+                                                                size="small"
+                                                                onClick={() => handleCollapse(val._id)}
+                                                            >
+                                                                {open === val._id ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                            </IconButton>
                                                         </TableCell>
-                                                    }
-                                                </TableRow>
+                                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>{val.user.name}</TableCell>}
+                                                        <TableCell>{moment(val._id.date).format("DD MMM YYYY")}</TableCell>
+                                                        <TableCell>{sum(val.child)}</TableCell>
+                                                        <TableCell>{calculatorBreakTime(val.child)}</TableCell>
+                                                        <TableCell>
+                                                            {val.child.find((val) => {
+                                                                return !val.hasOwnProperty("clock_out");
+                                                            }) &&
+                                                                <div className='action'>
+                                                                    <AttendanceModal data={val.child.find((val) => {
+                                                                        return !val.hasOwnProperty("clock_out");
+                                                                    })} permission={permission} />
+                                                                </div>}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    <TableRow>
+                                                        {/* child table show */}
+                                                        <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
+                                                            <Collapse in={open === val._id} timeout="auto" unmountOnExit>
+                                                                <Table size="small" aria-label="purchases">
+                                                                    <TableHead className="common-header">
+                                                                        <TableRow>
+                                                                            <TableCell>Clock In</TableCell>
+                                                                            <TableCell>Clock Out</TableCell>
+                                                                            <TableCell >Hours</TableCell>
+                                                                        </TableRow>
+                                                                    </TableHead>
+                                                                    <TableBody>
+                                                                        {val.child.map((elem) => {
+                                                                            return (
+                                                                                <TableRow key={elem._id}>
+                                                                                    <TableCell component="th" scope="row">{elem.clock_in}</TableCell>
+                                                                                    <TableCell>{elem.clock_out ? elem.clock_out : <HorizontalRuleIcon />}</TableCell>
+                                                                                    <TableCell>{elem.totalHours ? elem.totalHours : <HorizontalRuleIcon />}</TableCell>
+                                                                                </TableRow>
+                                                                            )
+                                                                        })}
+                                                                    </TableBody>
+                                                                </Table>
+                                                            </Collapse>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </React.Fragment>
                                             )
                                         }) :
                                             <TableRow>

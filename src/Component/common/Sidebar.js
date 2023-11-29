@@ -149,7 +149,7 @@ const Sidebar = () => {
   // add active class 
   const HandleACtive = (menu) => {
     if (menu.route !== "#") {
-      return menu.route === location.pathname.toLowerCase()
+      return "/"+location.pathname.split("/")[1].toLowerCase() === menu.route
     } else {
       let result = menu.child.find((cur) => {
        return cur.route === location.pathname.split("/")[1]
