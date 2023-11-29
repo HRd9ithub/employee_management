@@ -5,7 +5,6 @@ import moment from 'moment';
 import toast from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,8 +25,6 @@ const AttendanceModal = ({ data,permission }) => {
 
     const clockInRef = useRef(null);
     const clockOutRef = useRef(null);
-
-    const {getCommonApi} = GlobalPageRedirect();
 
     const navigate = useNavigate();
 
@@ -122,9 +119,7 @@ const AttendanceModal = ({ data,permission }) => {
             }
         }).catch((error) => {
             if (!error.response) {
-                toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
+                toast.error(error.message)
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

@@ -7,7 +7,6 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { HiOutlineMinus } from "react-icons/hi";
 import { AiOutlineMinus } from "react-icons/ai";
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import ChangePassword from '../../../user_profile/ChangePassword';
 import Avatar from '@mui/material/Avatar';
 import { useContext } from 'react';
@@ -31,7 +30,6 @@ const EmployeeViewComponent = () => {
     // eslint-disable-next-line
     const [image, setimage] = useState("")
 
-    let { getCommonApi } = GlobalPageRedirect();
     let { getUserData, UserData, Loading } = useContext(AppProvider);
 
     const ref = useRef(null);
@@ -68,8 +66,6 @@ const EmployeeViewComponent = () => {
             setisLoading(false);
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
@@ -130,8 +126,6 @@ const EmployeeViewComponent = () => {
                 setisLoading(false)
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

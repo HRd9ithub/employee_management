@@ -6,7 +6,6 @@ import { AppProvider } from '../context/RouteContext';
 import Spinner from './Spinner';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../service/CreateApi';
 
 const Sidebar = () => {
@@ -19,10 +18,6 @@ const Sidebar = () => {
 
   // Global state
   let { setSidebarToggle, sidebarToggle, sidebarRef } = useContext(AppProvider)
-
-  // global funcation for api error of 403
-  let { getCommonApi } = GlobalPageRedirect();
-
 
   // eslint-disable-next-line
   useEffect(() => {
@@ -92,11 +87,9 @@ const Sidebar = () => {
       }
     } catch (error) {
       if (!error.response) {
-        toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else if (error.response.data.message) {
-        toast.error(error.response.data.message)
+        toast.error(error.message);
+      }else if (error.response.data.message) {
+        toast.error(error.response.data.message);
       }
     } finally {
       setisLoading(false);

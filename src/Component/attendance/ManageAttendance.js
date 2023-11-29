@@ -5,7 +5,6 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
 import Error500 from '../error_pages/Error500';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Error403 from '../error_pages/Error403';
 
 const ManageAttendance = () => {
@@ -18,8 +17,6 @@ const ManageAttendance = () => {
 
     const navigate = useNavigate();
     const {id} = useParams();
-    const {getCommonApi} = GlobalPageRedirect();
-
     //get attendance
     const getAttendancemanagement = async () => {
         try {
@@ -80,8 +77,6 @@ const ManageAttendance = () => {
         }).catch((error) => {
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

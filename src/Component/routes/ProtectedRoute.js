@@ -1,16 +1,12 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
-import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
 const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
     const navigate = useNavigate();
     // get url of page
     const { pathname } = useLocation();
-
-    let currDate = new Date().getDate();
-    const { getCommonApi } = GlobalPageRedirect();
 
     const getProtectedData = async () => {
         // get localstorage in token
@@ -23,18 +19,6 @@ const ProtectedRoute = ({ children, authentication }) => {
             navigate('/');
         }
     }
-
-    useEffect(() => {
-        setInterval(async () => {
-            if (currDate !== new Date().getDate()) {
-                getCommonApi();
-                // eslint-disable-next-line
-                currDate = new Date().getDate()
-            } else {
-                currDate = new Date().getDate()
-            }
-        }, 1000)
-    }, [currDate])
 
     useEffect(() => {
         getProtectedData();

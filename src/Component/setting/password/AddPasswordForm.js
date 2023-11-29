@@ -5,8 +5,7 @@ import { AppProvider } from '../../context/RouteContext';
 import Spinner from '../../common/Spinner';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 import { customAxios } from '../../../service/CreateApi';
-import {toast} from 'react-hot-toast';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
+import { toast } from 'react-hot-toast';
 import { Dropdown } from 'react-bootstrap';
 import { urlFormat } from '../../common/RegaulrExp';
 
@@ -35,7 +34,6 @@ const AddPasswordForm = (props) => {
 
     // Global state
     let { get_username, userName, Loading } = useContext(AppProvider);
-    let { getCommonApi } = GlobalPageRedirect();
 
     // *show modal
     const showModal = () => {
@@ -221,14 +219,10 @@ const AddPasswordForm = (props) => {
             if (!error.response) {
                 toast.error(error.message);
             } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        setError(error.response.data.error);
-                    }
+                    setError(error.response.data.error);
                 }
             }
         })

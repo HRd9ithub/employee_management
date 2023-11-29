@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
 import {alphSpaceFormat, alphaNumFormat, numberFormat} from "../../../common/RegaulrExp";
 
@@ -24,8 +23,6 @@ const AccountForm = (props) => {
     const [name_error, setname_error] = useState('')
     const [isLoading, setisLoading] = useState(false);
     const [error, setError] = useState([]);
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     useEffect(() => {
         if (userDetail.account_detail.length !== 0) {
@@ -134,8 +131,6 @@ const AccountForm = (props) => {
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

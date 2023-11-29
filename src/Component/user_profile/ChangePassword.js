@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect'
 import Spinner from '../common/Spinner';
 import { customAxios } from '../../service/CreateApi'
 import { clearLocalStorage } from '../../service/StoreLocalStorage'
@@ -21,8 +20,6 @@ const ChangePassword = () => {
     const [error, setError] = React.useState([]);
 
     const navigate = useNavigate();
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // onchange function
     const InputEvent = (e) => {
@@ -98,8 +95,6 @@ const ChangePassword = () => {
                 })
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

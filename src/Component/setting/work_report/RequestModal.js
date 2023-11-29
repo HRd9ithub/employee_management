@@ -3,7 +3,6 @@ import Modal from "react-bootstrap/Modal";
 import { customAxios } from "../../../service/CreateApi";
 import Tooltip from '@mui/material/Tooltip';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import { useRef } from 'react';
@@ -22,7 +21,6 @@ const RequestModal = ({ data }) => {
     const [error, seterror] = useState("");
     const [requestLoading, setrequestLoading] = useState(false);
 
-    let { getCommonApi } = GlobalPageRedirect();
     let ref = useRef();
 
     // hide requset modal 
@@ -86,14 +84,10 @@ const RequestModal = ({ data }) => {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }else{
-                            seterror(error.response.data.error)
-                        }
+                        seterror(error.response.data.error)
                     }
                 }
             })
@@ -107,7 +101,7 @@ const RequestModal = ({ data }) => {
                     className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={() => {
                         setrequestModal(true);
                         settitle("Add Request");
-                        setrequest({...request, date:moment(new Date()).subtract(2,"day").format("YYYY-MM-DD")})
+                        setrequest({ ...request, date: moment(new Date()).subtract(2, "day").format("YYYY-MM-DD") })
                     }} >
                     <i className="fa-solid fa-plus" ></i>&nbsp;Add Request
                 </button > :
@@ -115,7 +109,7 @@ const RequestModal = ({ data }) => {
                     <i className="fa-solid fa-pen-to-square" onClick={() => {
                         setrequestModal(true)
                         settitle("Edit Request");
-                        setrequest({...request, date: data})
+                        setrequest({ ...request, date: data })
                     }} ></i>
                 </Tooltip>}
 
@@ -155,7 +149,7 @@ const RequestModal = ({ data }) => {
                                                         onChange={handleChange}
                                                         value={request.date}
                                                         onBlur={dateValidation}
-                                                        max={moment(new Date()).subtract(2,"day").format("YYYY-MM-DD")}
+                                                        max={moment(new Date()).subtract(2, "day").format("YYYY-MM-DD")}
                                                         disabled={data}
                                                     />
                                                     <CalendarMonthIcon className='calendar-icon-work' />

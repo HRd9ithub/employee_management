@@ -3,7 +3,6 @@ import React from 'react'
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../common/Spinner';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../service/CreateApi';
 import { alphSpaceFormat } from '../../common/RegaulrExp';
 
@@ -15,7 +14,6 @@ const LeaveTypeModal = (props) => {
     const [id, setId] = useState("")
     const [error, setError] = useState("")
     const [Backerror, setBackerror] = useState("")
-    let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
@@ -82,8 +80,6 @@ const LeaveTypeModal = (props) => {
             }).catch((error) => {
                 if (!error.response) {
                     toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

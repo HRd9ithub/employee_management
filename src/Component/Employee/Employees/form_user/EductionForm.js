@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceDotFormat, numberFormat, percentageFormat } from '../../../common/RegaulrExp';
 
@@ -23,8 +22,6 @@ const EductionForm = (props) => {
     const [isLoading, setisLoading] = useState(false);
     const [disableBtn, setDisableBtn] = useState(false);
     const [error, setError] = useState([])
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // onchange function
     const InputEvent = (event, ind) => {
@@ -166,8 +163,6 @@ const EductionForm = (props) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import Spinner from '../../../common/Spinner';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from 'moment';
@@ -17,8 +16,6 @@ const LoginInfo = ({ userId }) => {
     let date_today = new Date();
     let history = useNavigate();
 
-
-    let { getCommonApi } = GlobalPageRedirect();
     const [loader, setLoader] = useState(false)
     const [dataFilter, setDataFilter] = useState([]);
     const [startDate, setStartDate] = useState(new Date(date_today.getFullYear(), date_today.getMonth(), 1));
@@ -43,8 +40,6 @@ const LoginInfo = ({ userId }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

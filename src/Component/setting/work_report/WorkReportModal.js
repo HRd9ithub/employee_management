@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../../common/Spinner';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { customAxios } from '../../../service/CreateApi';
@@ -43,7 +42,6 @@ function WorkReportModal({ data, permission, getReport }) {
     const [hoursError, sethoursError] = useState([]);
     const [error, setError] = useState([]);
 
-    let { getCommonApi } = GlobalPageRedirect();
     let { get_username, userName, Loading } = useContext(AppProvider);
 
     // modal show function
@@ -105,12 +103,8 @@ function WorkReportModal({ data, permission, getReport }) {
             if (!error.response) {
                 toast.error(error.message)
             } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 }
             }
         } finally {
@@ -167,14 +161,10 @@ function WorkReportModal({ data, permission, getReport }) {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        } else {
-                            setError(error.response.data.error);
-                        }
+                        setError(error.response.data.error);
                     }
                 }
             })

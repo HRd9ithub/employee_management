@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "../../common/Spinner";
-import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { toast } from "react-hot-toast";
 import { customAxios } from "../../../service/CreateApi";
 import { alphSpaceFormat } from "../../common/RegaulrExp";
@@ -13,8 +12,6 @@ function DesignationModal({ data, getdesignation, permission }) {
   const [nameError, setNameError] = useState("");
   const [id, setId] = useState("");
   const [error, setError] = useState("");
-
-  let { getCommonApi } = GlobalPageRedirect();
 
   // modal show function
   const handleShow = () => {
@@ -85,15 +82,11 @@ function DesignationModal({ data, getdesignation, permission }) {
       if (!error.response) {
         toast.error(error.message);
       } else {
-        if (error.response.status === 401) {
-          getCommonApi();
-        } else {
           if (error.response.data.message) {
             toast.error(error.response.data.message)
           } else {
             setError(error.response.data.error);
           }
-        }
       }
     }).finally(() => setisLoading(false));
   };

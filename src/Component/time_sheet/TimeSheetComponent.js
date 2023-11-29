@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
-import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 import { AiOutlineDownload } from "react-icons/ai";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -29,7 +28,6 @@ const TimeSheetComponent = () => {
     const [serverError, setServerError] = useState(false);
     const [searchItem, setsearchItem] = useState("");
 
-    let { getCommonApi } = GlobalPageRedirect();
     let { get_username, userName, Loading } = useContext(AppProvider);
 
     // pagination state
@@ -54,8 +52,6 @@ const TimeSheetComponent = () => {
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.status === 500) {
                     setServerError(true)

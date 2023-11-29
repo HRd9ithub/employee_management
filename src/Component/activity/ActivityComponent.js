@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import { customAxios } from '../../service/CreateApi';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from '../common/Spinner';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { timeAgos } from '../../helper/dateFormat';
@@ -24,7 +23,6 @@ const ActivityComponent = () => {
     const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
     const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
 
-    let { getCommonApi } = GlobalPageRedirect();
     // page redirect
     let navigate = useNavigate();
 
@@ -45,15 +43,12 @@ const ActivityComponent = () => {
                 setServerError(true)
                 toast.error(error.message)
             } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.status === 500) {
-                        setServerError(true)
-                    }
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                    setpermission(error.response.data.permissions);
                 }
             }
         })
@@ -74,7 +69,7 @@ const ActivityComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission|| permission.permissions.list !== 1) {
+    } else if (!permission || permission.permissions.list !== 1) {
         return <Error403 />;
     }
 

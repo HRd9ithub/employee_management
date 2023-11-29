@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-hot-toast";
 import Spinner from "../../common/Spinner";
-import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { customAxios } from "../../../service/CreateApi";
@@ -16,8 +15,6 @@ function UserRoleModal({ data, getuserRole, permission }) {
     const [Error, setError] = useState([]);
     const [page, setPage] = useState([])
     const [id, setId] = useState("");
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
@@ -90,12 +87,8 @@ function UserRoleModal({ data, getuserRole, permission }) {
             if (!error.response) {
                 toast.error(error.message)
             } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 }
             }
         } finally {
@@ -129,18 +122,14 @@ function UserRoleModal({ data, getuserRole, permission }) {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        } else {
-                            setError(error.response.data.error);
-                        }
+                        setError(error.response.data.error);
                     }
                 }
             }).finally(() => setisLoading(false))
-        } 
+        }
     };
 
     const handleChange = (e, id, name) => {
@@ -200,12 +189,12 @@ function UserRoleModal({ data, getuserRole, permission }) {
                                             })}
                                         </tbody>
                                     </Table>
-                                    {Error.length !== 0 && 
-                                    <ol>
-                                        {Error.map((val) => {
-                                            return <li className="error" key={val} >{val}</li>
-                                        })}
-                                    </ol>}
+                                    {Error.length !== 0 &&
+                                        <ol>
+                                            {Error.map((val) => {
+                                                return <li className="error" key={val} >{val}</li>
+                                            })}
+                                        </ol>}
                                     <div className="col-12">
                                         <div className="d-flex justify-content-center modal-button">
                                             <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}> {data ? "Update" : "Save"} </button>

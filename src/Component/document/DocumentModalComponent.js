@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from '../common/Spinner';
 import { Form } from 'react-bootstrap';
 import { customAxios1 } from '../../service/CreateApi';
@@ -20,9 +19,6 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [imageError, setImagerror] = useState('');
     const [isLoading, setisLoading] = useState(false)
     const [Error, setError] = useState([])
-
-    let { getCommonApi } = GlobalPageRedirect();
-
 
     // modal show function
     const handleShow = () => {
@@ -114,9 +110,7 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
         }).catch((error) => {
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
+            }else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 } else {

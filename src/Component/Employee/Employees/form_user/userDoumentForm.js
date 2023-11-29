@@ -3,7 +3,6 @@ import { Form } from 'react-bootstrap';
 import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios1 } from '../../../../service/CreateApi';
 
 const UserDoumentForm = (props) => {
@@ -29,8 +28,6 @@ const UserDoumentForm = (props) => {
         other: "",
         other_name: ""
     })
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // onchange function
     const InputEvent = (e) => {
@@ -140,8 +137,6 @@ const UserDoumentForm = (props) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

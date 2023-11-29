@@ -7,14 +7,12 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from "../../../../service/CreateApi";
 import { AppProvider } from '../../../context/RouteContext';
 import { alphaNumDeshFormat, alphabetFormat, emailFormat, numberFormat, passwordFormat } from '../../../common/RegaulrExp';
 
 const AddEmployeeModal = ({ getAlluser, permission }) => {
     const history = useNavigate();
-    let { getCommonApi } = GlobalPageRedirect();
     let DateRef = useRef();
     let { get_username, userName, Loading } = useContext(AppProvider);
 
@@ -65,12 +63,8 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             } finally {
@@ -89,12 +83,8 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             } finally {
@@ -199,8 +189,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             }).catch((error) => {
                 if (!error.response) {
                     toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
@@ -229,8 +217,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             }).catch((error) => {
                 if (!error.response) {
                     toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
@@ -403,8 +389,6 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

@@ -2,7 +2,6 @@ import Modal from 'react-bootstrap/Modal';
 import React, { useRef } from 'react'
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../service/CreateApi';
 import Spinner from '../../common/Spinner';
 import moment from 'moment';
@@ -22,7 +21,6 @@ const HolidayModal = (props) => {
     const [error, setError] = useState([]);
     const [nameError, setnameError] = useState("");
     const [dateError, setdateError] = useState("");
-    let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
@@ -117,8 +115,6 @@ const HolidayModal = (props) => {
             }).catch((error) => {
                 if (!error.response) {
                     toast.error(error.message);
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
