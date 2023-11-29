@@ -6,6 +6,7 @@ import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { customAxios } from "../../../service/CreateApi";
+import { alphSpaceFormat } from "../../common/RegaulrExp";
 
 function UserRoleModal({ data, getuserRole, permission }) {
     const [show, setShow] = useState(false);
@@ -55,7 +56,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
     const handlenameValidate = () => {
         if (!name) {
             seterror("User role is a required field.");
-        } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
+        } else if (!name.trim() || !name.match(alphSpaceFormat)) {
             seterror("User role name must be an alphabet and space only.");
         } else {
             seterror("");
@@ -143,7 +144,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
     };
 
     const handleChange = (e, id, name) => {
-        let changeData = page.map((val) => {
+        const changeData = page.map((val) => {
             if (val.menuId === id) {
                 return { ...val, [name]: e.target.checked === true ? 1 : 0 }
             }

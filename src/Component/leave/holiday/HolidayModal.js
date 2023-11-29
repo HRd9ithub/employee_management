@@ -7,10 +7,11 @@ import { customAxios } from '../../../service/CreateApi';
 import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { alphSpaceFormat } from '../../common/RegaulrExp';
 
 const HolidayModal = (props) => {
     let { data, get_holiday_detail, permission } = props;
-    let DateRef = useRef();
+    const DateRef = useRef();
     const [show, setShow] = useState(false);
     const [isLoading, setisLoading] = useState(false);
     const [holiday, setholiday] = useState({
@@ -60,7 +61,7 @@ const HolidayModal = (props) => {
     const nameValidate = () => {
         if (!holiday.name) {
             setnameError('Holiday name is a required field.')
-        } else if (!holiday.name.trim() || !holiday.name.match(/^[A-Za-z ]+$/)) {
+        } else if (!holiday.name.trim() || !holiday.name.match(alphSpaceFormat)) {
             setnameError('Holiday name must be an alphabet and space only.');
         } else {
             setnameError("");

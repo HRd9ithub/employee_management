@@ -10,7 +10,7 @@ import { AppProvider } from '../../context/RouteContext';
 const DowlonadReport = () => {
     const [show, setshow] = useState(false);
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     // initialistate 
     const [initialistate, setinitialistate] = useState({
@@ -21,7 +21,7 @@ const DowlonadReport = () => {
     const [dateError, setdateError] = useState("");
 
 
-    let monthRef = useRef(null);
+    const monthRef = useRef(null);
 
     let { get_username, userName, Loading, getReportPreview } = useContext(AppProvider);
 

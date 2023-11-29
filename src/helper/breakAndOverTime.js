@@ -14,26 +14,25 @@ export const calculatorBreakTime = (value) => {
 
     const data = value.sort(function (a, b) {
         // Convert the date strings to Date objects
-        let dateA = new Date(a.createdAt);
-        let dateB = new Date(b.createdAt);
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
 
         // Subtract the dates to get a value that is either negative, positive, or zero
         return dateA - dateB;
     });
 
-    const breakTimes = data.map((val, index) => {
+    let breakTimes = [];
+
+    data.forEach((val, index) => {
         if (index < data.length - 1) {
             const diff = moment.utc(moment(data[index + 1].clock_in, "HH:mm:ss A").diff(moment(val.clock_out, "HH:mm:ss A"))).format("HH:mm")
-            return diff;
+            breakTimes.push(diff);
         }
     })
     const sumHoras = [0, 0];
-    const filterData = breakTimes.filter(function (element) {
-        return element !== undefined;
-    });
 
-    for (let i = 0; i < filterData.length; i++) {
-        const [hours, minutes] = filterData[i].split(':').map(s => parseInt(s, 10));
+    for (let i = 0; i < breakTimes.length; i++) {
+        const [hours, minutes] = breakTimes[i].split(':').map(s => parseInt(s, 10));
 
         // hours
         sumHoras[0] += hours;
@@ -55,9 +54,11 @@ export const calculatorBreakTime = (value) => {
 }
 
 export const sum = (data) => {
+    const removeData = data.filter((item) => item.hasOwnProperty("totalHours"))
     const sumHoras = [0, 0];
-    for (let i = 0; i < data.filter((item) => item.hasOwnProperty("totalHours")).length; i++) {
-        const [hours, minutes] = data[i].totalHours.split(':').map(s => parseInt(s, 10));
+
+    removeData.forEach((element,i) => {
+        const [hours, minutes] = element.totalHours.split(':').map(s => parseInt(s, 10));
     
         // hours
         sumHoras[0] += hours;
@@ -70,7 +71,7 @@ export const sum = (data) => {
         } else {
             sumHoras[1] += minutes;
         }
-    }
+    });
 
     if (sumHoras.join(':') !== "0:0") {
         return sumHoras.join(':');

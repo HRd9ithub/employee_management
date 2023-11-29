@@ -19,7 +19,7 @@ import { AppProvider } from "../context/RouteContext";
 import ranges from "../../helper/calcendarOption";
 
 const TimeSheetComponent = () => {
-    let date_today = new Date();
+    const date_today = new Date();
     const [data, setData] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);

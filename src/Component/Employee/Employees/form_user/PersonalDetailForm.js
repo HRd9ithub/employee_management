@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import { country } from "../../../../static/County.js";
+import { country } from "../../../../static/country.js";
 import { toast } from "react-hot-toast";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useContext } from "react";
@@ -48,7 +48,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const [lastNameError, setlastNameError] = useState('');
     const [emailError, setemailError] = useState('');
     const [phoneError, setphoneError] = useState('');
-    // const [departmentError, setdepartmentError] = useState('');
     const [designationError, setdesignationError] = useState('');
     const [roleError, setroleError] = useState('');
     const [joningDateError, setjoningDateError] = useState('');

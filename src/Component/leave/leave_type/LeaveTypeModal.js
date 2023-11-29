@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import Spinner from '../../common/Spinner';
 import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../service/CreateApi';
+import { alphSpaceFormat } from '../../common/RegaulrExp';
 
 const LeaveTypeModal = (props) => {
     let { data, getLeaveType, permission } = props;
@@ -46,7 +47,7 @@ const LeaveTypeModal = (props) => {
     const HandleValidate = () => {
         if (!name) {
             setError('Leave type is a required field.')
-        } else if (!name.trim() || !name.match(/^[A-Za-z ]+$/)) {
+        } else if (!name.trim() || !name.match(alphSpaceFormat)) {
             setError('Leave type must be an alphabet and space only.');
         } else {
             setError("");
