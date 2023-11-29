@@ -5,10 +5,10 @@ import { AppProvider } from '../../context/RouteContext';
 import Spinner from '../../common/Spinner';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 import { customAxios } from '../../../service/CreateApi';
-import toast from 'react-hot-toast';
+import {toast} from 'react-hot-toast';
 import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { Dropdown } from 'react-bootstrap';
-// import { toast } from "react-hot-toast";
+import { urlFormat } from '../../common/RegaulrExp';
 
 const AddPasswordForm = (props) => {
     let { data, getPasswordRecord } = props;
@@ -119,10 +119,9 @@ const AddPasswordForm = (props) => {
     // url 
     const urlValidation = () => {
         // eslint-disable-next-line
-        var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
         if (!password.url.trim()) {
             setUrlError("URL is a required field.")
-        } else if (!expression.test(password.url)) {
+        } else if (!urlFormat.test(password.url)) {
             setUrlError("URL must be a valid URL.")
         } else {
             setUrlError("");

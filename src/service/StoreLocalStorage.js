@@ -13,7 +13,7 @@ export const GetLocalStorage = (name) => {
 
 // set localstorage data
 export const SetLocalStorage = (name, data) => {
-    var ciphertext = CryptoJS.AES.encrypt(data, 'secret key 123').toString()
+    const ciphertext = CryptoJS.AES.encrypt(data, 'secret key 123').toString()
     return localStorage.setItem(name, ciphertext);
 }
 

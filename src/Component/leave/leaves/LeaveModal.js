@@ -47,14 +47,14 @@ const LeaveModal = (props) => {
 
     let { getCommonApi } = GlobalPageRedirect();
 
-    let fromDateRef = useRef();
-    let toDateRef = useRef();
+    const fromDateRef = useRef();
+    const toDateRef = useRef();
 
     // modal show function
     const handleShow = () => {
         if (data) {
             if (data?.leaveType?.toLowerCase() === "casual leave") {
-                let date = new Date();
+                const date = new Date();
                 date.setDate(date.getDate() + 4);
                 setleaveType(moment(date).format("YYYY-MM-DD"))
             }
@@ -86,12 +86,12 @@ const LeaveModal = (props) => {
 
     //leave type  onchange function
     const InputEvent = (e) => {
-        let value = e.target.value;
+        const value = e.target.value;
         if (value && value !== "0") {
             setleave({ ...leave, leave_type_id: value })
-            let data = leaveTypeDetail.find((val) => val._id === value)
+            const data = leaveTypeDetail.find((val) => val._id === value)
             if (data?.name.toLowerCase() === "casual leave") {
-                let date = new Date();
+                const date = new Date();
                 date.setDate(date.getDate() + 4);
                 setleaveType(moment(date).format("YYYY-MM-DD"))
             } else {

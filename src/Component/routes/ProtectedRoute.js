@@ -5,12 +5,12 @@ import GlobalPageRedirect from "../auth_context/GlobalPageRedirect";
 
 const ProtectedRoute = ({ children, authentication }) => {
     // use for redirect the page
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     // get url of page
-    let { pathname } = useLocation();
+    const { pathname } = useLocation();
 
     let currDate = new Date().getDate();
-    let { getCommonApi } = GlobalPageRedirect();
+    const { getCommonApi } = GlobalPageRedirect();
 
     const getProtectedData = async () => {
         // get localstorage in token

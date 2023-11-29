@@ -5,6 +5,7 @@ import Spinner from '../common/Spinner';
 import { customAxios } from '../../service/CreateApi'
 import { clearLocalStorage } from '../../service/StoreLocalStorage'
 import { useNavigate } from 'react-router-dom'
+import { passwordFormat } from '../common/RegaulrExp';
 
 const ChangePassword = () => {
     // change password state
@@ -34,7 +35,7 @@ const ChangePassword = () => {
     const handlepasswordValidate = () => {
         if (!list.password) {
             setpasswordError("Password is a required field.");
-        } else if (!list.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
+        } else if (!list.password.match(passwordFormat)) {
             setpasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
             setpasswordError("")
@@ -44,7 +45,7 @@ const ChangePassword = () => {
     const handlenewPasswordValidate = () => {
         if (!list.newpassword) {
             setnewPasswordError("New password is a required field.");
-        } else if (!list.newpassword.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)) {
+        } else if (!list.newpassword.match(passwordFormat)) {
             setnewPasswordError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
         } else {
             setnewPasswordError("")

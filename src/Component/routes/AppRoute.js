@@ -1,7 +1,5 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-
-import Spinner from '../common/Spinner';
 import ProtectedRoute from './ProtectedRoute';
 import Login from '../auth/Login';
 import OtpVerification from '../auth/OtpVerification';
@@ -30,7 +28,6 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 
 const AppRoute = () => {
     return (
-        <Suspense fallback={<Spinner />}>
             <Routes>
                 {/* login route */}
                 <Route exact path='/login' element={<ProtectedRoute authentication={false}><Login /></ProtectedRoute>}></Route>
@@ -47,9 +44,6 @@ const AppRoute = () => {
                     <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
                     <Route path="view/:id" element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>} />
                 </Route>
-                {/* <Route exact path='/employees' element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>}></Route> */}
-                {/* <Route exact path='/employees/edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route> */}
-                {/* <Route exact path='/employees/view/:id' element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>}></Route> */}
                 <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
                 <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
                 {/* leave route */}
@@ -73,7 +67,6 @@ const AppRoute = () => {
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>
-        </Suspense>
     );
 }
 

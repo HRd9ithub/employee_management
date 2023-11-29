@@ -16,7 +16,7 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { customAxios } from '../service/CreateApi';
 
 const Dashboard = () => {
-     let userId = GetLocalStorage("user_id");
+     const userId = GetLocalStorage("user_id");
      const [isLoading, setisLoading] = useState(false)
      const [animateLoader, setanimateLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
