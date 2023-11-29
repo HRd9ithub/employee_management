@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../../common/Spinner';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { toast } from 'react-hot-toast';
 import { customAxios } from '../../../service/CreateApi';
 
@@ -12,8 +11,6 @@ function ProjectModal({ data, getProject, permission, records }) {
     const [id, setId] = useState('')
     const [isLoading, setisLoading] = useState(false)
     const [Error, setError] = useState("");
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // modal show function
     const handleShow = () => {
@@ -57,7 +54,7 @@ function ProjectModal({ data, getProject, permission, records }) {
         }
         setError("");
         if (!name || error) {
-           return false
+            return false
         }
         let url = "";
         if (id) {
@@ -81,14 +78,10 @@ function ProjectModal({ data, getProject, permission, records }) {
             if (!error.response) {
                 toast.error(error.message);
             } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                 } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    } else {
-                        setError(error.response.data.error);
-                    }
+                    setError(error.response.data.error);
                 }
             }
         })

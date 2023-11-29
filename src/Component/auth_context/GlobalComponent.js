@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { isDesktop } from "react-device-detect";
 import DeviceDetector from "device-detector-js";
-import GlobalPageRedirect from './GlobalPageRedirect';
 import { RemoveLocalStorage, SetLocalStorage, clearLocalStorage } from '../../service/StoreLocalStorage';
 import { toast } from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
@@ -13,8 +12,6 @@ export const Globalcomponent = () => {
     const [Error, setError] = useState([]);
 
     const navigate = useNavigate();
-
-    const { getCommonApi } = GlobalPageRedirect();
 
     //  login function
     const onSubmit = async (data) => {
@@ -32,10 +29,8 @@ export const Globalcomponent = () => {
                 toast.error(error.message)
             } else if (error.response.data.message) {
                 toast.error(error.response.data.message)
-            } else {
-                if (error.response.data.error) {
-                    setError(error.response.data.error)
-                }
+            } else if (error.response.data.error) {
+                setError(error.response.data.error)
             }
         } finally {
             setLoading(false)
@@ -107,8 +102,6 @@ export const Globalcomponent = () => {
             setLoading(false)
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else if (error.response.data.message) {
                 toast.error(error.response.data.message)
             }
@@ -129,10 +122,8 @@ export const Globalcomponent = () => {
                 toast.error(error.message)
             } else if (error.response.data.message) {
                 toast.error(error.response.data.message)
-            } else {
-                if (error.response.data.error) {
-                    setError(error.response.data.error)
-                }
+            } else if (error.response.data.error) {
+                setError(error.response.data.error)
             }
         } finally {
             setLoading(false)

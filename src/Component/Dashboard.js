@@ -5,7 +5,6 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from './auth_context/GlobalPageRedirect';
 import moment from 'moment';
 import { AppProvider } from './context/RouteContext';
 import { GetLocalStorage } from '../service/StoreLocalStorage';
@@ -28,8 +27,6 @@ const Dashboard = () => {
      const [holidayfilter, setHolidayfilter] = useState([])
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
-
-     let { getCommonApi } = GlobalPageRedirect();
 
      let { UserData } = useContext(AppProvider)
 
@@ -72,8 +69,6 @@ const Dashboard = () => {
                } catch (error) {
                     if (!error.response) {
                          toast.error(error.message)
-                    } else if (error.response.status === 401) {
-                         getCommonApi();
                     } else if (error.response.data.message) {
                          toast.error(error.response.data.message)
                     }
@@ -137,12 +132,8 @@ const Dashboard = () => {
                setisLoading(false)
                if (!error.response) {
                     toast.error(error.message)
-               } else if (error.response.status === 401) {
-                    getCommonApi();
-               } else {
-                    if (error.response.data.message) {
-                         toast.error(error.response.data.message)
-                    }
+               } else if (error.response.data.message) {
+                    toast.error(error.response.data.message)
                }
           }
      }

@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import moment from 'moment';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import Spinner from '../../common/Spinner';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
@@ -16,8 +15,6 @@ const ReportPreview = () => {
     let { reportData, id, summary } = useContext(AppProvider);
     const [isLoading, setisLoading] = useState(false);
     let navigate = useNavigate();
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     useEffect(() => {
         if (!id) {
@@ -38,8 +35,6 @@ const ReportPreview = () => {
             setisLoading(false)
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message);

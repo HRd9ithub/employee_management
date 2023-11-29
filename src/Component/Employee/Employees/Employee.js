@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import AddEmployeeModal from "./add_form/AddEmployeeModal";
 import Switch from '@mui/material/Switch';
 import { HiOutlineMinus } from "react-icons/hi";
-import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
@@ -31,8 +30,6 @@ const Employee = () => {
 
   const history = useNavigate()
 
-  let { getCommonApi } = GlobalPageRedirect();
-
   // status update function
   const handleStatus = async (row) => {
     // eslint-disable-next-line
@@ -50,12 +47,8 @@ const Employee = () => {
       if (!error.response) {
         toast.error(error.message)
       } else {
-        if (error.response.status === 401) {
-          getCommonApi();
-        } else {
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
         }
       }
     }
@@ -86,9 +79,7 @@ const Employee = () => {
       setisLoading(false);
       if (!error.response) {
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else {
+      }else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
@@ -114,9 +105,6 @@ const Employee = () => {
         setServerError(true)
         toast.error(error.message);
       } else {
-        if (error.response.status === 401) {
-          getCommonApi();
-        } else {
           if (error.response.status === 500) {
             setServerError(true)
           }
@@ -124,7 +112,6 @@ const Employee = () => {
             toast.error(error.response.data.message)
           }
         }
-      }
     });
   };
 

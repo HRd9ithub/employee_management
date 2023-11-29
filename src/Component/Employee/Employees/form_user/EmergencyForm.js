@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import { useEffect } from 'react';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GlobalPageRedirect from '../../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 
@@ -33,8 +32,6 @@ const EmergencyForm = (props) => {
         userDetail.emergency_contact.length > 0 &&
             setEmergncy(userDetail.emergency_contact[0])
     }, [userDetail])
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     // # onchnage function 
     const InputEvent = (e) => {
@@ -76,8 +73,6 @@ const EmergencyForm = (props) => {
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)

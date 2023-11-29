@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
 import Spinner from '../../common/Spinner';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../service/CreateApi';
 import { useMemo } from 'react';
 
@@ -44,8 +43,6 @@ const LeaveModal = (props) => {
     })
     const [id, setId] = useState('')
     const [error, setError] = useState([])
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     const fromDateRef = useRef();
     const toDateRef = useRef();
@@ -160,8 +157,6 @@ const LeaveModal = (props) => {
         }).catch((error) => {
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
@@ -189,12 +184,8 @@ const LeaveModal = (props) => {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             } finally {
@@ -215,12 +206,8 @@ const LeaveModal = (props) => {
                 if (!error.response) {
                     toast.error(error.message);
                 } else {
-                    if (error.response.status === 401) {
-                        getCommonApi();
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
                     }
                 }
             } finally {

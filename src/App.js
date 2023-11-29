@@ -11,11 +11,11 @@ import { GetLocalStorage } from './service/StoreLocalStorage';
 
 function App() {
 
-  let {pathname,key} = useLocation();
+  const {pathname,key} = useLocation();
   
   // show or hide sidebar and navbar 
   const checkRoute = () => {
-    let Root = ['/login','/forgot-password','/reset-password','/otp'];
+    const Root = ['/login','/forgot-password','/reset-password','/otp'];
 
     return !(Root.includes(pathname) || (key === "default" && !GetLocalStorage("token")))
   }

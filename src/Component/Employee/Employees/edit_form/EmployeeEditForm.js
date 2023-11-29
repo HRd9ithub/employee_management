@@ -12,7 +12,6 @@ import EmergencyForm from "../form_user/EmergencyForm";
 import { NavLink } from "react-router-dom";
 import PersonalDetailForm from "../form_user/PersonalDetailForm";
 import { toast } from "react-hot-toast";
-import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect";
 import LoginInfo from "../view/LoginInfo";
 import Error403 from "../../../error_pages/Error403";
 import Error500 from "../../../error_pages/Error500";
@@ -31,8 +30,6 @@ const EmployeeEditForm = () => {
   const handleChanges = (newValue) => {
     setValue(newValue);
   };
-
-  let { getCommonApi } = GlobalPageRedirect();
 
   // tabs onchange function
   const changeTab = (event, newValue) => {
@@ -61,8 +58,6 @@ const EmployeeEditForm = () => {
       if (!error.response) {
         setServerError(true);
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
       } else {
         if (error.response.status === 500) {
           setServerError(true)

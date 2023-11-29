@@ -1,7 +1,6 @@
 import React, { useReducer, createContext, useState, useRef } from 'react'
 import { RouteReducer } from './RouteReducer';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import { GetLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
 import moment from 'moment';
@@ -33,8 +32,6 @@ const RouteContext = ({ children }) => {
     const [sidebarToggle, setSidebarToggle] = useState(false)
     let sidebarRef = useRef(null);
 
-    let { getCommonApi } = GlobalPageRedirect();
-
     // use reducer
     const [state, dispatch] = useReducer(RouteReducer, initialistate)
 
@@ -51,13 +48,9 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                }
-            }
+              }else if (error.response.data.message) {
+                toast.error(error.response.data.message);
+              }
         }finally{
             setLoading(false);
         }
@@ -75,14 +68,10 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             setLoading(false)
             if (!error.response) {
-                toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                }
-            }
+                toast.error(error.message);
+              }else if (error.response.data.message) {
+                toast.error(error.response.data.message);
+              }
         }
     }
     // leave data get
@@ -101,15 +90,11 @@ const RouteContext = ({ children }) => {
             if (!error.response) {
                 dispatch({ type: "SERVER_ERROR" })
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
-                if (error.response.status === 500) {
-                    dispatch({ type: "SERVER_ERROR" })
-                }
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                }
+            } else if (error.response.status === 500) {
+                dispatch({ type: "SERVER_ERROR" })
+            }
+            if (error.response.data.message) {
+                toast.error(error.response.data.message)
             }
         } finally {
             setLoading(false)
@@ -132,14 +117,8 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
+            }else if (error.response.data.message) {
+                toast.error(error.response.data.message);
             }
         } finally {
             setLoading(false)
@@ -159,14 +138,8 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            } else {
-                if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
+            }else if (error.response.data.message) {
+                toast.error(error.response.data.message);
             }
         } finally {
             setLoading(false)

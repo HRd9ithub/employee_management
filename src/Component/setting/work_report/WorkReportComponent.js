@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from "../../common/Spinner";
-import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
@@ -34,7 +33,6 @@ const WorkReportComponent = () => {
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
 
-    let { getCommonApi } = GlobalPageRedirect();
     let { get_username, userName } = useContext(AppProvider);
 
     // pagination state
@@ -61,8 +59,6 @@ const WorkReportComponent = () => {
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.status === 500) {
                     setServerError(true)

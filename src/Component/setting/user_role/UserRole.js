@@ -4,7 +4,6 @@ import Spinner from "../../common/Spinner";
 import { toast } from "react-hot-toast";
 import UserRoleModal from "./UserRoleModal";
 import { motion } from "framer-motion";
-import GlobalPageRedirect from "../../auth_context/GlobalPageRedirect";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
@@ -27,8 +26,6 @@ const UserRole = () => {
   const [order, setOrder] = useState("asc")
   const [orderBy, setOrderBy] = useState("id")
 
-  let { getCommonApi } = GlobalPageRedirect();
-
   // get user role data
   const getuserRole = async () => {
     try {
@@ -47,15 +44,11 @@ const UserRole = () => {
         setServerError(true)
         toast.error(error.message)
       } else {
-        if (error.response.status === 401) {
-          getCommonApi();
-        } else {
-          if (error.response.status === 500) {
-            setServerError(true)
-          }
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+        if (error.response.status === 500) {
+          setServerError(true)
+        }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
         }
       }
     } finally {
@@ -123,7 +116,7 @@ const UserRole = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  }else if (!permission || permission.permissions.list !== 1) {
+  } else if (!permission || permission.permissions.list !== 1) {
     return <Error403 />;
   }
 

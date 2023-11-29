@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { customAxios } from '../../../service/CreateApi';
 import Spinner from '../../common/Spinner';
 import Error500 from '../../error_pages/Error500';
@@ -28,8 +27,6 @@ const HolidayComponent = () => {
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("id")
 
-    let { getCommonApi } = GlobalPageRedirect();
-
     //get Holi
     const get_holiday_detail = async () => {
         try {
@@ -44,9 +41,7 @@ const HolidayComponent = () => {
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
-            } else {
+            }else {
                 if (error.response.status === 500) {
                     setServerError(true)
                 }
@@ -89,8 +84,6 @@ const HolidayComponent = () => {
             setisLoading(false);
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)

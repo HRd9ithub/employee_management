@@ -8,7 +8,6 @@ import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
 import { timeAgo } from '../../helper/dateFormat';
 import { toast } from 'react-hot-toast';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Avatar from '@mui/material/Avatar';
 import Spinner from './Spinner';
 import moment from 'moment';
@@ -24,7 +23,6 @@ const Navbar = () => {
   // Global state
   let { handleLogout, loading } = Globalcomponent();
   let { UserData, notification, getLeaveNotification, getUserData, getLeave, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle ,Loading} = useContext(AppProvider);
-  let { getCommonApi } = GlobalPageRedirect();
 
   // mobile screen toggle sidebar 
   const toggleOffcanvas = () => {
@@ -78,12 +76,8 @@ const Navbar = () => {
       setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else {
-        if (error.response.data.message) {
+      }else if (error.response.data.message) {
           toast.error(error.response.data.message)
-        }
       }
     }
   }
@@ -105,12 +99,8 @@ const Navbar = () => {
       setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else {
-        if (error.response.data.message) {
+      }else if (error.response.data.message) {
           toast.error(error.response.data.message)
-        }
       }
     }
   }
@@ -129,12 +119,8 @@ const Navbar = () => {
       setisLoading(false)
       if (!error.response) {
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else {
-        if (error.response.data.message) {
-          toast.error(error.response.data.message)
-        }
+      }else if (error.response.data.message) {
+        toast.error(error.response.data.message)
       }
     }
   }

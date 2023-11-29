@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Table, TableBody, TableCell, TableContainer, TableHead, Collapse, TablePagination, IconButton, TableRow, TableSortLabel } from "@mui/material";
 import moment from 'moment';
 import { customAxios } from '../../service/CreateApi';
-import GlobalPageRedirect from '../auth_context/GlobalPageRedirect';
 import Spinner from "../common/Spinner";
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { calculatorBreakTime, calculatorOverTime, sum } from '../../helper/breakAndOverTime';
@@ -42,8 +41,6 @@ const AttendanceComponent = () => {
     // sort state
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     //get attendance
     const getAttendance = async (start, end) => {
@@ -85,7 +82,9 @@ const AttendanceComponent = () => {
                     setcurrentDataAll(temp);
 
                     // overtime get
-                    setOverTime(calculatorOverTime(currentData));
+                    if (currentData.length > 1) {
+                        setOverTime(calculatorOverTime(currentData));
+                    }
 
                     // generate break time
                     if (currentData.length > 1) {
@@ -97,8 +96,6 @@ const AttendanceComponent = () => {
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.status === 500) {
                     setServerError(true)
@@ -143,14 +140,14 @@ const AttendanceComponent = () => {
         }).catch(error => {
             setisLoading(false);
             if (!error.response) {
-                toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
+                setServerError(true)
+                toast.error(error.message)
             } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
-                } else {
-                    // setError(error.response.data.error);
                 }
             }
         })
@@ -192,11 +189,11 @@ const AttendanceComponent = () => {
                 return 1
             }
             return 0
-        } else {
-            if (b[orderBy] < a[orderBy]) {
+        } else if (orderBy === "date") {
+            if (b._id.date < a._id.date) {
                 return -1
             }
-            if (b[orderBy] > a[orderBy]) {
+            if (b._id.date > a._id.date) {
                 return 1
             }
             return 0
@@ -364,19 +361,15 @@ const AttendanceComponent = () => {
                                                     </TableSortLabel>
                                                 </TableCell>}
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "timestamp"} direction={orderBy === "timestamp" ? order : "asc"} onClick={() => handleRequestSort("timestamp")}>
+                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                     Date
                                                 </TableSortLabel>
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
-                                                    Total Hours
-                                                </TableSortLabel>
+                                                Total Hours
                                             </TableCell>
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
-                                                    Break Time
-                                                </TableSortLabel>
+                                                Break Time
                                             </TableCell>
                                             <TableCell>
                                                 Action

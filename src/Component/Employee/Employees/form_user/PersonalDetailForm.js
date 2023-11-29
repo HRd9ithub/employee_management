@@ -8,7 +8,6 @@ import { AppProvider } from "../../../context/RouteContext.js";
 import { useRef } from 'react';
 import Spinner from "../../../common/Spinner.js";
 import {  useMatch, useNavigate } from "react-router-dom";
-import GlobalPageRedirect from "../../../auth_context/GlobalPageRedirect.js";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
@@ -65,8 +64,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
 
     let { getUserData ,get_username,loading,userName} = useContext(AppProvider);
 
-    let { getCommonApi } = GlobalPageRedirect();
-
     let history = useNavigate();
     // get path name
     const match = useMatch("/employees/edit/" + userDetail._id)
@@ -87,8 +84,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
                 } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
@@ -107,9 +102,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message)
-                } else if (error.response.status === 401) {
-                    getCommonApi();
-                } else {
+                }else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     }
@@ -247,8 +240,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             setisLoading(false)
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
@@ -311,8 +302,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                 }).catch((error) => {
                     if (!error.response) {
                         toast.error(error.message);
-                    } else if (error.response.status === 401) {
-                        getCommonApi();
                     } else {
                         if (error.response.data.message) {
                             toast.error(error.response.data.message)

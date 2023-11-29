@@ -5,7 +5,6 @@ import AddPasswordForm from './AddPasswordForm';
 import Modal from "react-bootstrap/Modal";
 import { customAxios } from '../../../service/CreateApi';
 import toast from 'react-hot-toast';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import Spinner from '../../common/Spinner';
 import Error500 from '../../error_pages/Error500';
 import Error403 from '../../error_pages/Error403';
@@ -27,8 +26,6 @@ const PasswordComponent = () => {
   const [view, setView] = useState("");
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
-
-  let { getCommonApi } = GlobalPageRedirect();
 
   // password show and hide 
   const passwordToggle = () => {
@@ -64,15 +61,11 @@ const PasswordComponent = () => {
         setServerError(true)
         toast.error(error.message)
       } else {
-        if (error.response.status === 401) {
-          getCommonApi();
-        } else {
-          if (error.response.status === 500) {
-            setServerError(true)
-          }
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+        if (error.response.status === 500) {
+          setServerError(true)
+        }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
         }
       }
     })
@@ -108,9 +101,7 @@ const PasswordComponent = () => {
       setIsLoading(false);
       if (!error.response) {
         toast.error(error.message)
-      } else if (error.response.status === 401) {
-        getCommonApi();
-      } else {
+      }else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
@@ -240,7 +231,7 @@ const PasswordComponent = () => {
                       <div className='position-relative auth-box'>
                         <input type={eyeToggle ? 'text' : "password"} value={view.password} readOnly />
                         {!passwordCopy ?
-                          <i className="fa-solid fa-copy" onClick={() => textCopy("password",view.password)}></i> :
+                          <i className="fa-solid fa-copy" onClick={() => textCopy("password", view.password)}></i> :
                           <i className="fa-solid fa-check"></i>}
                         {eyeToggle ? <span className='eye-icon-password' onClick={passwordToggle}><VisibilityIcon /></span> :
                           <span className='eye-icon-password' onClick={passwordToggle}><VisibilityOffIcon /></span>}

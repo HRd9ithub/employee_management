@@ -6,7 +6,6 @@ import LeaveModal from './LeaveModal'
 import { motion } from 'framer-motion'
 import { HiOutlineMinus } from "react-icons/hi";
 import Modal from 'react-bootstrap/Modal';
-import GlobalPageRedirect from '../../auth_context/GlobalPageRedirect';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
@@ -24,8 +23,6 @@ const Leave = () => {
     const [status, setstatus] = useState("");
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
-
-    let { getCommonApi } = GlobalPageRedirect();
 
     let { getLeave, user_id, setuser_id, leave, startDate, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
@@ -68,8 +65,6 @@ const Leave = () => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
@@ -106,8 +101,6 @@ const Leave = () => {
             setsubLoading(false);
             if (!error.response) {
                 toast.error(error.message)
-            } else if (error.response.status === 401) {
-                getCommonApi();
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
