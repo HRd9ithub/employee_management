@@ -187,7 +187,7 @@ const WorkReportComponent = () => {
                                                     <option value="">Select employee</option>
                                                     {userName.map((val) => {
                                                         return (
-                                                            val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                         )
                                                     })}
                                                 </select>

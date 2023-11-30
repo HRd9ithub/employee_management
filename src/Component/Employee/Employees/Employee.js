@@ -296,7 +296,8 @@ const Employee = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Switch color="success"
+                            <Switch 
+                              className="status-switch"
                               checked={val.status === "Active" ? true : false}
                               onChange={() => handleStatus(val)}
                               disabled={!permission || permission.name.toLowerCase() !== "admin"}

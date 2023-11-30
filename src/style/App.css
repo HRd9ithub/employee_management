@@ -4412,7 +4412,7 @@ input[type="time"]::-webkit-calendar-picker-indicator{
   border-bottom: none !important;
 }
 
-.employee-form .css-1q2h7u5, .employee-form .css-1q2h7u5.Mui-selected{
+.tab-panel-button, .tab-panel-button.Mui-selected{
   color : #fff !important;
   border-color: #fff !important;
   opacity: 1 !important;
@@ -4421,10 +4421,13 @@ input[type="time"]::-webkit-calendar-picker-indicator{
  text-transform: capitalize !important;
 }
 
-.css-mje1gg.Mui-checked{
+.status-switch .MuiSwitch-switchBase.Mui-checked{
   color: rgb(0 75 143) !important;
 }
 
-.css-mje1gg.Mui-checked + .MuiSwitch-track{
+.status-switch .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track{
   background-color: rgb(0 75 143) !important;
+}
+.MuiTabs-indicator{
+  background-color: #fff !important;
 }

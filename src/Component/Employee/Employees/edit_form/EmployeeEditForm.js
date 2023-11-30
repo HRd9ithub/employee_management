@@ -111,12 +111,12 @@ const EmployeeEditForm = () => {
                   onChange={changeTab}
                   aria-label="secondary tabs example"
                 >
-                  <Tab value="Personal" label="Personal Information" />
-                  <Tab value="Account" label="Account Information" />
-                  <Tab value="Education" label="Education Information" />
-                  <Tab value="Document" label="Document Information" />
-                  <Tab value="Emergency" label="Emergency Contact Information" />
-                  <Tab value="login" label="Login Information" />
+                  <Tab value="Personal" label="Personal Information" className="tab-panel-button" />
+                  <Tab value="Account" label="Account Information" className="tab-panel-button" />
+                  <Tab value="Education" label="Education Information" className="tab-panel-button" />
+                  <Tab value="Document" label="Document Information" className="tab-panel-button" />
+                  <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
+                  <Tab value="login" label="Login Information" className="tab-panel-button" />
                 </Tabs>
               </div>
 
