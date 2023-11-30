@@ -5,9 +5,9 @@ import Sidebar from "./Component/common/Sidebar"
 import AppRoute from './Component/routes/AppRoute';
 // import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
 import { GetLocalStorage } from './service/StoreLocalStorage';
-// import './style/App.scss';
-// import './style/App.css'
-// import './style/Responsive.css'
+import './style/App.scss';
+import './style/App.css'
+import './style/Responsive.css'
 
 function App() {
 
