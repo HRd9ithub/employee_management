@@ -1,10 +1,11 @@
 import moment from "moment";
 
 export const calculatorOverTime = (data) => {
-    const sumHoras = sum(data)
-    if (sumHoras[0] > 8) {
-        sumHoras[0] -= 8
-        return sumHoras.join(':');
+    const sumHoras = sum(data);
+    if (sumHoras.split(":")[0] > 8) {
+        const value = sumHoras.split(":")
+        value[0] -= 8
+        return value.join(":");
     }else{
         return 0
     }
