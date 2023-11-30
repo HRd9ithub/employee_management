@@ -222,14 +222,14 @@ const EmployeeViewComponent = () => {
                                 {/* ............................Header one.......................... */}
                                 <div className="modal-header employee-form">
                                     <Tabs value={value} onChange={changeTab} aria-label="secondary tabs example">
-                                        <Tab value="Personal" label="Personal Info." />
-                                        <Tab value="Account" label="Account Info." />
-                                        <Tab value="Education" label="Education Info." />
-                                        <Tab value="Document" label="Document Info." />
-                                        <Tab value="Company" label="Company Info." />
-                                        <Tab value="Emergency" label="Emergency Contact Info." />
+                                        <Tab value="Personal" label="Personal Info." className="tab-panel-button" />
+                                        <Tab value="Account" label="Account Info." className="tab-panel-button" />
+                                        <Tab value="Education" label="Education Info." className="tab-panel-button" />
+                                        <Tab value="Document" label="Document Info." className="tab-panel-button" />
+                                        <Tab value="Company" label="Company Info." className="tab-panel-button" />
+                                        <Tab value="Emergency" label="Emergency Contact Info." className="tab-panel-button" />
                                         {match &&
-                                            <Tab value="password" label="Change Password" />}
+                                            <Tab value="password" label="Change Password" className="tab-panel-button" />}
                                     </Tabs>
                                 </div>
 

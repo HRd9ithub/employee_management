@@ -610,12 +610,38 @@
         width: 75%;
     }
 }
-/* 
+
 @media (max-width: 1280px) {
-    .box-dashboard.col-lg-3.col-md-6 {
-        max-width: 25% !important;
+    .modal-header-none {
+        display: block;
     }
-} */
+
+    .employee-form {
+        display: none;
+    }
+    /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
+    .modal-header-none .dropdown-menu {
+        height: 130px !important;
+        overflow: auto !important;
+    }
+
+    .dropdown-item.active,
+    .dropdown-item:active {
+        color: #00458f;
+        text-decoration: none;
+        background-color: #fff;
+    }
+
+    .modal-header-none .dropdown-menu {
+        padding: 0px 22px;
+    }
+
+    .modal-header-none .dropdown .dropdown-menu .dropdown-item :hover {
+        border-bottom: 1px solid lightgrey !important;
+        background-color: lightblue !important;
+    }
+
+}
 
 @media (max-width: 1200px) {
 
@@ -903,30 +929,6 @@
         padding: 1rem 2rem !important;
     }
 
-    .modal-header-none {
-        display: block;
-    }
-
-    .employee-form {
-        display: none;
-    }
-
-    .dropdown-item.active,
-    .dropdown-item:active {
-        color: #00458f;
-        text-decoration: none;
-        background-color: #fff;
-    }
-
-    .modal-header-none .dropdown-menu {
-        padding: 0px 22px;
-    }
-
-    .modal-header-none .dropdown .dropdown-menu .dropdown-item :hover {
-        border-bottom: 1px solid lightgrey !important;
-        background-color: lightblue !important;
-    }
-
     .calcedar-field .react-date-picker__wrapper {
         padding: 9px 6px;
     }
@@ -943,11 +945,7 @@
         padding: 2rem 1rem;
     }
 
-    /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
-    .modal-header-none .dropdown-menu {
-        height: 130px !important;
-        overflow: auto !important;
-    }
+
 }
 
 @media (max-width: 1028px) {
