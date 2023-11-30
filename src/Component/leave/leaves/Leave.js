@@ -190,6 +190,7 @@ const Leave = () => {
                     let data = leave.find((val) => {
                         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
                     })
+                    console.log('data :>> ', data);
                     if (data) {
                         return true
                     } else {
@@ -384,8 +385,8 @@ const Leave = () => {
                                                         <TableCell>
                                                             <div className='action'>
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
-                                                                {(permission && permission.permissions.update === 1 && val.status !== 'Approved' && val.status !== "Declined") &&
-                                                                    !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) &&
+                                                                {(permission && permission.permissions.update === 1 && (val.status !== 'Approved' && val.status !== "Declined") ||
+                                                                    !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())) &&
                                                                     <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />}
                                                                 {permission && permission.name.toLowerCase() !== "admin" && (val.status === "Read" || val.status === "Pending") && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                             </div>
