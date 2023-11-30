@@ -225,24 +225,20 @@ const LeaveModal = (props) => {
 
     //user validation
     const userValidation = () => {
-        if (user.length !== 0) {
-            if (!info.user_id || info.user_id === '0') {
-                setinfo({ ...info, user_id_error: "Employee is a required field." })
-                return false
-            } else {
-                setinfo({ ...info, user_id_error: '' })
-            }
+        if (!info.user_id || info.user_id === '0') {
+            setinfo({ ...info, user_id_error: "Employee is a required field." })
+            return false
+        } else {
+            setinfo({ ...info, user_id_error: '' })
         }
     }
     // leave type validation
     const leaveTypeValidation = () => {
-        if (leaveTypeDetail.length !== 0) {
-            if (!leave.leave_type_id || leave.leave_type_id === '0') {
-                setleave({ ...leave, leave_type_id_error: "Leave type is a required field." })
-                return false
-            } else {
-                setleave({ ...leave, leave_type_id_error: '' })
-            }
+        if (!leave.leave_type_id || leave.leave_type_id === '0') {
+            setleave({ ...leave, leave_type_id_error: "Leave type is a required field." })
+            return false
+        } else {
+            setleave({ ...leave, leave_type_id_error: '' })
         }
     }
     // from date validation

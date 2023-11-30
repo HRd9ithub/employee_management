@@ -3523,6 +3523,7 @@ select.form-control:focus {
 table.common-table-section thead tr th,
 table.common-table-section tbody tr td {
   white-space: nowrap !important;
+  font-weight: 500;
 }
 
 /* button animation */
