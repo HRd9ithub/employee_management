@@ -1,6 +1,5 @@
 import axios from "axios";
 import { GetLocalStorage, clearLocalStorage } from "./StoreLocalStorage";
-import { Navigate } from "react-router-dom";
 
 export const customAxios  = () => {
     const token  = GetLocalStorage('token');
@@ -18,7 +17,7 @@ export const customAxios  = () => {
       }, function (error) {
         if (error.response && error.response.status === 401) {
             clearLocalStorage();
-            <Navigate to="/login"/>
+            window.location.href = '/login';
         }
         return Promise.reject(error);
       });
@@ -41,7 +40,7 @@ export const customAxios1  = () => {
       }, function (error) {
         if (error.response && error.response.status === 401) {
             clearLocalStorage();
-            return <Navigate to="/login"/>
+            window.location.href = '/login';
         }
         return Promise.reject(error);
       });
