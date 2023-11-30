@@ -41,7 +41,7 @@ export const customAxios1  = () => {
       }, function (error) {
         if (error.response && error.response.status === 401) {
             clearLocalStorage();
-            <Navigate to="/login"/>
+            return <Navigate to="/login"/>
         }
         return Promise.reject(error);
       });
