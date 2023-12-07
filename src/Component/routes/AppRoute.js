@@ -25,6 +25,8 @@ import HolidayComponent from '../leave/holiday/HolidayComponent';
 import AttendanceComponent from '../attendance/AttendanceComponent';
 import ManageAttendance from '../attendance/ManageAttendance';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import InvoiceComponent from '../accounting/InvoiceComponent';
+import InvoiceFormComponent from '../accounting/InvoiceFormComponent';
 
 const AppRoute = () => {
     return (
@@ -64,6 +66,12 @@ const AppRoute = () => {
                 {/* attendance route */}
                 <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent/></ProtectedRoute>}></Route>
                 <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance/></ProtectedRoute>}></Route>
+                {/* invoice route */}
+                <Route path="/invoice">
+                    <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
+                    {/* <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route> */}
+                    <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>} /> 
+                </Route>       
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>
