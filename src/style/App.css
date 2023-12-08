@@ -4459,8 +4459,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .Paid-invoice {
-  background: rgb(82, 196, 26);
+  /* background: rgb(82, 196, 26); */
   color: rgb(255, 255, 255);
+  background-color: #5fd45f;
   font-weight: 500;
 }
 
@@ -4542,10 +4543,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .business-detail {
   border: 1.5px solid #aaaa;
-  margin: 22px 1px;
+  margin:22px 1px 5px 1px;
   background-color: #fff;
   border-radius: 7px;
   height: 310px;
+}
+.business-detail.client-error{
+  border: 1.5px solid red;
 }
 
 .business-name {
@@ -4558,8 +4562,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .business-info-value {
-  width: 45%;
+  width: 100%;
 }
+
+/* --------- billed to part ------------------ */
 
 .list-client {
   margin: 8px 0px;
@@ -4592,7 +4598,62 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   gap: 6px;
 }
 
-/* table css */
+.static-title {
+  display: inline-block;
+  padding: 9px;
+  color: #aaa;
+}
+
+.static.business-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+span.client-static-title {
+  text-align: center;
+  margin-bottom: 16px;
+  display: block;
+  color: rgb(81, 97, 115);
+}
+
+.client-profile-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.client-profile-div label{
+  height: 122px;
+  border: 1px dashed;
+  border-radius: 50%;
+  color: #004b8f;
+  width: 122px;
+  position: relative;
+  cursor: pointer;
+}
+
+.client-profile-div label img{
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.client-profile-div label .fa-camera{
+  position: absolute;
+  bottom: 6px;
+  right: 5px;
+  background-color: #fff;
+  border: 1px solid #004b8f;
+  text-align: center;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+/*------------------ table css --------------------------- */
 
 .head-item {
   background: #004b8f;
@@ -4665,6 +4726,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   display: flex;
   gap: 21px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .attach-button label {
@@ -4716,6 +4778,8 @@ svg {
 .sigCanvas {
   touch-action: none;
   background: white;
+  width: 100%;
+  height: 160px !important;
 }
 
 .Signature {
@@ -4724,9 +4788,19 @@ svg {
   justify-content: center;
 }
 
+.sign-upload-image{
+  text-align: end;
+  margin-top: 9px;
+}
+
+.sign-upload-image label{
+  cursor: pointer;
+}
+
 .invoice-error-box {
   border: 1px solid rgb(235, 73, 60);
-  color: rgb(235, 73, 60);;
+  color: rgb(235, 73, 60);
+  ;
   width: 340px;
   border-radius: 5px;
   -webkit-border-radius: 5px;

@@ -25,8 +25,8 @@ import HolidayComponent from '../leave/holiday/HolidayComponent';
 import AttendanceComponent from '../attendance/AttendanceComponent';
 import ManageAttendance from '../attendance/ManageAttendance';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
-import InvoiceComponent from '../accounting/InvoiceComponent';
-import InvoiceFormComponent from '../accounting/InvoiceFormComponent';
+import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
+import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
 
 const AppRoute = () => {
     return (

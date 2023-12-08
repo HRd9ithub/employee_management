@@ -46,8 +46,8 @@ const ItemComponent = (props) => {
                                         </td>
                                         <td>
                                             <div style={{ height: "38px" }}>
-                                                <input className='form-control' type="number" min="0" name="Quantity" value={itemData.Quantity} onChange={(e) => handleItemchange(e, ind)}  onBlur={(e) => {
-                                                    if (!itemData.Quantity) {
+                                                <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity} onChange={(e) => handleItemchange(e, ind)}  onBlur={(e) => {
+                                                    if (!itemData.quantity) {
                                                         let list = quantiyError.filter((val) => {
                                                             return val.id === ind
                                                         })
@@ -68,8 +68,8 @@ const ItemComponent = (props) => {
                                         </td>
                                         <td>
                                             <div style={{ height: "38px" }}>
-                                                <input className='form-control' type="number" min="0" name="Rate" value={itemData.Rate} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
-                                                    if (!itemData.Rate.trim()) {
+                                                <input className='form-control' type="number" min="0" name="rate" value={itemData.rate} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                    if (!itemData.rate.trim()) {
                                                         let list = rateError.filter((val) => {
                                                             return val.id === ind
                                                         })
@@ -88,7 +88,7 @@ const ItemComponent = (props) => {
                                                 ))}
                                             </div>
                                         </td>
-                                        <td><input className='form-control' type="number" min="0" name="Rate" value={itemData.Amount} readOnly /></td>
+                                        <td><input className='form-control' type="number" min="0"  value={itemData.amount} readOnly /></td>
                                         {ind > 0 &&
                                             <td onClick={() => removeRowTable(ind)} className="remove-item-icon"><i className="fa-solid fa-xmark"></i></td>}
                                     </tr>

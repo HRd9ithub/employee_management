@@ -5,11 +5,12 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ItemComponent from './ItemComponent';
 import SignatureCanvas from 'react-signature-canvas'
 import JoditEditor from 'jodit-react';
-import { AppProvider } from '../context/RouteContext';
+import { AppProvider } from '../../../context/RouteContext';
 import toast from 'react-hot-toast';
-import { customAxios } from '../../service/CreateApi';
-import Spinner from '../common/Spinner';
-import Error500 from '../error_pages/Error500';
+import { customAxios, customAxios1 } from '../../../../service/CreateApi';
+import Spinner from '../../../common/Spinner';
+import Error500 from '../../../error_pages/Error500';
+import ClientFormComponent from './ClientFormComponent';
 
 
 const InvoiceFormComponent = () => {
@@ -20,7 +21,10 @@ const InvoiceFormComponent = () => {
     const noteEditorRef = useRef(null);
 
     const [clientNames, setClientNames] = useState([]);
+    const [clientData, setClientData] = useState({});
+    const [clienError, setClienError] = useState("");
     const [isLoading, setisLoading] = useState(false);
+    const [isSubLoading, setisSubLoading] = useState(false);
     const [serverError, setServerError] = useState(false);
     const [heading, setHeading] = useState({
         invoiceId: "D9" + Math.random().toString().slice(2, 8),
@@ -35,9 +39,9 @@ const InvoiceFormComponent = () => {
     //table data
     const [tableData, settableData] = useState([{
         itemName: '',
-        Quantity: '1',
-        Rate: '1',
-        Amount: 1
+        quantity: '1',
+        rate: '1',
+        amount: 1
     }]);
     const [itemNameError, setitemNameError] = useState([]);
     const [rateError, setrateError] = useState([]);
@@ -105,9 +109,9 @@ const InvoiceFormComponent = () => {
     const addRowTable = () => {
         const data = [...tableData, {
             itemName: '',
-            Quantity: '1',
-            Rate: '1',
-            Amount: 1
+            quantity: '1',
+            rate: '1',
+            amount: 1
         }]
         settableData(data)
     }
@@ -137,11 +141,11 @@ const InvoiceFormComponent = () => {
         const { name, value } = e.target;
         let list = [...tableData];
         list[ind][name] = value;
-        if (name === 'Quantity') {
-            list[ind]['Amount'] = tableData[ind].Rate * value
+        if (name === 'quantity') {
+            list[ind]['amount'] = tableData[ind].rate * value
         }
-        if (name === 'Rate') {
-            list[ind]['Amount'] = tableData[ind].Quantity * value
+        if (name === 'rate') {
+            list[ind]['amount'] = tableData[ind].quantity * value
         }
         settableData(list)
     }
@@ -208,9 +212,44 @@ const InvoiceFormComponent = () => {
         });
     }
 
+    // get client detail
+    const getClientDetail = (id) => {
+        setServerError(false)
+        setisSubLoading(true);
+
+        customAxios().get(`/invoice/client/${id}`).then((res) => {
+            if (res.data.success) {
+                getClientName();
+                const { data, permissions } = res.data;
+                // setPermission(permissions);
+                setClientData(data);
+                setisSubLoading(false);
+            }
+        }).catch((error) => {
+            setisSubLoading(false);
+            if (!error.response) {
+                setServerError(true)
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        });
+    }
+
     useEffect(() => {
         getClientName();
     }, [])
+
+    // onchange function
+    const clientChange = (id) => {
+        // setClientId()
+        getClientDetail(id)
+    }
 
 
     // * ============================  submit invoice====================================
@@ -221,22 +260,76 @@ const InvoiceFormComponent = () => {
         console.log('signimage :>> ', signatureRef.current.toDataURL('image/png'));
         console.log('signimage :>> ', signatureRef.current.isEmpty());
         console.log('signimage :>> ', note);
+
+        Object.keys(clientData).length !== 0 ? setClienError("") : setClienError("Client Business Name is Empty.");
+
         invoiceIdValidation();
         issueDateValidation();
-
-        // attchFile.map((url) => {
-        //     formdata1.append('fileurl', url);
-        // })
 
         const data = validate();
 
 
         const { invoiceId, issue_date, due_date } = heading;
 
-        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data) {
+        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError) {
             return false
-        }
+        } else {
+            const totalAmount = tableData.reduce((total, cur) => {
+                return total + cur.amount
+            }, 0)
 
+            let formdata = new FormData();
+            formdata.append('invoiceId', invoiceId);
+            formdata.append('issue_date', issue_date);
+            due_date && formdata.append('due_date', due_date);
+            formdata.append('totalAmount', totalAmount);
+            formdata.append('userId', UserData._id)
+            formdata.append('clientId', clientData._id);
+            attchFile.map((val) => formdata.append('image', val.url))
+            formdata.append('signImage', signatureRef.current.isEmpty() ? "" : signatureRef.current.toDataURL('image/png'));
+            extra_field.length !== 0 && formdata.append('extra_field', JSON.stringify(extra_field));
+            note && formdata.append('note', note);
+            formdata.append('tableData', JSON.stringify(tableData));
+
+            let url = "";
+            // if (data) {
+            //     url = customAxios1().put(`/invoice/${data._id}`, formdata);
+            // } else {
+                url = customAxios1().post('/invoice', formdata);
+            // }
+
+            url.then((result) => {
+                if (result.data.success) {
+                    toast.success(result.data.message);
+                    // setclient({
+                    //     first_name: "",
+                    //     last_name: "",
+                    //     email: "",
+                    //     phone: "",
+                    //     country: "",
+                    //     state: "",
+                    //     city: "",
+                    //     address: "",
+                    //     postcode: "",
+                    //     profile_image: ""
+                    // });
+                    // setImage("");
+                    // getClientDetail(result.data.id);
+                }
+            }).catch((error) => {
+                if (!error.response) {
+                    toast.error(error.message);
+                } else {
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    } else {
+                        // setError(error.response.data.error);
+                    }
+                }
+            }).finally(() => {
+                setisLoading(false);
+            })
+        }
     }
 
     //  * validation form  part    
@@ -250,10 +343,10 @@ const InvoiceFormComponent = () => {
             if ((!val.itemName.trim())) {
                 nameError.push({ item: "Item Name is a required field.", id: ind })
             }
-            if ((!val.Quantity)) {
+            if ((!val.quantity)) {
                 QuantityError.push({ Quantity: "Quantity is a required field.", id: ind })
             }
-            if (!val.Rate) {
+            if (!val.rate) {
                 rateError.push({ rate: "Rate is a required field.", id: ind })
             }
         })
@@ -263,10 +356,10 @@ const InvoiceFormComponent = () => {
         return (nameError.length !== 0 || rateError.length !== 0 || QuantityError.length !== 0)
     }
 
-    if(isLoading){
-        return <Spinner/>
-    }else if(serverError){
-        return <Error500/>
+    if (isLoading) {
+        return <Spinner />
+    } else if (serverError) {
+        return <Error500 />
     }
 
     return (
@@ -359,7 +452,7 @@ const InvoiceFormComponent = () => {
                                 {/* bill part */}
                                 <div className="form-contents">
                                     <div className="row align-content-center">
-                                        <div className='col-6'>
+                                        <div className='col-md-6'>
                                             <div className='bill-box-section'>
                                                 <h4>Billed By</h4>
                                                 <div className="dropdown ">
@@ -416,69 +509,86 @@ const InvoiceFormComponent = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='col-6 '>
+                                        <div className='col-md-6 '>
                                             <div className='bill-box-section'>
                                                 <h4>Billed To</h4>
                                                 <div className="dropdown ">
                                                     <button className="btn button-bill text-left col-12 client-icon-drop dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                                        <span className='bill-logo mx-2' ><img src="/Images/d9.png" alt='p_image' /></span>
-                                                        <span className='text-capitalize'>hardik patel</span>
+                                                        {Object.keys(clientData).length !== 0 ? <>
+                                                            {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
+                                                            <span className='text-capitalize'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
+                                                        </> : <span className='static-title'> Select Client</span>}
                                                     </button>
                                                     <ul className="dropdown-menu col-md-12" aria-labelledby="dropdownMenuButton1">
                                                         {clientNames.map((val) => {
-                                                            return <li className="list-client" key={val._id}>{val.name}</li>
+                                                            return <li className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</li>
                                                         })}
                                                         <li className='d-flex justify-content-center my-2'>
-                                                            <button className='btn add-client-button' onClick={(e) => e.preventDefault()}><i className="fa-solid fa-circle-plus"></i> add new client</button>
+                                                            <ClientFormComponent getClientDetail={getClientDetail} />
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <div className='p-3 business-detail'>
-                                                    <div className="d-flex justify-content-between">
-                                                        <label className='Business-title'>Business details</label>
-                                                        <label className='edit-client-icon'><i className="fa-solid fa-pencil"></i> Edit</label>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Business Name</span>
+                                                {Object.keys(clientData).length !== 0 ?
+                                                    <div className='p-3 business-detail'>
+                                                        <div className="d-flex justify-content-between">
+                                                            <label className='Business-title'>Business details</label>
+                                                            <ClientFormComponent data={clientData} getClientDetail={getClientDetail} />
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>JD patel</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >Business Name</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Email</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >Email</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{clientData.email}</span>
+                                                            </div>
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>jd@gmail.com</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >Phone No :</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{clientData.phone}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Phone No :</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >country</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{clientData.country}</span>
+                                                            </div>
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>65646874874874</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >Address</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Industry :</span>
+                                                    </div> :
+                                                    <div>
+                                                        <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
+                                                            <div className='static-client-div'>
+                                                                <span className='client-static-title'>Select a Client/Business from list</span>
+                                                                <span className='client-static-title'>Or</span>
+                                                                <ul className="col-md-12 client-static-button">
+                                                                    <li className='d-flex justify-content-center my-2'>
+                                                                        <ClientFormComponent getClientDetail={getClientDetail} />
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>it </span>
-                                                        </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Address</span>
-                                                        </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>Shivarajni soceity</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                        {clienError && <div className='error mt-0' >{clienError}</div>}
+                                                    </div>}
                                             </div>
                                         </div>
                                     </div>
@@ -547,6 +657,9 @@ const InvoiceFormComponent = () => {
                                                     penColor='cyan' throttle={20}
                                                     canvasProps={{ width: 450, height: 180, className: 'sigCanvas' }}
                                                 />
+                                                <div className='sign-upload-image'>
+                                                    <label onClick={() => signatureRef.current.clear()}><i className="fa-solid fa-rotate-right"></i> reset</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -575,6 +688,7 @@ const InvoiceFormComponent = () => {
                                                         {itemNameError.length !== 0 && <li className='mt-1'> {itemNameError[0].item} </li>}
                                                         {rateError.length !== 0 && <li className='mt-1'> {rateError[0].rate} </li>}
                                                         {quantiyError.length !== 0 && <li className='mt-1'> {quantiyError[0].Quantity} </li>}
+                                                        {clienError && <li className='mt-1'>{clienError}</li>}
                                                     </ol>
                                                 </div>
                                             </div>
@@ -594,6 +708,7 @@ const InvoiceFormComponent = () => {
                     </div>
                 </div>
             </motion.div >
+            {isSubLoading && <Spinner />}
         </>
     )
 }
