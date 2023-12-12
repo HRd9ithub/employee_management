@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { NavLink, Navigate, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -19,16 +19,15 @@ import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
 
 const InvoiceComponent = () => {
-  const date_today = new Date();
-  const [clientData,setClientData] = useState([]);
+  const [clientData, setClientData] = useState([]);
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [permission, setpermission] = useState("");
   const [serverError, setServerError] = useState(false);
-  const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
-  const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
+  const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
+  const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
   const [open, setOpen] = useState("");
-  const [client_id,setClient_id] = useState("")
+  const [client_id, setClient_id] = useState("");
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -68,23 +67,23 @@ const InvoiceComponent = () => {
   }
 
   // get client name
-  const fetchClientName = async() => {
+  const fetchClientName = async () => {
     setisLoading(true)
-        try {
-            const res = await customAxios().get('/invoice/client');
+    try {
+      const res = await customAxios().get('/invoice/client');
 
-            if (res.data.success) {
-              setClientData(res.data.data);
-            }
-        } catch (error) {
-            if (!error.response) {
-                toast.error(error.message);
-            }else if (error.response.data.message) {
-                toast.error(error.response.data.message);
-            }
-        } finally {
-          setisLoading(false)
-        }
+      if (res.data.success) {
+        setClientData(res.data.data);
+      }
+    } catch (error) {
+      if (!error.response) {
+        toast.error(error.message);
+      } else if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
+    } finally {
+      setisLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -171,9 +170,9 @@ const InvoiceComponent = () => {
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
-      return <Error500 />;
+    return <Error500 />;
   } else if (!permission || permission.permissions.list !== 1) {
-      return <Error403 />;
+    return <Error403 />;
   }
 
   return (
@@ -198,10 +197,10 @@ const InvoiceComponent = () => {
                         <select className="form-control mb-0" id="client" name='data' value={client_id} onChange={clientChange} >
                           <option value=''>All</option>
                           {clientData.map((val) => {
-                              return (
-                                <option key={val._id} value={val._id}>{val.name}</option>
-                              )
-                            })}
+                            return (
+                              <option key={val._id} value={val._id}>{val.name}</option>
+                            )
+                          })}
                         </select>
                       </div>
                     </div>
@@ -227,9 +226,9 @@ const InvoiceComponent = () => {
                       <i className="fas fa-search"></i>
                     </div>
                     {permission && permission.permissions.create === 1 &&
-                    <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' onClick={() => navigate("create")} >
-                      <i className="fa-solid fa-plus"></i>&nbsp;Add
-                    </div>}
+                      <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' onClick={() => navigate("create")} >
+                        <i className="fa-solid fa-plus"></i>&nbsp;Add
+                      </div>}
                   </div>
                 </div>
               </div>
@@ -240,16 +239,16 @@ const InvoiceComponent = () => {
                       <select className="form-control mt-3" id="client" name='data' value={client_id} onChange={clientChange} >
                         <option value=''>All</option>
                         {clientData.map((val) => {
-                              return (
-                                <option key={val._id} value={val._id}>{val.name}</option>
-                              )
-                            })}
+                          return (
+                            <option key={val._id} value={val._id}>{val.name}</option>
+                          )
+                        })}
                       </select>
                     </div>
                   </div>
                   <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
                     <div className="form-group mb-0 position-relative">
-                      <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }}  onCallback={handleCallback}>
+                      <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback}>
                         <input className="form-control mt-3" />
                       </DateRangePicker>
                       <CalendarMonthIcon className="range_icon" />
@@ -308,7 +307,7 @@ const InvoiceComponent = () => {
                                 size="small"
                                 onClick={() => handleCollapse(val._id)}
                               >
-                                {open === val._id ? <RemoveIcon /> : <AddIcon /> }
+                                {open === val._id ? <RemoveIcon /> : <AddIcon />}
                               </IconButton>
                             </TableCell>
                             <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
@@ -318,10 +317,30 @@ const InvoiceComponent = () => {
                             <TableCell>
                               <div >
                                 <span className={val.status + "-invoice invoice-status"}>{val.status}</span>
-                                <br/>
+                                <br />
                                 {val.status === "Unpaid" && val.due_date && <label className="mb-0 mt-1" htmlFor="due-date">Due on {moment(val.due_date).format("DD MMM YYYY")}</label>}
                               </div>
-                              </TableCell>
+                            </TableCell>
+                            <TableCell>
+                              <div className="d-flex invoice-action">
+                                <div className='text-center' onClick={() => navigate(`/invoice/preview/${val._id}`)}>
+                                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                                  <span className="d-block">Open</span>
+                                </div>
+                                <div className='text-center' onClick={() => navigate(`/invoice/edit/${val._id}`)}>
+                                <i className="fa-solid fa-pencil"></i>
+                                <span className="d-block">Edit</span>
+                                </div>
+                                <div className='text-center' onClick={() => navigate(`/invoice/duplicate/${val._id}`)}>
+                                  <i className="fa-regular fa-copy"></i>
+                                  <span className="d-block">Duplicate</span>
+                                </div>
+                                <div className='text-center'>
+                                <i className="fa-solid fa-trash-can"></i>
+                                  <span className="d-block">Delete</span>
+                                </div>
+                              </div>
+                            </TableCell>
                           </TableRow>
                           <TableRow>
                             {/* child table show */}

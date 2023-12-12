@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from "framer-motion";
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ItemComponent from './ItemComponent';
 import SignatureCanvas from 'react-signature-canvas'
@@ -11,6 +11,7 @@ import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 import Spinner from '../../../common/Spinner';
 import Error500 from '../../../error_pages/Error500';
 import ClientFormComponent from './ClientFormComponent';
+import moment from 'moment';
 
 
 const InvoiceFormComponent = () => {
@@ -35,6 +36,8 @@ const InvoiceFormComponent = () => {
     const [issueDateError, setissueDateError] = useState("");
     // extra field
     const [extra_field, setextra_field] = useState([]);
+    const [extraFieldError, setExtraFieldError] = useState("");
+    const [error, setError] = useState([]);
 
     //table data
     const [tableData, settableData] = useState([{
@@ -48,7 +51,10 @@ const InvoiceFormComponent = () => {
     const [quantiyError, setquantiyError] = useState([]);
     const [note, setNote] = useState('');
     const [attchFile, setattchFile] = useState([]);
+    const [signImage, setsignImage] = useState("");
+    const [signImageToggle, setsignImageToggle] = useState(true);
 
+    const { id,duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
 
     // heading onchange
@@ -187,17 +193,17 @@ const InvoiceFormComponent = () => {
     // get client name
     const getClientName = () => {
         setServerError(false)
-        setisLoading(true);
+        setisSubLoading(true);
 
         customAxios().get('/invoice/client').then((res) => {
             if (res.data.success) {
                 const { data, permissions } = res.data;
                 // setPermission(permissions);
                 setClientNames(data);
-                setisLoading(false);
+                setisSubLoading(false);
             }
         }).catch((error) => {
-            setisLoading(false);
+            setisSubLoading(false);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -243,6 +249,9 @@ const InvoiceFormComponent = () => {
 
     useEffect(() => {
         getClientName();
+        if (id || duplicateId) {
+            getInvoiceDetail();
+        }
     }, [])
 
     // onchange function
@@ -253,14 +262,20 @@ const InvoiceFormComponent = () => {
 
 
     // * ============================  submit invoice====================================
-    const addInvoice = () => {
-        console.log('heading :>> ', heading);
-        console.log('bill by :>> ', UserData);
-        console.log('table data :>> ', tableData);
-        console.log('signimage :>> ', signatureRef.current.toDataURL('image/png'));
-        console.log('signimage :>> ', signatureRef.current.isEmpty());
-        console.log('signimage :>> ', note);
-
+    const addInvoice = (status) => {
+        console.log('status :>> ', status);
+        let errorData = ""
+        if (extra_field.length > 0) {
+            errorData = extra_field.find((val) => {
+                return !val.name.trim() || !val.value.trim();
+            })
+            if (errorData) {
+                setExtraFieldError("Additional field must not be empty.");
+            } else {
+                setExtraFieldError("");
+            }
+        }
+        setError([]);
         Object.keys(clientData).length !== 0 ? setClienError("") : setClienError("Client Business Name is Empty.");
 
         invoiceIdValidation();
@@ -268,10 +283,9 @@ const InvoiceFormComponent = () => {
 
         const data = validate();
 
-
         const { invoiceId, issue_date, due_date } = heading;
 
-        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError) {
+        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData) {
             return false
         } else {
             const totalAmount = tableData.reduce((total, cur) => {
@@ -286,35 +300,29 @@ const InvoiceFormComponent = () => {
             formdata.append('userId', UserData._id)
             formdata.append('clientId', clientData._id);
             attchFile.map((val) => formdata.append('image', val.url))
-            formdata.append('signImage', signatureRef.current.isEmpty() ? "" : signatureRef.current.toDataURL('image/png'));
-            extra_field.length !== 0 && formdata.append('extra_field', JSON.stringify(extra_field));
+            formdata.append('signImage', !signImageToggle || signatureRef?.current.isEmpty() ? signImage: signatureRef.current.toDataURL('image/png'));
+            formdata.append('extra_field', JSON.stringify(extra_field));
             note && formdata.append('note', note);
             formdata.append('tableData', JSON.stringify(tableData));
+            status && formdata.append('status', status);
 
             let url = "";
-            // if (data) {
-            //     url = customAxios1().put(`/invoice/${data._id}`, formdata);
-            // } else {
+            if (id) {
+                url = customAxios1().put(`/invoice/${id}`, formdata);
+            } else {
                 url = customAxios1().post('/invoice', formdata);
-            // }
+            }
 
             url.then((result) => {
                 if (result.data.success) {
                     toast.success(result.data.message);
-                    // setclient({
-                    //     first_name: "",
-                    //     last_name: "",
-                    //     email: "",
-                    //     phone: "",
-                    //     country: "",
-                    //     state: "",
-                    //     city: "",
-                    //     address: "",
-                    //     postcode: "",
-                    //     profile_image: ""
-                    // });
-                    // setImage("");
-                    // getClientDetail(result.data.id);
+                    if (status) {
+                        navigate("/invoice");
+                    } else if(id) {
+                        navigate(`/invoice/preview/${result.data.id}`);
+                    }else{
+                        navigate(`/invoice/payment/${result.data.id}`);
+                    }
                 }
             }).catch((error) => {
                 if (!error.response) {
@@ -323,7 +331,7 @@ const InvoiceFormComponent = () => {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     } else {
-                        // setError(error.response.data.error);
+                        setError(error.response.data.error);
                     }
                 }
             }).finally(() => {
@@ -356,18 +364,77 @@ const InvoiceFormComponent = () => {
         return (nameError.length !== 0 || rateError.length !== 0 || QuantityError.length !== 0)
     }
 
+    /* ------------------------
+    get data database
+    ---------------------------*/
+
+    const getInvoiceDetail = async () => {
+        setServerError(false)
+        setisLoading(true);
+
+        const unique = id || duplicateId;
+        console.log('unique :>> ', unique);
+
+        customAxios().get(`invoice/${unique}`).then((res) => {
+            if (res.data.success) {
+                const { data } = res.data;
+                if (data.length !== 0) {
+                    const result = data[0]
+                    setHeading({
+                        invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
+                        issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
+                        due_date: result.due_date && moment(result.due_date).format("YYYY-MM-DD"),
+                    });
+                    result.hasOwnProperty("extra_field") && setextra_field(JSON.parse(result.extra_field));
+                    setClientData(result.invoiceClient[0]);
+                    settableData(result.productDetails);
+                    let file = [];
+                    result.attchmentFile.forEach((val) => {
+                        if (val.split(".")[1] === "pdf") {
+                            file.push({ url: val, icon: '/Images/pdf-attch.png' });
+                        } else if (val.split(".")[1] === "csv") {
+                            file.push({ url: val, icon: '/Images/csv.png' });
+                        } else {    
+                            file.push({ url: val, icon: process.env.REACT_APP_IMAGE_API + "/uploads/" + val });
+                        }
+                    })
+                    setattchFile(file);
+                    if(id){
+                        setsignImage(result.signImage);
+                        result.signImage ? setsignImageToggle(false) : setsignImageToggle(true);
+                    }
+                    setNote(result.note)
+                }
+                setisLoading(false);
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                setServerError(true)
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        });
+    }
+
     if (isLoading) {
         return <Spinner />
-    } else if (serverError) {
+    } else if (serverError && !isSubLoading) {
         return <Error500 />
     }
 
     return (
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                <div className=" container-fluid pt-4">
+                <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white pt-4">
-                        {/* ====================== breadcrumb */}
+                        {/* ====================== breadcrumb ==================*/}
                         <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-8 d-flex justify-content-between align-items-center">
@@ -375,7 +442,7 @@ const InvoiceFormComponent = () => {
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                             <li><NavLink to="/invoice" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Invoice</NavLink></li>
-                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Create</NavLink></li>
+                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; {id ? "Edit" : "Create"}</NavLink></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -390,7 +457,7 @@ const InvoiceFormComponent = () => {
                             {/* title */}
                             <div className='row'>
                                 <div className='col-md-12 text-center mt-3'>
-                                    <h1 className='invoice-title'>Create Invoice</h1>
+                                    <h1 className='invoice-title'>{id ? "Edit" : "Create"} Invoice</h1>
                                 </div>
                             </div>
                             <form>
@@ -652,12 +719,17 @@ const InvoiceFormComponent = () => {
                                                 <h4>Signature <span>(Optional)</span></h4>
                                             </div>
                                             <div className='signature'>
-                                                <SignatureCanvas
-                                                    ref={signatureRef}
-                                                    penColor='cyan' throttle={20}
-                                                    canvasProps={{ width: 450, height: 180, className: 'sigCanvas' }}
-                                                />
+                                                {signImageToggle ?
+                                                    <SignatureCanvas
+                                                        ref={signatureRef}
+                                                        penColor='cyan' throttle={20}
+                                                        canvasProps={{ width: 450, height: 180, className: 'sigCanvas' }}
+                                                    /> :
+                                                    <img src={signImage} alt="signature" width={450} height={160} />
+                                                }
                                                 <div className='sign-upload-image'>
+                                                    {!signImageToggle &&
+                                                        <label onClick={() => {setsignImageToggle(true);setsignImage("")}}><i className="fa-solid fa-plus"></i> Add New Signature</label>}
                                                     <label onClick={() => signatureRef.current.clear()}><i className="fa-solid fa-rotate-right"></i> reset</label>
                                                 </div>
                                             </div>
@@ -678,7 +750,7 @@ const InvoiceFormComponent = () => {
                                         </div>
                                     </div>
                                     {
-                                        invoiceIdError || issueDateError || itemNameError.length !== 0 || rateError.length !== 0 || quantiyError.length !== 0 ?
+                                        invoiceIdError || issueDateError || itemNameError.length !== 0 || rateError.length !== 0 || quantiyError.length !== 0 || error.length !== 0 || extraFieldError ?
                                             <div className='col-md-4 my-3'>
                                                 <div className='invoice-error-box p-3'>
                                                     <span><i className="fa-solid fa-circle-exclamation"></i> Please fill the following details</span>
@@ -689,6 +761,10 @@ const InvoiceFormComponent = () => {
                                                         {rateError.length !== 0 && <li className='mt-1'> {rateError[0].rate} </li>}
                                                         {quantiyError.length !== 0 && <li className='mt-1'> {quantiyError[0].Quantity} </li>}
                                                         {clienError && <li className='mt-1'>{clienError}</li>}
+                                                        {extraFieldError && <li className='mt-1'>{extraFieldError}</li>}
+                                                        {error.map((item, index) => (
+                                                            <li key={index} className='mt-1'>{item}</li>
+                                                        ))}
                                                     </ol>
                                                 </div>
                                             </div>
@@ -698,8 +774,8 @@ const InvoiceFormComponent = () => {
 
                                     <div className='col-md-10 mx-auto'>
                                         <div className='d-flex justify-content-center'>
-                                            <button className="btn btn-light">Save as Draft</button>
-                                            <button className="btn btn-gradient-primary" onClick={addInvoice} >Save & Continue</button>
+                                            {!id && <button className="btn btn-light" onClick={() => addInvoice("Draft")}>Save as Draft</button>}
+                                            <button className="btn btn-gradient-primary" onClick={() => addInvoice()} >Save & Continue</button>
                                         </div>
                                     </div>
                                 </div>

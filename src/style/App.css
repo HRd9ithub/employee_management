@@ -4458,6 +4458,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   font-weight: 500;
 }
 
+.Draft-invoice {
+  background: rgb(232, 232, 232);
+  color: rgb(32, 23, 66);
+  font-weight: 500;
+}
+
 .Paid-invoice {
   /* background: rgb(82, 196, 26); */
   color: rgb(255, 255, 255);
@@ -4470,6 +4476,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   text-align: center;
   border-radius: 32px;
   cursor: pointer;
+}
+.invoice-action{
+  gap : 10px;
+}
+.invoice-action div{
+ cursor : pointer;
 }
 
 /* ---------------------------------------  invoice form ---------------------------------------- */
@@ -4543,12 +4555,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .business-detail {
   border: 1.5px solid #aaaa;
-  margin:22px 1px 5px 1px;
+  margin: 22px 1px 5px 1px;
   background-color: #fff;
   border-radius: 7px;
   height: 310px;
 }
-.business-detail.client-error{
+
+.business-detail.client-error {
   border: 1.5px solid red;
 }
 
@@ -4617,14 +4630,14 @@ span.client-static-title {
   color: rgb(81, 97, 115);
 }
 
-.client-profile-div{
+.client-profile-div {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-bottom: 10px;
 }
 
-.client-profile-div label{
+.client-profile-div label {
   height: 122px;
   border: 1px dashed;
   border-radius: 50%;
@@ -4634,7 +4647,7 @@ span.client-static-title {
   cursor: pointer;
 }
 
-.client-profile-div label img{
+.client-profile-div label img {
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -4642,7 +4655,7 @@ span.client-static-title {
   -o-border-radius: 50%;
 }
 
-.client-profile-div label .fa-camera{
+.client-profile-div label .fa-camera {
   position: absolute;
   bottom: 6px;
   right: 5px;
@@ -4788,24 +4801,117 @@ svg {
   justify-content: center;
 }
 
-.sign-upload-image{
-  text-align: end;
+.sign-upload-image {
+  display : flex;
+  justify-content : space-between;
   margin-top: 9px;
 }
 
-.sign-upload-image label{
+.sign-upload-image label {
   cursor: pointer;
 }
 
 .invoice-error-box {
   border: 1px solid rgb(235, 73, 60);
   color: rgb(235, 73, 60);
-  ;
-  width: 340px;
+  width: 400px;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   background-color: rgba(235, 73, 60, 0.06);
+}
+
+/* --------------------------
+ preview invoice 
+ --------------------------- */
+
+.invoice-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0 1rem;
+  background: #0a4a92;
+  ;
+  border-bottom: none;
+  color: rgb(255 255 255);
+}
+
+/* box-shadow: 0 0 4px #ccc; */
+.invoice-summary .btn {
+  padding: 0.875rem 0rem !important;
+  color: rgb(255 255 255);
+  font-size: 16px;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+}
+
+.invoice-title-summary {
+  color: rgb(127, 143, 164);
+  font-size: 14px;
+  text-transform: capitalize;
+  width: 125px;
+}
+
+.invoice-value-summary {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.summary-card-body {
+  box-shadow: 0 0 4px #ccc;
+  border: none;
+}
+
+.invoice-summary:first-child {
+  border-radius: 5px;
+}
+
+/* -------- template design ---------------*/
+
+.template-section {
+  box-shadow: 0 0 4px #ccc;
+  border-radius: 5px;
+}
+
+.template-logo {
+  width: 40%;
+}
+
+.template-heading {
+  font-size: 26px;
+  font-weight: 400 !important;
+  letter-spacing: 0.6px;
+  margin: 0 !important;
+}
+
+.heading-section h4 {
+  text-transform: capitalize;
+}
+
+.heading-section label {
+  color: #c3c7c8;
+  border-left: 2px solid #0a4a92;
+}
+
+.heading-section p{
+  margin-bottom: 0.5rem;
+}
+
+.product-table thead{
+  background-color: #0a4a92;
+  color: #fff;
+}
+
+.total-column{
+  background-color : rgb(247, 250, 255);
+}
+
+.extra-heading{
+  color : #0a4192
 }

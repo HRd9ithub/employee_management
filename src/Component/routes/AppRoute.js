@@ -27,6 +27,8 @@ import ManageAttendance from '../attendance/ManageAttendance';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
 import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
+import AccountFormComponent from "../accounting/invoice/form/AccountFormComponent";
+import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 
 const AppRoute = () => {
     return (
@@ -69,8 +71,11 @@ const AppRoute = () => {
                 {/* invoice route */}
                 <Route path="/invoice">
                     <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
-                    {/* <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route> */}
+                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
+                    <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
                     <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>} /> 
+                    <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} /> 
+                    <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
                 </Route>       
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
