@@ -15,7 +15,6 @@ export const Globalcomponent = () => {
 
     //  login function
     const onSubmit = async (data) => {
-        console.warn(data)
         setError([]);
         try {
             setLoading(true)

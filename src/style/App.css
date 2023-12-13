@@ -4477,11 +4477,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-radius: 32px;
   cursor: pointer;
 }
-.invoice-action{
-  gap : 10px;
+
+.invoice-action {
+  gap: 10px;
 }
-.invoice-action div{
- cursor : pointer;
+
+.invoice-action div {
+  cursor: pointer;
 }
 
 /* ---------------------------------------  invoice form ---------------------------------------- */
@@ -4802,8 +4804,8 @@ svg {
 }
 
 .sign-upload-image {
-  display : flex;
-  justify-content : space-between;
+  display: flex;
+  justify-content: space-between;
   margin-top: 9px;
 }
 
@@ -4899,19 +4901,88 @@ svg {
   border-left: 2px solid #0a4a92;
 }
 
-.heading-section p{
+.heading-section p {
   margin-bottom: 0.5rem;
 }
 
-.product-table thead{
+.product-table thead {
   background-color: #0a4a92;
   color: #fff;
 }
 
-.total-column{
-  background-color : rgb(247, 250, 255);
+.total-column {
+  background-color: rgb(247, 250, 255);
 }
 
-.extra-heading{
-  color : #0a4192
+.extra-heading {
+  color: #0a4192
+}
+
+@media print {
+  .template-section {
+    padding: 35px 50px !important;
+  }
+
+  .template-head-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .template-head-section .col-md-6 {
+    width: 50% !important;
+  }
+
+  .template-summary-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .template-summary-section .col-md-4 {
+    width: 33% !important;
+  }
+
+  .table {
+    margin-bottom: 0 !important;
+  }
+
+  .table-bordered {
+    border: 1px solid #ebedf2 !important;
+  }
+
+  .table {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+    color: #212529 !important;
+  }
+
+  table {
+    border-collapse: collapse !important;
+  }
+
+  .product-table table thead th {
+    background-color: #0a4a92 !important;
+    color: #fff !important;
+  }
+
+  .total-column td {
+    background-color: rgb(247, 250, 255) !important;
+  }
+
+  .extra-section ol li a{
+    color: #007bff !important;
+    text-decoration: none !important;
+    background-color: transparent !important;
+    font-size: 16px !important;
+  }
+
+  .attch-template-section{
+    width: 50%;
+  }
+
+  .template-signature-section{
+    width: 33% !important;
+    float: right !important;
+  }
 }

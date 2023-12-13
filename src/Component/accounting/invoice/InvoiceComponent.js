@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -17,6 +17,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Spinner from '../../common/Spinner';
 import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
+import Swal from 'sweetalert2';
+import MinimizeIcon from '@mui/icons-material/Minimize';
 
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
@@ -28,6 +30,7 @@ const InvoiceComponent = () => {
   const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
   const [open, setOpen] = useState("");
   const [client_id, setClient_id] = useState("");
+  const [searchItem, setsearchItem] = useState("");
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -38,7 +41,9 @@ const InvoiceComponent = () => {
   const [orderBy, setOrderBy] = useState("issue_date")
   const navigate = useNavigate();
 
-  // get invoice
+  /*--------------------
+     get invoice data
+  ----------------------*/
   const fetchInvoice = async () => {
     setServerError(false)
     setisLoading(true);
@@ -66,7 +71,9 @@ const InvoiceComponent = () => {
     });
   }
 
-  // get client name
+  /*--------------------
+    get client name
+  ----------------------*/
   const fetchClientName = async () => {
     setisLoading(true)
     try {
@@ -90,6 +97,42 @@ const InvoiceComponent = () => {
     fetchInvoice();
     fetchClientName();
   }, [])
+
+
+  /*--------------------
+     Delete invoice funcation
+  ----------------------*/
+  const deleteInvoice = (id) => {
+    Swal.fire({
+      title: "Delete Invoice",
+      text: "Are you sure you want to delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1bcfb4",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      width: "450px",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setisLoading(true);
+        const res = await customAxios().delete(`/invoice/${id}`);
+        if (res.data.success) {
+          fetchInvoice();
+          toast.success(res.data.message);
+        }
+      }
+    }).catch((error) => {
+      setisLoading(false);
+      if (!error.response) {
+        toast.error(error.message)
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })
+  }
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -167,11 +210,29 @@ const InvoiceComponent = () => {
     setClient_id(event.target.value);
   }
 
+  // search filter 
+    // memoize filtered items
+    const recordsFilter = useMemo(() => {
+      return records.filter((item) => {
+        return (
+           (item.issue_date && moment(item.issue_date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase())) ||
+           item.invoiceId.toLowerCase().includes(searchItem.toLowerCase()) ||
+           item.invoiceClient?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
+           item.totalAmount.includes(searchItem.toLowerCase())
+          )
+      })
+    }, [records, searchItem]);
+
+  //  search onchange funcation
+  const handleSearch = (event) =>{
+    setsearchItem(event.target.value);
+  }
+ 
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if (!permission || permission.name.toLowerCase() !== "admin") {
     return <Error403 />;
   }
 
@@ -216,12 +277,12 @@ const InvoiceComponent = () => {
                       <i className="fa-solid fa-plus" ></i>&nbsp;Generate
                     </button>
                     <div className="search-full pr-0">
-                      <input type="search" className="input-search-full" autoComplete='off' name="txt" placeholder="Search" />
+                      <input type="search" className="input-search-full" autoComplete='off' name="txt" placeholder="Search" value={searchItem} onChange={handleSearch}/>
                       <i className="fas fa-search"></i>
                     </div>
                     <div className="search-box mr-3">
                       <form name="search-inner">
-                        <input type="search" className="input-search" autoComplete='off' name="txt" />
+                        <input type="search" className="input-search" autoComplete='off' name="txt" value={searchItem} onChange={handleSearch} />
                       </form>
                       <i className="fas fa-search"></i>
                     </div>
@@ -297,7 +358,7 @@ const InvoiceComponent = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {records.length !== 0 ? sortRowInformation(records, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                       return (
                         <React.Fragment key={ind}>
                           <TableRow>
@@ -316,7 +377,7 @@ const InvoiceComponent = () => {
                             <TableCell>&#8377;{val.totalAmount}</TableCell>
                             <TableCell>
                               <div >
-                                <span className={val.status + "-invoice invoice-status"}>{val.status}</span>
+                                {val.status === "Draft" ? <span className={val.status + "-invoice invoice-status"}>{val.status}</span> : <MinimizeIcon/>}
                                 <br />
                                 {val.status === "Unpaid" && val.due_date && <label className="mb-0 mt-1" htmlFor="due-date">Due on {moment(val.due_date).format("DD MMM YYYY")}</label>}
                               </div>
@@ -328,15 +389,15 @@ const InvoiceComponent = () => {
                                   <span className="d-block">Open</span>
                                 </div>
                                 <div className='text-center' onClick={() => navigate(`/invoice/edit/${val._id}`)}>
-                                <i className="fa-solid fa-pencil"></i>
-                                <span className="d-block">Edit</span>
+                                  <i className="fa-solid fa-pencil"></i>
+                                  <span className="d-block">Edit</span>
                                 </div>
                                 <div className='text-center' onClick={() => navigate(`/invoice/duplicate/${val._id}`)}>
                                   <i className="fa-regular fa-copy"></i>
                                   <span className="d-block">Duplicate</span>
                                 </div>
-                                <div className='text-center'>
-                                <i className="fa-solid fa-trash-can"></i>
+                                <div className='text-center' onClick={() => deleteInvoice(val._id)}>
+                                  <i className="fa-solid fa-trash-can"></i>
                                   <span className="d-block">Delete</span>
                                 </div>
                               </div>
@@ -388,7 +449,7 @@ const InvoiceComponent = () => {
                 onPageChange={onChangePage}
                 onRowsPerPageChange={onChangeRowsPerPage}
                 rowsPerPage={count}
-                count={records.length}
+                count={recordsFilter.length}
                 page={page}>
 
               </TablePagination>

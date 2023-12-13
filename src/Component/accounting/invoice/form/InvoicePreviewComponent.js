@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { customAxios } from '../../../../service/CreateApi';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -6,10 +6,12 @@ import Spinner from '../../../common/Spinner';
 import Error500 from '../../../error_pages/Error500';
 import { motion } from "framer-motion";
 import moment from 'moment';
-import Table from 'react-bootstrap/Table';
 import Tooltip from '@mui/material/Tooltip';
-import ReactToPrint from 'react-to-print';
-
+import { useReactToPrint } from 'react-to-print';
+import Swal from 'sweetalert2';
+import generatePDF, { Margin } from 'react-to-pdf';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Error403 from '../../../error_pages/Error403';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -18,6 +20,7 @@ const InvoicePreviewComponent = () => {
     const [clientData, setClientData] = useState("");
     const [invoiceProvider, setinvoiceProvider] = useState("");
     const [bankDetail, setbankDetail] = useState("");
+    const [permission, setpermission] = useState("");
 
     const Navigate = useNavigate();
     const componentRef = useRef();
@@ -41,6 +44,7 @@ const InvoicePreviewComponent = () => {
                     setinvoiceProvider(...data[0].invoiceProvider);
                     setbankDetail(...data[0].bankDetails);
                 }
+                setpermission(permissions);
                 setisLoading(false);
             }
         }).catch((error) => {
@@ -64,19 +68,72 @@ const InvoicePreviewComponent = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // option
-    const pageStyle = `@media print {
-        @page {
-          size: A3;
-          margin: 10px;
-        }
-      }`
+    /*--------------------
+         Delete invoice funcation
+    ----------------------*/
+    const deleteInvoice = () => {
+        Swal.fire({
+            title: "Delete Invoice",
+            text: "Are you sure you want to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1bcfb4",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel",
+            width: "450px",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setisLoading(true);
+                const res = await customAxios().delete(`/invoice/${id}`);
+                if (res.data.success) {
+                    Navigate("/invoice");
+                    setisLoading(false);
+                    toast.success(res.data.message);
+                }
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message)
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
+    }
+
+    /* -------------------
+        INVOICE DOWNLOAD
+    ----------------------*/
+
+    const invoiceDownload = useCallback(() => {
+        generatePDF(componentRef, {
+            method: "save",
+            filename: clientData.first_name + "-invoice.pdf",
+            page: { margin: Margin.SMALL },
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [componentRef.current])
+
+    /* -------------------
+        INVOICE PRINT
+    ----------------------*/
+
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+        documentTitle: clientData.first_name + "-invoice.pdf"
+    })
+
 
 
     if (isLoading) {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
+    } else if (!permission || permission.name.toLowerCase() !== "admin") {
+        return <Error403 />;
     }
 
 
@@ -116,24 +173,28 @@ const InvoicePreviewComponent = () => {
                                             }}><i className="fa-regular fa-eye"></i> Show All Invoice</button>
                                         </Tooltip>
                                         {/* create new invoice button */}
+                                        {(!permission || permission.permissions.create === 1)  &&
                                         <Tooltip title="Create New Invoice" arrow placement="top">
                                             <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
                                                 Navigate('/invoice/create')
                                             }}><i className="fa-solid fa-square-plus"></i> Create New Invoice</button>
-                                        </Tooltip>
+                                        </Tooltip>}
                                         {/* delete invoice button */}
+                                        {(!permission || permission.permissions.delete === 1)  &&
                                         <Tooltip title="Delete Invoice" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center"><i className="fa-solid fa-trash-can"></i> Delete Invoice</button>
-                                        </Tooltip>
+                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={deleteInvoice}><i className="fa-solid fa-trash-can"></i> Delete Invoice</button>
+                                        </Tooltip>}
                                         {/* edit button */}
+                                        {(!permission || permission.permissions.update === 1)  &&
                                         <Tooltip title="Edit" arrow placement="top">
                                             <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate(`/invoice/edit/${id}`)}><i className="fa-solid fa-pencil"></i> Edit</button>
+                                        </Tooltip>}
+                                        <Tooltip title="Print" arrow placement="top">
+                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handlePrint}><i className="fa-solid fa-print"></i> Print</button>
                                         </Tooltip>
-                                        <ReactToPrint
-                                            trigger={() => <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center"><i className="fa-solid fa-print"></i> Print</button>}
-                                            content={() => componentRef.current}
-                                            pageStyle={pageStyle}
-                                        />
+                                        <Tooltip title="Download" arrow placement="top">
+                                            <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={invoiceDownload}><FileDownloadIcon className='mt-0 mb-0' /> Download</button>
+                                        </Tooltip>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +260,7 @@ const InvoicePreviewComponent = () => {
                             <div className="my-3" ref={componentRef}>
                                 {/* invoice display */}
                                 <div className="template-section p-3" >
-                                    <div className="row justify-content-end mt-2">
+                                    <div className="row justify-content-end mt-2 template-head-section">
                                         <div className="col-md-6">
                                             <img src="/Images/d9_logo_black-transprent.png" alt="company_logo" className='img-fluid template-logo' />
                                         </div>
@@ -207,7 +268,7 @@ const InvoicePreviewComponent = () => {
                                             <h4 className="template-heading">Invoice</h4>
                                         </div>
                                     </div>
-                                    <div className="row mt-5">
+                                    <div className="row mt-5 template-summary-section">
                                         <div className="col-md-4 heading-section">
                                             <label>&nbsp;Billed By</label>
                                             <h4>{invoiceProvider.first_name?.concat(" ", invoiceProvider.last_name)}</h4>
@@ -257,8 +318,8 @@ const InvoicePreviewComponent = () => {
                                         </div>
                                     </div>
                                     <div className="product-table mt-4">
-                                        <Table bordered>
-                                            <thead >
+                                        <table className='table table-bordered'>
+                                            <thead>
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Item Name</th>
@@ -284,13 +345,13 @@ const InvoicePreviewComponent = () => {
                                                     <td><i className="fa-solid fa-indian-rupee-sign"></i> {invoiceDetail.totalAmount}</td>
                                                 </tr>
                                             </tbody>
-                                        </Table>
+                                        </table>
                                     </div>
                                     <div className="extra-section mt-4">
-                                        {(invoiceDetail.hasOwnProperty("attchmentFile") || bankDetail) &&
-                                            <div className="row justify-content-start">
+                                        {(invoiceDetail.hasOwnProperty("attchmentFile") || bankDetail || invoiceDetail.signImage || invoiceDetail.hasOwnProperty("note")) &&
+                                            <div className="row justify-content-end">
                                                 {invoiceDetail.hasOwnProperty("attchmentFile") && invoiceDetail.attchmentFile.length !== 0 &&
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-6 attch-template-section">
                                                         <h5 className='extra-heading'>Attachment:</h5>
                                                         <ol>
                                                             {invoiceDetail.attchmentFile.map((val, ind) => {
@@ -302,7 +363,7 @@ const InvoicePreviewComponent = () => {
                                                     </div>
                                                 }
                                                 {bankDetail &&
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-6 attch-template-section">
                                                         <h5 className='extra-heading'>Bank Details:</h5>
                                                         <table className='w-100'>
                                                             <tbody>
@@ -329,17 +390,13 @@ const InvoicePreviewComponent = () => {
                                                             </tbody>
                                                         </table>
                                                     </div>}
-                                            </div>}
-                                        {(invoiceDetail.signImage || invoiceDetail.hasOwnProperty("note")) &&
-                                            <div className="row justify-content-start mt-4">
                                                 {(invoiceDetail.hasOwnProperty("note") && invoiceDetail.note) &&
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-12">
                                                         <h5 className='extra-heading'>Additional Notes:</h5>
                                                         <div dangerouslySetInnerHTML={{ __html: invoiceDetail.note }}></div>
-                                                    </div>
-                                                }
+                                                    </div>}
                                                 {invoiceDetail.signImage &&
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-4 template-signature-section">
                                                         <h5 className='extra-heading'>Signature :</h5>
                                                         <div style={{ backgroundColor: "rgb(247 250 255)", borderRadius: '5px' }}>
                                                             <img src={invoiceDetail.signImage} alt='signeture' className='img-fluid' />

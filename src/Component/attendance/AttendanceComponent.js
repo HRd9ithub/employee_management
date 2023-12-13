@@ -82,7 +82,6 @@ const AttendanceComponent = () => {
                     setcurrentDataAll(temp);
 
                     // overtime get
-                    console.log('currentData.filter((val) => val.hasOwnProperty("clock-out")).length >= 1 :>> ',  currentData.filter((item) => item.hasOwnProperty("totalHours")));
                     if (currentData.filter((item) => item.hasOwnProperty("totalHours")).length >= 1) {
                         setOverTime(calculatorOverTime(currentData));
                     }

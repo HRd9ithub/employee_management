@@ -12,6 +12,7 @@ import Spinner from '../../../common/Spinner';
 import Error500 from '../../../error_pages/Error500';
 import ClientFormComponent from './ClientFormComponent';
 import moment from 'moment';
+import Error403 from '../../../error_pages/Error403';
 
 
 const InvoiceFormComponent = () => {
@@ -20,12 +21,11 @@ const InvoiceFormComponent = () => {
     const dueDateRef = useRef(null);
     const signatureRef = useRef(null);
     const noteEditorRef = useRef(null);
-
+    const [permission, setPermission] = useState("");
     const [clientNames, setClientNames] = useState([]);
     const [clientData, setClientData] = useState({});
     const [clienError, setClienError] = useState("");
     const [isLoading, setisLoading] = useState(false);
-    const [isSubLoading, setisSubLoading] = useState(false);
     const [serverError, setServerError] = useState(false);
     const [heading, setHeading] = useState({
         invoiceId: "D9" + Math.random().toString().slice(2, 8),
@@ -193,17 +193,15 @@ const InvoiceFormComponent = () => {
     // get client name
     const getClientName = () => {
         setServerError(false)
-        setisSubLoading(true);
+        setisLoading(true);
 
         customAxios().get('/invoice/client').then((res) => {
+            const { data, permissions } = res.data;
+            setPermission(permissions);
             if (res.data.success) {
-                const { data, permissions } = res.data;
-                // setPermission(permissions);
                 setClientNames(data);
-                setisSubLoading(false);
             }
         }).catch((error) => {
-            setisSubLoading(false);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -215,24 +213,23 @@ const InvoiceFormComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        });
+        }).finally(() => setisLoading(false));
     }
 
     // get client detail
     const getClientDetail = (id) => {
         setServerError(false)
-        setisSubLoading(true);
+        setisLoading(true);
 
         customAxios().get(`/invoice/client/${id}`).then((res) => {
             if (res.data.success) {
                 getClientName();
-                const { data, permissions } = res.data;
-                // setPermission(permissions);
+                const { data } = res.data;
                 setClientData(data);
-                setisSubLoading(false);
+                setisLoading(false);
             }
         }).catch((error) => {
-            setisSubLoading(false);
+            setisLoading(false);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -248,24 +245,22 @@ const InvoiceFormComponent = () => {
     }
 
     useEffect(() => {
-        getClientName();
         if (id || duplicateId) {
             getInvoiceDetail();
         }
+        getClientName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // onchange function
     const clientChange = (id) => {
-        // setClientId()
         getClientDetail(id)
     }
 
 
     // * ============================  submit invoice====================================
     const addInvoice = (status) => {
-        console.log('status :>> ', status);
         let errorData = ""
-        if (extra_field.length > 0) {
             errorData = extra_field.find((val) => {
                 return !val.name.trim() || !val.value.trim();
             })
@@ -274,7 +269,6 @@ const InvoiceFormComponent = () => {
             } else {
                 setExtraFieldError("");
             }
-        }
         setError([]);
         Object.keys(clientData).length !== 0 ? setClienError("") : setClienError("Client Business Name is Empty.");
 
@@ -373,7 +367,6 @@ const InvoiceFormComponent = () => {
         setisLoading(true);
 
         const unique = id || duplicateId;
-        console.log('unique :>> ', unique);
 
         customAxios().get(`invoice/${unique}`).then((res) => {
             if (res.data.success) {
@@ -425,8 +418,10 @@ const InvoiceFormComponent = () => {
 
     if (isLoading) {
         return <Spinner />
-    } else if (serverError && !isSubLoading) {
+    } else if (serverError) {
         return <Error500 />
+    } else if (!permission || permission.name.toLowerCase() !== "admin") {
+        return <Error403 />;
     }
 
     return (
@@ -471,7 +466,7 @@ const InvoiceFormComponent = () => {
                                                         <tr>
                                                             <td><label htmlFor='invoice-id' className='field-input'>Invoice No</label></td>
                                                             <td className='common-head-invoice'>
-                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} />
+                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
                                                                 {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
                                                             </td>
                                                         </tr>
@@ -784,7 +779,6 @@ const InvoiceFormComponent = () => {
                     </div>
                 </div>
             </motion.div >
-            {isSubLoading && <Spinner />}
         </>
     )
 }

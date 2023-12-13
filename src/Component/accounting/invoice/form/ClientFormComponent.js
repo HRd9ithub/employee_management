@@ -5,7 +5,7 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { toast } from 'react-hot-toast';
 import { customAxios, customAxios1 } from "../../../../service/CreateApi";
-import { alphaNumDeshFormat, alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
+import { alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
 
 const ClientFormComponent = ({ data, getClientDetail }) => {

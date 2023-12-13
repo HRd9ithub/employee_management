@@ -6,6 +6,7 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, alphaNumFormat, numberFormat } from "../../../common/RegaulrExp";
 import Error500 from '../../../error_pages/Error500';
+import Error403 from '../../../error_pages/Error403';
 
 const AccountFormComponent = (props) => {
   // let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
@@ -26,6 +27,8 @@ const AccountFormComponent = (props) => {
   const [isLoading, setisLoading] = useState(false);
   const [error, setError] = useState([]);
   const [serverError, setServerError] = useState(false);
+  const [permission, setPermission] = useState("");
+
   const history = useNavigate();
 
   const { id } = useParams();
@@ -53,6 +56,7 @@ const AccountFormComponent = (props) => {
           });
           setIsEditing(true)
         }
+        setPermission(permissions)
         setisLoading(false);
       }
     }).catch((error) => {
@@ -221,7 +225,9 @@ const AccountFormComponent = (props) => {
     return <Spinner />
   } else if (serverError) {
     return <Error500 />
-  }
+  }else if (!permission || permission.name.toLowerCase() !== "admin") {
+    return <Error403 />;
+}
 
   return (
     <>
