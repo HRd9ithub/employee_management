@@ -3,7 +3,7 @@ import { useLocation} from 'react-router-dom';
 import Navbar from './Component/common/Navbar';
 import Sidebar from "./Component/common/Sidebar"
 import AppRoute from './Component/routes/AppRoute';
-// import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
+import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
 import { GetLocalStorage } from './service/StoreLocalStorage';
 import './style/App.scss';
 import './style/App.css'
@@ -23,7 +23,7 @@ function App() {
   return (
     <>
       <div className='wrapper-container d-flex'>
-        {/* <IdleTimeOutHandler/> */}
+        <IdleTimeOutHandler/>
         <div className='sidebar-wrap'>
           {checkRoute() && <Sidebar />}
         </div>

@@ -190,8 +190,7 @@ const Leave = () => {
                     let data = leave.find((val) => {
                         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
                     })
-                    console.log('data :>> ', data);
-                    if (data) {
+                    if (data || leave.length === 0) {
                         return true
                     } else {
                         return false
@@ -200,7 +199,7 @@ const Leave = () => {
                     let data = leave.find((val) => {
                         return val.status === "Pending" || val.status === "Read"
                     })
-                    if (data) {
+                    if (data || leave.length === 0) {
                         return true
                     }
                 }

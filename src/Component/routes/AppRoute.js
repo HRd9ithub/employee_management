@@ -25,6 +25,10 @@ import HolidayComponent from '../leave/holiday/HolidayComponent';
 import AttendanceComponent from '../attendance/AttendanceComponent';
 import ManageAttendance from '../attendance/ManageAttendance';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
+import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
+import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
+import AccountFormComponent from "../accounting/invoice/form/AccountFormComponent";
+import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 
 const AppRoute = () => {
     return (
@@ -64,6 +68,15 @@ const AppRoute = () => {
                 {/* attendance route */}
                 <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent/></ProtectedRoute>}></Route>
                 <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance/></ProtectedRoute>}></Route>
+                {/* invoice route */}
+                <Route path="/invoice">
+                    <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
+                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
+                    <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
+                    <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>} /> 
+                    <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} /> 
+                    <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
+                </Route>       
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>

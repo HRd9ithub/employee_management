@@ -44,6 +44,7 @@ const Sidebar = () => {
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
         const setting = ['User Role', 'Work Report','Password']
+        const accounting = ['Invoices']
 
         data.forEach((item) => {
           if (employee.includes(item.name)) {
@@ -70,16 +71,27 @@ const Sidebar = () => {
             })
           } else if (setting.includes(item.name)) {
             let abc = result.find((val) => {
-              return val.name === "setting"
+              return val.name === "settings"
             })
-            !abc && result.push({ name: "setting", child: [], icon: item.icon, route: "#" })
+            !abc && result.push({ name: "settings", child: [], icon: item.icon, route: "#" })
             result = result.map((val) => {
-              if (val.name === "setting") {
+              if (val.name === "settings") {
                 return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
               }
               return val
             })
-          } else {
+          }else if (accounting.includes(item.name)) {
+            let abc = result.find((val) => {
+              return val.name === "accounting"
+            })
+            !abc && result.push({ name: "accounting", child: [], icon: item.icon, route: "#" })
+            result = result.map((val) => {
+              if (val.name === "accounting") {
+                return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
+              }
+              return val
+            })
+          }else {
             result.push({ _id: item._id, name: item.name, icon: item.icon, route: item.path })
           }
         })
@@ -142,10 +154,10 @@ const Sidebar = () => {
   // add active class 
   const HandleACtive = (menu) => {
     if (menu.route !== "#") {
-      return "/"+location.pathname.split("/")[1].toLowerCase() === menu.route
+      return "/"+location.pathname.split("/")[1].toLowerCase() === menu.route.toLowerCase()
     } else {
       let result = menu.child.find((cur) => {
-       return cur.route === location.pathname.split("/")[1]
+       return cur.route.toLowerCase() === "/"+location.pathname.split("/")[1].toLowerCase()
       //  return location.pathname.includes("employees") ? cur.route === "/employees" : location.pathname.includes("work-report") ? cur.route === "/work-report" : cur.route === location.pathname.toLowerCase()
       })
       return result ? true : false;
@@ -180,7 +192,7 @@ const Sidebar = () => {
             <Link className="navbar-brand brand-logo " to="/"><img src='/Images/d9_logo_black.png' alt="logo" /></Link> :
             <Link className="navbar-brand brand-logo-mini" to="/"><img src='/Images/d9.jpg' alt="logo" width={53} height={45} /></Link>}
         </div>
-        <ul className="nav mt-2" ref={sidebarRef}>
+        <ul className="nav mt-2 nav-container" ref={sidebarRef}>
           {menu.map((elem, ind) => {
             return (
               <li className={`nav-item item-hover ${HandleACtive(elem) ? 'active' : ''}`} key={ind}>

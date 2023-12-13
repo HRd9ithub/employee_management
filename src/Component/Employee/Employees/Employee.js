@@ -79,7 +79,7 @@ const Employee = () => {
       setisLoading(false);
       if (!error.response) {
         toast.error(error.message)
-      }else {
+      } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
@@ -105,13 +105,13 @@ const Employee = () => {
         setServerError(true)
         toast.error(error.message);
       } else {
-          if (error.response.status === 500) {
-            setServerError(true)
-          }
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+        if (error.response.status === 500) {
+          setServerError(true)
         }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
     });
   };
 
@@ -153,29 +153,29 @@ const Employee = () => {
 
   const descedingComparator = (a, b, orderBy) => {
     if (orderBy === "role") {
-        if (b[orderBy].name < a[orderBy].name) {
-          return -1
-        }
-        if (b[orderBy].name > a[orderBy].name) {
-          return 1
-        }
-        return 0
+      if (b[orderBy].name < a[orderBy].name) {
+        return -1
+      }
+      if (b[orderBy].name > a[orderBy].name) {
+        return 1
+      }
+      return 0
     } else if (orderBy === "report") {
-        if (b[orderBy]?.name < a[orderBy]?.name) {
-          return -1
-        }
-        if (b[orderBy]?.name > a[orderBy]?.name) {
-          return 1
-        }
-        return 0
+      if (b[orderBy]?.name < a[orderBy]?.name) {
+        return -1
+      }
+      if (b[orderBy]?.name > a[orderBy]?.name) {
+        return 1
+      }
+      return 0
     } else {
-        if (b[orderBy] < a[orderBy]) {
-          return -1
-        }
-        if (b[orderBy] > a[orderBy]) {
-          return 1
-        }
-        return 0
+      if (b[orderBy] < a[orderBy]) {
+        return -1
+      }
+      if (b[orderBy] > a[orderBy]) {
+        return 1
+      }
+      return 0
     }
   }
 
@@ -207,7 +207,7 @@ const Employee = () => {
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
         <div className=" container-fluid pt-4">
           <div className="background-wrapper bg-white pt-4">
-            <div className=''>
+            <div>
               <div className='row justify-content-end align-items-center row-std m-0'>
                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                   <div>
@@ -296,7 +296,7 @@ const Employee = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Switch 
+                            <Switch
                               className="status-switch"
                               checked={val.status === "Active" ? true : false}
                               onChange={() => handleStatus(val)}
