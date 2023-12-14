@@ -1532,10 +1532,6 @@
         max-width: unset;
     }
 
-    .remove-side-margin {
-        margin: unset;
-    }
-
     .col-md-6.mt-3.box-dashboard:last-child {
         margin-top: 30px !important;
         margin-bottom: 15px;
@@ -2948,6 +2944,10 @@
     }
 
     select.form-control.currency-dropdown {
+        width: 100%;
+    }
+
+    .button-full-width {
         width: 100%;
     }
 }

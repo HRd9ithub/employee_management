@@ -448,7 +448,7 @@ const InvoicePreviewComponent = () => {
                                                         </div>
                                                     </>}
                                                 <div className={!bankDetail ? "col-12 text-center" : "col-12"}>
-                                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate(`/invoice/payment/${id}`)} >
+                                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={() => Navigate(`/invoice/payment/${id}`)} >
                                                         <i className="fa-solid fa-gear"></i>&nbsp;{bankDetail ? "Edit" : "Add"} Bank Details
                                                     </button>
                                                 </div>

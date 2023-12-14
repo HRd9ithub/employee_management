@@ -503,7 +503,7 @@ const InvoiceFormComponent = () => {
                                                     </tbody>
                                                 </table>
                                                 <div className='text-left my-2'>
-                                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={addExtraField} >
+                                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addExtraField} >
                                                         <i className="fa-solid fa-plus"></i>&nbsp;Add Field
                                                     </button>
                                                 </div>
@@ -639,14 +639,12 @@ const InvoiceFormComponent = () => {
                                                     </div> :
                                                     <div>
                                                         <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
-                                                            <div className='static-client-div'>
+                                                            <div className='static-client-div w-100 px-3'>
                                                                 <span className='client-static-title mt-3 mt-md-0'>Select a Client/Business from list</span>
                                                                 <span className='client-static-title'>Or</span>
-                                                                <ul className="col-md-12 client-static-button">
-                                                                    <li className='d-flex justify-content-center my-2'>
-                                                                        <ClientFormComponent getClientDetail={getClientDetail} />
-                                                                    </li>
-                                                                </ul>
+                                                                <div className="mb-3">
+                                                                    <ClientFormComponent getClientDetail={getClientDetail} />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         {clienError && <div className='error mt-0' >{clienError}</div>}
@@ -684,7 +682,7 @@ const InvoiceFormComponent = () => {
                                 <div className='row my-3'>
                                     {/* add button */}
                                     <div className='col-sm-4'>
-                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={addRowTable} disabled={addRowButtonDisable} >
+                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addRowTable} disabled={addRowButtonDisable} >
                                             <i className="fa-solid fa-plus"></i>&nbsp;Add More Item
                                         </button>
                                     </div>
@@ -823,7 +821,7 @@ const InvoiceFormComponent = () => {
                                                         <i className="fa-solid fa-xmark remove-field-icon"></i>
                                                     </li>
                                                 </ol>
-                                                <button className="btn btn-gradient-primary">Add More</button>
+                                                <button className="btn btn-gradient-primary button-full-width">Add More</button>
                                             </div>
                                         </div>
                                     </div>
