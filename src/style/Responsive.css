@@ -619,6 +619,7 @@
     .employee-form {
         display: none;
     }
+
     /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
     .modal-header-none .dropdown-menu {
         height: 130px !important;
@@ -838,6 +839,21 @@
 
     .activity-date-range {
         width: 50% !important;
+    }
+
+    .business-info-value {
+        width: 150px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .business-info-value.address{
+        white-space: unset;
+    }
+
+    .business-info{
+        width: 120px;
     }
 }
 
@@ -1268,7 +1284,6 @@
     .user-modal .modal-button button {
         width: 12% !important;
     }
-
 }
 
 @media (max-width:800px) {
@@ -1550,6 +1565,10 @@
 
     .attendance-body .col-md-6:last-child {
         margin-top: 20px;
+    }
+
+    .business-info{
+        width: 180px;
     }
 }
 
@@ -2898,7 +2917,8 @@
     .calendar-icon {
         top: 29px;
     }
-/* 
+
+    /* 
     .calendar-icon-holiday {
         top: 12px;
     } */
@@ -2908,6 +2928,18 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+}
+
+@media (max-width :420px){
+    .business-name{
+        flex-direction: column;
+    }
+    .business-info-value{
+        width: unset !important;
+        white-space: nowrap;
+        overflow: unset;
+        text-overflow: unset;
     }
 }
 

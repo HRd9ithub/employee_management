@@ -4496,6 +4496,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .common-head-invoice {
   transform: translateY(-5px);
   position: relative;
+  width: 150px;
 }
 
 .invoice-calendar-icon {
@@ -4526,6 +4527,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-radius: 10px;
   background-color: #f6faff;
   padding: 20px;
+  margin-top: 10px;
 }
 
 .bill-logo img {
@@ -4573,7 +4575,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .business-info {
-  width: 33.33%;
+  width: 180px;
 }
 
 .business-info-value {

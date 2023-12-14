@@ -460,18 +460,18 @@ const InvoiceFormComponent = () => {
                                 <div className='row'>
                                     <div className="col-12">
                                         <div className="row">
-                                            <div className="col-md-4">
+                                            <div className="col-md-4 col-sm-6 col-10">
                                                 <table className='w-100'>
                                                     <tbody>
                                                         <tr>
-                                                            <td><label htmlFor='invoice-id' className='field-input'>Invoice No</label></td>
+                                                            <td  className='field-input'><label htmlFor='invoice-id'>Invoice No</label></td>
                                                             <td className='common-head-invoice'>
                                                                 <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
                                                                 {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td><label htmlFor='issue_date' className='field-input'>Issue Date</label></td>
+                                                            <td className='field-input'><label htmlFor='issue_date' >Issue Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { issueDateRef.current.showPicker(); }}>
                                                                 <input type="date" className='form-control' name='issue_date' value={heading.issue_date} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
@@ -479,7 +479,7 @@ const InvoiceFormComponent = () => {
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td><label htmlFor='due_date' className='field-input'>Due Date</label></td>
+                                                            <td className='field-input'><label htmlFor='due_date'>Due Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
                                                                 <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date} onChange={headingChange} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
@@ -490,7 +490,7 @@ const InvoiceFormComponent = () => {
                                                                 return (
                                                                     <tr key={ind}>
                                                                         <td className='common-head-invoice'>
-                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control field-input' name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control field-input'  name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                         <td className='common-head-invoice'>
                                                                             <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
@@ -545,7 +545,7 @@ const InvoiceFormComponent = () => {
                                                     </div>
                                                     <div className='business-name'>
                                                         <div className='business-info'>
-                                                            <span >Phone No :</span>
+                                                            <span >Phone No</span>
                                                         </div>
                                                         <div className='business-info-value'>
                                                             <span className='Business-title'>{UserData.phone}</span>
@@ -553,7 +553,7 @@ const InvoiceFormComponent = () => {
                                                     </div>
                                                     <div className='business-name'>
                                                         <div className='business-info'>
-                                                            <span >country</span>
+                                                            <span>Country</span>
                                                         </div>
                                                         <div className='business-info-value'>
                                                             <span className='Business-title'>{UserData.country}</span>
@@ -564,7 +564,7 @@ const InvoiceFormComponent = () => {
                                                             <div className='business-info'>
                                                                 <span >Address</span>
                                                             </div>
-                                                            <div className='business-info-value'>
+                                                            <div className='business-info-value address'>
                                                                 <span className='Business-title'>{UserData.address?.concat(" ", UserData.state).concat(",", UserData.city).concat("-", UserData.postcode)}</span>
                                                             </div>
                                                         </div>}
@@ -632,7 +632,7 @@ const InvoiceFormComponent = () => {
                                                             <div className='business-info'>
                                                                 <span >Address</span>
                                                             </div>
-                                                            <div className='business-info-value'>
+                                                            <div className='business-info-value address'>
                                                                 <span className='Business-title'>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</span>
                                                             </div>
                                                         </div>

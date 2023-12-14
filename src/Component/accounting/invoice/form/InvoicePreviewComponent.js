@@ -111,7 +111,7 @@ const InvoicePreviewComponent = () => {
     const invoiceDownload = useCallback(() => {
         generatePDF(componentRef, {
             method: "save",
-            filename: clientData.first_name + "-invoice.pdf",
+            filename: "invoice.pdf",
             page: { margin: Margin.SMALL },
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
