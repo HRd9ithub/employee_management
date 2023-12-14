@@ -384,19 +384,19 @@ const InvoiceComponent = () => {
                             </TableCell>
                             <TableCell>
                               <div className="d-flex invoice-action">
-                                <div className='text-center' onClick={() => navigate(`/invoice/preview/${val._id}`)}>
+                                <div className='text-center text-orange' onClick={() => navigate(`/invoice/preview/${val._id}`)}>
                                   <i className="fa-solid fa-arrow-up-right-from-square"></i>
                                   <span className="d-block">Open</span>
                                 </div>
-                                <div className='text-center' onClick={() => navigate(`/invoice/edit/${val._id}`)}>
+                                <div className='text-center text-green' onClick={() => navigate(`/invoice/edit/${val._id}`)}>
                                   <i className="fa-solid fa-pencil"></i>
                                   <span className="d-block">Edit</span>
                                 </div>
-                                <div className='text-center' onClick={() => navigate(`/invoice/duplicate/${val._id}`)}>
+                                <div className='text-center text-primary' onClick={() => navigate(`/invoice/duplicate/${val._id}`)}>
                                   <i className="fa-regular fa-copy"></i>
                                   <span className="d-block">Duplicate</span>
                                 </div>
-                                <div className='text-center' onClick={() => deleteInvoice(val._id)}>
+                                <div className='text-center text-red' onClick={() => deleteInvoice(val._id)}>
                                   <i className="fa-solid fa-trash-can"></i>
                                   <span className="d-block">Delete</span>
                                 </div>
