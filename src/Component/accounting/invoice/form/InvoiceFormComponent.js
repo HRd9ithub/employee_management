@@ -13,7 +13,8 @@ import Error500 from '../../../error_pages/Error500';
 import ClientFormComponent from './ClientFormComponent';
 import moment from 'moment';
 import Error403 from '../../../error_pages/Error403';
-
+import CurrencyList from "../../../../static/currencyList.js";
+import axios from 'axios';
 
 const InvoiceFormComponent = () => {
     const navigate = useNavigate();
@@ -38,6 +39,8 @@ const InvoiceFormComponent = () => {
     const [extra_field, setextra_field] = useState([]);
     const [extraFieldError, setExtraFieldError] = useState("");
     const [error, setError] = useState([]);
+    const [currencyValue, setcurrencyValue] = useState('')
+    const [currency, setcurrency] = useState('INR')
 
     //table data
     const [tableData, settableData] = useState([{
@@ -53,8 +56,10 @@ const InvoiceFormComponent = () => {
     const [attchFile, setattchFile] = useState([]);
     const [signImage, setsignImage] = useState("");
     const [signImageToggle, setsignImageToggle] = useState(true);
+    const [contact, setContact] = useState("");
+    const [terms, setTerms] = useState([{ name: "" }]);
 
-    const { id,duplicateId } = useParams();
+    const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
 
     // heading onchange
@@ -163,6 +168,26 @@ const InvoiceFormComponent = () => {
         return result ? true : false;
     }, [tableData])
 
+    // currency onchange
+    const currencyChange = (event) => {
+        setcurrency(event.target.value);
+    }
+
+    // get_currency  value
+    useEffect(() => {
+        const getcurrencyapi = async () => {
+            const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${currency}&base_currency=INR`);
+            setcurrencyValue(parseFloat(res.data.data[currency]).toFixed(2))
+        }
+        getcurrencyapi();
+    }, [currency])
+
+    const totalAmount = useMemo(() => {
+        return tableData.reduce((total, cur) => {
+            return total + (cur.amount * currencyValue)
+        }, 0)
+    }, [tableData, currencyValue])
+
 
     // * ======================= attchment part ============================================
 
@@ -249,7 +274,7 @@ const InvoiceFormComponent = () => {
             getInvoiceDetail();
         }
         getClientName();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // onchange function
@@ -261,19 +286,28 @@ const InvoiceFormComponent = () => {
     // * ============================  submit invoice====================================
     const addInvoice = (status) => {
         let errorData = ""
-            errorData = extra_field.find((val) => {
-                return !val.name.trim() || !val.value.trim();
-            })
-            if (errorData) {
-                setExtraFieldError("Additional field must not be empty.");
-            } else {
-                setExtraFieldError("");
-            }
+        errorData = extra_field.find((val) => {
+            return !val.name.trim() || !val.value.trim();
+        })
+        if (errorData) {
+            setExtraFieldError("Additional field must not be empty.");
+        } else {
+            setExtraFieldError("");
+        }
         setError([]);
         Object.keys(clientData).length !== 0 ? setClienError("") : setClienError("Client Business Name is Empty.");
 
         invoiceIdValidation();
         issueDateValidation();
+
+        let conditions = [];
+        terms.forEach((val) => {
+            if (val.name.trim()) {
+                conditions.push(val.name);
+            }
+        })
+
+        console.log('conditions :>> ', conditions);
 
         const data = validate();
 
@@ -282,10 +316,6 @@ const InvoiceFormComponent = () => {
         if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData) {
             return false
         } else {
-            const totalAmount = tableData.reduce((total, cur) => {
-                return total + cur.amount
-            }, 0)
-
             let formdata = new FormData();
             formdata.append('invoiceId', invoiceId);
             formdata.append('issue_date', issue_date);
@@ -294,11 +324,15 @@ const InvoiceFormComponent = () => {
             formdata.append('userId', UserData._id)
             formdata.append('clientId', clientData._id);
             attchFile.map((val) => formdata.append('image', val.url))
-            formdata.append('signImage', !signImageToggle || signatureRef?.current.isEmpty() ? signImage: signatureRef.current.toDataURL('image/png'));
+            formdata.append('signImage', !signImageToggle || signatureRef?.current.isEmpty() ? signImage : signatureRef.current.toDataURL('image/png'));
             formdata.append('extra_field', JSON.stringify(extra_field));
             note && formdata.append('note', note);
             formdata.append('tableData', JSON.stringify(tableData));
             status && formdata.append('status', status);
+            formdata.append('currency', currency);
+            formdata.append('currencyValue', currencyValue);
+            formdata.append('contact', contact);
+            formdata.append('terms', conditions);
 
             let url = "";
             if (id) {
@@ -312,9 +346,9 @@ const InvoiceFormComponent = () => {
                     toast.success(result.data.message);
                     if (status) {
                         navigate("/invoice");
-                    } else if(id) {
+                    } else if (id) {
                         navigate(`/invoice/preview/${result.data.id}`);
-                    }else{
+                    } else {
                         navigate(`/invoice/payment/${result.data.id}`);
                     }
                 }
@@ -359,7 +393,7 @@ const InvoiceFormComponent = () => {
     }
 
     /* ------------------------
-    get data database
+        get data database
     ---------------------------*/
 
     const getInvoiceDetail = async () => {
@@ -373,6 +407,7 @@ const InvoiceFormComponent = () => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
+                    setcurrency(result.currency);
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
@@ -387,12 +422,25 @@ const InvoiceFormComponent = () => {
                             file.push({ url: val, icon: '/Images/pdf-attch.png' });
                         } else if (val.split(".")[1] === "csv") {
                             file.push({ url: val, icon: '/Images/csv.png' });
-                        } else {    
+                        } else {
                             file.push({ url: val, icon: process.env.REACT_APP_IMAGE_API + "/uploads/" + val });
                         }
                     })
                     setattchFile(file);
-                    if(id){
+                    setcurrencyValue(result.currencyValue);
+                    setContact(result?.contact);
+
+                    let conditions = [];
+                    if(result.terms.length !== 0){
+                        result.terms.forEach((val) => {
+                            conditions.push({name :val});
+                        });
+                    }else{
+                        conditions.push({ name: "" });
+                    }
+                    setTerms(conditions);
+
+                    if (id) {
                         setsignImage(result.signImage);
                         result.signImage ? setsignImageToggle(false) : setsignImageToggle(true);
                     }
@@ -414,6 +462,41 @@ const InvoiceFormComponent = () => {
                 }
             }
         });
+    }
+
+    /* ------------------------
+        conatct section
+    ---------------------------*/
+    const contactChange = (event) => {
+        setContact(event.target.value);
+    }
+    /* ------------------------
+        terms section
+    ---------------------------*/
+    const addTerms = () => {
+        const data = [...terms, { name: "" }]
+        setTerms(data)
+    }
+
+    //delete row in terms
+    const removeRowTerms = (ind) => {
+        const deleteval = [...terms];
+        deleteval.splice(ind, 1)
+        setTerms(deleteval);
+    }
+
+    const addTermsDisable = useMemo(() => {
+        const result = terms.find((item) => {
+            return item.name === ""
+        })
+        return result ? true : false;
+    }, [terms])
+
+    // onchage
+    const termsChange = (value, ind) => {
+        let newData = [...terms]
+        newData[ind].name = value;
+        setTerms(newData)
     }
 
     if (isLoading) {
@@ -464,7 +547,7 @@ const InvoiceFormComponent = () => {
                                                 <table className='w-100'>
                                                     <tbody>
                                                         <tr>
-                                                            <td  className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
+                                                            <td className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
                                                             <td className='common-head-invoice'>
                                                                 <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
                                                                 {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
@@ -490,7 +573,7 @@ const InvoiceFormComponent = () => {
                                                                 return (
                                                                     <tr key={ind}>
                                                                         <td className='common-head-invoice field-input'>
-                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control'  name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                         <td className='common-head-invoice'>
                                                                             <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
@@ -660,19 +743,19 @@ const InvoiceFormComponent = () => {
                             <div className='my-4'>
                                 <div className="d-flex justify-content-between align-items-center flex-wrap">
                                     <h4 className="mb-0">Item Details</h4>
-                                    <select className="form-control currency-dropdown" id="exampleFormControldesignation" name="designation_id">
-                                        <option value="designation">Select Currency</option>
-                                        <option value="designation">ABC</option>
-                                        <option value="designation">Rupee</option>
+                                    <select className="form-control currency-dropdown" id="currency" name="currency" value={currency} onChange={currencyChange}>
+                                        {CurrencyList.map((val) => (
+                                            <option key={val} value={val}>{val}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 {/* table display */}
                                 <ItemComponent
-                                    // currency={currency}
+                                    currency={currency}
                                     tableData={tableData}
                                     removeRowTable={removeRowTable}
                                     handleItemchange={handleItemchange}
-                                    // currencyvalue={currencyvalue}
+                                    currencyValue={currencyValue}
                                     itemNameError={itemNameError}
                                     setitemNameError={setitemNameError}
                                     rateError={rateError}
@@ -690,35 +773,37 @@ const InvoiceFormComponent = () => {
                                     </div>
                                     <div className='col-sm-8'>
                                         <div className="table-total-section p-3 ml-auto">
-                                            <p className="text-center">Applied Exchange Rate: 1 INR = 0.012 USD</p>
+                                            <p className="text-center">Applied Exchange Rate: {`1 INR = ${currencyValue} ${currency}`}</p>
                                             <table className="w-100">
-                                                <tr>
-                                                    <td>
-                                                        <p className="text-left mb-0">Sub Total:</p>
-                                                    </td>
-                                                    <td>
-                                                        <p className="text-right mb-0">1110</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p className="text-left mb-0">Tax:</p>
-                                                    </td>
-                                                    <td>
-                                                        <p className="text-right mb-0">11</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><hr /></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <h4 className="text-left mb-0">Total:</h4>
-                                                    </th>
-                                                    <th>
-                                                        <h4 className="text-right mb-0">1121</h4>
-                                                    </th>
-                                                </tr>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">Sub Total:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">{parseFloat(totalAmount).toFixed(2)}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">Tax:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">0</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colSpan="2"><hr /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            <h4 className="text-left mb-0">Total:</h4>
+                                                        </th>
+                                                        <th>
+                                                            <h4 className="text-right mb-0">{parseFloat(totalAmount).toFixed(2)}</h4>
+                                                        </th>
+                                                    </tr>
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -768,7 +853,7 @@ const InvoiceFormComponent = () => {
                                                 }
                                                 <div className='sign-upload-image'>
                                                     {!signImageToggle &&
-                                                        <label onClick={() => {setsignImageToggle(true);setsignImage("")}}><i className="fa-solid fa-plus"></i> Add New Signature</label>}
+                                                        <label onClick={() => { setsignImageToggle(true); setsignImage("") }}><i className="fa-solid fa-plus"></i> Add New Signature</label>}
                                                     <label onClick={() => signatureRef.current.clear()}><i className="fa-solid fa-rotate-right"></i> reset</label>
                                                 </div>
                                             </div>
@@ -786,6 +871,36 @@ const InvoiceFormComponent = () => {
                                                 tabIndex={1}
                                                 onBlur={newContent => setNote(newContent)}
                                             />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 my-3">
+                                        <div className='bg-div-color h-100 p-3'>
+                                            <div className='attach-title'>
+                                                <h4>Terms & Conditions <span>(Optional)</span></h4>
+                                            </div>
+                                            <div className='terms-conditions'>
+                                                <ol>
+                                                    {terms.map((val, ind) => (
+                                                        <li className="position-relative" key={ind}>
+                                                            <input type="text" className='form-control bg-transparent' placeholder="Write Here..." value={val.name} onChange={(event) => termsChange(event.target.value, ind)} />
+                                                            {ind !== 0 && <i className="fa-solid fa-xmark remove-field-icon" onClick={() => removeRowTerms(ind)}></i>}
+                                                        </li>
+                                                    ))}
+                                                </ol>
+                                                <button className="btn btn-gradient-primary" disabled={addTermsDisable} onClick={addTerms}>Add More</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 my-3">
+                                        <div className='bg-div-color h-100 p-3'>
+                                            <div className='attach-title'>
+                                                <h4>Contact Details <span>(Optional)</span></h4>
+                                            </div>
+                                            <div className='terms-conditions'>
+                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..." value={contact} onChange={contactChange} />
+                                                <small className="text-muted d-block">Ex: For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</small>
+                                            </div>
                                         </div>
                                     </div>
                                     {
@@ -810,37 +925,6 @@ const InvoiceFormComponent = () => {
                                             :
                                             null
                                     }
-
-                                    <div className="col-md-12 my-3">
-                                        <div className='bg-div-color h-100 p-3'>
-                                            <div className='attach-title'>
-                                                <h4>Terms & Conditions <span>(Optional)</span></h4>
-                                            </div>
-                                            <div className='terms-conditions'>
-                                                <ol>
-                                                    <li className="position-relative">
-                                                        <input type="text" className='form-control bg-transparent' placeholder="Write Here..."/>
-                                                        <i className="fa-solid fa-xmark remove-field-icon"></i>
-                                                    </li>
-                                                </ol>
-                                                <button className="btn btn-gradient-primary">Add More</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-12 my-3">
-                                        <div className='bg-div-color h-100 p-3'>
-                                            <div className='attach-title'>
-                                                <h4>Contact Details <span>(Optional)</span></h4>
-                                            </div>
-                                            <div className='terms-conditions'>
-                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..."/>
-                                                <small class="text-muted d-block">Ex: For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</small>
-                                                <button className="btn btn-gradient-primary mt-3">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div className="col-12">
                                         <div className="submit-section d-flex justify-content-between pb-3">
                                             <button className="btn btn-gradient-primary" onClick={() => addInvoice()} >Save & Continue</button>

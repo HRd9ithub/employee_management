@@ -2,8 +2,7 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 
 const ItemComponent = (props) => {
-    const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError } = props
-
+    const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency, currencyValue } = props
     return (
         <>
             <div className='row'>
@@ -12,9 +11,9 @@ const ItemComponent = (props) => {
                         <thead className='head-item'>
                             <tr>
                                 <th>Item Name</th>
-                                <th>Quantity</th>
                                 <th>Rate</th>
-                                <th>Amount</th>
+                                <th>Quantity</th>
+                                <th>Amount({currency})</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -46,28 +45,6 @@ const ItemComponent = (props) => {
                                         </td>
                                         <td>
                                             <div style={{ height: "38px" }}>
-                                                <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
-                                                    if (!itemData.quantity) {
-                                                        let list = quantiyError.filter((val) => {
-                                                            return val.id === ind
-                                                        })
-                                                        if (list.length === 0) {
-                                                            setquantiyError([...quantiyError, { Quantity: "Quantity is a required field", id: ind }])
-                                                        }
-                                                    } else {
-                                                        let temp = quantiyError.filter((elem) => {
-                                                            return elem.id !== ind
-                                                        })
-                                                        setquantiyError(temp)
-                                                    }
-                                                }} />
-                                                {quantiyError.map((val) => (
-                                                    val.id === ind && <span className='error' key={val.id}>{val.Quantity}</span>
-                                                ))}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div style={{ height: "38px" }}>
                                                 <input className='form-control' type="number" min="0" name="rate" value={itemData.rate} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
                                                     if (!itemData.rate.trim()) {
                                                         let list = rateError.filter((val) => {
@@ -88,9 +65,31 @@ const ItemComponent = (props) => {
                                                 ))}
                                             </div>
                                         </td>
-                                        <td><input className='form-control' type="number" min="0" value={itemData.amount} readOnly /></td>
+                                        <td>
+                                            <div style={{ height: "38px" }}>
+                                                <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                    if (!itemData.quantity) {
+                                                        let list = quantiyError.filter((val) => {
+                                                            return val.id === ind
+                                                        })
+                                                        if (list.length === 0) {
+                                                            setquantiyError([...quantiyError, { Quantity: "Quantity is a required field", id: ind }])
+                                                        }
+                                                    } else {
+                                                        let temp = quantiyError.filter((elem) => {
+                                                            return elem.id !== ind
+                                                        })
+                                                        setquantiyError(temp)
+                                                    }
+                                                }} />
+                                                {quantiyError.map((val) => (
+                                                    val.id === ind && <span className='error' key={val.id}>{val.Quantity}</span>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        <td><input className='form-control' type="number" min="0" value={parseFloat(currencyValue * itemData.amount).toFixed(2)} readOnly /></td>
                                         {ind > 0 &&
-                                            <td onClick={() => removeRowTable(ind)} className="remove-item-icon"><i className="fa-solid fa-xmark"></i></td>}
+                                            <td onClick={() => removeRowTable(ind)} className="text-center"><i className="fa-solid fa-xmark text-maroon"></i></td>}
                                     </tr>
                                 )
                             })}

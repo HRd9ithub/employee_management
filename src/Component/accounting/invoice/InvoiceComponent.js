@@ -48,7 +48,7 @@ const InvoiceComponent = () => {
     setServerError(false)
     setisLoading(true);
 
-    customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}`).then((res) => {
+    customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}&isDelete=${false}`).then((res) => {
       if (res.data.success) {
         const { data, permissions } = res.data;
         setpermission(permissions);
@@ -374,7 +374,7 @@ const InvoiceComponent = () => {
                             <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceId}</TableCell>
                             <TableCell>{val.invoiceClient.name}</TableCell>
-                            <TableCell>&#8377;{val.totalAmount}</TableCell>
+                            <TableCell>{parseFloat(val.totalAmount).toFixed(2)}</TableCell>
                             <TableCell>
                               <div >
                                 {val.status === "Draft" ? <span className={val.status + "-invoice invoice-status"}>{val.status}</span> : <MinimizeIcon/>}
@@ -383,24 +383,12 @@ const InvoiceComponent = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <div className="d-flex invoice-action">
-                                <div className='text-center text-orange' onClick={() => navigate(`/invoice/preview/${val._id}`)}>
-                                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                                  <span className="d-block">Open</span>
-                                </div>
-                                <div className='text-center text-green' onClick={() => navigate(`/invoice/edit/${val._id}`)}>
-                                  <i className="fa-solid fa-pencil"></i>
-                                  <span className="d-block">Edit</span>
-                                </div>
-                                <div className='text-center text-primary' onClick={() => navigate(`/invoice/duplicate/${val._id}`)}>
-                                  <i className="fa-regular fa-copy"></i>
-                                  <span className="d-block">Duplicate</span>
-                                </div>
-                                <div className='text-center text-red' onClick={() => deleteInvoice(val._id)}>
-                                  <i className="fa-solid fa-trash-can"></i>
-                                  <span className="d-block">Delete</span>
-                                </div>
-                              </div>
+                            <div className='action'>
+                                  <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
+                                  <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>
+                                  <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                                  <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                            </div>
                             </TableCell>
                           </TableRow>
                           <TableRow>
@@ -413,7 +401,7 @@ const InvoiceComponent = () => {
                                       <TableCell>Item Name</TableCell>
                                       <TableCell>Rate</TableCell>
                                       <TableCell >Quantity</TableCell>
-                                      <TableCell >Amount</TableCell>
+                                      <TableCell >Amount ({val.currency})</TableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
@@ -423,7 +411,7 @@ const InvoiceComponent = () => {
                                           <TableCell component="th" scope="row">{elem.itemName}</TableCell>
                                           <TableCell>{elem.rate}</TableCell>
                                           <TableCell>{elem.quantity}</TableCell>
-                                          <TableCell>&#8377;{elem.amount}</TableCell>
+                                          <TableCell>{parseFloat(elem.amount * val.currencyValue).toFixed(2)}</TableCell>
                                         </TableRow>
                                       )
                                     })}
