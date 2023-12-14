@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import generatePDF, { Margin } from 'react-to-pdf';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Error403 from '../../../error_pages/Error403';
+import { Dropdown } from 'react-bootstrap';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -155,6 +156,26 @@ const InvoicePreviewComponent = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-4 d-flex justify-content-end" id="two">
+                                    <div class="dropdown">
+                                        <button class="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Action &nbsp;<i className="fa-solid fa-angle-down"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <Dropdown.Item className="dropdown-item">Show All Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Create New Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Delete Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Edit Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Print Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Download Invoice</Dropdown.Item>
+                                            <div className="dropdown-divider"></div>
+                                            <Dropdown.Item className="dropdown-item">Duplicate Invoice</Dropdown.Item>
+                                        </div>
+                                    </div>
                                     <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate("/invoice")}>
                                         <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
                                     </button>
@@ -259,31 +280,31 @@ const InvoicePreviewComponent = () => {
                             </div>
                             <div className="my-3" ref={componentRef}>
                                 {/* invoice display */}
-                                <div className="template-section p-3" >
-                                    <div className="row justify-content-end mt-2 template-head-section">
+                                <div className="template-section" >
+                                    <div className="row justify-content-end align-items-center mt-2 template-head-section">
                                         <div className="col-md-6">
                                             <img src="/Images/d9_logo_black-transprent.png" alt="company_logo" className='img-fluid template-logo' />
                                         </div>
-                                        <div className="col-md-6 d-flex align-items-center justify-content-end">
-                                            <h4 className="template-heading">Invoice</h4>
+                                        <div className="col-md-6 mb-4 mb-md-0">
+                                            <h4 className="template-heading text-center text-md-right">Invoice</h4>
                                         </div>
                                     </div>
-                                    <div className="row mt-5 template-summary-section">
-                                        <div className="col-md-4 heading-section">
+                                    <div className="row mt-4 mt-md-5 template-summary-section">
+                                        <div className="col-md-4 col-sm-6 heading-section">
                                             <label>&nbsp;Billed By</label>
                                             <h4>{invoiceProvider.first_name?.concat(" ", invoiceProvider.last_name)}</h4>
                                             <p>+91 {invoiceProvider.phone}</p>
                                             <p>{invoiceProvider.email}</p>
                                             {invoiceProvider.address && <p>{invoiceProvider.address?.concat(" ", invoiceProvider.state).concat(",", invoiceProvider.city).concat("-", clientData.postcode)}</p>}
                                         </div>
-                                        <div className="col-md-4 heading-section">
+                                        <div className="col-md-4 col-sm-6 heading-section mt-3 mt-sm-0">
                                             <label>&nbsp;Billed To</label>
                                             <h4>{clientData.first_name?.concat(" ", clientData.last_name)}</h4>
                                             <p>+91 {clientData.phone}</p>
                                             <p>{clientData.email}</p>
                                             {clientData.address && <p>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</p>}
                                         </div>
-                                        <div className="col-md-4 heading-section">
+                                        <div className="col-md-4 col-sm-6 heading-section mt-3 mt-md-0">
                                             <label>&nbsp;Invoice Details</label>
                                             <table className='w-100'>
                                                 <tbody>
@@ -349,11 +370,11 @@ const InvoicePreviewComponent = () => {
                                     </div>
                                     <div className="extra-section mt-4">
                                         {(invoiceDetail.hasOwnProperty("attchmentFile") || bankDetail || invoiceDetail.signImage || invoiceDetail.hasOwnProperty("note")) &&
-                                            <div className="row justify-content-end">
+                                            <div className="row">
                                                 {invoiceDetail.hasOwnProperty("attchmentFile") && invoiceDetail.attchmentFile.length !== 0 &&
-                                                    <div className="col-md-6 attch-template-section">
+                                                    <div className="col-md-6 mb-3 attch-template-section">
                                                         <h5 className='extra-heading'>Attachment:</h5>
-                                                        <ol>
+                                                        <ol className='mb-0'>
                                                             {invoiceDetail.attchmentFile.map((val, ind) => {
                                                                 return (
                                                                     <li key={ind}><NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val}`} target='_attch'>{val}</NavLink></li>
@@ -363,7 +384,7 @@ const InvoicePreviewComponent = () => {
                                                     </div>
                                                 }
                                                 {bankDetail &&
-                                                    <div className="col-md-6 attch-template-section">
+                                                    <div className="col-md-6 mb-3 attch-template-section">
                                                         <h5 className='extra-heading'>Bank Details:</h5>
                                                         <table className='w-100'>
                                                             <tbody>
@@ -421,33 +442,39 @@ const InvoicePreviewComponent = () => {
                                         <div className="card-body summary-card-body">
                                             <div className="row">
                                                 {bankDetail &&
-                                                    <div className="col-md-6">
-                                                        <table className='w-100'>
-                                                            <tbody>
-                                                                <tr className='d-block mt-2'>
-                                                                    <td className="invoice-title-summary"><span >Account Number:</span></td>
-                                                                    <td><span className='invoice-value-summary'>{bankDetail.account_number}</span></td>
-                                                                </tr>
-                                                                <tr className='d-block mt-3'>
-                                                                    <td className="invoice-title-summary"><span >IFSC Code:</span></td>
-                                                                    <td><span className='invoice-value-summary'>{bankDetail.ifsc_code}</span></td>
-                                                                </tr>
-                                                                <tr className='d-block mt-3'>
-                                                                    <td className="invoice-title-summary"><span >Bank Name:</span></td>
-                                                                    <td><span className='invoice-value-summary'>{bankDetail.bank}</span></td>
-                                                                </tr>
-                                                                <tr className='d-block mt-3'>
-                                                                    <td className="invoice-title-summary"><span >Branch Name:</span></td>
-                                                                    <td><span className='invoice-value-summary'>{bankDetail.branch_name}</span></td>
-                                                                </tr>
-                                                                <tr className='d-block mt-3'>
-                                                                    <td className="invoice-title-summary"><span >Name:</span></td>
-                                                                    <td><span className='invoice-value-summary'>{bankDetail.name}</span></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>}
-                                                <div className="col-md-6">
+                                                <>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6">
+                                                        <div className="form-group">
+                                                            <label htmlFor="2" className='mt-2'>Account Number</label>
+                                                            <p className="mb-0">{bankDetail.account_number}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6">
+                                                        <div className="form-group">
+                                                            <label htmlFor="2" className='mt-2'>IFSC Code</label>
+                                                            <p className="mb-0">{bankDetail.ifsc_code}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6">
+                                                        <div className="form-group">
+                                                            <label htmlFor="2" className='mt-2'>Bank Name</label>
+                                                            <p className="mb-0">{bankDetail.bank}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6">
+                                                        <div className="form-group">
+                                                            <label htmlFor="2" className='mt-2'>Branch Name</label>
+                                                            <p className="mb-0">{bankDetail.branch_name}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-3 col-md-4 col-sm-6">
+                                                        <div className="form-group">
+                                                            <label htmlFor="2" className='mt-2'>Name</label>
+                                                            <p className="mb-0">{bankDetail.name}</p>
+                                                        </div>
+                                                    </div>
+                                                </>}
+                                                <div className={!bankDetail ? "col-12 text-center" : "col-12"}>
                                                     <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate(`/invoice/payment/${id}`)} >
                                                         <i className="fa-solid fa-gear"></i>&nbsp;{bankDetail ? "Edit" : "Add"} Bank Details
                                                     </button>

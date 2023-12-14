@@ -4494,9 +4494,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .common-head-invoice {
-  transform: translateY(-5px);
   position: relative;
-  width: 150px;
+  width: 200px;
 }
 
 .invoice-calendar-icon {
@@ -4508,15 +4507,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .field-input {
-  width: 120px !important;
+  padding-right: 10px;
 }
 
 .remove-field-icon {
   cursor: pointer;
   position: absolute;
-  top: 12px;
+  top: 9px;
   color: #B31312;
-  right: -20px;
+  right: 5px;
 }
 
 .form-contents {
@@ -4879,12 +4878,13 @@ svg {
 /* -------- template design ---------------*/
 
 .template-section {
+  padding: 1rem 2.5rem;
   box-shadow: 0 0 4px #ccc;
   border-radius: 5px;
 }
 
 .template-logo {
-  width: 40%;
+  width: 180px;
 }
 
 .template-heading {
@@ -4920,29 +4920,45 @@ svg {
   color: #0a4192
 }
 
-@media print {
-  .template-section {
-    padding: 35px 50px !important;
-  }
+.text-orange {
+  color: orange;
+}
+.text-green {
+  color: green;
+}
+.text-red {
+  color: red;
+}
 
+@media print {
   .template-head-section {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
+    flex-direction: column !important;
   }
 
   .template-head-section .col-md-6 {
-    width: 50% !important;
+    text-align: left !important;
   }
 
-  .template-summary-section {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+  .template-head-section .template-logo {
+    width: 180px !important;
   }
 
-  .template-summary-section .col-md-4 {
+  .template-head-section .template-heading {
+    text-align: right !important;
+    margin-top: -15px !important;
+  }
+
+  .template-summary-section .heading-section {
     width: 33% !important;
+    max-width: 33% !important;
+    margin-top: 0 !important;
+  }
+
+  .attch-template-section {
+    margin-bottom: 10px !important;
   }
 
   .table {

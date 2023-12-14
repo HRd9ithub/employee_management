@@ -842,7 +842,6 @@
     }
 
     .business-info-value {
-        width: 150px !important;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1569,6 +1568,16 @@
 
     .business-info{
         width: 180px;
+    }
+
+    .business-detail {
+        height: unset;
+    }
+    .template-head-section {
+        flex-direction: column-reverse;
+    }
+    .template-logo {
+        width: 140px;
     }
 }
 
@@ -2572,6 +2581,10 @@
     .summary-report {
         width: 99%;
     }
+
+    .invoice-calendar-icon, .remove-field-icon {
+        top: 15px;
+    }
 }
 
 @media (max-width:480px) {
@@ -2934,12 +2947,6 @@
 @media (max-width :420px){
     .business-name{
         flex-direction: column;
-    }
-    .business-info-value{
-        width: unset !important;
-        white-space: nowrap;
-        overflow: unset;
-        text-overflow: unset;
     }
 }
 
