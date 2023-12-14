@@ -657,7 +657,15 @@ const InvoiceFormComponent = () => {
                                 </div>
                             </form>
 
-                            <div className='mt-3 mb-4'>
+                            <div className='my-4'>
+                                <div className="d-flex justify-content-between align-items-center flex-wrap">
+                                    <h4 className="mb-0">Item Details</h4>
+                                    <select className="form-control currency-dropdown" id="exampleFormControldesignation" name="designation_id">
+                                        <option value="designation">Select Currency</option>
+                                        <option value="designation">ABC</option>
+                                        <option value="designation">Rupee</option>
+                                    </select>
+                                </div>
                                 {/* table display */}
                                 <ItemComponent
                                     // currency={currency}
@@ -675,11 +683,47 @@ const InvoiceFormComponent = () => {
 
                                 <div className='row my-3'>
                                     {/* add button */}
-                                    <div className='col-md-12 text-right'>
+                                    <div className='col-sm-4'>
                                         <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={addRowTable} disabled={addRowButtonDisable} >
                                             <i className="fa-solid fa-plus"></i>&nbsp;Add More Item
                                         </button>
                                     </div>
+                                    <div className='col-sm-8'>
+                                        <div className="table-total-section p-3 ml-auto">
+                                            <p className="text-center">Applied Exchange Rate: 1 INR = 0.012 USD</p>
+                                            <table className="w-100">
+                                                <tr>
+                                                    <td>
+                                                        <p className="text-left mb-0">Sub Total:</p>
+                                                    </td>
+                                                    <td>
+                                                        <p className="text-right mb-0">1110</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p className="text-left mb-0">Tax:</p>
+                                                    </td>
+                                                    <td>
+                                                        <p className="text-right mb-0">11</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><hr /></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        <h4 className="text-left mb-0">Total:</h4>
+                                                    </th>
+                                                    <th>
+                                                        <h4 className="text-right mb-0">1121</h4>
+                                                    </th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='row my-3'>
                                     {/* attchment file */}
                                     <div className="col-md-6 my-3">
                                         <div className='bg-div-color p-3'>
@@ -767,10 +811,40 @@ const InvoiceFormComponent = () => {
                                             null
                                     }
 
-                                    <div className='col-md-10 mx-auto'>
-                                        <div className='d-flex justify-content-center'>
-                                            {!id && <button className="btn btn-light" onClick={() => addInvoice("Draft")}>Save as Draft</button>}
+                                    <div className="col-md-12 my-3">
+                                        <div className='bg-div-color h-100 p-3'>
+                                            <div className='attach-title'>
+                                                <h4>Terms & Conditions <span>(Optional)</span></h4>
+                                            </div>
+                                            <div className='terms-conditions'>
+                                                <ol>
+                                                    <li className="position-relative">
+                                                        <input type="text" className='form-control bg-transparent' placeholder="Write Here..."/>
+                                                        <i className="fa-solid fa-xmark remove-field-icon"></i>
+                                                    </li>
+                                                </ol>
+                                                <button className="btn btn-gradient-primary">Add More</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 my-3">
+                                        <div className='bg-div-color h-100 p-3'>
+                                            <div className='attach-title'>
+                                                <h4>Contact Details <span>(Optional)</span></h4>
+                                            </div>
+                                            <div className='terms-conditions'>
+                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..."/>
+                                                <small class="text-muted d-block">Ex: For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</small>
+                                                <button className="btn btn-gradient-primary mt-3">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-12">
+                                        <div className="submit-section d-flex justify-content-between pb-3">
                                             <button className="btn btn-gradient-primary" onClick={() => addInvoice()} >Save & Continue</button>
+                                            {!id && <button className="btn btn-light" onClick={() => addInvoice("Draft")}>Save as Draft</button>}
                                         </div>
                                     </div>
                                 </div>

@@ -4525,7 +4525,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .bill-box-section {
   border-radius: 10px;
   background-color: #f6faff;
-  padding: 20px;
+  padding: 16px;
   margin-top: 10px;
 }
 
@@ -4842,7 +4842,6 @@ svg {
   color: rgb(255 255 255);
 }
 
-/* box-shadow: 0 0 4px #ccc; */
 .invoice-summary .btn {
   padding: 0.875rem 0rem !important;
   color: rgb(255 255 255);
@@ -4873,6 +4872,11 @@ svg {
 
 .invoice-summary:first-child {
   border-radius: 5px;
+}
+
+.dropdown.show > .btn-gradient-primary.dropdown-toggle {
+  background-color: #0a4a92 !important;
+  color: white !important;
 }
 
 /* -------- template design ---------------*/
@@ -4928,6 +4932,17 @@ svg {
 }
 .text-red {
   color: red;
+}
+
+select.form-control.currency-dropdown {
+  display: inline-block !important;
+  padding: 2px 5px !important;
+  width: 200px;
+}
+
+.table-total-section {
+  background-color: rgb(247, 250, 255);
+  width: 310px !important;
 }
 
 @media print {
