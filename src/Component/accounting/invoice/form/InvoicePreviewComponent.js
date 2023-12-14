@@ -6,11 +6,9 @@ import Spinner from '../../../common/Spinner';
 import Error500 from '../../../error_pages/Error500';
 import { motion } from "framer-motion";
 import moment from 'moment';
-import Tooltip from '@mui/material/Tooltip';
 import { useReactToPrint } from 'react-to-print';
 import Swal from 'sweetalert2';
 import generatePDF, { Margin } from 'react-to-pdf';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Error403 from '../../../error_pages/Error403';
 import { Dropdown } from 'react-bootstrap';
 
@@ -156,69 +154,34 @@ const InvoicePreviewComponent = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-4 d-flex justify-content-end" id="two">
-                                    <div class="dropdown">
-                                        <button class="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Action &nbsp;<i className="fa-solid fa-angle-down"></i>
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <Dropdown.Item className="dropdown-item">Show All Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Create New Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Delete Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Edit Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Print Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Download Invoice</Dropdown.Item>
-                                            <div className="dropdown-divider"></div>
-                                            <Dropdown.Item className="dropdown-item">Duplicate Invoice</Dropdown.Item>
-                                        </div>
-                                    </div>
                                     <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate("/invoice")}>
                                         <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
                                     </button>
+                                    <Dropdown>
+                                        <Dropdown.Toggle className="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle" id="dropdown-basic">
+                                            Action&nbsp; <i className="fa-solid fa-angle-down"></i>
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                        <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice')}>Show All Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice/create')}>Create New Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/edit/${id}`)}>Edit Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/duplicate/${id}`)}>Duplicate Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={deleteInvoice}>Delete Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={handlePrint}>Print Invoice</Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item className="dropdown-item" onClick={invoiceDownload}>Download Invoice</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </div>
                             </div>
                         </div>
                         <div className="m-4">
-                            {/* buttons */}
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className='d-flex justify-content-end my-3'>
-                                        {/* redirect invoice page */}
-                                        <Tooltip title="Show All Invoice" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
-                                                Navigate('/invoice')
-                                            }}><i className="fa-regular fa-eye"></i> Show All Invoice</button>
-                                        </Tooltip>
-                                        {/* create new invoice button */}
-                                        {(!permission || permission.permissions.create === 1)  &&
-                                        <Tooltip title="Create New Invoice" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => {
-                                                Navigate('/invoice/create')
-                                            }}><i className="fa-solid fa-square-plus"></i> Create New Invoice</button>
-                                        </Tooltip>}
-                                        {/* delete invoice button */}
-                                        {(!permission || permission.permissions.delete === 1)  &&
-                                        <Tooltip title="Delete Invoice" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={deleteInvoice}><i className="fa-solid fa-trash-can"></i> Delete Invoice</button>
-                                        </Tooltip>}
-                                        {/* edit button */}
-                                        {(!permission || permission.permissions.update === 1)  &&
-                                        <Tooltip title="Edit" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate(`/invoice/edit/${id}`)}><i className="fa-solid fa-pencil"></i> Edit</button>
-                                        </Tooltip>}
-                                        <Tooltip title="Print" arrow placement="top">
-                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={handlePrint}><i className="fa-solid fa-print"></i> Print</button>
-                                        </Tooltip>
-                                        <Tooltip title="Download" arrow placement="top">
-                                            <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={invoiceDownload}><FileDownloadIcon className='mt-0 mb-0' /> Download</button>
-                                        </Tooltip>
-                                    </div>
-                                </div>
-                            </div>
                             {/* invoice summary */}
                             <div id="accordion">
                                 <div className="card">
@@ -442,38 +405,38 @@ const InvoicePreviewComponent = () => {
                                         <div className="card-body summary-card-body">
                                             <div className="row">
                                                 {bankDetail &&
-                                                <>
-                                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="2" className='mt-2'>Account Number</label>
-                                                            <p className="mb-0">{bankDetail.account_number}</p>
+                                                    <>
+                                                        <div className="col-lg-3 col-md-4 col-sm-6">
+                                                            <div className="form-group">
+                                                                <label htmlFor="2" className='mt-2'>Account Number</label>
+                                                                <p className="mb-0">{bankDetail.account_number}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="2" className='mt-2'>IFSC Code</label>
-                                                            <p className="mb-0">{bankDetail.ifsc_code}</p>
+                                                        <div className="col-lg-3 col-md-4 col-sm-6">
+                                                            <div className="form-group">
+                                                                <label htmlFor="2" className='mt-2'>IFSC Code</label>
+                                                                <p className="mb-0">{bankDetail.ifsc_code}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="2" className='mt-2'>Bank Name</label>
-                                                            <p className="mb-0">{bankDetail.bank}</p>
+                                                        <div className="col-lg-3 col-md-4 col-sm-6">
+                                                            <div className="form-group">
+                                                                <label htmlFor="2" className='mt-2'>Bank Name</label>
+                                                                <p className="mb-0">{bankDetail.bank}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="2" className='mt-2'>Branch Name</label>
-                                                            <p className="mb-0">{bankDetail.branch_name}</p>
+                                                        <div className="col-lg-3 col-md-4 col-sm-6">
+                                                            <div className="form-group">
+                                                                <label htmlFor="2" className='mt-2'>Branch Name</label>
+                                                                <p className="mb-0">{bankDetail.branch_name}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="2" className='mt-2'>Name</label>
-                                                            <p className="mb-0">{bankDetail.name}</p>
+                                                        <div className="col-lg-3 col-md-4 col-sm-6">
+                                                            <div className="form-group">
+                                                                <label htmlFor="2" className='mt-2'>Name</label>
+                                                                <p className="mb-0">{bankDetail.name}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </>}
+                                                    </>}
                                                 <div className={!bankDetail ? "col-12 text-center" : "col-12"}>
                                                     <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate(`/invoice/payment/${id}`)} >
                                                         <i className="fa-solid fa-gear"></i>&nbsp;{bankDetail ? "Edit" : "Add"} Bank Details
