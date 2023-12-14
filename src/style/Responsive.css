@@ -2114,6 +2114,10 @@
     .activity-date-range {
         width: 100% !important;
     }
+    .table-total-section {
+        width: 100% !important;
+        margin-top: 15px;
+    }
 }
 
 @media (max-width:568px) {
@@ -2941,6 +2945,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    select.form-control.currency-dropdown {
+        width: 100%;
     }
 }
 

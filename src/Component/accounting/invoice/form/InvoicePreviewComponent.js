@@ -377,7 +377,7 @@ const InvoicePreviewComponent = () => {
                                                         <ol className='mb-0'>
                                                             {invoiceDetail.attchmentFile.map((val, ind) => {
                                                                 return (
-                                                                    <li key={ind}><NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val}`} target='_attch'>{val}</NavLink></li>
+                                                                    <li key={ind}><NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val}`} target='_attch' className="text-primary">{val}</NavLink></li>
                                                                 )
                                                             })}
                                                         </ol>
@@ -422,8 +422,18 @@ const InvoicePreviewComponent = () => {
                                                         <div style={{ backgroundColor: "rgb(247 250 255)", borderRadius: '5px' }}>
                                                             <img src={invoiceDetail.signImage} alt='signeture' className='img-fluid' />
                                                         </div>
-                                                    </div>
-                                                }
+                                                    </div>}
+                                                <div className="col-md-12 mt-4">
+                                                    <h5 className='extra-heading'>Terms & Conditions:</h5>
+                                                    <ol className="mb-0">
+                                                        <li>Please pay within 15 days from the date of invoice, overdue interest @ 14% will be charged on delayed payments.</li>
+                                                        <li>Please quote invoice number when remitting funds.</li>
+                                                    </ol>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <hr/>
+                                                    <p className="mb-0 text-center">For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</p>
+                                                </div>
                                             </div>}
                                     </div>
                                 </div>
