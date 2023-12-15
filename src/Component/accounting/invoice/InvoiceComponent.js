@@ -262,7 +262,8 @@ const InvoiceComponent = () => {
         (item.issue_date && moment(item.issue_date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase())) ||
         item.invoiceId.toLowerCase().includes(searchItem.toLowerCase()) ||
         item.invoiceClient?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
-        item.totalAmount.includes(searchItem.toLowerCase())
+        item.totalAmount.includes(searchItem.toLowerCase()) || 
+        item.status.toLowerCase().includes(searchItem.toLowerCase())
       )
     })
   }, [records, searchItem, tab]);
