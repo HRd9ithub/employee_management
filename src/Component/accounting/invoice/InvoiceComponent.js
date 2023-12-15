@@ -18,12 +18,9 @@ import Spinner from '../../common/Spinner';
 import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
 import Swal from 'sweetalert2';
-import MinimizeIcon from '@mui/icons-material/Minimize';
-
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { Button } from 'bootstrap';
 
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
@@ -37,10 +34,7 @@ const InvoiceComponent = () => {
   const [client_id, setClient_id] = useState("");
   const [searchItem, setsearchItem] = useState("");
 
-  const [value, setValue] = React.useState('invoices');
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [tab, setTab] = useState('invoices');
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -58,7 +52,7 @@ const InvoiceComponent = () => {
     setServerError(false)
     setisLoading(true);
 
-    customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}&isDelete=${false}`).then((res) => {
+    customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}`).then((res) => {
       if (res.data.success) {
         const { data, permissions } = res.data;
         setpermission(permissions);
@@ -80,6 +74,10 @@ const InvoiceComponent = () => {
       }
     });
   }
+
+  useEffect(() => {
+    fetchInvoice();
+  }, [])
 
   /*--------------------
     get client name
@@ -104,7 +102,6 @@ const InvoiceComponent = () => {
   }
 
   useEffect(() => {
-    fetchInvoice();
     fetchClientName();
   }, [])
 
@@ -126,7 +123,7 @@ const InvoiceComponent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         setisLoading(true);
-        const res = await customAxios().delete(`/invoice/${id}`);
+        const res = await customAxios().delete(`/invoice/${id}?p=${tab === "deletes" && true}`);
         if (res.data.success) {
           fetchInvoice();
           toast.success(res.data.message);
@@ -143,6 +140,33 @@ const InvoiceComponent = () => {
       }
     })
   }
+
+  /*--------------------
+     Restore invoice funcation
+  ----------------------*/
+  const restoreInvoice = (id) => {
+        setisLoading(true);
+        customAxios().patch(`/invoice/${id}`).then((res) => {
+          if (res.data.success) {
+            fetchInvoice();
+            toast.success(res.data.message);
+            setisLoading(false);
+          }
+        }).catch((error) => {
+          setisLoading(false);
+          if (!error.response) {
+            toast.error(error.message)
+          } else {
+            if (error.response.data.message) {
+              toast.error(error.response.data.message)
+            }
+          }
+        })
+  }
+
+  /*--------------------
+     pagination and sort table
+  ----------------------*/
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -221,23 +245,53 @@ const InvoiceComponent = () => {
   }
 
   // search filter 
-    // memoize filtered items
-    const recordsFilter = useMemo(() => {
-      return records.filter((item) => {
-        return (
-           (item.issue_date && moment(item.issue_date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase())) ||
-           item.invoiceId.toLowerCase().includes(searchItem.toLowerCase()) ||
-           item.invoiceClient?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
-           item.totalAmount.includes(searchItem.toLowerCase())
-          )
-      })
-    }, [records, searchItem]);
+  const recordsFilter = useMemo(() => {
+    const tabFilter = records.filter((item) => {
+      if(tab === "invoices"){
+        return ["Unpaid", "Paid"].includes(item.status) && !item.deleteAt
+      }else if(tab === "drafts"){
+        return ["Draft"].includes(item.status) && !item.deleteAt
+      }else{
+        return item.deleteAt
+      }
+    })
+
+    return tabFilter.filter((item) => {
+      return (
+        (item.issue_date && moment(item.issue_date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase())) ||
+        item.invoiceId.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.invoiceClient?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.totalAmount.includes(searchItem.toLowerCase())
+      )
+    })
+  }, [records, searchItem, tab]);
 
   //  search onchange funcation
-  const handleSearch = (event) =>{
+  const handleSearch = (event) => {
     setsearchItem(event.target.value);
   }
- 
+
+  /*------------------------------
+    invoice summary calculation
+  -------------------------------*/
+  //total amount 
+  const totalAmount = useMemo(() => {
+    return recordsFilter.reduce((accumulator, currentValue) => {
+      return accumulator + parseFloat(currentValue.totalAmount);
+    }, 0)
+  }, [recordsFilter]);
+
+  /*--------------------
+     tab onchage funcation
+   ----------------------*/
+
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+  };
+
+
+
+
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
@@ -287,7 +341,7 @@ const InvoiceComponent = () => {
                       <i className="fa-solid fa-plus" ></i>&nbsp;Generate
                     </button>
                     <div className="search-full pr-0">
-                      <input type="search" className="input-search-full" autoComplete='off' name="txt" placeholder="Search" value={searchItem} onChange={handleSearch}/>
+                      <input type="search" className="input-search-full" autoComplete='off' name="txt" placeholder="Search" value={searchItem} onChange={handleSearch} />
                       <i className="fas fa-search"></i>
                     </div>
                     <div className="search-box mr-3">
@@ -337,16 +391,16 @@ const InvoiceComponent = () => {
               <div className="row">
                 <div className="col-sm-6 col-md-3">
                   <div className="invoice-summery-card">
-                    <i className="fa-regular fa-file-lines"></i>
+                    <i className="fa-solid fa-receipt"></i>
                     <p className="mb-0">Invoices</p>
-                    <h3 className="mb-0">06</h3>
+                    <h3 className="mb-0">{recordsFilter.length < 10 && recordsFilter.length !== 0 ? "0" + recordsFilter.length : recordsFilter.length}</h3>
                   </div>
                 </div>
                 <div className="col-sm-6 col-md-3">
                   <div className="invoice-summery-card">
                     <i className="fa-solid fa-file-invoice-dollar"></i>
                     <p className="mb-0">Invoice Amount</p>
-                    <h3 className="mb-0">06</h3>
+                    <h3 className="mb-0">{totalAmount}</h3>
                   </div>
                 </div>
                 <div className="col-sm-6 col-md-3">
@@ -366,10 +420,10 @@ const InvoiceComponent = () => {
               </div>
             </div>
             <div className="mx-4 pt-2">
-              <Box sx={{ width:'100%', borderBottom: 1, borderColor: 'divider' }}>
+              <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs
-                  value={value}
-                  onChange={handleChange}
+                  value={tab}
+                  onChange={handleTabChange}
                   textColor="secondary"
                   variant="scrollable"
                   scrollButtons="auto"
@@ -377,9 +431,9 @@ const InvoiceComponent = () => {
                   aria-label="secondary tabs example"
                   className="tab-panel-content"
                 >
-                  <Tab value="invoices" label="Invoices" className="tab-panel-header"/>
-                  <Tab value="drafts" label="Drafts" className="tab-panel-header"/>
-                  <Tab value="deleted_invoices" label="Deleted Invoices" className="tab-panel-header"/>
+                  <Tab value="invoices" label="Invoices" className="tab-panel-header" />
+                  <Tab value="drafts" label="Drafts" className="tab-panel-header" />
+                  <Tab value="deletes" label="Deleted Invoices" className="tab-panel-header" />
                 </Tabs>
               </Box>
             </div>
@@ -437,18 +491,25 @@ const InvoiceComponent = () => {
                             <TableCell>{parseFloat(val.totalAmount).toFixed(2)}</TableCell>
                             <TableCell>
                               <div >
-                                {val.status === "Draft" ? <span className={val.status + "-invoice invoice-status"}>{val.status}</span> : <MinimizeIcon/>}
+                                <span className={val.deleteAt ? "Deleted-invoice invoice-status": val.status + "-invoice invoice-status"}>{val.deleteAt ? "Deleted" : val.status}</span>
                                 <br />
-                                {val.status === "Unpaid" && val.due_date && <label className="mb-0 mt-1" htmlFor="due-date">Due on {moment(val.due_date).format("DD MMM YYYY")}</label>}
+                                {val.status === "Unpaid" && val.due_date && !val.deleteAt && <label className="mb-0 mt-1" htmlFor="due-date">Due on {moment(val.due_date).format("DD MMM YYYY")}</label>}
                               </div>
                             </TableCell>
                             <TableCell>
-                            <div className='action'>
-                                  <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
-                                  <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>
-                                  <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                              <div className='action'>
+                                 {tab === "deletes" ?
+                                 <>
+                                  <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
                                   <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
-                            </div>
+                                 </>
+                                  :<>
+                                <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
+                                <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>
+                                <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                                <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                </>}
+                              </div>
                             </TableCell>
                           </TableRow>
                           <TableRow>
@@ -484,7 +545,7 @@ const InvoiceComponent = () => {
                       )
                     }) :
                       <TableRow>
-                        <TableCell colSpan={6} align="center">
+                        <TableCell colSpan={8} align="center">
                           No Records Found
                         </TableCell>
                       </TableRow>

@@ -306,9 +306,6 @@ const InvoiceFormComponent = () => {
                 conditions.push(val.name);
             }
         })
-
-        console.log('conditions :>> ', conditions);
-
         const data = validate();
 
         const { invoiceId, issue_date, due_date } = heading;
@@ -316,6 +313,7 @@ const InvoiceFormComponent = () => {
         if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData) {
             return false
         } else {
+            setisLoading(true);
             let formdata = new FormData();
             formdata.append('invoiceId', invoiceId);
             formdata.append('issue_date', issue_date);
@@ -332,7 +330,10 @@ const InvoiceFormComponent = () => {
             formdata.append('currency', currency);
             formdata.append('currencyValue', currencyValue);
             formdata.append('contact', contact);
-            formdata.append('terms', conditions);
+            conditions?.forEach((val) => {
+                formdata.append('terms', val);
+            })
+            
 
             let url = "";
             if (id) {
@@ -601,7 +602,7 @@ const InvoiceFormComponent = () => {
                                             <div className='bill-box-section'>
                                                 <h4>Billed By</h4>
                                                 <div className="dropdown ">
-                                                    <button className="btn button-bill text-left col-12 dropdown-toggle" type="button" id="dropdownMenuButton" >
+                                                    <button className="btn button-bill text-left col-12 dropdown-toggle" type="button">
                                                         <span className='bill-logo mx-2' >{UserData.profile_image && <img src={`${process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`} alt='p_image' />}</span>
                                                         <span className='text-capitalize'>{UserData.first_name?.concat(" ", UserData.last_name)}</span>
                                                     </button>
