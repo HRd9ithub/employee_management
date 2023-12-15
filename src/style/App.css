@@ -574,8 +574,9 @@ span.eye-icon {
 .fc .fc-button-group .fc-button-primary.fc-button-active:hover:not(:disabled),
 .fc .fc-header-toolbar .fc-left .fc-today-button:hover {
   color: #fff;
-  background-color: #31aaec;
-  border-color: #31aaec;
+  background-color: #0a4a92;
+  border-color: #0a4a92;
+  box-shadow: none !important;
 }
 
 .jlPZUL {
@@ -867,8 +868,6 @@ span.eye-icon {
 }
 
 .sidebar {
-  /* height: 100vh; */
-  /* overflow: auto; */
   width: 225px;
   z-index: 10000;
 }
@@ -3875,10 +3874,6 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
   /* margin-top: 10px; */
 }
 
-.remove-side-margin {
-  margin: 0 -15px;
-}
-
 /* csv button hover effect */
 .csv-button.btn-gradient-primary:hover a {
   color: white !important;
@@ -4911,6 +4906,9 @@ svg {
   margin-bottom: 0.5rem;
 }
 
+.product-table {
+  overflow-x: auto;
+}
 .product-table thead {
   background-color: #0a4a92;
   color: #fff;
@@ -4927,11 +4925,17 @@ svg {
 .text-orange {
   color: orange;
 }
+
 .text-green {
   color: green;
 }
+
 .text-red {
   color: red;
+}
+
+.text-maroon {
+  color: #B31312;
 }
 
 select.form-control.currency-dropdown {
@@ -4943,6 +4947,33 @@ select.form-control.currency-dropdown {
 .table-total-section {
   background-color: rgb(247, 250, 255);
   width: 310px !important;
+}
+
+.invoice-summery-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #004392;
+  color: white;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.invoice-summery-card i {
+  color: #ffffff69;
+  font-size: 60px;
+  transform: rotate(-27deg);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.tab-panel-header.Mui-selected {
+  color: #004392 !important;
+}
+
+.tab-panel-content .MuiTabs-indicator {
+  background-color: #004392 !important;
 }
 
 @media print {

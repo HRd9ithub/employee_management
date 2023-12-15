@@ -311,7 +311,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
     return (
         <>
             {data ? <label className='edit-client-icon' onClick={showModal}><i className="fa-solid fa-pencil"></i> Edit</label> :
-                <button className='btn add-client-button' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
+                <button className='btn add-client-button button-full-width' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
             <Modal
                 show={modalShow}
                 onHide={onHideModal}
@@ -416,7 +416,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                                 return <li className='error' key={val}>{val}</li>
                                             })}
                                         </ol>}
-                                    <div className='d-flex justify-content-center modal-button remove-side-margin'>
+                                    <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} > Save</button>
                                         <button className="btn btn-light" onClick={onHideModal}>Cancel</button>
                                     </div>

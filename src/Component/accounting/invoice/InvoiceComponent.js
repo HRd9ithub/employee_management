@@ -20,6 +20,11 @@ import Error500 from '../../error_pages/Error500';
 import Swal from 'sweetalert2';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import { Button } from 'bootstrap';
+
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
   const [records, setRecords] = useState([]);
@@ -31,6 +36,11 @@ const InvoiceComponent = () => {
   const [open, setOpen] = useState("");
   const [client_id, setClient_id] = useState("");
   const [searchItem, setsearchItem] = useState("");
+
+  const [value, setValue] = React.useState('invoices');
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -239,7 +249,7 @@ const InvoiceComponent = () => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=" container-fluid pt-4">
+        <div className="container-fluid py-4">
           <div className="background-wrapper bg-white pt-4">
             <div className=''>
               <div className='row justify-content-end align-items-center row-std m-0'>
@@ -287,9 +297,9 @@ const InvoiceComponent = () => {
                       <i className="fas fa-search"></i>
                     </div>
                     {permission && permission.permissions.create === 1 &&
-                      <div className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' onClick={() => navigate("create")} >
+                      <button className='btn btn-gradient-primary btn-rounded btn-fw text-center csv-button' onClick={() => navigate("create")} >
                         <i className="fa-solid fa-plus"></i>&nbsp;Add
-                      </div>}
+                      </button>}
                   </div>
                 </div>
               </div>
@@ -316,7 +326,7 @@ const InvoiceComponent = () => {
                     </div>
                   </div>
                   <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
-                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={filterInvoice}>
+                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3 button-full-width' onClick={filterInvoice}>
                       <i className="fa-solid fa-plus" ></i>&nbsp;Generate
                     </button>
                   </div>
@@ -324,6 +334,56 @@ const InvoiceComponent = () => {
               </div>
             </div>
             <div className="mx-4 pt-4">
+              <div className="row">
+                <div className="col-sm-6 col-md-3">
+                  <div className="invoice-summery-card">
+                    <i className="fa-regular fa-file-lines"></i>
+                    <p className="mb-0">Invoices</p>
+                    <h3 className="mb-0">06</h3>
+                  </div>
+                </div>
+                <div className="col-sm-6 col-md-3">
+                  <div className="invoice-summery-card">
+                    <i className="fa-solid fa-file-invoice-dollar"></i>
+                    <p className="mb-0">Invoice Amount</p>
+                    <h3 className="mb-0">06</h3>
+                  </div>
+                </div>
+                <div className="col-sm-6 col-md-3">
+                  <div className="invoice-summery-card">
+                    <i className="fa-solid fa-hourglass-end"></i>
+                    <p className="mb-0">Due</p>
+                    <h3 className="mb-0">06</h3>
+                  </div>
+                </div>
+                <div className="col-sm-6 col-md-3">
+                  <div className="invoice-summery-card">
+                    <i className="fa-solid fa-hand-holding-dollar"></i>
+                    <p className="mb-0">Paid</p>
+                    <h3 className="mb-0">06</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mx-4 pt-2">
+              <Box sx={{ width:'100%', borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  indicatorColor="secondary"
+                  aria-label="secondary tabs example"
+                  className="tab-panel-content"
+                >
+                  <Tab value="invoices" label="Invoices" className="tab-panel-header"/>
+                  <Tab value="drafts" label="Drafts" className="tab-panel-header"/>
+                  <Tab value="deleted_invoices" label="Deleted Invoices" className="tab-panel-header"/>
+                </Tabs>
+              </Box>
+            </div>
+            <div className="mx-4 pt-3">
               <TableContainer >
                 <Table className="common-table-section expanted-table">
                   <TableHead className="common-header">
