@@ -144,7 +144,7 @@ const InvoicePreviewComponent = () => {
                         {/* ====================== breadcrumb */}
                         <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>
-                                <div className="col-12 col-sm-8 d-flex justify-content-between align-items-center">
+                                <div className="col-12 col-sm-7 d-flex justify-content-between align-items-center">
                                     <div>
                                         <ul id="breadcrumb" className="mb-0">
                                             <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
@@ -153,10 +153,7 @@ const InvoicePreviewComponent = () => {
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="col-12 col-sm-4 d-flex justify-content-end" id="two">
-                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate("/invoice")}>
-                                        <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
-                                    </button>
+                                <div className="col-12 col-sm-5 d-flex justify-content-end" id="two">
                                     <Dropdown>
                                         <Dropdown.Toggle className="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle" id="dropdown-basic">
                                             Action&nbsp; <i className="fa-solid fa-angle-down"></i>
@@ -178,6 +175,9 @@ const InvoicePreviewComponent = () => {
                                             <Dropdown.Item className="dropdown-item" onClick={invoiceDownload}>Download Invoice</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
+                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate("/invoice")}>
+                                        <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -309,7 +309,7 @@ const InvoicePreviewComponent = () => {
                                                     <th>Item Name</th>
                                                     <th>Rate</th>
                                                     <th>Quantity</th>
-                                                    <th>Amount</th>
+                                                    <th>Amount({invoiceDetail.currency})</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -320,13 +320,13 @@ const InvoicePreviewComponent = () => {
                                                             <td>{val.itemName}</td>
                                                             <td>{val.rate}</td>
                                                             <td>{val.quantity}</td>
-                                                            <td><i className="fa-solid fa-indian-rupee-sign"></i> {val.amount}</td>
+                                                            <td>{parseFloat(val.amount * invoiceDetail.currencyValue).toFixed(2)}</td>
                                                         </tr>
                                                     )
                                                 })}
                                                 <tr className='total-column'>
                                                     <td colSpan={4}>Total</td>
-                                                    <td><i className="fa-solid fa-indian-rupee-sign"></i> {invoiceDetail.totalAmount}</td>
+                                                    <td>{invoiceDetail.totalAmount}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -386,17 +386,20 @@ const InvoicePreviewComponent = () => {
                                                             <img src={invoiceDetail.signImage} alt='signeture' className='img-fluid' />
                                                         </div>
                                                     </div>}
+                                                {(invoiceDetail.hasOwnProperty("terms") && invoiceDetail.terms.length !== 0) && 
                                                 <div className="col-md-12 mt-4">
                                                     <h5 className='extra-heading'>Terms & Conditions:</h5>
                                                     <ol className="mb-0">
-                                                        <li>Please pay within 15 days from the date of invoice, overdue interest @ 14% will be charged on delayed payments.</li>
-                                                        <li>Please quote invoice number when remitting funds.</li>
+                                                        {invoiceDetail.terms.map((val) => (
+                                                            <li key={val}>{val}</li>
+                                                            ))}
                                                     </ol>
-                                                </div>
+                                                </div>}
+                                                {(invoiceDetail.hasOwnProperty("contact") && invoiceDetail.contact) && 
                                                 <div className="col-md-12">
                                                     <hr/>
-                                                    <p className="mb-0 text-center">For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</p>
-                                                </div>
+                                                    <p className="mb-0 text-center">{invoiceDetail.contact}</p>
+                                                </div>}
                                             </div>}
                                     </div>
                                 </div>

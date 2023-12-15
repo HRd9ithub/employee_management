@@ -1,4 +1,4 @@
-export const Currencylist = [
+const CurrencyList = [
     'EUR',
     'USD',
     'JPY',
@@ -33,3 +33,5 @@ export const Currencylist = [
     'THB',
     'ZAR'
 ]
+
+export default CurrencyList;
