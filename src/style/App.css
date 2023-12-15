@@ -3019,21 +3019,23 @@ input[type=password]::-ms-clear {
   justify-content: center;
 }
 
+.action i {
+  cursor: pointer;
+
+}
 .action i.fa-solid.fa-pen-to-square {
   color: green;
-  cursor: pointer;
 }
 
 .action i.fa-solid.fa-trash-can {
   color: red;
-  cursor: pointer;
 }
 
 .action i.fa-solid.fa-eye,
 .action i.fa-solid.fa-download,
-.action i.fa-solid.fa-user-clock {
+.action i.fa-solid.fa-user-clock,
+.action i.fa-regular.fa-copy {
   color: rgb(7, 75, 154);
-  cursor: pointer;
 }
 
 .common-table-section {
@@ -3360,7 +3362,7 @@ input[type="date"]::-webkit-clear-button {
 
 select.form-control {
   outline: transparent;
-  padding: 2px 1px !important;
+  padding: 2px 3px !important;
   border-bottom: 1px solid #0a4a92;
   border-radius: 1px !important;
   /* *opera browser border issue */
