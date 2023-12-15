@@ -311,7 +311,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
     return (
         <>
             {data ? <label className='edit-client-icon' onClick={showModal}><i className="fa-solid fa-pencil"></i> Edit</label> :
-                <button className='btn add-client-button button-full-width' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
+                <button className='btn add-client-button button-full-width mx-auto' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
             <Modal
                 show={modalShow}
                 onHide={onHideModal}
