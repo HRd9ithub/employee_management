@@ -4472,6 +4472,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   color: rgb(255, 255, 255);
   background-color: #5fd45f;
   font-weight: 500;
+  cursor : default !important;
 }
 
 .invoice-status {

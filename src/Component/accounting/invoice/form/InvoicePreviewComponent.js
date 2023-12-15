@@ -131,7 +131,7 @@ const InvoicePreviewComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    } else if (!permission || permission.name.toLowerCase() !== "admin") {
+    }else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
         return <Error403 />;
     }
 
@@ -164,8 +164,8 @@ const InvoicePreviewComponent = () => {
                                             <Dropdown.Divider />
                                             <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice/create')}>Create New Invoice</Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/edit/${id}`)}>Edit Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
+                                            {invoiceDetail.status !== "Paid" && <><Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/edit/${id}`)}>Edit Invoice</Dropdown.Item>
+                                            <Dropdown.Divider /></>}
                                             <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/duplicate/${id}`)}>Duplicate Invoice</Dropdown.Item>
                                             <Dropdown.Divider />
                                             <Dropdown.Item className="dropdown-item" onClick={deleteInvoice}>Delete Invoice</Dropdown.Item>
@@ -295,7 +295,7 @@ const InvoicePreviewComponent = () => {
                                                     }
                                                     <tr className='d-block mt-2'>
                                                         <td className="invoice-title-summary"><span >Total Amount:</span></td>
-                                                        <td><span className='invoice-value-summary'><i className="fa-solid fa-indian-rupee-sign"></i> {invoiceDetail.totalAmount}</span></td>
+                                                        <td><span className='invoice-value-summary'>{invoiceDetail.totalAmount}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
