@@ -9,6 +9,7 @@ import moment from 'moment';
 import { Table, TableBody, TableCell, TableContainer, TableHead, Collapse, TablePagination, IconButton, TableRow, TableSortLabel } from "@mui/material";
 import ranges from '../../../helper/calcendarOption';
 import { customAxios } from '../../../service/CreateApi';
+import InvoiceStatusModal from "./form/InvoiceStatusModal";
 import toast from 'react-hot-toast';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -145,23 +146,23 @@ const InvoiceComponent = () => {
      Restore invoice funcation
   ----------------------*/
   const restoreInvoice = (id) => {
-        setisLoading(true);
-        customAxios().patch(`/invoice/${id}`).then((res) => {
-          if (res.data.success) {
-            fetchInvoice();
-            toast.success(res.data.message);
-            setisLoading(false);
-          }
-        }).catch((error) => {
-          setisLoading(false);
-          if (!error.response) {
-            toast.error(error.message)
-          } else {
-            if (error.response.data.message) {
-              toast.error(error.response.data.message)
-            }
-          }
-        })
+    setisLoading(true);
+    customAxios().patch(`/invoice/${id}`).then((res) => {
+      if (res.data.success) {
+        fetchInvoice();
+        toast.success(res.data.message);
+        setisLoading(false);
+      }
+    }).catch((error) => {
+      setisLoading(false);
+      if (!error.response) {
+        toast.error(error.message)
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })
   }
 
   /*--------------------
@@ -247,11 +248,11 @@ const InvoiceComponent = () => {
   // search filter 
   const recordsFilter = useMemo(() => {
     const tabFilter = records.filter((item) => {
-      if(tab === "invoices"){
+      if (tab === "invoices") {
         return ["Unpaid", "Paid"].includes(item.status) && !item.deleteAt
-      }else if(tab === "drafts"){
+      } else if (tab === "drafts") {
         return ["Draft"].includes(item.status) && !item.deleteAt
-      }else{
+      } else {
         return item.deleteAt
       }
     })
@@ -277,7 +278,14 @@ const InvoiceComponent = () => {
   //total amount 
   const totalAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator + parseFloat(currentValue.totalAmount);
+      return accumulator + (parseFloat(currentValue.totalAmount) / parseFloat(currentValue.currencyValue));
+    }, 0)
+  }, [recordsFilter]);
+
+  //recevied amount 
+  const receivedAmount = useMemo(() => {
+    return recordsFilter.reduce((accumulator, currentValue) => {
+      return accumulator + (currentValue.status === "Paid" && parseFloat(currentValue.totalAmount) / parseFloat(currentValue.currencyValue));
     }, 0)
   }, [recordsFilter]);
 
@@ -289,14 +297,11 @@ const InvoiceComponent = () => {
     setTab(newValue);
   };
 
-
-
-
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.name.toLowerCase() !== "admin") {
+  } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
     return <Error403 />;
   }
 
@@ -387,38 +392,39 @@ const InvoiceComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="mx-4 pt-4">
-              <div className="row">
-                <div className="col-sm-6 col-md-3">
-                  <div className="invoice-summery-card">
-                    <i className="fa-solid fa-receipt"></i>
-                    <p className="mb-0">Invoices</p>
-                    <h3 className="mb-0">{recordsFilter.length < 10 && recordsFilter.length !== 0 ? "0" + recordsFilter.length : recordsFilter.length}</h3>
+            {tab !== "deletes" &&
+              <div className="mx-4 pt-4">
+                <div className="row">
+                  <div className="col-sm-6 col-md-3">
+                    <div className="invoice-summery-card">
+                      <i className="fa-solid fa-receipt"></i>
+                      <p className="mb-0">Invoices</p>
+                      <h3 className="mb-0">{recordsFilter.length < 10 && recordsFilter.length !== 0 ? "0" + recordsFilter.length : recordsFilter.length}</h3>
+                    </div>
+                  </div>
+                  <div className="col-sm-6 col-md-3">
+                    <div className="invoice-summery-card">
+                      <i className="fa-solid fa-file-invoice-dollar"></i>
+                      <p className="mb-0">Invoice Amount</p>
+                      <h3 className="mb-0">&#x20B9; {totalAmount}</h3>
+                    </div>
+                  </div>
+                  <div className="col-sm-6 col-md-3">
+                    <div className="invoice-summery-card">
+                      <i className="fa-solid fa-hourglass-end"></i>
+                      <p className="mb-0">Due</p>
+                      <h3 className="mb-0">&#x20B9; {totalAmount - receivedAmount}</h3>
+                    </div>
+                  </div>
+                  <div className="col-sm-6 col-md-3">
+                    <div className="invoice-summery-card">
+                      <i className="fa-solid fa-hand-holding-dollar"></i>
+                      <p className="mb-0">Paid</p>
+                      <h3 className="mb-0">&#x20B9; {receivedAmount}</h3>
+                    </div>
                   </div>
                 </div>
-                <div className="col-sm-6 col-md-3">
-                  <div className="invoice-summery-card">
-                    <i className="fa-solid fa-file-invoice-dollar"></i>
-                    <p className="mb-0">Invoice Amount</p>
-                    <h3 className="mb-0">{totalAmount}</h3>
-                  </div>
-                </div>
-                <div className="col-sm-6 col-md-3">
-                  <div className="invoice-summery-card">
-                    <i className="fa-solid fa-hourglass-end"></i>
-                    <p className="mb-0">Due</p>
-                    <h3 className="mb-0">06</h3>
-                  </div>
-                </div>
-                <div className="col-sm-6 col-md-3">
-                  <div className="invoice-summery-card">
-                    <i className="fa-solid fa-hand-holding-dollar"></i>
-                    <p className="mb-0">Paid</p>
-                    <h3 className="mb-0">06</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </div>}
             <div className="mx-4 pt-2">
               <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs
@@ -488,27 +494,22 @@ const InvoiceComponent = () => {
                             <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceId}</TableCell>
                             <TableCell>{val.invoiceClient.name}</TableCell>
-                            <TableCell>{parseFloat(val.totalAmount).toFixed(2)}</TableCell>
-                            <TableCell>
-                              <div >
-                                <span className={val.deleteAt ? "Deleted-invoice invoice-status": val.status + "-invoice invoice-status"}>{val.deleteAt ? "Deleted" : val.status}</span>
-                                <br />
-                                {val.status === "Unpaid" && val.due_date && !val.deleteAt && <label className="mb-0 mt-1" htmlFor="due-date">Due on {moment(val.due_date).format("DD MMM YYYY")}</label>}
-                              </div>
-                            </TableCell>
+                            <TableCell>{parseFloat(val.totalAmount).toFixed(2)} ({val.currency})</TableCell>
+                            <TableCell><InvoiceStatusModal data={val} fetchInvoice={fetchInvoice} /></TableCell>
                             <TableCell>
                               <div className='action'>
-                                 {tab === "deletes" ?
-                                 <>
-                                  <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
-                                  <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
-                                 </>
-                                  :<>
-                                <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
-                                <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>
-                                <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
-                                <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
-                                </>}
+                                {tab === "deletes" ?
+                                  <>
+                                    <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
+                                    <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                  </>
+                                  : <>
+                                    <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
+                                    {val.status !== "Paid" && <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>}
+                                    <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                                    <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                  </>
+                                }
                               </div>
                             </TableCell>
                           </TableRow>

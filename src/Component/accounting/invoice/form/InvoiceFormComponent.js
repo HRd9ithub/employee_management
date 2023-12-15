@@ -318,7 +318,7 @@ const InvoiceFormComponent = () => {
             formdata.append('invoiceId', invoiceId);
             formdata.append('issue_date', issue_date);
             due_date && formdata.append('due_date', due_date);
-            formdata.append('totalAmount', totalAmount);
+            formdata.append('totalAmount', parseFloat(totalAmount).toFixed(2));
             formdata.append('userId', UserData._id)
             formdata.append('clientId', clientData._id);
             attchFile.map((val) => formdata.append('image', val.url))
@@ -504,7 +504,7 @@ const InvoiceFormComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    } else if (!permission || permission.name.toLowerCase() !== "admin") {
+    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
         return <Error403 />;
     }
 
