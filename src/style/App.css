@@ -574,8 +574,9 @@ span.eye-icon {
 .fc .fc-button-group .fc-button-primary.fc-button-active:hover:not(:disabled),
 .fc .fc-header-toolbar .fc-left .fc-today-button:hover {
   color: #fff;
-  background-color: #31aaec;
-  border-color: #31aaec;
+  background-color: #0a4a92;
+  border-color: #0a4a92;
+  box-shadow: none !important;
 }
 
 .jlPZUL {
@@ -867,8 +868,6 @@ span.eye-icon {
 }
 
 .sidebar {
-  /* height: 100vh; */
-  /* overflow: auto; */
   width: 225px;
   z-index: 10000;
 }
@@ -3020,21 +3019,23 @@ input[type=password]::-ms-clear {
   justify-content: center;
 }
 
+.action i {
+  cursor: pointer;
+
+}
 .action i.fa-solid.fa-pen-to-square {
   color: green;
-  cursor: pointer;
 }
 
 .action i.fa-solid.fa-trash-can {
   color: red;
-  cursor: pointer;
 }
 
 .action i.fa-solid.fa-eye,
 .action i.fa-solid.fa-download,
-.action i.fa-solid.fa-user-clock {
+.action i.fa-solid.fa-user-clock,
+.action i.fa-regular.fa-copy {
   color: rgb(7, 75, 154);
-  cursor: pointer;
 }
 
 .common-table-section {
@@ -3361,7 +3362,7 @@ input[type="date"]::-webkit-clear-button {
 
 select.form-control {
   outline: transparent;
-  padding: 2px 1px !important;
+  padding: 2px 3px !important;
   border-bottom: 1px solid #0a4a92;
   border-radius: 1px !important;
   /* *opera browser border issue */
@@ -3873,10 +3874,6 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 .card.calender .add-items button {
   height: 32px !important;
   /* margin-top: 10px; */
-}
-
-.remove-side-margin {
-  margin: 0 -15px;
 }
 
 /* csv button hover effect */
@@ -4460,8 +4457,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .Draft-invoice {
   background: rgb(232, 232, 232);
-  color: rgb(32, 23, 66);
+  color: rgb(0,0,0);
   font-weight: 500;
+}
+.Deleted-invoice {
+  background: rgb(238, 5, 5);
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+  cursor : default !important;
 }
 
 .Paid-invoice {
@@ -4469,6 +4472,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   color: rgb(255, 255, 255);
   background-color: #5fd45f;
   font-weight: 500;
+  cursor : default !important;
 }
 
 .invoice-status {
@@ -4494,8 +4498,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .common-head-invoice {
-  transform: translateY(-5px);
   position: relative;
+  width: 200px;
 }
 
 .invoice-calendar-icon {
@@ -4507,15 +4511,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .field-input {
-  width: 120px !important;
+  padding-right: 10px;
 }
 
 .remove-field-icon {
   cursor: pointer;
   position: absolute;
-  top: 12px;
+  top: 9px;
   color: #B31312;
-  right: -20px;
+  right: 5px;
 }
 
 .form-contents {
@@ -4525,7 +4529,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .bill-box-section {
   border-radius: 10px;
   background-color: #f6faff;
-  padding: 20px;
+  padding: 16px;
+  margin-top: 10px;
 }
 
 .bill-logo img {
@@ -4573,7 +4578,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .business-info {
-  width: 33.33%;
+  width: 180px;
 }
 
 .business-info-value {
@@ -4841,7 +4846,6 @@ svg {
   color: rgb(255 255 255);
 }
 
-/* box-shadow: 0 0 4px #ccc; */
 .invoice-summary .btn {
   padding: 0.875rem 0rem !important;
   color: rgb(255 255 255);
@@ -4874,15 +4878,21 @@ svg {
   border-radius: 5px;
 }
 
+.dropdown.show > .btn-gradient-primary.dropdown-toggle {
+  background-color: #0a4a92 !important;
+  color: white !important;
+}
+
 /* -------- template design ---------------*/
 
 .template-section {
+  padding: 1rem 2.5rem;
   box-shadow: 0 0 4px #ccc;
   border-radius: 5px;
 }
 
 .template-logo {
-  width: 40%;
+  width: 180px;
 }
 
 .template-heading {
@@ -4905,6 +4915,9 @@ svg {
   margin-bottom: 0.5rem;
 }
 
+.product-table {
+  overflow-x: auto;
+}
 .product-table thead {
   background-color: #0a4a92;
   color: #fff;
@@ -4918,29 +4931,89 @@ svg {
   color: #0a4192
 }
 
-@media print {
-  .template-section {
-    padding: 35px 50px !important;
-  }
+.text-orange {
+  color: orange;
+}
 
+.text-green {
+  color: green;
+}
+
+.text-red {
+  color: red;
+}
+
+.text-maroon {
+  color: #B31312;
+}
+
+select.form-control.currency-dropdown {
+  display: inline-block !important;
+  padding: 2px 5px !important;
+  width: 200px;
+}
+
+.table-total-section {
+  background-color: rgb(247, 250, 255);
+  width: 310px !important;
+}
+
+.invoice-summery-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #004392;
+  color: white;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.invoice-summery-card i {
+  color: #ffffff69;
+  font-size: 60px;
+  transform: rotate(-27deg);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.tab-panel-header.Mui-selected {
+  color: #004392 !important;
+}
+
+.tab-panel-content .MuiTabs-indicator {
+  background-color: #004392 !important;
+}
+
+@media print {
   .template-head-section {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
+    flex-direction: column !important;
   }
 
   .template-head-section .col-md-6 {
-    width: 50% !important;
+    text-align: left !important;
   }
 
-  .template-summary-section {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+  .template-head-section .template-logo {
+    width: 180px !important;
   }
 
-  .template-summary-section .col-md-4 {
+  .template-head-section .template-heading {
+    text-align: right !important;
+    margin-top: -15px !important;
+  }
+
+  .template-summary-section .heading-section {
     width: 33% !important;
+    max-width: 33% !important;
+    margin-top: 0 !important;
+  }
+
+  .attch-template-section {
+    margin-bottom: 10px !important;
   }
 
   .table {

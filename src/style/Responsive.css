@@ -619,6 +619,7 @@
     .employee-form {
         display: none;
     }
+
     /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
     .modal-header-none .dropdown-menu {
         height: 130px !important;
@@ -838,6 +839,20 @@
 
     .activity-date-range {
         width: 50% !important;
+    }
+
+    .business-info-value {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .business-info-value.address{
+        white-space: unset;
+    }
+
+    .business-info{
+        width: 120px;
     }
 }
 
@@ -1268,7 +1283,6 @@
     .user-modal .modal-button button {
         width: 12% !important;
     }
-
 }
 
 @media (max-width:800px) {
@@ -1518,10 +1532,6 @@
         max-width: unset;
     }
 
-    .remove-side-margin {
-        margin: unset;
-    }
-
     .col-md-6.mt-3.box-dashboard:last-child {
         margin-top: 30px !important;
         margin-bottom: 15px;
@@ -1550,6 +1560,20 @@
 
     .attendance-body .col-md-6:last-child {
         margin-top: 20px;
+    }
+
+    .business-info{
+        width: 180px;
+    }
+
+    .business-detail {
+        height: unset;
+    }
+    .template-head-section {
+        flex-direction: column-reverse;
+    }
+    .template-logo {
+        width: 140px;
     }
 }
 
@@ -2086,6 +2110,10 @@
     .activity-date-range {
         width: 100% !important;
     }
+    .table-total-section {
+        width: 100% !important;
+        margin-top: 15px;
+    }
 }
 
 @media (max-width:568px) {
@@ -2553,6 +2581,10 @@
     .summary-report {
         width: 99%;
     }
+
+    .invoice-calendar-icon, .remove-field-icon {
+        top: 15px;
+    }
 }
 
 @media (max-width:480px) {
@@ -2898,7 +2930,8 @@
     .calendar-icon {
         top: 29px;
     }
-/* 
+
+    /* 
     .calendar-icon-holiday {
         top: 12px;
     } */
@@ -2908,6 +2941,20 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    select.form-control.currency-dropdown {
+        width: 100%;
+    }
+
+    .button-full-width {
+        width: 100%;
+    }
+}
+
+@media (max-width :420px){
+    .business-name{
+        flex-direction: column;
     }
 }
 
