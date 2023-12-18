@@ -669,29 +669,16 @@ const InvoiceFormComponent = () => {
 
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
-                                                            return <Dropdown.Item className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                            return <>
+                                                             <Dropdown.Item className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                             <Dropdown.Divider/>
+                                                            </>
                                                         })}
-                                                        <Dropdown.Item className='d-flex justify-content-center my-2'>
+                                                        <div className='d-flex justify-content-center my-2'>
                                                             <ClientFormComponent getClientDetail={getClientDetail} />
-                                                        </Dropdown.Item>
+                                                        </div>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
-                                                {/* <div className="dropdown">
-                                                    <button className="btn button-bill text-left col-12 client-icon-drop dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                                        {Object.keys(clientData).length !== 0 ? <>
-                                                            {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
-                                                            <span className='text-capitalize'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
-                                                        </> : <span className='static-title'> Select Client</span>}
-                                                    </button>
-                                                    <ul className="dropdown-menu col-md-12" aria-labelledby="dropdownMenuButton1">
-                                                        {clientNames.map((val) => {
-                                                            return <li className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</li>
-                                                        })}
-                                                        <li className='d-flex justify-content-center my-2'>
-                                                            <ClientFormComponent getClientDetail={getClientDetail} />
-                                                        </li>
-                                                    </ul>
-                                                </div> */}
                                                 {Object.keys(clientData).length !== 0 ?
                                                     <div className='p-3 business-detail'>
                                                         <div className="d-flex justify-content-between">
