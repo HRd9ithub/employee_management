@@ -8,7 +8,7 @@ import Spinner from '../common/Spinner';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const AttendanceModal = ({ data,permission }) => {
+const AttendanceModal = ({ data, permission }) => {
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
@@ -96,13 +96,13 @@ const AttendanceModal = ({ data,permission }) => {
         clockOutValidation();
 
         if (!clockIn || !clockOut || clockInError || clockOutError || !explanation || explanationError) {
-           return false;
+            return false;
         }
 
         setisLoading(true);
         customAxios().post('/attendance/regulation', {
-            clockIn : clockIn && moment(clockIn, "hh:mm").format("hh:mm A"),
-            clockOut : clockOut && moment(clockOut, "hh:mm").format("hh:mm A"), 
+            clockIn: clockIn && moment(clockIn, "hh:mm").format("hh:mm A"),
+            clockOut: clockOut && moment(clockOut, "hh:mm").format("hh:mm A"),
             explanation, userId, timestamp, id: _id
         }).then(data => {
             if (data.data.success) {
@@ -132,15 +132,19 @@ const AttendanceModal = ({ data,permission }) => {
 
     return (
         <>
-            <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-            <div className="dropdown-menu password-action--dropdown">
-                {permission && permission.name.toLowerCase() !== "admin" && data && <>
-                <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
-                </>}
-                {permission && permission.name.toLowerCase() === "admin" &&<>
-                <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
-            </div>
-
+            <Dropdown>
+                <Dropdown.Toggle id="password-action">
+                    <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="password-action--dropdown">
+                    {permission && permission.name.toLowerCase() !== "admin" && data && <>
+                        <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
+                    </>}
+                    {permission && permission.name.toLowerCase() === "admin" && <>
+                        <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
+                </Dropdown.Menu>
+                <Dropdown.Divider />
+            </Dropdown>
 
             {/* <i className="fa-solid fa-user-clock" title="Regularize" onClick={handleShow}></i> */}
 
@@ -155,25 +159,25 @@ const AttendanceModal = ({ data,permission }) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="row">
-                                            <div className="col-md-12">
-                                                <label className="mb-2">Attendance Adjustment</label>
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="clockIn">Clock In</label>
-                                                            <input type="time" className="form-control" name='clockIn' value={initialState.clockIn} onChange={handleOnChange} onBlur={clockInValidation} ref={clockInRef} onClick={() => clockInRef.current.showPicker()} />
-                                                            {clockInError && <small id="clockIn" className="form-text error">{clockInError}</small>}
-                                                        </div>
+                                        <div className="col-md-12">
+                                            <label className="mb-2">Attendance Adjustment</label>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <div className="form-group">
+                                                        <label htmlFor="clockIn">Clock In</label>
+                                                        <input type="time" className="form-control" name='clockIn' value={initialState.clockIn} onChange={handleOnChange} onBlur={clockInValidation} ref={clockInRef} onClick={() => clockInRef.current.showPicker()} />
+                                                        {clockInError && <small id="clockIn" className="form-text error">{clockInError}</small>}
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <div className="form-group">
-                                                            <label htmlFor="clockOut">Clock Out</label>
-                                                            <input type="time" className="form-control" name='clockOut' value={initialState.clockOut} onChange={handleOnChange} onBlur={clockOutValidation} ref={clockOutRef} onClick={() => clockOutRef.current.showPicker()} />
-                                                            {clockOutError && <small id="clockOut" className="form-text error">{clockOutError}</small>}
-                                                        </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="form-group">
+                                                        <label htmlFor="clockOut">Clock Out</label>
+                                                        <input type="time" className="form-control" name='clockOut' value={initialState.clockOut} onChange={handleOnChange} onBlur={clockOutValidation} ref={clockOutRef} onClick={() => clockOutRef.current.showPicker()} />
+                                                        {clockOutError && <small id="clockOut" className="form-text error">{clockOutError}</small>}
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         <div className="col-md-12">
                                             <div className="form-group">
                                                 <label htmlFor="explanation">Explanation</label>
