@@ -228,7 +228,7 @@ const Navbar = () => {
                   <i className="mdi mdi-account-circle mr-2 text-primary"></i>
                   Profile
                 </Dropdown.Item>
-                <div className="dropdown-divider"></div>
+                <Dropdown.Divider />
                 <Dropdown.Item className='dropdown-item' onClick={handleLogout}>
                   <i className="mdi mdi-logout mr-2 text-primary"></i>
                   Sign Out

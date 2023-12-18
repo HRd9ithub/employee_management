@@ -101,7 +101,7 @@ const PasswordComponent = () => {
       setIsLoading(false);
       if (!error.response) {
         toast.error(error.message)
-      }else {
+      } else {
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
@@ -174,18 +174,22 @@ const PasswordComponent = () => {
                       <div className="password-info-box">
                         <div className="d-flex justify-content-between position-relative w-100">
                           <h5>{item.title}</h5>
-                          <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                          <div className="dropdown-menu password-action--dropdown">
-                            <Dropdown.Item className="dropdown-item" onClick={() => showModal(item)} ><i className="fa-solid fa-eye"></i><label>View</label></Dropdown.Item>
-                            {permission && permission.permissions.update === 1 && <>
-                              <div className="dropdown-divider"></div>
-                              <AddPasswordForm data={item} getPasswordRecord={getPasswordRecord} />
-                            </>}
-                            {permission && permission.permissions.delete === 1 && <>
-                              <div className="dropdown-divider"></div>
-                              <Dropdown.Item className="dropdown-item" onClick={() => handleDelete(item._id)}><i className="fa-solid fa-trash-can"></i><label>Delete</label></Dropdown.Item>
-                            </>}
-                          </div>
+                          <Dropdown>
+                            <Dropdown.Toggle id="password-action">
+                                <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu className="password-action--dropdown">
+                              <Dropdown.Item onClick={() => showModal(item)} ><i className="fa-solid fa-eye"></i><label>View</label></Dropdown.Item>
+                              {permission && permission.permissions.update === 1 && <>
+                                <Dropdown.Divider />
+                                <AddPasswordForm data={item} getPasswordRecord={getPasswordRecord} />
+                              </>}
+                              {permission && permission.permissions.delete === 1 && <>
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={() => handleDelete(item._id)}><i className="fa-solid fa-trash-can"></i><label>Delete</label></Dropdown.Item>
+                              </>}
+                            </Dropdown.Menu>
+                          </Dropdown>
                         </div>
                         <hr className='mt-1 mb-2' />
                         <p>{item.url}</p>

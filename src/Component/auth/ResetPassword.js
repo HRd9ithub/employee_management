@@ -13,7 +13,9 @@ const ResetPassword = () => {
   const query = new URLSearchParams(useLocation().search);
   let email = query.get("email");
   const token = query.get("token");
-  email = email.replace(" ", "+");
+  if(email){
+    email = email.replace(" ", "+");
+  }
 
   // common header for api
   const request = {
