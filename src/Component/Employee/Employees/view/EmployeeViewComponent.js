@@ -16,6 +16,7 @@ import { dateFormat } from '../../../../helper/dateFormat';
 import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import Swal from 'sweetalert2';
+import { Dropdown } from 'react-bootstrap';
 
 const EmployeeViewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -142,7 +143,7 @@ const EmployeeViewComponent = () => {
     return (
         <>
             {/* <div className=" container-fluid pt-4"> */}
-            {(match || (!match && permission &&  permission.permissions.list === 1)) ?
+            {(match || (!match && permission && permission.permissions.list === 1)) ?
                 <div className="background-wrapper bg-white py-4">
                     <div className=' container-fluid'>
                         <div className='row justify-content-end align-items-center row-std m-0 pb-2'>
@@ -235,22 +236,21 @@ const EmployeeViewComponent = () => {
 
                                 {/* ............................Header two.......................... */}
                                 <div className="modal-header-none">
-                                    <div className="dropdown">
-                                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            {/* eslint-disable-next-line no-useless-concat */}
-                                            {value === "password" ? "Change Password" : value + " " + "Details"} <i className="fa-solid fa-chevron-down"></i>
-                                        </button>
-                                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Info.</NavLink>
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Info.</NavLink>
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Info.</NavLink>
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Info.</NavLink>
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Company")}>Company Info.</NavLink>
-                                            <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Info.</NavLink>
+                                    <Dropdown>
+                                        <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
+                                            {value === "password" ? "Change Password" : value + " Details"} <i className="fa-solid fa-chevron-down"></i>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Info.</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleChanges("Account")}>Account Info.</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleChanges("Education")}>Education Info.</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleChanges("Document")}>Document Info.</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleChanges("Company")}>Company Info.</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Info.</Dropdown.Item>
                                             {match &&
-                                                <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("password")}>Change Password</NavLink>}
-                                        </div>
-                                    </div>
+                                                <Dropdown.Item onClick={() => handleChanges("password")}>Change Password</Dropdown.Item>}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </div>
 
                                 <div className="profile-info">
