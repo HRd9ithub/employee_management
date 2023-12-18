@@ -7,7 +7,8 @@ import IdleTimeOutHandler from './service/IdleTimeOutHandler ';
 import { GetLocalStorage } from './service/StoreLocalStorage';
 import './style/App.scss';
 import './style/App.css'
-import './style/Responsive.css'
+import './style/Responsive.css';
+import "bootstrap/dist/js/bootstrap";
 
 function App() {
 
