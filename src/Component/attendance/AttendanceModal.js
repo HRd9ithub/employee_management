@@ -137,9 +137,7 @@ const AttendanceModal = ({ data,permission }) => {
                 {permission && permission.name.toLowerCase() !== "admin" && data && <>
                 <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
                 </>}
-                {/* <div className="dropdown-divider"></div> */}
                 {permission && permission.name.toLowerCase() === "admin" &&<>
-                {/* <div className="dropdown-divider"></div> */}
                 <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
             </div>
 

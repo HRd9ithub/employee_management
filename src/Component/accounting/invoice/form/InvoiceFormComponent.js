@@ -15,6 +15,7 @@ import moment from 'moment';
 import Error403 from '../../../error_pages/Error403';
 import CurrencyList from "../../../../static/currencyList.js";
 import axios from 'axios';
+import { Dropdown } from 'react-bootstrap';
 
 const InvoiceFormComponent = () => {
     const navigate = useNavigate();
@@ -333,7 +334,7 @@ const InvoiceFormComponent = () => {
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
-            
+
 
             let url = "";
             if (id) {
@@ -432,11 +433,11 @@ const InvoiceFormComponent = () => {
                     setContact(result?.contact);
 
                     let conditions = [];
-                    if(result.terms.length !== 0){
+                    if (result.terms.length !== 0) {
                         result.terms.forEach((val) => {
-                            conditions.push({name :val});
+                            conditions.push({ name: val });
                         });
-                    }else{
+                    } else {
                         conditions.push({ name: "" });
                     }
                     setTerms(conditions);
@@ -658,7 +659,24 @@ const InvoiceFormComponent = () => {
                                         <div className='col-md-6 '>
                                             <div className='bill-box-section'>
                                                 <h4>Billed To</h4>
-                                                <div className="dropdown ">
+                                                <Dropdown>
+                                                    <Dropdown.Toggle className="btn button-bill text-left col-12 client-icon-drop" id="dropdown-basic">
+                                                        {Object.keys(clientData).length !== 0 ? <>
+                                                            {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
+                                                            <span className='text-capitalize'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
+                                                        </> : <span className='static-title'> Select Client</span>}
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu className='col-md-12'>
+                                                        {clientNames.map((val) => {
+                                                            return <Dropdown.Item className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                        })}
+                                                        <Dropdown.Item className='d-flex justify-content-center my-2'>
+                                                            <ClientFormComponent getClientDetail={getClientDetail} />
+                                                        </Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                                {/* <div className="dropdown">
                                                     <button className="btn button-bill text-left col-12 client-icon-drop dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                                         {Object.keys(clientData).length !== 0 ? <>
                                                             {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
@@ -673,7 +691,7 @@ const InvoiceFormComponent = () => {
                                                             <ClientFormComponent getClientDetail={getClientDetail} />
                                                         </li>
                                                     </ul>
-                                                </div>
+                                                </div> */}
                                                 {Object.keys(clientData).length !== 0 ?
                                                     <div className='p-3 business-detail'>
                                                         <div className="d-flex justify-content-between">

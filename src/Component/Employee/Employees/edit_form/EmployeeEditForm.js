@@ -16,6 +16,7 @@ import LoginInfo from "../view/LoginInfo";
 import Error403 from "../../../error_pages/Error403";
 import Error500 from "../../../error_pages/Error500";
 import { customAxios } from "../../../../service/CreateApi";
+import { Dropdown } from "react-bootstrap";
 
 const EmployeeEditForm = () => {
   const [value, setValue] = React.useState('Personal');
@@ -50,7 +51,7 @@ const EmployeeEditForm = () => {
         let result = await res.data.data;
         setpermission(res.data.permissions)
         setUserDetail(result);
-        if(result){
+        if (result) {
           setUserId(result._id);
         }
       }
@@ -76,102 +77,101 @@ const EmployeeEditForm = () => {
     // eslint-disable-next-line
   }, [id])
 
-  if(isLoading){
+  if (isLoading) {
     return <Spinner />;
   }
 
-  if(serverError){
-    return <Error500/>;
+  if (serverError) {
+    return <Error500 />;
   }
 
-  if(!permission || permission.permissions.update === 0){
-    return <Error403/>;
+  if (!permission || permission.permissions.update === 0) {
+    return <Error403 />;
   }
 
-    return (
-      <>
-        <div className="container-fluid px-4">
-          <div className='row justify-content-start align-items-center row-std m-0 my-3'>
-            <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
-                <div>
-                    <ul id="breadcrumb" className="mb-0">
-                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                        <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
-                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Edit</NavLink></li>
-                    </ul>
-                </div>
-            </div>
-          </div>
-          <div className=" grid-margin stretch-card inner-pages mb-lg-0">
-            <div className="card">
-              {/* ............................Header one.......................... */}
-              <div className="modal-header employee-form">
-                <Tabs
-                  value={value}
-                  onChange={changeTab}
-                  aria-label="secondary tabs example"
-                >
-                  <Tab value="Personal" label="Personal Information" className="tab-panel-button" />
-                  <Tab value="Account" label="Account Information" className="tab-panel-button" />
-                  <Tab value="Education" label="Education Information" className="tab-panel-button" />
-                  <Tab value="Document" label="Document Information" className="tab-panel-button" />
-                  <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
-                  <Tab value="login" label="Login Information" className="tab-panel-button" />
-                </Tabs>
-              </div>
-
-              {/* ............................Header two.......................... */}
-              <div className="modal-header-none">
-                <div className="dropdown">
-                  <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {/* eslint-disable-next-line no-useless-concat */}
-                    {value && value + " " + "Information"} <i className="fa-solid fa-chevron-down"></i>
-                  </button>
-                  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Personal")}>Personal Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Account")}>Account Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Education")}>Education Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Document")}>Document Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("Emergency")}>Emergency Contact Information</NavLink>
-                    <NavLink className="dropdown-item" href="#" onClick={() => handleChanges("login")}>Login Information</NavLink>
-                  </div>
-                </div>
-              </div>
-
-              <div className="card-body">
-                {value === "Personal" ?
-                  <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
-                  : value === "Account" ?
-                    <AccountForm
-                      userDetail={userDetail}
-                      userId={userId}
-                      getEmployeeDetail={getEmployeeDetail}
-                    />
-                    : value === "Education" ?
-                      <EductionForm
-                        userDetail={userDetail}
-                        getEmployeeDetail={getEmployeeDetail}
-                        userId={userId}
-                      /> :
-                      value === "Document" ?
-                        <UserDoumentForm
-                          userDetail={userDetail}
-                          getEmployeeDetail={getEmployeeDetail}
-                          userId={userId} />
-                        : value === "login" ?
-                          <LoginInfo userId={userId} />
-                          :
-                          <EmergencyForm
-                            userDetail={userDetail}
-                            getEmployeeDetail={getEmployeeDetail}
-                            userId={userId} />
-                }
-              </div>
+  return (
+    <>
+      <div className="container-fluid px-4">
+        <div className='row justify-content-start align-items-center row-std m-0 my-3'>
+          <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
+            <div>
+              <ul id="breadcrumb" className="mb-0">
+                <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Edit</NavLink></li>
+              </ul>
             </div>
           </div>
         </div>
-      </>
-    )
+        <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+          <div className="card">
+            {/* ............................Header one.......................... */}
+            <div className="modal-header employee-form">
+              <Tabs
+                value={value}
+                onChange={changeTab}
+                aria-label="secondary tabs example"
+              >
+                <Tab value="Personal" label="Personal Information" className="tab-panel-button" />
+                <Tab value="Account" label="Account Information" className="tab-panel-button" />
+                <Tab value="Education" label="Education Information" className="tab-panel-button" />
+                <Tab value="Document" label="Document Information" className="tab-panel-button" />
+                <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
+                <Tab value="login" label="Login Information" className="tab-panel-button" />
+              </Tabs>
+            </div>
+
+            {/* ............................Header two.......................... */}
+            <div className="modal-header-none">
+              <Dropdown>
+                <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
+                  {value && value + " Information"} <i className="fa-solid fa-chevron-down"></i>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Information</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChanges("Account")}>Account Information</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChanges("Education")}>Education Information</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChanges("Document")}>Document Information</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Information</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleChanges("login")}>Login Information</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            <div className="card-body">
+              {value === "Personal" ?
+                <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
+                : value === "Account" ?
+                  <AccountForm
+                    userDetail={userDetail}
+                    userId={userId}
+                    getEmployeeDetail={getEmployeeDetail}
+                  />
+                  : value === "Education" ?
+                    <EductionForm
+                      userDetail={userDetail}
+                      getEmployeeDetail={getEmployeeDetail}
+                      userId={userId}
+                    /> :
+                    value === "Document" ?
+                      <UserDoumentForm
+                        userDetail={userDetail}
+                        getEmployeeDetail={getEmployeeDetail}
+                        userId={userId} />
+                      : value === "login" ?
+                        <LoginInfo userId={userId} />
+                        :
+                        <EmergencyForm
+                          userDetail={userDetail}
+                          getEmployeeDetail={getEmployeeDetail}
+                          userId={userId} />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default EmployeeEditForm;
