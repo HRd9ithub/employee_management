@@ -1,8 +1,10 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
+import convertNumberFormat from '../../../../service/NumberFormat';
 
 const ItemComponent = (props) => {
-    const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency, currencyValue } = props
+    const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency } = props
+    console.log('currency :>> ', currency);
     return (
         <>
             <div className='row'>
@@ -13,7 +15,7 @@ const ItemComponent = (props) => {
                                 <th>Item Name</th>
                                 <th>Rate</th>
                                 <th>Quantity</th>
-                                <th>Amount({currency})</th>
+                                <th>Amount({currency.value?.slice(6)})</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -87,7 +89,7 @@ const ItemComponent = (props) => {
                                                 ))}
                                             </div>
                                         </td>
-                                        <td><input className='form-control' type="number" min="0" value={parseFloat(currencyValue * itemData.amount).toFixed(2)} readOnly /></td>
+                                        <td><input className='form-control' type="text" value={convertNumberFormat(itemData.amount)} readOnly /></td>
                                         {ind > 0 &&
                                             <td onClick={() => removeRowTable(ind)} className="text-center"><i className="fa-solid fa-xmark text-maroon"></i></td>}
                                     </tr>

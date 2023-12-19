@@ -866,7 +866,8 @@ span.eye-icon {
   height: 100vh;
   overflow: auto;
 }
-.sidebar{
+
+.sidebar {
   overflow: auto !important;
 }
 
@@ -874,14 +875,17 @@ span.eye-icon {
   height: calc(100vh - 70px) !important;
   overflow-y: auto !important;
 }
-.sidebar-icon-only  .nav-container {
+
+.sidebar-icon-only .nav-container {
   overflow-y: unset !important;
   overflow-x: unset !important;
 }
-.sidebar-icon-only  .sidebar .nav {
+
+.sidebar-icon-only .sidebar .nav {
   overflow: visible !important;
 }
-.sidebar-icon-only  .sidebar {
+
+.sidebar-icon-only .sidebar {
   overflow: unset !important;
 }
 
@@ -1803,7 +1807,7 @@ select.status-select {
 /* =========================== Profie Page ========================== */
 
 .card .card-body {
-  padding: 1rem 2.5rem;
+  padding: 1rem 2.5rem !important;
   border: 1px solid lightgray;
 }
 
@@ -3041,6 +3045,7 @@ input[type=password]::-ms-clear {
   cursor: pointer;
 
 }
+
 .action i.fa-solid.fa-pen-to-square {
   color: green;
 }
@@ -4482,14 +4487,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .Draft-invoice {
   background: rgb(232, 232, 232);
-  color: rgb(0,0,0);
+  color: rgb(0, 0, 0);
   font-weight: 500;
 }
+
 .Deleted-invoice {
   background: rgb(238, 5, 5);
   color: rgb(255, 255, 255);
   font-weight: 500;
-  cursor : default !important;
+  cursor: default !important;
 }
 
 .Paid-invoice {
@@ -4497,7 +4503,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   color: rgb(255, 255, 255);
   background-color: #5fd45f;
   font-weight: 500;
-  cursor : default !important;
+  cursor: default !important;
 }
 
 .invoice-status {
@@ -4865,12 +4871,15 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
-  padding: 0 1rem;
-  background: #0a4a92;
-  ;
-  border-bottom: none;
+  cursor: pointer !important;
+  padding: 0 1rem !important;
+  background: #0a4a92 !important;
+  border-bottom: none !important;
   color: rgb(255 255 255);
+}
+
+.invoice-summary svg {
+  font-size: 21px !important;
 }
 
 .invoice-summary .btn {
@@ -4880,6 +4889,8 @@ svg {
   font-weight: 500 !important;
   letter-spacing: 0.5px;
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
 }
 
 .invoice-title-summary {
@@ -4905,7 +4916,7 @@ svg {
   border-radius: 5px;
 }
 
-.dropdown.show > .btn-gradient-primary.dropdown-toggle {
+.dropdown.show>.btn-gradient-primary.dropdown-toggle {
   background-color: #0a4a92 !important;
   color: white !important;
 }
@@ -4945,6 +4956,7 @@ svg {
 .product-table {
   overflow-x: auto;
 }
+
 .product-table thead {
   background-color: #0a4a92;
   color: #fff;
@@ -5004,6 +5016,10 @@ select.form-control.currency-dropdown {
   right: 20px;
 }
 
+.currency-dropdown {
+  width: 200px !important;
+}
+
 .tab-panel-header.Mui-selected {
   color: #004392 !important;
 }
@@ -5012,11 +5028,13 @@ select.form-control.currency-dropdown {
   background-color: #004392 !important;
 }
 
-.password-dropdown-action:focus ,.password-dropdown-action:active{
-  border : none !important;
+.password-dropdown-action:focus,
+.password-dropdown-action:active {
+  border: none !important;
   box-shadow: none !important;
 }
-.show > .btn-primary.dropdown-toggle:focus{
+
+.show>.btn-primary.dropdown-toggle:focus {
   box-shadow: none !important;
   outline: none !important;
 }
@@ -5079,18 +5097,18 @@ select.form-control.currency-dropdown {
     background-color: rgb(247, 250, 255) !important;
   }
 
-  .extra-section ol li a{
+  .extra-section ol li a {
     color: #007bff !important;
     text-decoration: none !important;
     background-color: transparent !important;
     font-size: 16px !important;
   }
 
-  .attch-template-section{
+  .attch-template-section {
     width: 50%;
   }
 
-  .template-signature-section{
+  .template-signature-section {
     width: 33% !important;
     float: right !important;
   }
