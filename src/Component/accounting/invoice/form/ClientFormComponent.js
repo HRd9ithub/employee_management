@@ -254,7 +254,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         } else if (firstNameError || lastNameError || emailError || phoneError || countryError || stateError || cityError || postcodeError || addressError) {
             return false;
         } else {
-
+            setisLoading(true);
             let formdata = new FormData();
             formdata.append('profile_image', image);
             formdata.append('first_name', first_name.charAt(0).toUpperCase() + first_name.slice(1));
