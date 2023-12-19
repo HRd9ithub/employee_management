@@ -10,7 +10,12 @@ import { useReactToPrint } from 'react-to-print';
 import Swal from 'sweetalert2';
 import generatePDF, { Margin } from 'react-to-pdf';
 import Error403 from '../../../error_pages/Error403';
-import { Dropdown } from 'react-bootstrap';
+import { Card, Dropdown } from 'react-bootstrap';
+import convertNumberFormat from '../../../../service/NumberFormat';
+import Accordion from 'react-bootstrap/Accordion';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -131,7 +136,7 @@ const InvoicePreviewComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    }else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
+    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
         return <Error403 />;
     }
 
@@ -160,12 +165,12 @@ const InvoicePreviewComponent = () => {
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
-                                        <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice')}>Show All Invoice</Dropdown.Item>
+                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice')}>Show All Invoice</Dropdown.Item>
                                             <Dropdown.Divider />
                                             <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice/create')}>Create New Invoice</Dropdown.Item>
                                             <Dropdown.Divider />
                                             {invoiceDetail.status !== "Paid" && <><Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/edit/${id}`)}>Edit Invoice</Dropdown.Item>
-                                            <Dropdown.Divider /></>}
+                                                <Dropdown.Divider /></>}
                                             <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/duplicate/${id}`)}>Duplicate Invoice</Dropdown.Item>
                                             <Dropdown.Divider />
                                             <Dropdown.Item className="dropdown-item" onClick={deleteInvoice}>Delete Invoice</Dropdown.Item>
@@ -183,18 +188,17 @@ const InvoicePreviewComponent = () => {
                         </div>
                         <div className="m-4">
                             {/* invoice summary */}
-                            <div id="accordion">
-                                <div className="card">
-                                    <div className="card-header invoice-summary" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <Accordion defaultActiveKey="0">
+                                <Card>
+                                    <Accordion.Toggle eventKey="0" className='card-header invoice-summary'>
                                         <h5 className="mb-0 btn">
-                                            <i className="fa-solid fa-receipt mr-2"></i>
-                                            Invoice Summary
+                                            <ReceiptIcon className='my-0 mr-2' />
+                                            <span>Invoice Summary</span>
                                         </h5>
-                                        <i className="fa-solid fa-chevron-down"></i>
-                                    </div>
-
-                                    <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div className="card-body summary-card-body">
+                                        <KeyboardArrowDownIcon className='my-0' />
+                                    </Accordion.Toggle>
+                                    <Accordion.Collapse eventKey="0">
+                                        <Card.Body className='summary-card-body'>
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <table className='w-100'>
@@ -213,7 +217,7 @@ const InvoicePreviewComponent = () => {
                                                             </tr>
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Total Amount:</span></td>
-                                                                <td><span className='invoice-value-summary'><i className="fa-solid fa-indian-rupee-sign"></i> {invoiceDetail.totalAmount}</span></td>
+                                                                <td><span className='invoice-value-summary'>{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -237,10 +241,10 @@ const InvoicePreviewComponent = () => {
                                                     </table>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Card.Body>
+                                    </Accordion.Collapse>
+                                </Card>
+                            </Accordion>
                             <div className="my-3" ref={componentRef}>
                                 {/* invoice display */}
                                 <div className="template-section" >
@@ -295,7 +299,7 @@ const InvoicePreviewComponent = () => {
                                                     }
                                                     <tr className='d-block mt-2'>
                                                         <td className="invoice-title-summary"><span >Total Amount:</span></td>
-                                                        <td><span className='invoice-value-summary'>{invoiceDetail.totalAmount}</span></td>
+                                                        <td><span className='invoice-value-summary'>{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -309,7 +313,7 @@ const InvoicePreviewComponent = () => {
                                                     <th>Item Name</th>
                                                     <th>Rate</th>
                                                     <th>Quantity</th>
-                                                    <th>Amount({invoiceDetail.currency})</th>
+                                                    <th>Amount({invoiceDetail.currency.slice(6)})</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -320,13 +324,13 @@ const InvoicePreviewComponent = () => {
                                                             <td>{val.itemName}</td>
                                                             <td>{val.rate}</td>
                                                             <td>{val.quantity}</td>
-                                                            <td>{parseFloat(val.amount * invoiceDetail.currencyValue).toFixed(2)}</td>
+                                                            <td>{convertNumberFormat(val.amount)}</td>
                                                         </tr>
                                                     )
                                                 })}
                                                 <tr className='total-column'>
                                                     <td colSpan={4}>Total</td>
-                                                    <td>{invoiceDetail.totalAmount}</td>
+                                                    <td>{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -386,36 +390,36 @@ const InvoicePreviewComponent = () => {
                                                             <img src={invoiceDetail.signImage} alt='signeture' className='img-fluid' />
                                                         </div>
                                                     </div>}
-                                                {(invoiceDetail.hasOwnProperty("terms") && invoiceDetail.terms.length !== 0) && 
-                                                <div className="col-md-12 mt-4">
-                                                    <h5 className='extra-heading'>Terms & Conditions:</h5>
-                                                    <ol className="mb-0">
-                                                        {invoiceDetail.terms.map((val) => (
-                                                            <li key={val}>{val}</li>
+                                                {(invoiceDetail.hasOwnProperty("terms") && invoiceDetail.terms.length !== 0) &&
+                                                    <div className="col-md-12 mt-4">
+                                                        <h5 className='extra-heading'>Terms & Conditions:</h5>
+                                                        <ol className="mb-0">
+                                                            {invoiceDetail.terms.map((val) => (
+                                                                <li key={val}>{val}</li>
                                                             ))}
-                                                    </ol>
-                                                </div>}
-                                                {(invoiceDetail.hasOwnProperty("contact") && invoiceDetail.contact) && 
-                                                <div className="col-md-12">
-                                                    <hr/>
-                                                    <p className="mb-0 text-center">{invoiceDetail.contact}</p>
-                                                </div>}
+                                                        </ol>
+                                                    </div>}
+                                                {(invoiceDetail.hasOwnProperty("contact") && invoiceDetail.contact) &&
+                                                    <div className="col-md-12">
+                                                        <hr />
+                                                        <p className="mb-0 text-center">{invoiceDetail.contact}</p>
+                                                    </div>}
                                             </div>}
                                     </div>
                                 </div>
                             </div>
                             {/* bank detail accrodion */}
-                            <div id="accordion">
-                                <div className="card">
-                                    <div className="card-header invoice-summary" id="headingtwo" data-toggle="collapse" data-target="#collapsetwo" aria-expanded="true" aria-controls="collapsetwo">
+                            <Accordion>
+                                <Card>
+                                    <Accordion.Toggle className='card-header invoice-summary' eventKey='1'>
                                         <h5 className="mb-0 btn">
-                                            <i className="fa-solid fa-building-columns mr-2"></i>
-                                            Bank Details
+                                            <AccountBalanceIcon className='my-0 mr-2' />
+                                            <span>Bank Details</span>
                                         </h5>
-                                        <i className="fa-solid fa-chevron-down"></i>
-                                    </div>
-                                    <div id="collapsetwo" className="collapse" aria-labelledby="headingtwo" data-parent="#accordion">
-                                        <div className="card-body summary-card-body">
+                                        <KeyboardArrowDownIcon className='my-0' />
+                                    </Accordion.Toggle>
+                                    <Accordion.Collapse eventKey='1'>
+                                        <Card.Body className='summary-card-body'>
                                             <div className="row">
                                                 {bankDetail &&
                                                     <>
@@ -456,10 +460,10 @@ const InvoicePreviewComponent = () => {
                                                     </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Card.Body>
+                                    </Accordion.Collapse>
+                                </Card>
+                            </Accordion>
                         </div>
                     </div>
                 </div>

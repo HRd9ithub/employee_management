@@ -13,9 +13,11 @@ import Error500 from '../../../error_pages/Error500';
 import ClientFormComponent from './ClientFormComponent';
 import moment from 'moment';
 import Error403 from '../../../error_pages/Error403';
-import CurrencyList from "../../../../static/currencyList.js";
-import axios from 'axios';
+import { currencylist } from "../../../../static/currencyList.js";
 import { Dropdown } from 'react-bootstrap';
+import Select from 'react-select';
+import axios from "axios";
+import convertNumberFormat from '../../../../service/NumberFormat.js';
 
 const InvoiceFormComponent = () => {
     const navigate = useNavigate();
@@ -40,8 +42,8 @@ const InvoiceFormComponent = () => {
     const [extra_field, setextra_field] = useState([]);
     const [extraFieldError, setExtraFieldError] = useState("");
     const [error, setError] = useState([]);
-    const [currencyValue, setcurrencyValue] = useState('')
-    const [currency, setcurrency] = useState('INR')
+    const [currencyValue, setcurrencyValue] = useState('');
+    const [currency, setcurrency] = useState({label: 'INR - ₹',value: 'INR - ₹'})
 
     //table data
     const [tableData, settableData] = useState([{
@@ -169,25 +171,40 @@ const InvoiceFormComponent = () => {
         return result ? true : false;
     }, [tableData])
 
+    const currencyList = useMemo(() => {
+        return currencylist.map((val) => {
+            return {
+                value : val, label : val
+            }
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currencylist])
+
     // currency onchange
     const currencyChange = (event) => {
-        setcurrency(event.target.value);
+        setcurrency(event);
     }
 
     // get_currency  value
     useEffect(() => {
         const getcurrencyapi = async () => {
-            const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${currency}&base_currency=INR`);
-            setcurrencyValue(parseFloat(res.data.data[currency]).toFixed(2))
+            const code = currency.value.slice(0,3)
+            const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
+            setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
         }
         getcurrencyapi();
+        
     }, [currency])
 
     const totalAmount = useMemo(() => {
         return tableData.reduce((total, cur) => {
-            return total + (cur.amount * currencyValue)
+            return total + cur.amount
         }, 0)
-    }, [tableData, currencyValue])
+    }, [tableData])
+
+    const currencyAmount = useMemo(() => {
+        return parseFloat(totalAmount * currencyValue).toFixed(2)
+    }, [totalAmount,currencyValue])
 
 
     // * ======================= attchment part ============================================
@@ -328,9 +345,9 @@ const InvoiceFormComponent = () => {
             note && formdata.append('note', note);
             formdata.append('tableData', JSON.stringify(tableData));
             status && formdata.append('status', status);
-            formdata.append('currency', currency);
-            formdata.append('currencyValue', currencyValue);
+            formdata.append('currency', currency.value);
             formdata.append('contact', contact);
+            formdata.append('currencyValue', currencyValue);
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
@@ -409,7 +426,8 @@ const InvoiceFormComponent = () => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
-                    setcurrency(result.currency);
+                    setcurrency({value : result.currency,label :result.currency});
+                    setcurrencyValue(result.currencyValue);
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
@@ -429,7 +447,6 @@ const InvoiceFormComponent = () => {
                         }
                     })
                     setattchFile(file);
-                    setcurrencyValue(result.currencyValue);
                     setContact(result?.contact);
 
                     let conditions = [];
@@ -669,10 +686,10 @@ const InvoiceFormComponent = () => {
 
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
-                                                            return <>
-                                                             <Dropdown.Item className="list-client" key={val._id} value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
-                                                             <Dropdown.Divider/>
-                                                            </>
+                                                            return (<React.Fragment key={val._id}>
+                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                            </React.Fragment>)
                                                         })}
                                                         <div className='d-flex justify-content-center my-2'>
                                                             <ClientFormComponent getClientDetail={getClientDetail} />
@@ -745,13 +762,19 @@ const InvoiceFormComponent = () => {
                             </form>
 
                             <div className='my-4'>
-                                <div className="d-flex justify-content-between align-items-center flex-wrap">
+                                <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
                                     <h4 className="mb-0">Item Details</h4>
-                                    <select className="form-control currency-dropdown" id="currency" name="currency" value={currency} onChange={currencyChange}>
-                                        {CurrencyList.map((val) => (
-                                            <option key={val} value={val}>{val}</option>
-                                        ))}
-                                    </select>
+                                    {/* ======================  currency drop down ====================== */}
+                                    <Select
+                                        className="basic-single currency-dropdown"
+                                        classNamePrefix="select"
+                                        isClearable={false}
+                                        isSearchable={true}
+                                        name="currency"
+                                        value={currency}
+                                        options={currencyList}
+                                        onChange={currencyChange}
+                                    />
                                 </div>
                                 {/* table display */}
                                 <ItemComponent
@@ -759,7 +782,6 @@ const InvoiceFormComponent = () => {
                                     tableData={tableData}
                                     removeRowTable={removeRowTable}
                                     handleItemchange={handleItemchange}
-                                    currencyValue={currencyValue}
                                     itemNameError={itemNameError}
                                     setitemNameError={setitemNameError}
                                     rateError={rateError}
@@ -777,7 +799,9 @@ const InvoiceFormComponent = () => {
                                     </div>
                                     <div className='col-sm-8'>
                                         <div className="table-total-section p-3 ml-auto">
-                                            <p className="text-center">Applied Exchange Rate: {`1 INR = ${currencyValue} ${currency}`}</p>
+                                            <p className="text-center">Applied Exchange Rate: {`1 INR = ${currency.value?.slice(6)} ${convertNumberFormat(currencyValue)}`}</p>
+                                            <p className="text-center">Amount total in currency: {currency.value?.slice(6)} {convertNumberFormat(currencyAmount)}</p>
+
                                             <table className="w-100">
                                                 <tbody>
                                                     <tr>
@@ -785,7 +809,7 @@ const InvoiceFormComponent = () => {
                                                             <p className="text-left mb-0">Sub Total:</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-right mb-0">{parseFloat(totalAmount).toFixed(2)}</p>
+                                                           <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -804,7 +828,7 @@ const InvoiceFormComponent = () => {
                                                             <h4 className="text-left mb-0">Total:</h4>
                                                         </th>
                                                         <th>
-                                                            <h4 className="text-right mb-0">{parseFloat(totalAmount).toFixed(2)}</h4>
+                                                            <h4 className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</h4>
                                                         </th>
                                                     </tr>
                                                 </tbody>

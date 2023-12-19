@@ -1,37 +1,5 @@
-const CurrencyList = [
-    'EUR',
-    'USD',
-    'JPY',
-    'BGN',
-    'CZK',
-    'DKK',
-    'GBP',
-    'HUF',
-    'PLN',
-    'RON',
-    'SEK',
-    'CHF',
-    'ISK',
-    'NOK',
-    'HRK',
-    'RUB',
-    'TRY',
-    'AUD',
-    'BRL',
-    'CAD',
-    'CNY',
-    'HKD',
-    'IDR',
-    'ILS',
-    'INR',
-    'KRW',
-    'MXN',
-    'MYR',
-    'NZD',
-    'PHP',
-    'SGD',
-    'THB',
-    'ZAR'
+export const currencylist = [
+  'INR - ₹','EUR - €','USD - $','JPY - ¥','BGN - BGN','CZK - Kč','DKK - Dkr','GBP - £','HUF - Ft','PLN - zł','RON - RON',
+  'SEK - Skr','CHF - CHF','ISK - Ikr','NOK - Nkr','HRK - kn','RUB - RUB','TRY - TL','AUD - AU$','BRL - R$','CAD - CA$','CNY - CN¥',
+  'HKD - HK$','IDR - Rp','ILS - ₪','KRW - ₩','MXN - MX$','MYR - RM','NZD - NZ$','PHP - ₱','SGD - S$','THB - ฿','ZAR - R'
 ]
-
-export default CurrencyList;

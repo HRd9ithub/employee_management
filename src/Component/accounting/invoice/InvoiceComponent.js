@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import convertNumberFormat from "../../../service/NumberFormat";
 
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
@@ -279,14 +280,14 @@ const InvoiceComponent = () => {
   //total amount 
   const totalAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator + (parseFloat(currentValue.totalAmount) / parseFloat(currentValue.currencyValue));
+      return accumulator + parseFloat(currentValue.totalAmount);
     }, 0)
   }, [recordsFilter]);
 
   //recevied amount 
   const receivedAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator + (currentValue.status === "Paid" && parseFloat(currentValue.totalAmount) / parseFloat(currentValue.currencyValue));
+      return accumulator + (currentValue.status === "Paid" && parseFloat(currentValue.totalAmount));
     }, 0)
   }, [recordsFilter]);
 
@@ -407,21 +408,21 @@ const InvoiceComponent = () => {
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-file-invoice-dollar"></i>
                       <p className="mb-0">Invoice Amount</p>
-                      <h3 className="mb-0">&#x20B9; {totalAmount}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount)}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hourglass-end"></i>
                       <p className="mb-0">Due</p>
-                      <h3 className="mb-0">&#x20B9; {totalAmount - receivedAmount}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount - receivedAmount)}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hand-holding-dollar"></i>
                       <p className="mb-0">Paid</p>
-                      <h3 className="mb-0">&#x20B9; {receivedAmount}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(receivedAmount)}</h3>
                     </div>
                   </div>
                 </div>
@@ -495,7 +496,7 @@ const InvoiceComponent = () => {
                             <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceId}</TableCell>
                             <TableCell>{val.invoiceClient.name}</TableCell>
-                            <TableCell>{parseFloat(val.totalAmount).toFixed(2)} ({val.currency})</TableCell>
+                            <TableCell>{val.currency.slice(6)} {convertNumberFormat(parseFloat(val.totalAmount).toFixed(2))}</TableCell>
                             <TableCell><InvoiceStatusModal data={val} fetchInvoice={fetchInvoice} /></TableCell>
                             <TableCell>
                               <div className='action'>
@@ -524,7 +525,7 @@ const InvoiceComponent = () => {
                                       <TableCell>Item Name</TableCell>
                                       <TableCell>Rate</TableCell>
                                       <TableCell >Quantity</TableCell>
-                                      <TableCell >Amount ({val.currency})</TableCell>
+                                      <TableCell >Amount ({val.currency.slice(6)})</TableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
@@ -534,7 +535,7 @@ const InvoiceComponent = () => {
                                           <TableCell component="th" scope="row">{elem.itemName}</TableCell>
                                           <TableCell>{elem.rate}</TableCell>
                                           <TableCell>{elem.quantity}</TableCell>
-                                          <TableCell>{parseFloat(elem.amount * val.currencyValue).toFixed(2)}</TableCell>
+                                          <TableCell>{convertNumberFormat(elem.amount)}</TableCell>
                                         </TableRow>
                                       )
                                     })}
