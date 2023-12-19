@@ -280,14 +280,14 @@ const InvoiceComponent = () => {
   //total amount 
   const totalAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator + parseFloat(currentValue.totalAmount);
+      return accumulator +  (parseFloat(currentValue.totalAmount) * parseFloat(currentValue.currencyValue));
     }, 0)
   }, [recordsFilter]);
 
   //recevied amount 
   const receivedAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator + (currentValue.status === "Paid" && parseFloat(currentValue.totalAmount));
+      return accumulator + (currentValue.status === "Paid" && parseFloat(currentValue.totalAmount) * parseFloat(currentValue.currencyValue));
     }, 0)
   }, [recordsFilter]);
 
