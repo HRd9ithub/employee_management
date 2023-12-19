@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion } from "framer-motion";
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -287,7 +287,7 @@ const InvoiceFormComponent = () => {
         });
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (id || duplicateId) {
             getInvoiceDetail();
         }

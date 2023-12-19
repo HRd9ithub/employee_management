@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -77,7 +77,7 @@ const InvoiceComponent = () => {
     });
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchInvoice();
   }, [])
 
