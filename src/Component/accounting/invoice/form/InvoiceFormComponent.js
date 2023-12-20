@@ -44,7 +44,7 @@ const InvoiceFormComponent = () => {
     const [extraFieldError, setExtraFieldError] = useState("");
     const [error, setError] = useState([]);
     const [currencyValue, setcurrencyValue] = useState('');
-    const [currency, setcurrency] = useState({label: 'INR - ₹',value: 'INR - ₹'})
+    const [currency, setcurrency] = useState({})
 
     //table data
     const [tableData, settableData] = useState([{
@@ -189,13 +189,15 @@ const InvoiceFormComponent = () => {
     // get_currency  value
     useEffect(() => {
         const getcurrencyapi = async () => {
-            const code = currency.value.slice(0,3)
-            const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
-            setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
+            if(currency.value){
+                const code = currency?.value?.slice(0,3)
+                const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
+                setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
+            }
         }
         getcurrencyapi();
         
-    }, [currency,id,duplicateId])
+    }, [currency])
 
     const totalAmount = useMemo(() => {
         return tableData.reduce((total, cur) => {
@@ -205,7 +207,7 @@ const InvoiceFormComponent = () => {
 
     const currencyAmount = useMemo(() => {
         return parseFloat(totalAmount * currencyValue).toFixed(2)
-    }, [totalAmount,currencyValue])
+    }, [totalAmount,currencyValue,])
 
 
     // * ======================= attchment part ============================================
@@ -240,7 +242,7 @@ const InvoiceFormComponent = () => {
         setisLoading(true);
         setPermissionToggle(false);
         
-        customAxios().get('/invoice/client').then((res) => {
+        customAxios().get('/invoice/client/name').then((res) => {
             const { data, permissions } = res.data;
             setPermission(permissions);
             if (res.data.success) {
@@ -294,6 +296,8 @@ const InvoiceFormComponent = () => {
     useLayoutEffect(() => {
         if (id || duplicateId) {
             getInvoiceDetail();
+        }else{
+            setcurrency({label: 'INR - ₹',value: 'INR - ₹'})
         }
         getClientName();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -431,7 +435,6 @@ const InvoiceFormComponent = () => {
                 if (data.length !== 0) {
                     const result = data[0]
                     setcurrency({value : result.currency,label :result.currency});
-                    setcurrencyValue(result.currencyValue);
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),

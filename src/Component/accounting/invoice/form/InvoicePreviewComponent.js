@@ -394,8 +394,8 @@ const InvoicePreviewComponent = () => {
                                                     <div className="col-md-12 mt-4">
                                                         <h5 className='extra-heading'>Terms & Conditions:</h5>
                                                         <ol className="mb-0">
-                                                            {invoiceDetail.terms.map((val) => (
-                                                                <li key={val}>{val}</li>
+                                                            {invoiceDetail.terms.map((val,ind) => (
+                                                                <li key={ind}>{val}</li>
                                                             ))}
                                                         </ol>
                                                     </div>}
