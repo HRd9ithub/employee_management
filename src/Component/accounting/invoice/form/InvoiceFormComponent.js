@@ -26,7 +26,7 @@ const InvoiceFormComponent = () => {
     const signatureRef = useRef(null);
     const noteEditorRef = useRef(null);
     const [permission, setPermission] = useState("");
-    const [permissionToggle, setPermissionToggle] = useState(false);
+    const [permissionToggle, setPermissionToggle] = useState(true);
     const [clientNames, setClientNames] = useState([]);
     const [clientData, setClientData] = useState({});
     const [clienError, setClienError] = useState("");
@@ -240,7 +240,7 @@ const InvoiceFormComponent = () => {
     const getClientName = () => {
         setServerError(false)
         setisLoading(true);
-        setPermissionToggle(false);
+        setPermissionToggle(true);
         
         customAxios().get('/invoice/client/name').then((res) => {
             const { data, permissions } = res.data;
@@ -248,7 +248,6 @@ const InvoiceFormComponent = () => {
             if (res.data.success) {
                 setClientNames(data);
             }
-            setPermissionToggle(true);
         }).catch((error) => {
             if (!error.response) {
                 setServerError(true)
@@ -261,8 +260,10 @@ const InvoiceFormComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-            setPermissionToggle(true);
-        }).finally(() => setisLoading(false));
+        }).finally(() => {
+            setisLoading(false);
+            setPermissionToggle(false);
+        });
     }
 
     // get client detail
@@ -529,7 +530,7 @@ const InvoiceFormComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    } else if ((!permission || permission.name.toLowerCase() !== "admin") && permissionToggle) {
+    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !permissionToggle) {
         return <Error403 />;
     }
 
