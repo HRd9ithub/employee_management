@@ -4,7 +4,7 @@ import convertNumberFormat from '../../../../service/NumberFormat';
 
 const ItemComponent = (props) => {
     const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency } = props
-    console.log('currency :>> ', currency);
+
     return (
         <>
             <div className='row'>
