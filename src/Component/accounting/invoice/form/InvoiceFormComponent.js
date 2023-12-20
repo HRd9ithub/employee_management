@@ -26,6 +26,7 @@ const InvoiceFormComponent = () => {
     const signatureRef = useRef(null);
     const noteEditorRef = useRef(null);
     const [permission, setPermission] = useState("");
+    const [permissionToggle, setPermissionToggle] = useState(false);
     const [clientNames, setClientNames] = useState([]);
     const [clientData, setClientData] = useState({});
     const [clienError, setClienError] = useState("");
@@ -194,7 +195,7 @@ const InvoiceFormComponent = () => {
         }
         getcurrencyapi();
         
-    }, [currency])
+    }, [currency,id,duplicateId])
 
     const totalAmount = useMemo(() => {
         return tableData.reduce((total, cur) => {
@@ -237,13 +238,15 @@ const InvoiceFormComponent = () => {
     const getClientName = () => {
         setServerError(false)
         setisLoading(true);
-
+        setPermissionToggle(false);
+        
         customAxios().get('/invoice/client').then((res) => {
             const { data, permissions } = res.data;
             setPermission(permissions);
             if (res.data.success) {
                 setClientNames(data);
             }
+            setPermissionToggle(true);
         }).catch((error) => {
             if (!error.response) {
                 setServerError(true)
@@ -256,6 +259,7 @@ const InvoiceFormComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
+            setPermissionToggle(true);
         }).finally(() => setisLoading(false));
     }
 
@@ -522,7 +526,7 @@ const InvoiceFormComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
+    } else if ((!permission || permission.name.toLowerCase() !== "admin") && permissionToggle) {
         return <Error403 />;
     }
 
