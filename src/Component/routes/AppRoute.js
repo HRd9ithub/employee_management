@@ -29,6 +29,7 @@ import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
 import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
 import AccountFormComponent from "../accounting/invoice/form/AccountFormComponent";
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
+import ClientComponent from '../accounting/client/ClientComponent';
 
 const AppRoute = () => {
     return (
@@ -76,6 +77,10 @@ const AppRoute = () => {
                     <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>} /> 
                     <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} /> 
                     <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
+                </Route>       
+                {/* client route */}
+                <Route path="/client">
+                    <Route index element={<ProtectedRoute authentication={true}><ClientComponent /></ProtectedRoute>} />
                 </Route>       
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
