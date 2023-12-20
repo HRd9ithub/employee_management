@@ -86,21 +86,19 @@ const InvoiceComponent = () => {
   ----------------------*/
   const fetchClientName = async () => {
     setisLoading(true)
-    try {
-      const res = await customAxios().get('/invoice/client');
-
-      if (res.data.success) {
-        setClientData(res.data.data);
+    customAxios().get('/invoice/client/name').then((response) => {
+      if (response.data.success) {
+        setClientData(response.data.data);
       }
-    } catch (error) {
+      setisLoading(false);
+    }).catch((error) => {
+      setisLoading(false);
       if (!error.response) {
         toast.error(error.message);
       } else if (error.response.data.message) {
         toast.error(error.response.data.message);
       }
-    } finally {
-      setisLoading(false)
-    }
+    })
   }
 
   useEffect(() => {
@@ -263,7 +261,7 @@ const InvoiceComponent = () => {
         (item.issue_date && moment(item.issue_date).format("DD MMM YYYY").toLowerCase().includes(searchItem.toLowerCase())) ||
         item.invoiceId.toLowerCase().includes(searchItem.toLowerCase()) ||
         item.invoiceClient?.name.toLowerCase().includes(searchItem.toLowerCase()) ||
-        item.totalAmount.includes(searchItem.toLowerCase()) || 
+        item.totalAmount.includes(searchItem.toLowerCase()) ||
         item.status.toLowerCase().includes(searchItem.toLowerCase())
       )
     })
@@ -280,7 +278,7 @@ const InvoiceComponent = () => {
   //total amount 
   const totalAmount = useMemo(() => {
     return recordsFilter.reduce((accumulator, currentValue) => {
-      return accumulator +  (parseFloat(currentValue.totalAmount) * parseFloat(currentValue.currencyValue));
+      return accumulator + (parseFloat(currentValue.totalAmount) * parseFloat(currentValue.currencyValue));
     }, 0)
   }, [recordsFilter]);
 
