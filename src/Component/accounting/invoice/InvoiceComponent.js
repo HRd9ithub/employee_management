@@ -29,6 +29,7 @@ const InvoiceComponent = () => {
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [permission, setpermission] = useState("");
+  const [permissionToggle, setPermissionToggle] = useState(true);
   const [serverError, setServerError] = useState(false);
   const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
   const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
@@ -53,6 +54,7 @@ const InvoiceComponent = () => {
   const fetchInvoice = async () => {
     setServerError(false)
     setisLoading(true);
+    setPermissionToggle(true);
 
     customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}`).then((res) => {
       if (res.data.success) {
@@ -74,7 +76,7 @@ const InvoiceComponent = () => {
           toast.error(error.response.data.message)
         }
       }
-    });
+    }).finally(() => setPermissionToggle(false))
   }
 
   useLayoutEffect(() => {
@@ -301,7 +303,7 @@ const InvoiceComponent = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
+  } else if ((!permission || permission.name.toLowerCase() !== "admin") && !permissionToggle) {
     return <Error403 />;
   }
 
