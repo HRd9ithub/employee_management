@@ -44,7 +44,7 @@ const Sidebar = () => {
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
         const setting = ['User Role', 'Work Report','Password']
-        const accounting = ['Invoices']
+        const accounting = ['Invoices',"Clients"]
 
         data.forEach((item) => {
           if (employee.includes(item.name)) {

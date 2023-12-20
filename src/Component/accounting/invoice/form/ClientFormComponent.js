@@ -7,9 +7,12 @@ import { toast } from 'react-hot-toast';
 import { customAxios, customAxios1 } from "../../../../service/CreateApi";
 import { alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
+import { useMatch } from 'react-router-dom';
 
 const ClientFormComponent = ({ data, getClientDetail }) => {
     const imageRef = useRef();
+
+    const routeMatch = useMatch("/client")
 
     const [modalShow, setModalShow] = useState(false);
     const [client, setclient] = useState({
@@ -230,7 +233,6 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         }
     }
 
-
     // submit function
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -266,6 +268,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
             formdata.append('city', city);
             formdata.append('postcode', postcode);
             formdata.append('address', address);
+            data && formdata.append('userId', data.userId)
             let url = "";
             if (data) {
                 url = customAxios1().put(`/invoice/client/${data._id}`, formdata);
@@ -310,8 +313,11 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
 
     return (
         <>
-            {data ? <label className='edit-client-icon' onClick={showModal}><i className="fa-solid fa-pencil"></i> Edit</label> :
-                <button className='btn add-client-button button-full-width mx-auto' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
+            {routeMatch ?
+                data ? <i className="fa-solid fa-pen-to-square" onClick={showModal}></i> :
+                    <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' type='button' onClick={showModal}><i className="fa-solid fa-plus"></i>&nbsp;Add</button>
+                : data ? <label className='edit-client-icon' onClick={showModal}><i className="fa-solid fa-pencil"></i> Edit</label> :
+                    <button className='btn add-client-button button-full-width mx-auto' type='button' onClick={showModal}><i className="fa-solid fa-circle-plus"></i> add new client</button>}
             <Modal
                 show={modalShow}
                 onHide={onHideModal}

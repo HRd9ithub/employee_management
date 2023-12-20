@@ -91,10 +91,7 @@ function ProjectModal({ data, getProject, permission, records }) {
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
                 permission && permission.permissions.create === 1 &&
-                < button
-                    className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={handleShow} >
-                    <i className="fa-solid fa-plus" ></i>&nbsp;Add
-                </button >
+                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow} ><i className="fa-solid fa-plus" ></i>&nbsp;Add</button>
             }
             {/* Department Name * */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
