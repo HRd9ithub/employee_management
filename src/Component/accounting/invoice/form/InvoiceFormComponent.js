@@ -19,7 +19,7 @@ import Select from 'react-select';
 import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
 
-const InvoiceFormComponent = () => {
+const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
     const issueDateRef = useRef(null);
     const dueDateRef = useRef(null);
@@ -66,6 +66,10 @@ const InvoiceFormComponent = () => {
     const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
 
+    /*---------------------
+        heading section
+    -----------------------*/
+
     // heading onchange
     const headingChange = (event) => {
         const { name, value } = event.target;
@@ -91,8 +95,9 @@ const InvoiceFormComponent = () => {
         }
     }
 
-    // * ===================== extra field ==========================
-
+    /*---------------------
+       extra field section
+    -----------------------*/
     // add extra field
     const addExtraField = () => {
         const field = {
@@ -119,8 +124,9 @@ const InvoiceFormComponent = () => {
         setextra_field(list)
     }
 
-    //  * ======================= table data ============================
-
+    /*---------------------
+        table section
+    -----------------------*/
     const addRowTable = () => {
         const data = [...tableData, {
             itemName: '',
@@ -175,10 +181,10 @@ const InvoiceFormComponent = () => {
     const currencyList = useMemo(() => {
         return currencylist.map((val) => {
             return {
-                value : val, label : val
+                value: val, label: val
             }
         })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currencylist])
 
     // currency onchange
@@ -189,14 +195,14 @@ const InvoiceFormComponent = () => {
     // get_currency  value
     useEffect(() => {
         const getcurrencyapi = async () => {
-            if(currency.value){
-                const code = currency?.value?.slice(0,3)
+            if (currency.value) {
+                const code = currency?.value?.slice(0, 3)
                 const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
                 setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
             }
         }
         getcurrencyapi();
-        
+
     }, [currency])
 
     const totalAmount = useMemo(() => {
@@ -205,13 +211,9 @@ const InvoiceFormComponent = () => {
         }, 0)
     }, [tableData])
 
-    const currencyAmount = useMemo(() => {
-        return parseFloat(totalAmount * currencyValue).toFixed(2)
-    }, [totalAmount,currencyValue,])
-
-
-    // * ======================= attchment part ============================================
-
+    /*---------------------
+        attchment section
+    -----------------------*/
     // handle attachment
     const addAttchmentFile = (e) => {
         if (e.target.files.length !== 0) {
@@ -233,15 +235,15 @@ const InvoiceFormComponent = () => {
         }));
     }
 
-
-    // ============================== client part =======================================
-
+    /*---------------------
+        client section
+    -----------------------*/
     // get client name
     const getClientName = () => {
         setServerError(false)
-        setisLoading(true);
+        // setisLoading(true);
         setPermissionToggle(true);
-        
+
         customAxios().get('/invoice/client/name').then((res) => {
             const { data, permissions } = res.data;
             setPermission(permissions);
@@ -261,25 +263,26 @@ const InvoiceFormComponent = () => {
                 }
             }
         }).finally(() => {
-            setisLoading(false);
+            // setisLoading(false);
             setPermissionToggle(false);
         });
     }
 
     // get client detail
     const getClientDetail = (id) => {
-        setServerError(false)
-        setisLoading(true);
-
+        setProgress(10);
+        setServerError(false);
+        setProgress(20);
         customAxios().get(`/invoice/client/${id}`).then((res) => {
+            setProgress(50);
             if (res.data.success) {
+                setProgress(80);
                 getClientName();
                 const { data } = res.data;
                 setClientData(data);
-                setisLoading(false);
             }
         }).catch((error) => {
-            setisLoading(false);
+            setProgress(80);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -291,16 +294,17 @@ const InvoiceFormComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        });
+        }).finally(() => setProgress(100))
     }
 
+
     useLayoutEffect(() => {
+        getClientName();
         if (id || duplicateId) {
             getInvoiceDetail();
-        }else{
-            setcurrency({label: 'INR - ₹',value: 'INR - ₹'})
+        } else {
+            setcurrency({ label: 'INR - ₹', value: 'INR - ₹' })
         }
-        getClientName();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -309,8 +313,9 @@ const InvoiceFormComponent = () => {
         getClientDetail(id)
     }
 
-
-    // * ============================  submit invoice====================================
+    /*---------------------
+        submit form
+    -----------------------*/
     const addInvoice = (status) => {
         let errorData = ""
         errorData = extra_field.find((val) => {
@@ -435,7 +440,7 @@ const InvoiceFormComponent = () => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
-                    setcurrency({value : result.currency,label :result.currency});
+                    setcurrency({ value: result.currency, label: result.currency });
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
@@ -807,9 +812,6 @@ const InvoiceFormComponent = () => {
                                     </div>
                                     <div className='col-sm-8'>
                                         <div className="table-total-section p-3 ml-auto">
-                                            <p className="text-center">Applied Exchange Rate: {`1 INR = ${currency.value?.slice(6)} ${convertNumberFormat(currencyValue)}`}</p>
-                                            <p className="text-center">Amount total in currency: {currency.value?.slice(6)} {convertNumberFormat(currencyAmount)}</p>
-
                                             <table className="w-100">
                                                 <tbody>
                                                     <tr>
@@ -817,7 +819,7 @@ const InvoiceFormComponent = () => {
                                                             <p className="text-left mb-0">Sub Total:</p>
                                                         </td>
                                                         <td>
-                                                           <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
                                                     <tr>
