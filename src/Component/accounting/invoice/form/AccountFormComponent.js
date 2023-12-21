@@ -249,8 +249,22 @@ const AccountFormComponent = (props) => {
 
               </div>
             </div>
-            <form className="forms-sample">
-              <div className="row p-4">
+            <form className="forms-sample px-4">
+              <div className="row py-4">
+                <div className="col-md-4">
+                  <div className="form-group mb-0">
+                    <label htmlFor="2" className='mt-2'>Select Bank Account</label>
+                    <select className="form-control">
+                      <option value="">Select Bank Account</option>
+                      <option value="testuser">Test User</option>
+                      <option value="testuser">Test User</option>
+                      <option value="testuser">Test User</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <hr className="my-0"/>
+              <div className="row py-4">
                 <div className="col-md-4">
                   <div className="form-group">
                     <label htmlFor="2" className='mt-2'>Account Number</label>
