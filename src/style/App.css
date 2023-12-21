@@ -4900,6 +4900,42 @@ svg {
   width: 125px;
 }
 
+.invoice-details-table tr td {
+  padding: 7px 30px 7px 0 !important;
+  font-weight: 500;
+  color: gray;
+}
+
+.invoice-details-table tr td:last-child {
+  color: black;
+  padding: 7px 0 7px 0 !important;
+}
+
+.bill-by-to-section {
+  padding: 18px 22px;
+  border-radius: 5px;
+  background-color: #0a4a92;
+  color: white;
+}
+
+.bill-by-to-section h3 {
+  font-size: 25px !important;
+  color: #a1daf8;
+  margin-bottom: 12px !important;
+}
+
+.bill-by-to-section .invoice-details-table tr td {
+  color: white !important;
+}
+
+.extra-section .signature-section {
+  max-width: 350px !important;
+}
+
+.additional-notes-content p {
+  margin-bottom: 0 !important;
+}
+
 .invoice-value-summary {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.65);
@@ -4934,10 +4970,18 @@ svg {
 }
 
 .template-heading {
-  font-size: 26px;
-  font-weight: 400 !important;
-  letter-spacing: 0.6px;
-  margin: 0 !important;
+  font-size: 27px;
+  color: #00458f;
+}
+
+.billby-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .heading-section h4 {
@@ -4966,8 +5010,14 @@ svg {
   background-color: rgb(247, 250, 255);
 }
 
+.total-column td {
+  font-weight: 500;
+  font-size: 16px;
+}
+
 .extra-heading {
-  color: #0a4192
+  color: #0a4192;
+  font-size: 25px;
 }
 
 .text-orange {
@@ -5040,76 +5090,26 @@ select.form-control.currency-dropdown {
 }
 
 @media print {
-  .template-head-section {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    flex-direction: column !important;
+  .template-section .row:nth-child(3), .extra-section .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-
-  .template-head-section .col-md-6 {
-    text-align: left !important;
+  .template-section .row:nth-child(3) > div, .extra-section .bank-details {
+    width: 50%;
   }
-
-  .template-head-section .template-logo {
-    width: 180px !important;
+  .extra-section .signature-section {
+    max-width: 350px !important;
+    margin-top: -30px !important;
   }
-
-  .template-head-section .template-heading {
-    text-align: right !important;
-    margin-top: -15px !important;
+  .bill-by-to-section {
+    min-height: 160px !important;
   }
-
-  .template-summary-section .heading-section {
-    width: 33% !important;
-    max-width: 33% !important;
-    margin-top: 0 !important;
-  }
-
-  .attch-template-section {
-    margin-bottom: 10px !important;
-  }
-
-  .table {
-    margin-bottom: 0 !important;
-  }
-
-  .table-bordered {
-    border: 1px solid #ebedf2 !important;
-  }
-
-  .table {
-    width: 100% !important;
-    margin-bottom: 1rem !important;
-    color: #212529 !important;
-  }
-
-  table {
-    border-collapse: collapse !important;
-  }
-
-  .product-table table thead th {
+  .product-table thead tr th {
     background-color: #0a4a92 !important;
     color: #fff !important;
   }
-
   .total-column td {
     background-color: rgb(247, 250, 255) !important;
-  }
-
-  .extra-section ol li a {
-    color: #007bff !important;
-    text-decoration: none !important;
-    background-color: transparent !important;
-    font-size: 16px !important;
-  }
-
-  .attch-template-section {
-    width: 50%;
-  }
-
-  .template-signature-section {
-    width: 33% !important;
-    float: right !important;
   }
 }
