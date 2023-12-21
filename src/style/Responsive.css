@@ -2929,11 +2929,6 @@
         top: 29px;
     }
 
-    /* 
-    .calendar-icon-holiday {
-        top: 12px;
-    } */
-
     .password-auth-info .auth-box p {
         width: 80%;
         overflow: hidden;
@@ -3074,12 +3069,7 @@
         padding: 9px 9px;
     }
 
-    /* .delete {
-        margin-right: 0px !important;
-    } */
-
     /* calender */
-
     .calcedar-field .react-date-picker__wrapper {
         padding: 7px 5px;
     }
@@ -3153,10 +3143,6 @@
     .sidebar .nav .nav-item .nav-link {
         padding: 0.65rem 0 0.5rem 0;
     }
-
-    /* .sidebar .nav.sub-menu .nav-item .nav-link {
-        padding: 0.5rem 2rem 0.5rem 1rem;
-    } */
 
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
@@ -3260,6 +3246,9 @@
     }
     .invoice-details-table tr td {
         padding: 0 !important;
+    }
+    .gst-tax .form-check-label{
+        margin-left: 1.2rem !important;
     }
 }
 
