@@ -18,6 +18,8 @@ import { Dropdown } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
@@ -65,6 +67,20 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
     const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
+    const [show, setShow] = useState(false);
+    const [name, setName] = useState('');
+
+    // modal show function
+    const handleShow = () => {
+        
+        setShow(true)
+    }
+
+    // modal close function
+    const handleClose = (e) => {
+        e.preventDefault();
+        setShow(false)
+    }
 
     /*---------------------
         heading section
@@ -806,8 +822,11 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                 <div className='row my-3'>
                                     {/* add button */}
                                     <div className='col-sm-4'>
-                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addRowTable} disabled={addRowButtonDisable} >
+                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width mb-2 mr-3" onClick={addRowTable} disabled={addRowButtonDisable} >
                                             <i className="fa-solid fa-plus"></i>&nbsp;Add More Item
+                                        </button>
+                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width mb-2" onClick={handleShow}>
+                                            <i class="fa-solid fa-percent"></i>&nbsp;Add Tax
                                         </button>
                                     </div>
                                     <div className='col-sm-8'>
@@ -975,6 +994,42 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     </div>
                 </div>
             </motion.div >
+            {/* tax modal */}
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
+                <Modal.Header className='small-modal'>
+                    <Modal.Title>Add Tax</Modal.Title>
+                    <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                        <div className="card">
+                            <div className="card-body">
+                                <form className="forms-sample">
+                                    <div className="form-group">
+                                        <label htmlFor="exampleInputfname" className='mt-3'>Select Tax Type</label>
+                                        <select className="form-control" disabled>
+                                            <option value="gst" selected>GST</option>
+                                            <option value="taxies">Taxies</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="exampleInputfname">GST Type</label>
+                                        <div className="d-flex align-items-center gst-tax">
+                                            <Form.Check type={"radio"} label="IGST" className="pr-5"/>
+                                            <Form.Check type={"radio"} label="CGST & SGST"/>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center modal-button'>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2">Add</button>
+                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {isLoading && <Spinner />}
+                </Modal.Body>
+            </Modal>
         </>
     )
 }
