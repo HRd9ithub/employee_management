@@ -132,7 +132,7 @@ const RouteContext = ({ children }) => {
             const res = await customAxios().post('/report/report-preview', { month, id });
 
             if (res.data.success) {
-                setId(id);
+                setId(res.data.id);
                 dispatch({ type: "GET_REPORT", payload: res.data })
             }
         } catch (error) {
