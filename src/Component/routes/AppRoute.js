@@ -31,7 +31,7 @@ import AccountFormComponent from "../accounting/invoice/form/AccountFormComponen
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 import ClientComponent from '../accounting/client/ClientComponent';
 
-const AppRoute = () => {
+const AppRoute = ({setProgress}) => {
     return (
             <Routes>
                 {/* login route */}
@@ -72,9 +72,9 @@ const AppRoute = () => {
                 {/* invoice route */}
                 <Route path="/invoice">
                     <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
-                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
-                    <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>}></Route>
-                    <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent /></ProtectedRoute>} /> 
+                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
+                    <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
+                    <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>} /> 
                     <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} /> 
                     <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
                 </Route>       

@@ -343,8 +343,8 @@ const WorkReportComponent = () => {
                             {description?.map((currElem, ind) => {
                                 return <div className="card-body table_section" key={currElem._id}>
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <h4>{ind + 1}. {currElem.project?.name}</h4>
-                                        <h5 className="text-secondary">{currElem.hours}h</h5>
+                                        <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
+                                        <h5 className="text-secondary mb-0">{currElem.hours}h</h5>
                                     </div>
                                     <hr />
                                     <div>

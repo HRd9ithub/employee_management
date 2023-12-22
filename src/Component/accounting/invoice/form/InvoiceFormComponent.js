@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion } from "framer-motion";
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
@@ -18,8 +19,10 @@ import { Dropdown } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
-const InvoiceFormComponent = () => {
+const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
     const issueDateRef = useRef(null);
     const dueDateRef = useRef(null);
@@ -63,8 +66,16 @@ const InvoiceFormComponent = () => {
     const [contact, setContact] = useState("");
     const [terms, setTerms] = useState([{ name: "" }]);
 
+    const [gst, setGst] = useState("IGST");
+    const [tax, setTax] = useState("");
+
     const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
+    const [show, setShow] = useState(false);
+
+    /*---------------------
+        heading section
+    -----------------------*/
 
     // heading onchange
     const headingChange = (event) => {
@@ -91,8 +102,9 @@ const InvoiceFormComponent = () => {
         }
     }
 
-    // * ===================== extra field ==========================
-
+    /*---------------------
+       extra field section
+    -----------------------*/
     // add extra field
     const addExtraField = () => {
         const field = {
@@ -119,8 +131,9 @@ const InvoiceFormComponent = () => {
         setextra_field(list)
     }
 
-    //  * ======================= table data ============================
-
+    /*---------------------
+        table section
+    -----------------------*/
     const addRowTable = () => {
         const data = [...tableData, {
             itemName: '',
@@ -128,7 +141,20 @@ const InvoiceFormComponent = () => {
             rate: '1',
             amount: 1
         }]
-        settableData(data)
+        if (tax) {
+            const value = data.map(v => {
+                v.GST = v.GST ? v.GST : 18
+                const value1 = (v.quantity * v.rate * v.GST) / 100;
+                v = gst === "IGST" ? { ...v, IGST: parseFloat(value1).toFixed(2) } : { ...v, CGST: parseFloat(value1 / 2).toFixed(2), SGST: parseFloat(value1 / 2).toFixed(2) }
+                return {
+                    ...v,
+                    amount: v.quantity * v.rate + value1
+                }
+            })
+            settableData(value)
+        } else {
+            settableData(data)
+        }
     }
 
     //delete row in table
@@ -156,11 +182,51 @@ const InvoiceFormComponent = () => {
         const { name, value } = e.target;
         let list = [...tableData];
         list[ind][name] = value;
-        if (name === 'quantity') {
-            list[ind]['amount'] = tableData[ind].rate * value
-        }
-        if (name === 'rate') {
-            list[ind]['amount'] = tableData[ind].quantity * value
+
+        if (tax) {
+            switch (name) {
+                case "quantity":
+                    const value1 = (list[ind].rate * value * list[ind].GST) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(value1).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(value1 / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(value1 / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].rate * value + value1
+                    break;
+                case "rate":
+                    const value2 = (list[ind].quantity * value * list[ind].GST) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(value2).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(value2 / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(value2 / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].quantity * value + value2
+                    break;
+                case "GST":
+                    const IGST = (list[ind].quantity * value * list[ind].rate) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(IGST).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(IGST / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(IGST / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].quantity * list[ind].rate + IGST
+                    list[ind]['GST'] = value
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            if (name === 'quantity') {
+                list[ind]['amount'] = tableData[ind].rate * value
+            }
+            if (name === 'rate') {
+                list[ind]['amount'] = tableData[ind].quantity * value
+            }
         }
         settableData(list)
     }
@@ -175,10 +241,10 @@ const InvoiceFormComponent = () => {
     const currencyList = useMemo(() => {
         return currencylist.map((val) => {
             return {
-                value : val, label : val
+                value: val, label: val
             }
         })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currencylist])
 
     // currency onchange
@@ -189,14 +255,14 @@ const InvoiceFormComponent = () => {
     // get_currency  value
     useEffect(() => {
         const getcurrencyapi = async () => {
-            if(currency.value){
-                const code = currency?.value?.slice(0,3)
-                const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
-                setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
+            if (currency.value) {
+                const code = currency?.value?.slice(0, 3)
+                const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=INR&base_currency=${code}`);
+                setcurrencyValue(parseFloat(res.data.data.INR).toFixed(2))
             }
         }
         getcurrencyapi();
-        
+
     }, [currency])
 
     const totalAmount = useMemo(() => {
@@ -205,13 +271,21 @@ const InvoiceFormComponent = () => {
         }, 0)
     }, [tableData])
 
-    const currencyAmount = useMemo(() => {
-        return parseFloat(totalAmount * currencyValue).toFixed(2)
-    }, [totalAmount,currencyValue,])
+    const TOTALSGST = useMemo(() => {
+        return parseFloat(tableData.reduce((total, cur) => {
+            return total + (tax === "CGST" && parseFloat(cur.SGST)) 
+        }, 0)).toFixed(2)
+    }, [tableData])
 
+    const TOTALIGST = useMemo(() => {
+        return parseFloat(tableData.reduce((total, cur) => {
+            return total + (tax === "IGST" && parseFloat(cur.IGST)) 
+        }, 0)).toFixed(2)
+    }, [tableData])
 
-    // * ======================= attchment part ============================================
-
+    /*---------------------
+        attchment section
+    -----------------------*/
     // handle attachment
     const addAttchmentFile = (e) => {
         if (e.target.files.length !== 0) {
@@ -233,15 +307,15 @@ const InvoiceFormComponent = () => {
         }));
     }
 
-
-    // ============================== client part =======================================
-
+    /*---------------------
+        client section
+    -----------------------*/
     // get client name
     const getClientName = () => {
         setServerError(false)
-        setisLoading(true);
+        // setisLoading(true);
         setPermissionToggle(true);
-        
+
         customAxios().get('/invoice/client/name').then((res) => {
             const { data, permissions } = res.data;
             setPermission(permissions);
@@ -261,25 +335,26 @@ const InvoiceFormComponent = () => {
                 }
             }
         }).finally(() => {
-            setisLoading(false);
+            // setisLoading(false);
             setPermissionToggle(false);
         });
     }
 
     // get client detail
     const getClientDetail = (id) => {
-        setServerError(false)
-        setisLoading(true);
-
+        setProgress(10);
+        setServerError(false);
+        setProgress(20);
         customAxios().get(`/invoice/client/${id}`).then((res) => {
+            setProgress(50);
             if (res.data.success) {
+                setProgress(80);
                 getClientName();
                 const { data } = res.data;
                 setClientData(data);
-                setisLoading(false);
             }
         }).catch((error) => {
-            setisLoading(false);
+            setProgress(80);
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message);
@@ -291,16 +366,17 @@ const InvoiceFormComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        });
+        }).finally(() => setProgress(100))
     }
 
+
     useLayoutEffect(() => {
+        getClientName();
         if (id || duplicateId) {
             getInvoiceDetail();
-        }else{
-            setcurrency({label: 'INR - ₹',value: 'INR - ₹'})
+        } else {
+            setcurrency({ label: 'INR - ₹', value: 'INR - ₹' })
         }
-        getClientName();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -309,8 +385,9 @@ const InvoiceFormComponent = () => {
         getClientDetail(id)
     }
 
-
-    // * ============================  submit invoice====================================
+    /*---------------------
+        submit form
+    -----------------------*/
     const addInvoice = (status) => {
         let errorData = ""
         errorData = extra_field.find((val) => {
@@ -360,7 +437,7 @@ const InvoiceFormComponent = () => {
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
-
+            tax === "CGST" ? formdata.append('gstType', "CGST & SGST") : formdata.append('gstType',tax);
 
             let url = "";
             if (id) {
@@ -374,10 +451,8 @@ const InvoiceFormComponent = () => {
                     toast.success(result.data.message);
                     if (status) {
                         navigate("/invoice");
-                    } else if (id) {
+                    } else{
                         navigate(`/invoice/preview/${result.data.id}`);
-                    } else {
-                        navigate(`/invoice/payment/${result.data.id}`);
                     }
                 }
             }).catch((error) => {
@@ -435,7 +510,9 @@ const InvoiceFormComponent = () => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
-                    setcurrency({value : result.currency,label :result.currency});
+                    setTax(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"");
+                    setGst(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"IGST");
+                    setcurrency({ value: result.currency, label: result.currency });
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
@@ -456,7 +533,6 @@ const InvoiceFormComponent = () => {
                     })
                     setattchFile(file);
                     setContact(result?.contact);
-
                     let conditions = [];
                     if (result.terms.length !== 0) {
                         result.terms.forEach((val) => {
@@ -526,6 +602,53 @@ const InvoiceFormComponent = () => {
         setTerms(newData)
     }
 
+    /*----------------------
+        GST tax section
+    ------------------------*/
+
+    // modal show function
+    const handleShow = () => {
+        setShow(true)
+    }
+
+    // modal close function
+    const handleClose = (e) => {
+        e.preventDefault();
+        setShow(false)
+    }
+
+    // submit GST
+    const handleGst = (e) => {
+        e.preventDefault();
+        setTax(gst);
+        setShow(false);
+        const data = tableData.map(v => {
+            v.GST = v.GST ? v.GST : 18
+            const value1 = (v.quantity * v.rate * v.GST) / 100;
+            v = gst === "IGST" ? {
+                itemName: v.itemName,
+                quantity: v.quantity,
+                rate: v.rate,
+                amount: v.amount,
+                GST: v.GST,
+                IGST: parseFloat(value1).toFixed(2)
+            } : {
+                itemName: v.itemName,
+                quantity: v.quantity,
+                rate: v.rate,
+                amount: v.amount,
+                GST: v.GST, 
+                CGST: parseFloat(value1 / 2).toFixed(2),
+                SGST: parseFloat(value1 / 2).toFixed(2)
+            }
+            return {
+                ...v,
+                amount: v.quantity * v.rate + value1
+            }
+        })
+        settableData(data)
+    }
+
     if (isLoading) {
         return <Spinner />
     } else if (serverError) {
@@ -576,14 +699,14 @@ const InvoiceFormComponent = () => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
                                                             <td className='common-head-invoice'>
-                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
+                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId || ""} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
                                                                 {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='issue_date' className="mb-0">Issue Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { issueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='issue_date' value={heading.issue_date} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
+                                                                <input type="date" className='form-control' name='issue_date' value={heading.issue_date || ""} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
                                                                 {issueDateError && <small id="invoiceId" className="form-text error">{issueDateError}</small>}
                                                             </td>
@@ -591,7 +714,7 @@ const InvoiceFormComponent = () => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date} onChange={headingChange} />
+                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
                                                             </td>
                                                         </tr>
@@ -600,11 +723,11 @@ const InvoiceFormComponent = () => {
                                                                 return (
                                                                     <tr key={ind}>
                                                                         <td className='common-head-invoice field-input'>
-                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name || ""} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                         <td className='common-head-invoice'>
                                                                             <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
-                                                                            <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value || ""} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                     </tr>
                                                                 )
@@ -695,7 +818,7 @@ const InvoiceFormComponent = () => {
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
                                                             return (<React.Fragment key={val._id}>
-                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                                <Dropdown.Item className="list-client" value={val._id || ""} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                             </React.Fragment>)
                                                         })}
@@ -796,20 +919,21 @@ const InvoiceFormComponent = () => {
                                     setrateError={setrateError}
                                     quantiyError={quantiyError}
                                     setquantiyError={setquantiyError}
+                                    tax={tax}
                                 />
 
                                 <div className='row my-3'>
                                     {/* add button */}
                                     <div className='col-sm-4'>
-                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addRowTable} disabled={addRowButtonDisable} >
+                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width mb-2 mr-3" onClick={addRowTable} disabled={addRowButtonDisable} >
                                             <i className="fa-solid fa-plus"></i>&nbsp;Add More Item
+                                        </button>
+                                        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width mb-2" onClick={handleShow}>
+                                            <i className="fa-solid fa-percent"></i>&nbsp;Add Tax
                                         </button>
                                     </div>
                                     <div className='col-sm-8'>
                                         <div className="table-total-section p-3 ml-auto">
-                                            <p className="text-center">Applied Exchange Rate: {`1 INR = ${currency.value?.slice(6)} ${convertNumberFormat(currencyValue)}`}</p>
-                                            <p className="text-center">Amount total in currency: {currency.value?.slice(6)} {convertNumberFormat(currencyAmount)}</p>
-
                                             <table className="w-100">
                                                 <tbody>
                                                     <tr>
@@ -817,17 +941,36 @@ const InvoiceFormComponent = () => {
                                                             <p className="text-left mb-0">Sub Total:</p>
                                                         </td>
                                                         <td>
-                                                           <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount - TOTALSGST - TOTALSGST - TOTALIGST).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
+                                                    {tax === "CGST" && 
                                                     <tr>
                                                         <td>
-                                                            <p className="text-left mb-0">Tax:</p>
+                                                            <p className="text-left mb-0">CGST:</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-right mb-0">0</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
                                                         </td>
-                                                    </tr>
+                                                    </tr>}
+                                                    {tax === "CGST" && 
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">SGST:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
+                                                        </td>
+                                                    </tr>}
+                                                    {tax === "IGST" && 
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">IGST:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">{TOTALIGST}</p>
+                                                        </td>
+                                                    </tr>}
                                                     <tr>
                                                         <td colSpan="2"><hr /></td>
                                                     </tr>
@@ -903,7 +1046,7 @@ const InvoiceFormComponent = () => {
                                         <div className='additional-note'>
                                             <JoditEditor
                                                 ref={noteEditorRef}
-                                                value={note}
+                                                value={note || ""}
                                                 tabIndex={1}
                                                 onBlur={newContent => setNote(newContent)}
                                             />
@@ -918,7 +1061,7 @@ const InvoiceFormComponent = () => {
                                                 <ol>
                                                     {terms.map((val, ind) => (
                                                         <li className="position-relative" key={ind}>
-                                                            <input type="text" className='form-control bg-transparent' placeholder="Write Here..." value={val.name} onChange={(event) => termsChange(event.target.value, ind)} />
+                                                            <input type="text" className='form-control bg-transparent' placeholder="Write Here..." value={val.name || ""} onChange={(event) => termsChange(event.target.value, ind)} />
                                                             {ind !== 0 && <i className="fa-solid fa-xmark remove-field-icon" onClick={() => removeRowTerms(ind)}></i>}
                                                         </li>
                                                     ))}
@@ -934,7 +1077,7 @@ const InvoiceFormComponent = () => {
                                                 <h4>Contact Details <span>(Optional)</span></h4>
                                             </div>
                                             <div className='terms-conditions'>
-                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..." value={contact} onChange={contactChange} />
+                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..." value={contact || ""} onChange={contactChange} />
                                                 <small className="text-muted d-block">Ex: For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</small>
                                             </div>
                                         </div>
@@ -973,6 +1116,41 @@ const InvoiceFormComponent = () => {
                     </div>
                 </div>
             </motion.div >
+            {/* tax modal */}
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
+                <Modal.Header className='small-modal'>
+                    <Modal.Title>Add Tax</Modal.Title>
+                    <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                        <div className="card">
+                            <div className="card-body">
+                                <form className="forms-sample">
+                                    <div className="form-group">
+                                        <label htmlFor="exampleInputfname" className='mt-3' >Select Tax Type</label>
+                                        <select className="form-control" disabled>
+                                            <option value="gst" selected>GST</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="exampleInputfname">GST Type</label>
+                                        <div className="d-flex align-items-center gst-tax">
+                                            <Form.Check type="radio" checked={gst === "IGST"} label="IGST" className="pr-5" name='GST' id="IGST" value={gst || ""} onChange={() => setGst("IGST")} />
+                                            <Form.Check type="radio" checked={gst === "CGST"} label="CGST & SGST" name='GST' id="CGST" value={gst || ""} onChange={() => setGst("CGST")} />
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center modal-button'>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleGst}>Add</button>
+                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {isLoading && <Spinner />}
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

@@ -1575,6 +1575,10 @@
     .template-logo {
         width: 140px;
     }
+    .bill-by-to-section h3, .extra-heading {
+        font-size: 20px !important;
+        margin-bottom: 7px !important;
+    }
 }
 
 @media (max-width:736px) {
@@ -1612,11 +1616,6 @@
         font-size: 1.6rem;
     }
 
-    /* .modal-button .btn {
-        width: 29% !important;
-        height: 35px !important;
-    } */
-
     .sidebar-offcanvas {
         left: -55%;
     }
@@ -1630,8 +1629,8 @@
 
     /* employee */
 
-    .card .card-body {
-        padding: 1rem 2rem;
+    .card .card-body, .template-section {
+        padding: 1rem 2rem !important;
     }
 
     /* navbar */
@@ -1816,12 +1815,6 @@
 }
 
 @media (max-width:640px) {
-    /* navbar */
-    /* .navbar .navbar-brand-wrapper .navbar-brand img {
-        width: 78%;
-        height: 50px;
-    } */
-
     /* employee */
     .gHZEHz {
         font-size: 14px !important;
@@ -1831,24 +1824,15 @@
         font-size: 14px !important;
     }
 
-    .card .card-body {
-        padding: 1rem 2rem;
-    }
-
-    .card .card-body {
-        padding: 1rem 2rem;
+    .card .card-body, .template-section {
+        padding: 1rem 2rem !important;
     }
 
     .employee-modal .modal-dialog {
         max-width: 450px !important;
     }
 
-    /* .delete {
-        margin-right: 20px;
-    } */
-
     /* department model */
-
     .modal-dialog {
         margin: 30px auto;
         max-width: 425px;
@@ -2114,6 +2098,15 @@
         width: 100% !important;
         margin-top: 15px;
     }
+
+    .template-section .row:nth-child(2) {
+        flex-direction: column-reverse;
+    }
+    .template-section .billby-image {
+        margin: 0 !important;
+        width: 100px;
+        height: 100px;
+    }
 }
 
 @media (max-width:568px) {
@@ -2174,8 +2167,8 @@
         height: 36px;
     }
 
-    .card .card-body {
-        padding: 1rem 1.5rem;
+    .card .card-body, .template-section {
+        padding: 1rem 1.5rem !important;
     }
 
     .profile-basic .col-sm-5 {
@@ -2931,11 +2924,6 @@
         top: 29px;
     }
 
-    /* 
-    .calendar-icon-holiday {
-        top: 12px;
-    } */
-
     .password-auth-info .auth-box p {
         width: 80%;
         overflow: hidden;
@@ -2949,6 +2937,15 @@
 
     .button-full-width {
         width: 100%;
+    }
+
+    .modal-button {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .modal-button .btn, .submit-section .btn{
+        width: 100% !important;
+        margin: 0 !important;
     }
 
     .currency-dropdown{
@@ -3023,8 +3020,8 @@
         padding: 0.3rem;
     }
 
-    .card .card-body {
-        padding: 1rem;
+    .card .card-body, .template-section {
+        padding: 1rem !important;
     }
 
     .employee-modal .modal-dialog {
@@ -3076,12 +3073,7 @@
         padding: 9px 9px;
     }
 
-    /* .delete {
-        margin-right: 0px !important;
-    } */
-
     /* calender */
-
     .calcedar-field .react-date-picker__wrapper {
         padding: 7px 5px;
     }
@@ -3155,10 +3147,6 @@
     .sidebar .nav .nav-item .nav-link {
         padding: 0.65rem 0 0.5rem 0;
     }
-
-    /* .sidebar .nav.sub-menu .nav-item .nav-link {
-        padding: 0.5rem 2rem 0.5rem 1rem;
-    } */
 
     .css-1xvpzln-MuiButtonBase-root-MuiSwitch-switchBase {
         top: 0px !important;
@@ -3254,14 +3242,21 @@
     .preview-table-responsive {
         width: 230% !important;
     }
+
+    .invoice-details-table tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5px !important;
+    }
+    .invoice-details-table tr td {
+        padding: 0 !important;
+    }
+    .gst-tax .form-check-label{
+        margin-left: 1.2rem !important;
+    }
 }
 
 @media (max-width:375px) {
-    /* Login */
-    /* .auth .brand-logo img {
-        width: 90px;
-    } */
-
     .auth .auth-form-light {
         width: 293px;
     }
@@ -3605,10 +3600,6 @@
         font-size: 12px !important;
     }
 
-    .modal-button .btn {
-        width: 33% !important;
-    }
-
     .animate-celebration-content p {
         width: 95%;
     }
@@ -3936,10 +3927,6 @@
 
     .user-modal .modal-button button {
         width: 32% !important;
-    }
-
-    .modal-button .btn {
-        width: 40% !important;
     }
 }
 

@@ -408,21 +408,21 @@ const InvoiceComponent = () => {
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-file-invoice-dollar"></i>
                       <p className="mb-0">Invoice Amount</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hourglass-end"></i>
                       <p className="mb-0">Due</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount - receivedAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(totalAmount - receivedAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hand-holding-dollar"></i>
                       <p className="mb-0">Paid</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(receivedAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(receivedAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                 </div>
@@ -452,13 +452,13 @@ const InvoiceComponent = () => {
                     <TableRow>
                       <TableCell style={{ width: "10px", padding: "16px 0" }} />
                       <TableCell>
-                        <TableSortLabel active={orderBy === "issue_date"} direction={orderBy === "issue_date" ? order : "asc"} onClick={() => handleRequestSort("issue_date")}>
-                          Date
+                        <TableSortLabel active={orderBy === "invoiceId"} direction={orderBy === "invoiceId" ? order : "asc"} onClick={() => handleRequestSort("invoiceId")}>
+                          Invoice Id
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "invoiceId"} direction={orderBy === "invoiceId" ? order : "asc"} onClick={() => handleRequestSort("invoiceId")}>
-                          Invoice Id
+                        <TableSortLabel active={orderBy === "issue_date"} direction={orderBy === "issue_date" ? order : "asc"} onClick={() => handleRequestSort("issue_date")}>
+                          Date
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -472,7 +472,9 @@ const InvoiceComponent = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        status
+                        <TableSortLabel active={orderBy === "status"} direction={orderBy === "status" ? order : "asc"} onClick={() => handleRequestSort("status")}>
+                          Status
+                        </TableSortLabel>
                       </TableCell>
                       <TableCell>
                         Action
@@ -493,8 +495,8 @@ const InvoiceComponent = () => {
                                 {open === val._id ? <RemoveIcon /> : <AddIcon />}
                               </IconButton>
                             </TableCell>
-                            <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceId}</TableCell>
+                            <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceClient.name}</TableCell>
                             <TableCell>{val.currency.slice(6)} {convertNumberFormat(parseFloat(val.totalAmount).toFixed(2))}</TableCell>
                             <TableCell><InvoiceStatusModal data={val} fetchInvoice={fetchInvoice} /></TableCell>
@@ -523,8 +525,12 @@ const InvoiceComponent = () => {
                                   <TableHead className="common-header">
                                     <TableRow>
                                       <TableCell>Item Name</TableCell>
+                                      {val.gstType && <TableCell>GST</TableCell>}
                                       <TableCell>Rate</TableCell>
                                       <TableCell >Quantity</TableCell>
+                                      {val.gstType === "IGST" && <TableCell>IGST</TableCell>}
+                                      {val.gstType === "CGST & SGST" && <TableCell>CGST</TableCell>}
+                                      {val.gstType === "CGST & SGST" && <TableCell>SGST</TableCell>}
                                       <TableCell >Amount ({val.currency.slice(6)})</TableCell>
                                     </TableRow>
                                   </TableHead>
@@ -533,8 +539,12 @@ const InvoiceComponent = () => {
                                       return (
                                         <TableRow key={elem._id}>
                                           <TableCell component="th" scope="row">{elem.itemName}</TableCell>
+                                          {val.gstType && <TableCell>{elem.GST}</TableCell>}
                                           <TableCell>{elem.rate}</TableCell>
                                           <TableCell>{elem.quantity}</TableCell>
+                                          {val.gstType === "IGST" && <TableCell>{elem.IGST}</TableCell>}
+                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.CGST}</TableCell>}
+                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.SGST}</TableCell>}
                                           <TableCell>{convertNumberFormat(elem.amount)}</TableCell>
                                         </TableRow>
                                       )
