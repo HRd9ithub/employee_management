@@ -452,13 +452,13 @@ const InvoiceComponent = () => {
                     <TableRow>
                       <TableCell style={{ width: "10px", padding: "16px 0" }} />
                       <TableCell>
-                        <TableSortLabel active={orderBy === "issue_date"} direction={orderBy === "issue_date" ? order : "asc"} onClick={() => handleRequestSort("issue_date")}>
-                          Date
+                        <TableSortLabel active={orderBy === "invoiceId"} direction={orderBy === "invoiceId" ? order : "asc"} onClick={() => handleRequestSort("invoiceId")}>
+                          Invoice Id
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "invoiceId"} direction={orderBy === "invoiceId" ? order : "asc"} onClick={() => handleRequestSort("invoiceId")}>
-                          Invoice Id
+                        <TableSortLabel active={orderBy === "issue_date"} direction={orderBy === "issue_date" ? order : "asc"} onClick={() => handleRequestSort("issue_date")}>
+                          Date
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -472,7 +472,9 @@ const InvoiceComponent = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        status
+                        <TableSortLabel active={orderBy === "status"} direction={orderBy === "status" ? order : "asc"} onClick={() => handleRequestSort("status")}>
+                          Status
+                        </TableSortLabel>
                       </TableCell>
                       <TableCell>
                         Action
@@ -493,8 +495,8 @@ const InvoiceComponent = () => {
                                 {open === val._id ? <RemoveIcon /> : <AddIcon />}
                               </IconButton>
                             </TableCell>
-                            <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceId}</TableCell>
+                            <TableCell>{moment(val.issue_date).format("DD MMM YYYY")}</TableCell>
                             <TableCell>{val.invoiceClient.name}</TableCell>
                             <TableCell>{val.currency.slice(6)} {convertNumberFormat(parseFloat(val.totalAmount).toFixed(2))}</TableCell>
                             <TableCell><InvoiceStatusModal data={val} fetchInvoice={fetchInvoice} /></TableCell>

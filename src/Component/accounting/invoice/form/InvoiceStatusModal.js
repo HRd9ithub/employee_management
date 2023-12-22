@@ -170,7 +170,7 @@ function InvoiceStatusModal({ data, fetchInvoice }) {
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}>Update</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}>Pay</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
                                     </div>
                                 </form>

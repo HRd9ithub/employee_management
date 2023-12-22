@@ -1616,11 +1616,6 @@
         font-size: 1.6rem;
     }
 
-    /* .modal-button .btn {
-        width: 29% !important;
-        height: 35px !important;
-    } */
-
     .sidebar-offcanvas {
         left: -55%;
     }
@@ -2944,6 +2939,15 @@
         width: 100%;
     }
 
+    .modal-button {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .modal-button .btn, .submit-section .btn{
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
     .currency-dropdown{
         width:  100% !important;
     }
@@ -3596,10 +3600,6 @@
         font-size: 12px !important;
     }
 
-    .modal-button .btn {
-        width: 33% !important;
-    }
-
     .animate-celebration-content p {
         width: 95%;
     }
@@ -3927,10 +3927,6 @@
 
     .user-modal .modal-button button {
         width: 32% !important;
-    }
-
-    .modal-button .btn {
-        width: 40% !important;
     }
 }
 
