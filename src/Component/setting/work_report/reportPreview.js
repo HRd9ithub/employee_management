@@ -34,7 +34,7 @@ const ReportPreview = () => {
         }).catch((error) => {
             setisLoading(false)
             if (!error.response) {
-                toast.error(error.message);
+                toast.error(error.message || "something went wrong.");
             } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message);
