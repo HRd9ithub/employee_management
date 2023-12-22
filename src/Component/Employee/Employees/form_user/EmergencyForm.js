@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
-import { alphSpaceFormat, alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
+import { alphSpaceFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 
 const EmergencyForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props
@@ -122,9 +122,9 @@ const EmergencyForm = (props) => {
 
     // # validation for address
     const relationshipValidtion = () => {
-        if (!emergency.relationship) {
+        if (!emergency.relationship.trim()) {
             setrelationshipError("Relation ship is a required field.");
-        } else if (!alphabetFormat.test(emergency.relationship)) {
+        } else if (!alphSpaceFormat.test(emergency.relationship)) {
             setrelationshipError("Relation ship must be alphabetic.");
         } else {
             setrelationshipError("")
