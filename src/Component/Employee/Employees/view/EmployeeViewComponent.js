@@ -442,7 +442,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1 '
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].photo.split(".").pop() !== 'doc' && data.user_document[0].photo.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}` : data.user_document[0].joining_letter.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0]?.photo?.split(".")?.pop() !== 'doc' && data.user_document[0].photo?.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}` : data.user_document[0].joining_letter?.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'> Photo</p>
@@ -452,7 +452,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1 '
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].id_proof.split(".").pop() !== 'doc' && data.user_document[0].id_proof.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].id_proof}` : data.user_document[0].id_proof.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0].id_proof.split(".").pop() !== 'doc' && data.user_document[0].id_proof.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].id_proof}` : data.user_document[0].id_proof.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'>Identity Proof</p>
@@ -462,7 +462,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1 '
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].joining_letter.split(".").pop() !== 'doc' && data.user_document[0].joining_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].joining_letter}` : data.user_document[0].joining_letter.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0].joining_letter.split(".").pop() !== 'doc' && data.user_document[0].joining_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].joining_letter}` : data.user_document[0].joining_letter.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'> Joining letter</p>
@@ -472,7 +472,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1'
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].offer_letter.split(".").pop() !== 'doc' && data.user_document[0].offer_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}` : data.user_document[0].offer_letter.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0].offer_letter.split(".").pop() !== 'doc' && data.user_document[0].offer_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}` : data.user_document[0].offer_letter.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'> offer letter</p>
@@ -482,7 +482,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1 '
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].resume.split(".").pop() !== 'doc' && data.user_document[0].resume.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}` : data.user_document[0].resume.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0].resume.split(".").pop() !== 'doc' && data.user_document[0].resume.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}` : data.user_document[0].resume.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'> resume</p>
@@ -492,7 +492,7 @@ const EmployeeViewComponent = () => {
                                                                                             <img
                                                                                                 className='mt-1 '
                                                                                                 style={{ width: '70px', height: '70px' }}
-                                                                                                src={(data.user_document[0].other.split(".").pop() !== 'doc' && data.user_document[0].other.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}` : data.user_document[0].other.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                                                src={(data.user_document[0].other.split(".").pop() !== 'doc' && data.user_document[0].other.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}` : data.user_document[0].other.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                                                 alt="file"
                                                                                             />
                                                                                             <p className='document-title'> other</p>
