@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import convertNumberFormat from '../../../../service/NumberFormat';
 
 const ItemComponent = (props) => {
-    const { removeRowTable, tableData, handleItemchange, itemNameError, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency } = props
+    const { removeRowTable, tableData, handleItemchange, itemNameError, tax, setitemNameError, rateError, setrateError, quantiyError, setquantiyError, currency } = props
 
     return (
         <>
@@ -13,8 +13,11 @@ const ItemComponent = (props) => {
                         <thead className='head-item'>
                             <tr>
                                 <th>Item Name</th>
+                                {tax && <th>GST</th>}
                                 <th>Rate</th>
                                 <th>Quantity</th>
+                                {tax === "IGST" && <th>IGST</th>}
+                                {tax === "CGST" && <><th>CGST</th><th>SGST</th></>}
                                 <th>Amount({currency.value?.slice(6)})</th>
                                 <th></th>
                             </tr>
@@ -25,7 +28,7 @@ const ItemComponent = (props) => {
                                     <tr key={ind} className="table-border">
                                         <td>
                                             <div style={{ height: "38px" }}>
-                                                <input className='form-control' placeholder='item name' name="itemName" type="text" value={itemData.itemName} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                <input className='form-control' placeholder='item name' name="itemName" type="text" value={itemData.itemName || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
                                                     if (!itemData.itemName.trim()) {
                                                         let list = itemNameError.filter((val) => {
                                                             return val.id === ind
@@ -45,9 +48,10 @@ const ItemComponent = (props) => {
                                                 ))}
                                             </div>
                                         </td>
+                                        {tax && <td><input className='form-control' type="text" value={itemData.GST || ""} name='GST' onChange={(e) => handleItemchange(e, ind)} /></td>}
                                         <td>
                                             <div style={{ height: "38px" }}>
-                                                <input className='form-control' type="number" min="0" name="rate" value={itemData.rate} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                <input className='form-control' type="number" min="0" name="rate" value={itemData.rate || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
                                                     if (!itemData.rate.trim()) {
                                                         let list = rateError.filter((val) => {
                                                             return val.id === ind
@@ -89,6 +93,8 @@ const ItemComponent = (props) => {
                                                 ))}
                                             </div>
                                         </td>
+                                        {tax === "IGST" && <td><input className='form-control' type="text" value={itemData.IGST} readOnly /></td>}
+                                        {tax === "CGST" && <><td><input className='form-control' type="text" value={itemData.CGST} readOnly /></td><td><input className='form-control' type="text" value={itemData.SGST} readOnly /></td></>}
                                         <td><input className='form-control' type="text" value={convertNumberFormat(itemData.amount)} readOnly /></td>
                                         {ind > 0 &&
                                             <td onClick={() => removeRowTable(ind)} className="text-center"><i className="fa-solid fa-xmark text-maroon"></i></td>}
