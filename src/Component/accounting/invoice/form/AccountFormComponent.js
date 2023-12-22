@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { motion } from "framer-motion";
-import Spinner from '../../../common/Spinner';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, alphaNumFormat, numberFormat } from "../../../common/RegaulrExp";
-import Error500 from '../../../error_pages/Error500';
-import Error403 from '../../../error_pages/Error403';
+import { Modal } from 'react-bootstrap';
+import Spinner from '../../../common/Spinner';
 
-const AccountFormComponent = (props) => {
-  // let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
+const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
   const [account, setAccount] = useState({
     bank_name: '',
     account_number: '',
@@ -18,7 +14,8 @@ const AccountFormComponent = (props) => {
     name: '',
     branch_name: ''
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [bankAllDetail, setbankAllDetail] = useState([]);
+  const [bankId, setBankId] = useState("");
   const [bank_name_error, setBank_name_error] = useState('')
   const [account_number_error, setaccount_number_error] = useState('')
   const [ifsc_code_error, setifsc_code_error] = useState('')
@@ -26,48 +23,57 @@ const AccountFormComponent = (props) => {
   const [name_error, setname_error] = useState('')
   const [isLoading, setisLoading] = useState(false);
   const [error, setError] = useState([]);
-  const [serverError, setServerError] = useState(false);
-  const [permission, setPermission] = useState("");
+  const [show, setShow] = useState(false);
 
-  const history = useNavigate();
+  // modal show function
+  const handleShow = () => {
+    if (bankDetail) {
+      setAccount({
+        bank_name: bankDetail.bank,
+        account_number: bankDetail.account_number,
+        ifsc_code: bankDetail.ifsc_code,
+        name: bankDetail.name,
+        branch_name: bankDetail.branch_name,
+        _id: bankDetail._id
+      });
+      setBankId(bankDetail._id)
+    }
+    setShow(true);
+  }
 
-  const { id } = useParams();
-
-  /*  -------------------------------
-      get data in database
-  ----------------------------------- */
+  // modal close function
+  const handleClose = (e) => {
+    e.preventDefault();
+    setShow(false);
+    setAccount({
+      bank_name: '',
+      account_number: '',
+      ifsc_code: '',
+      user_id: '',
+      name: '',
+      branch_name: ''
+    });
+    setBank_name_error('')
+    setaccount_number_error('')
+    setifsc_code_error('')
+    setbranch_name_error('');
+    setname_error('')
+  }
 
   const getAccountDetail = async () => {
-    setServerError(false)
     setisLoading(true);
 
-    customAxios().get(`invoice/account/${id}`).then((res) => {
+    customAxios().get(`invoice/account`).then((res) => {
       if (res.data.success) {
-        const { data, permissions } = res.data;
-        if (data) {
-          const { bank, account_number, ifsc_code, branch_name, name, _id } = data;
-          setAccount({
-            bank_name: bank,
-            account_number: account_number,
-            ifsc_code: ifsc_code,
-            name: name,
-            branch_name: branch_name,
-            _id: _id
-          });
-          setIsEditing(true)
-        }
-        setPermission(permissions)
+        const { data } = res.data;
+        setbankAllDetail(data);
         setisLoading(false);
       }
     }).catch((error) => {
       setisLoading(false);
       if (!error.response) {
-        setServerError(true)
         toast.error(error.message);
       } else {
-        if (error.response.status === 500) {
-          setServerError(true)
-        }
         if (error.response.data.message) {
           toast.error(error.response.data.message)
         }
@@ -76,9 +82,10 @@ const AccountFormComponent = (props) => {
   }
 
   useEffect(() => {
-    getAccountDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (show) {
+      getAccountDetail();
+    }
+  }, [show])
 
   /*  -------------------------------
       form function
@@ -89,6 +96,32 @@ const AccountFormComponent = (props) => {
     let { value, name } = event.target
 
     setAccount({ ...account, [name]: value })
+  }
+
+  const handleAccount = (event) => {
+    if (event.target.value) {
+      const data = bankAllDetail.find((val) => {
+        return val._id === event.target.value;
+      })
+      setAccount({
+        bank_name: data.bank,
+        account_number: data.account_number,
+        ifsc_code: data.ifsc_code,
+        name: data.name,
+        branch_name: data.branch_name,
+        _id: data._id
+      });
+      setBankId(data._id)
+    } else {
+      setAccount({
+        bank_name: '',
+        account_number: '',
+        ifsc_code: '',
+        name: '',
+        branch_name: ''
+      })
+      setBankId("")
+    }
   }
 
   // bank name validation
@@ -173,14 +206,14 @@ const AccountFormComponent = (props) => {
 
     let url = "";
     setisLoading(true);
-    if (isEditing) {
+    if (bankId) {
       url = customAxios().put(`/invoice/account/${_id}`, {
         bank: bank_name,
         account_number: account_number,
         ifsc_code: ifsc_code,
         branch_name: branch_name,
         name: name,
-        invoice_id: id
+        status: true
       });
     } else {
       url = customAxios().post('/invoice/account/', {
@@ -189,13 +222,13 @@ const AccountFormComponent = (props) => {
         ifsc_code: ifsc_code,
         branch_name: branch_name,
         name: name,
-        invoice_id: id
       });
     }
     url.then((result) => {
       if (result.data.success) {
+        getSingleAccountDetail();
+        setShow(false);
         toast.success(result.data.message);
-        history(`/invoice/preview/${id}`);
         setAccount({
           bank_name: '',
           account_number: '',
@@ -204,7 +237,6 @@ const AccountFormComponent = (props) => {
           name: '',
           branch_name: ''
         });
-        setIsEditing(false);
       }
     }).catch((error) => {
       if (!error.response) {
@@ -221,104 +253,105 @@ const AccountFormComponent = (props) => {
     })
   }
 
-  if (isLoading) {
-    return <Spinner />
-  } else if (serverError) {
-    return <Error500 />
-  }else if (!permission || permission.name.toLowerCase() !== "admin") {
-    return <Error403 />;
-}
+
+  // number encrypt 
+  const obscurenumber = (no) => {
+    const length = no.length;
+    const sliceno = no.slice(length - 5);
+    return sliceno.padStart(length, "✶");
+  };
 
   return (
     <>
-      <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=" container-fluid pt-4">
-          <div className="background-wrapper bg-white pt-4">
-            {/* ====================== breadcrumb */}
-            <div>
-              <div className='row justify-content-start align-items-center row-std m-0'>
-                <div className="col-12 col-sm-8 d-flex justify-content-between align-items-center">
-                  <div>
-                    <ul id="breadcrumb" className="mb-0">
-                      <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                      <li><NavLink to="/invoice" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Invoice</NavLink></li>
-                      <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Payment</NavLink></li>
-                    </ul>
+      {bankDetail ?
+        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={handleShow} >
+          <i className="fa-solid fa-gear"></i>&nbsp;Edit Bank Details
+        </button> :
+        <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={handleShow} >
+          <i className="fa-solid fa-gear"></i>&nbsp;Add Bank Details
+        </button>}
+      <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" centered>
+        <Modal.Header className='small-modal'>
+          <Modal.Title>Bank Detail</Modal.Title>
+          <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
+        </Modal.Header>
+        <Modal.Body>
+          <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+            <div className="card">
+              <div className="card-body">
+                <form className="forms-sample">
+                  <div className="row pt-2">
+                    {bankDetail &&
+                      <div className="col-md-12 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                          <label htmlFor="2" className='mt-2'>Select Bank Account</label>
+                          <select className="form-control" onChange={handleAccount} value={bankId}>
+                            {bankAllDetail.map((val) => {
+                              return (
+                                <option value={val._id} key={val._id}>{obscurenumber(val.account_number)} ({val.bank})</option>
+                              )
+                            })}
+                            <option value="">Add New Account</option>
+                          </select>
+                        </div>
+                      </div>}
+                    <div className="col-md-6 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="2" className='mt-2'>Account Number</label>
+                        <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
+                        {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
+                      </div>
+                    </div>
+                    <div className="col-md-6 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="3" className='mt-2'>IFSC Code</label>
+                        <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
+                        {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
+                      </div>
+                    </div>
+                    <div className="col-md-6 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="1" className='mt-2'> Bank Name</label>
+                        <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
+                        {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
+                      </div>
+                    </div>
+                    <div className="col-md-6 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="6" className='mt-2'> Branch Name</label>
+                        <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
+                        {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
+                      </div>
+                    </div>
+                    <div className="col-md-12 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="3" className='mt-2'>Account Holder Name</label>
+                        <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
+                        {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
+                      </div>
+                    </div>
+                    {error.length !== 0 &&
+                      <div className="col-12">
+                        <ol>
+                          {error.map((elem) => {
+                            return <li className='error' key={elem}>{elem}</li>
+                          })}
+                        </ol>
+                      </div>}
+                    <div className="col-12">
+                      <div className="submit-section d-flex justify-content-between pb-3">
+                        <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
+                        <button className="btn btn-light" onClick={handleClose} >Cancel</button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
+                </form>
               </div>
             </div>
-            <form className="forms-sample px-4">
-              <div className="row py-4">
-                <div className="col-md-4">
-                  <div className="form-group mb-0">
-                    <label htmlFor="2" className='mt-2'>Select Bank Account</label>
-                    <select className="form-control">
-                      <option value="">Select Bank Account</option>
-                      <option value="testuser">Test User</option>
-                      <option value="testuser">Test User</option>
-                      <option value="testuser">Test User</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <hr className="my-0"/>
-              <div className="row py-4">
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="2" className='mt-2'>Account Number</label>
-                    <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
-                    {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="3" className='mt-2'>IFSC Code</label>
-                    <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
-                    {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="1" className='mt-2'> Bank Name</label>
-                    <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
-                    {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="6" className='mt-2'> Branch Name</label>
-                    <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
-                    {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="form-group">
-                    <label htmlFor="3" className='mt-2'>Account Holder Name</label>
-                    <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
-                    {name_error && <small id="emailHelp" className="form-text error">{name_error}</small>}
-                  </div>
-                </div>
-                {error.length !== 0 &&
-                  <div className="col-12">
-                    <ol>
-                      {error.map((elem) => {
-                        return <li className='error' key={elem}>{elem}</li>
-                      })}
-                    </ol>
-                  </div>}
-                <div className="col-12">
-                  <div className="submit-section d-flex justify-content-between pb-3">
-                    <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
-                    <button className="btn btn-light" onClick={() => history(`/invoice/preview/${id}`)} >Skip</button>
-                  </div>
-                </div>
-              </div>
-            </form>
           </div>
-        </div>
-      </motion.div>
+        </Modal.Body>
+        {isLoading && <Spinner />}
+      </Modal>
     </>
   )
 }

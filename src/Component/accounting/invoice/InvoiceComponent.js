@@ -408,21 +408,21 @@ const InvoiceComponent = () => {
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-file-invoice-dollar"></i>
                       <p className="mb-0">Invoice Amount</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hourglass-end"></i>
                       <p className="mb-0">Due</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(totalAmount - receivedAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(totalAmount - receivedAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                   <div className="col-sm-6 col-md-3">
                     <div className="invoice-summery-card">
                       <i className="fa-solid fa-hand-holding-dollar"></i>
                       <p className="mb-0">Paid</p>
-                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(receivedAmount)}</h3>
+                      <h3 className="mb-0">&#x20B9; {convertNumberFormat(parseFloat(receivedAmount).toFixed(2))}</h3>
                     </div>
                   </div>
                 </div>
@@ -525,8 +525,12 @@ const InvoiceComponent = () => {
                                   <TableHead className="common-header">
                                     <TableRow>
                                       <TableCell>Item Name</TableCell>
+                                      {val.gstType && <TableCell>GST</TableCell>}
                                       <TableCell>Rate</TableCell>
                                       <TableCell >Quantity</TableCell>
+                                      {val.gstType === "IGST" && <TableCell>IGST</TableCell>}
+                                      {val.gstType === "CGST & SGST" && <TableCell>CGST</TableCell>}
+                                      {val.gstType === "CGST & SGST" && <TableCell>SGST</TableCell>}
                                       <TableCell >Amount ({val.currency.slice(6)})</TableCell>
                                     </TableRow>
                                   </TableHead>
@@ -535,8 +539,12 @@ const InvoiceComponent = () => {
                                       return (
                                         <TableRow key={elem._id}>
                                           <TableCell component="th" scope="row">{elem.itemName}</TableCell>
+                                          {val.gstType && <TableCell>{elem.GST}</TableCell>}
                                           <TableCell>{elem.rate}</TableCell>
                                           <TableCell>{elem.quantity}</TableCell>
+                                          {val.gstType === "IGST" && <TableCell>{elem.IGST}</TableCell>}
+                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.CGST}</TableCell>}
+                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.SGST}</TableCell>}
                                           <TableCell>{convertNumberFormat(elem.amount)}</TableCell>
                                         </TableRow>
                                       )

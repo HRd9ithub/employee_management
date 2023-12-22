@@ -272,15 +272,15 @@ const InvoiceFormComponent = ({ setProgress }) => {
     }, [tableData])
 
     const TOTALSGST = useMemo(() => {
-        return tableData.reduce((total, cur) => {
+        return parseFloat(tableData.reduce((total, cur) => {
             return total + (tax === "CGST" && parseFloat(cur.SGST)) 
-        }, 0)
+        }, 0)).toFixed(2)
     }, [tableData])
 
     const TOTALIGST = useMemo(() => {
-        return tableData.reduce((total, cur) => {
+        return parseFloat(tableData.reduce((total, cur) => {
             return total + (tax === "IGST" && parseFloat(cur.IGST)) 
-        }, 0)
+        }, 0)).toFixed(2)
     }, [tableData])
 
     /*---------------------
@@ -451,10 +451,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     toast.success(result.data.message);
                     if (status) {
                         navigate("/invoice");
-                    } else if (id) {
+                    } else{
                         navigate(`/invoice/preview/${result.data.id}`);
-                    } else {
-                        navigate(`/invoice/payment/${result.data.id}`);
                     }
                 }
             }).catch((error) => {
@@ -708,7 +706,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='issue_date' className="mb-0">Issue Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { issueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='issue_date' value={heading.issue_date} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
+                                                                <input type="date" className='form-control' name='issue_date' value={heading.issue_date || ""} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
                                                                 {issueDateError && <small id="invoiceId" className="form-text error">{issueDateError}</small>}
                                                             </td>
@@ -716,7 +714,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date} onChange={headingChange} />
+                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
                                                             </td>
                                                         </tr>
