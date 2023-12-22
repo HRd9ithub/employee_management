@@ -33,15 +33,14 @@ const ReportPreview = () => {
             setisLoading(false)
         }).catch((error) => {
             setisLoading(false)
-            if (!error.response) {
-                toast.error(error.message);
+            if (!error.response || !error) {
+                toast.error(error?.message || "something went wrong.");
+            } else if (error.response.data.message) {
+                toast.error(error.response.data.message);
             } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message);
-                } else {
-                    toast.error(error.response.statusText);
-                }
+                toast.error(error.response.statusText);
             }
+
         })
     }
 
@@ -69,7 +68,7 @@ const ReportPreview = () => {
                                 </button >
                             </div>
                         </div>
-                        <div className="d-flex justify-content-start align-content-center flex-wrap px-4 mt-3" style={{gap: '7px'}}>
+                        <div className="d-flex justify-content-start align-content-center flex-wrap px-4 mt-3" style={{ gap: '7px' }}>
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">
                                 <h6 className="mb-0">Total Working Days</h6>
                                 <h6 className="mb-0">{summary.dayCount}</h6>
