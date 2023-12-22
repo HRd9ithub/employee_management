@@ -27,6 +27,7 @@ const InvoicePreviewComponent = () => {
     const [invoiceProvider, setinvoiceProvider] = useState("");
     const [bankDetail, setbankDetail] = useState("");
     const [permission, setpermission] = useState("");
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     const Navigate = useNavigate();
     const componentRef = useRef();
@@ -72,6 +73,7 @@ const InvoicePreviewComponent = () => {
     const getInvoiceDetail = async () => {
         setServerError(false)
         setisLoading(true);
+        setPermissionToggle(true)
 
         customAxios().get(`invoice/${id}`).then((res) => {
             if (res.data.success) {
@@ -83,6 +85,7 @@ const InvoicePreviewComponent = () => {
                 }
                 setpermission(permissions);
                 setisLoading(false);
+
             }
         }).catch((error) => {
             setisLoading(false);
@@ -97,7 +100,7 @@ const InvoicePreviewComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        });
+        }).finally(() => setPermissionToggle(false))
     }
 
     useEffect(() => {
@@ -186,7 +189,7 @@ const InvoicePreviewComponent = () => {
         return <Spinner />
     } else if (serverError) {
         return <Error500 />
-    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
+    } else if ((!permission || permission.name.toLowerCase() !== "admin") && !permissionToggle) {
         return <Error403 />;
     }
 
@@ -267,7 +270,7 @@ const InvoicePreviewComponent = () => {
                                                             </tr>
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Total Amount:</span></td>
-                                                                <td><span className='invoice-value-summary'>{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</span></td>
+                                                                <td><span className='invoice-value-summary'>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -331,7 +334,7 @@ const InvoicePreviewComponent = () => {
                                                     }
                                                     <tr>
                                                         <td>Total Amount</td>
-                                                        <td className="text-black">{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
+                                                        <td className="text-black">{invoiceDetail.currency?.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -375,7 +378,7 @@ const InvoicePreviewComponent = () => {
                                                     {invoiceDetail.gstType === "IGST" && <th>IGST</th>}
                                                     {invoiceDetail.gstType === "CGST & SGST" && <th>CGST</th>}
                                                     {invoiceDetail.gstType === "CGST & SGST" && <th>SGST</th>}
-                                                    <th>Amount({invoiceDetail.currency.slice(6)})</th>
+                                                    <th>Amount({invoiceDetail.currency?.slice(6)})</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -396,10 +399,10 @@ const InvoicePreviewComponent = () => {
                                                 })}
                                                 <tr className='total-column'>
                                                     <td colSpan={invoiceDetail.gstType ? 5 : 4}>Total</td>
-                                                    {invoiceDetail.gstType === "IGST" && <td>{invoiceDetail.currency.slice(6)} {convertNumberFormat(TOTALIGST)}</td>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
-                                                    <td>{invoiceDetail.currency.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
+                                                    {invoiceDetail.gstType === "IGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALIGST)}</td>}
+                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
+                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
+                                                    <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

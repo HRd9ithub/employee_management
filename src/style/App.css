@@ -98,6 +98,10 @@ h6,
 .error {
   color: #e50914;
   font-size: 13px;
+  text-transform: lowercase;
+}
+.error::first-letter{
+  text-transform: capitalize;
 }
 
 input[type=number]::-webkit-outer-spin-button,
