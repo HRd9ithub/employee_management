@@ -27,7 +27,6 @@ import ManageAttendance from '../attendance/ManageAttendance';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
 import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
 import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
-import AccountFormComponent from "../accounting/invoice/form/AccountFormComponent";
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 import ClientComponent from '../accounting/client/ClientComponent';
 
@@ -75,7 +74,7 @@ const AppRoute = ({setProgress}) => {
                     <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
                     <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
                     <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>} /> 
-                    <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} /> 
+                    {/* <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} />  */}
                     <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
                 </Route>       
                 {/* client route */}
