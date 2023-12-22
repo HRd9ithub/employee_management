@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion } from "framer-motion";
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
@@ -65,22 +66,12 @@ const InvoiceFormComponent = ({ setProgress }) => {
     const [contact, setContact] = useState("");
     const [terms, setTerms] = useState([{ name: "" }]);
 
+    const [gst, setGst] = useState("IGST");
+    const [tax, setTax] = useState("");
+
     const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
     const [show, setShow] = useState(false);
-    const [name, setName] = useState('');
-
-    // modal show function
-    const handleShow = () => {
-        
-        setShow(true)
-    }
-
-    // modal close function
-    const handleClose = (e) => {
-        e.preventDefault();
-        setShow(false)
-    }
 
     /*---------------------
         heading section
@@ -150,7 +141,20 @@ const InvoiceFormComponent = ({ setProgress }) => {
             rate: '1',
             amount: 1
         }]
-        settableData(data)
+        if (tax) {
+            const value = data.map(v => {
+                v.GST = v.GST ? v.GST : 18
+                const value1 = (v.quantity * v.rate * v.GST) / 100;
+                v = gst === "IGST" ? { ...v, IGST: parseFloat(value1).toFixed(2) } : { ...v, CGST: parseFloat(value1 / 2).toFixed(2), SGST: parseFloat(value1 / 2).toFixed(2) }
+                return {
+                    ...v,
+                    amount: v.quantity * v.rate + value1
+                }
+            })
+            settableData(value)
+        } else {
+            settableData(data)
+        }
     }
 
     //delete row in table
@@ -178,11 +182,51 @@ const InvoiceFormComponent = ({ setProgress }) => {
         const { name, value } = e.target;
         let list = [...tableData];
         list[ind][name] = value;
-        if (name === 'quantity') {
-            list[ind]['amount'] = tableData[ind].rate * value
-        }
-        if (name === 'rate') {
-            list[ind]['amount'] = tableData[ind].quantity * value
+
+        if (tax) {
+            switch (name) {
+                case "quantity":
+                    const value1 = (list[ind].rate * value * list[ind].GST) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(value1).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(value1 / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(value1 / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].rate * value + value1
+                    break;
+                case "rate":
+                    const value2 = (list[ind].quantity * value * list[ind].GST) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(value2).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(value2 / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(value2 / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].quantity * value + value2
+                    break;
+                case "GST":
+                    const IGST = (list[ind].quantity * value * list[ind].rate) / 100;
+                    if (gst === "IGST") {
+                        list[ind]['IGST'] = parseFloat(IGST).toFixed(2);
+                    } else {
+                        list[ind]['CGST'] = parseFloat(IGST / 2).toFixed(2);
+                        list[ind]['SGST'] = parseFloat(IGST / 2).toFixed(2);
+                    }
+                    list[ind]['amount'] = list[ind].quantity * list[ind].rate + IGST
+                    list[ind]['GST'] = value
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            if (name === 'quantity') {
+                list[ind]['amount'] = tableData[ind].rate * value
+            }
+            if (name === 'rate') {
+                list[ind]['amount'] = tableData[ind].quantity * value
+            }
         }
         settableData(list)
     }
@@ -213,8 +257,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
         const getcurrencyapi = async () => {
             if (currency.value) {
                 const code = currency?.value?.slice(0, 3)
-                const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=${code}&base_currency=INR`);
-                setcurrencyValue(parseFloat(res.data.data[code]).toFixed(2))
+                const res = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=ak9K98VbQDumCwq1xyLj5fCG1p2pBdjLOPhSVWin&currencies=INR&base_currency=${code}`);
+                setcurrencyValue(parseFloat(res.data.data.INR).toFixed(2))
             }
         }
         getcurrencyapi();
@@ -224,6 +268,18 @@ const InvoiceFormComponent = ({ setProgress }) => {
     const totalAmount = useMemo(() => {
         return tableData.reduce((total, cur) => {
             return total + cur.amount
+        }, 0)
+    }, [tableData])
+
+    const TOTALSGST = useMemo(() => {
+        return tableData.reduce((total, cur) => {
+            return total + (tax === "CGST" && parseFloat(cur.SGST)) 
+        }, 0)
+    }, [tableData])
+
+    const TOTALIGST = useMemo(() => {
+        return tableData.reduce((total, cur) => {
+            return total + (tax === "IGST" && parseFloat(cur.IGST)) 
         }, 0)
     }, [tableData])
 
@@ -381,7 +437,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
-
+            tax === "CGST" ? formdata.append('gstType', "CGST & SGST") : formdata.append('gstType',tax);
 
             let url = "";
             if (id) {
@@ -456,6 +512,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
+                    setTax(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"");
+                    setGst(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"IGST");
                     setcurrency({ value: result.currency, label: result.currency });
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
@@ -477,7 +535,6 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     })
                     setattchFile(file);
                     setContact(result?.contact);
-
                     let conditions = [];
                     if (result.terms.length !== 0) {
                         result.terms.forEach((val) => {
@@ -547,6 +604,53 @@ const InvoiceFormComponent = ({ setProgress }) => {
         setTerms(newData)
     }
 
+    /*----------------------
+        GST tax section
+    ------------------------*/
+
+    // modal show function
+    const handleShow = () => {
+        setShow(true)
+    }
+
+    // modal close function
+    const handleClose = (e) => {
+        e.preventDefault();
+        setShow(false)
+    }
+
+    // submit GST
+    const handleGst = (e) => {
+        e.preventDefault();
+        setTax(gst);
+        setShow(false);
+        const data = tableData.map(v => {
+            v.GST = v.GST ? v.GST : 18
+            const value1 = (v.quantity * v.rate * v.GST) / 100;
+            v = gst === "IGST" ? {
+                itemName: v.itemName,
+                quantity: v.quantity,
+                rate: v.rate,
+                amount: v.amount,
+                GST: v.GST,
+                IGST: parseFloat(value1).toFixed(2)
+            } : {
+                itemName: v.itemName,
+                quantity: v.quantity,
+                rate: v.rate,
+                amount: v.amount,
+                GST: v.GST, 
+                CGST: parseFloat(value1 / 2).toFixed(2),
+                SGST: parseFloat(value1 / 2).toFixed(2)
+            }
+            return {
+                ...v,
+                amount: v.quantity * v.rate + value1
+            }
+        })
+        settableData(data)
+    }
+
     if (isLoading) {
         return <Spinner />
     } else if (serverError) {
@@ -597,7 +701,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
                                                             <td className='common-head-invoice'>
-                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
+                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId || ""} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
                                                                 {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
                                                             </td>
                                                         </tr>
@@ -621,11 +725,11 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 return (
                                                                     <tr key={ind}>
                                                                         <td className='common-head-invoice field-input'>
-                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name || ""} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                         <td className='common-head-invoice'>
                                                                             <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
-                                                                            <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                            <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value || ""} onChange={(event) => handleFieldChange(event, ind)} />
                                                                         </td>
                                                                     </tr>
                                                                 )
@@ -716,7 +820,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
                                                             return (<React.Fragment key={val._id}>
-                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                                <Dropdown.Item className="list-client" value={val._id || ""} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                             </React.Fragment>)
                                                         })}
@@ -817,6 +921,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                     setrateError={setrateError}
                                     quantiyError={quantiyError}
                                     setquantiyError={setquantiyError}
+                                    tax={tax}
                                 />
 
                                 <div className='row my-3'>
@@ -826,7 +931,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                             <i className="fa-solid fa-plus"></i>&nbsp;Add More Item
                                         </button>
                                         <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width mb-2" onClick={handleShow}>
-                                            <i class="fa-solid fa-percent"></i>&nbsp;Add Tax
+                                            <i className="fa-solid fa-percent"></i>&nbsp;Add Tax
                                         </button>
                                     </div>
                                     <div className='col-sm-8'>
@@ -838,17 +943,36 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                             <p className="text-left mb-0">Sub Total:</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount).toFixed(2))}</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount - TOTALSGST - TOTALSGST - TOTALIGST).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
+                                                    {tax === "CGST" && 
                                                     <tr>
                                                         <td>
-                                                            <p className="text-left mb-0">Tax:</p>
+                                                            <p className="text-left mb-0">CGST:</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-right mb-0">0</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
                                                         </td>
-                                                    </tr>
+                                                    </tr>}
+                                                    {tax === "CGST" && 
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">SGST:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
+                                                        </td>
+                                                    </tr>}
+                                                    {tax === "IGST" && 
+                                                    <tr>
+                                                        <td>
+                                                            <p className="text-left mb-0">IGST:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="text-right mb-0">{TOTALIGST}</p>
+                                                        </td>
+                                                    </tr>}
                                                     <tr>
                                                         <td colSpan="2"><hr /></td>
                                                     </tr>
@@ -924,7 +1048,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                         <div className='additional-note'>
                                             <JoditEditor
                                                 ref={noteEditorRef}
-                                                value={note}
+                                                value={note || ""}
                                                 tabIndex={1}
                                                 onBlur={newContent => setNote(newContent)}
                                             />
@@ -939,7 +1063,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                 <ol>
                                                     {terms.map((val, ind) => (
                                                         <li className="position-relative" key={ind}>
-                                                            <input type="text" className='form-control bg-transparent' placeholder="Write Here..." value={val.name} onChange={(event) => termsChange(event.target.value, ind)} />
+                                                            <input type="text" className='form-control bg-transparent' placeholder="Write Here..." value={val.name || ""} onChange={(event) => termsChange(event.target.value, ind)} />
                                                             {ind !== 0 && <i className="fa-solid fa-xmark remove-field-icon" onClick={() => removeRowTerms(ind)}></i>}
                                                         </li>
                                                     ))}
@@ -955,7 +1079,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                 <h4>Contact Details <span>(Optional)</span></h4>
                                             </div>
                                             <div className='terms-conditions'>
-                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..." value={contact} onChange={contactChange} />
+                                                <input type="text" className='form-control bg-transparent' placeholder="For Any Enquiry..." value={contact || ""} onChange={contactChange} />
                                                 <small className="text-muted d-block">Ex: For any enquiry, reach out via email at example@gmail.com, call on +91 1234567890</small>
                                             </div>
                                         </div>
@@ -1006,21 +1130,20 @@ const InvoiceFormComponent = ({ setProgress }) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="form-group">
-                                        <label htmlFor="exampleInputfname" className='mt-3'>Select Tax Type</label>
+                                        <label htmlFor="exampleInputfname" className='mt-3' >Select Tax Type</label>
                                         <select className="form-control" disabled>
                                             <option value="gst" selected>GST</option>
-                                            <option value="taxies">Taxies</option>
                                         </select>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="exampleInputfname">GST Type</label>
                                         <div className="d-flex align-items-center gst-tax">
-                                            <Form.Check type={"radio"} label="IGST" className="pr-5"/>
-                                            <Form.Check type={"radio"} label="CGST & SGST"/>
+                                            <Form.Check type="radio" checked={gst === "IGST"} label="IGST" className="pr-5" name='GST' id="IGST" value={gst || ""} onChange={() => setGst("IGST")} />
+                                            <Form.Check type="radio" checked={gst === "CGST"} label="CGST & SGST" name='GST' id="CGST" value={gst || ""} onChange={() => setGst("CGST")} />
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2">Add</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleGst}>Add</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
                                     </div>
                                 </form>
