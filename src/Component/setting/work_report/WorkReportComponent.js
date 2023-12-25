@@ -345,9 +345,7 @@ const WorkReportComponent = () => {
                                         <h5 className="text-secondary mb-0">{currElem.hours}h</h5>
                                     </div>
                                     <hr />
-                                    <div>
-                                        {currElem.description}
-                                    </div>
+                                    <div className="report-description-preview" dangerouslySetInnerHTML={{__html : currElem.description}}></div>
                                 </div>
                             })}
                         </div>

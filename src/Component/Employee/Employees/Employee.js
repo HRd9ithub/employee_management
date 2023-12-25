@@ -21,7 +21,7 @@ const Employee = () => {
   const [searchItem, setsearchItem] = useState("");
 
   // pagination state
-  const [count, setCount] = useState(5)
+  const [count, setCount] = useState(100)
   const [page, setpage] = useState(0)
 
   // sort state

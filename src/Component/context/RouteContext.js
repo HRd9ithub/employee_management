@@ -15,6 +15,7 @@ const initialistate = {
     leave: [],
     leaveFilter: [],
     permission: "",
+    permissionToggle: true,
     serverError: false,
     userName: [],
     reportData: [],

@@ -120,9 +120,7 @@ const ReportPreview = () => {
                                                             {val.work?.map((currElem, ind) => {
                                                                 return <div className="card-body table_section" key={currElem._id}>
                                                                     <p style={{ fontWeight: "bold" }} className='mb-0'>{ind + 1}. {currElem.project?.name}</p>
-                                                                    <div className='w-100 text-wrap'>
-                                                                        {currElem.description}
-                                                                    </div>
+                                                                    <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                                                 </div>
                                                             })}
                                                         </TableCell>}
