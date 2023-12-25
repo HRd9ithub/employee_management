@@ -24,7 +24,7 @@ const Leave = () => {
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
 
-    let { getLeave, user_id, setuser_id, leave, startDate, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave, user_id, setuser_id, leave, startDate, permissionToggle,setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -214,7 +214,7 @@ const Leave = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 
