@@ -248,16 +248,14 @@ const WorkReportComponent = () => {
                             <Table className="common-table-section">
                                 <TableHead className="common-header">
                                     <TableRow>
-                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                            {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
-                                            Employee
-                                            {/* </TableSortLabel> */}
-                                        </TableCell>}
                                         <TableCell>
                                             <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                 Date
                                             </TableSortLabel>
                                         </TableCell>
+                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                            Employee
+                                        </TableCell>}
                                         <TableCell>
                                             <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
                                                 Total Hours
@@ -276,6 +274,7 @@ const WorkReportComponent = () => {
                                     {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                         return (
                                             <TableRow key={ind}>
+                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
                                                 {permission && permission.name.toLowerCase() === "admin" &&
                                                     <TableCell>
                                                         <div className='pr-3'>
@@ -283,7 +282,6 @@ const WorkReportComponent = () => {
                                                         </div>
                                                     </TableCell>
                                                 }
-                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
                                                 <TableCell>{val.totalHours}</TableCell>
                                                 <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
                                                 {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">

@@ -2422,7 +2422,7 @@ svg {
 }
 
 .experience-box .experience-list li .experience-user .before-circle {
-  background-color: #ddd;
+  background-color: #004b8f;
   border-radius: 50%;
   height: 10px;
   width: 10px;
@@ -5082,6 +5082,10 @@ select.form-control.currency-dropdown {
 .show>.btn-primary.dropdown-toggle:focus {
   box-shadow: none !important;
   outline: none !important;
+}
+
+.experience-list:last-child::before{
+  content: unset;
 }
 
 @media print {
