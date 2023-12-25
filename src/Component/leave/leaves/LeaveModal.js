@@ -339,7 +339,7 @@ const LeaveModal = (props) => {
                                 <form className="forms-sample">
                                     <div className="row">
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                            <div className="col-md-6">
+                                            <div className="col-md-6 pr-md-2 pl-md-2">
                                                 <div className="form-group">
                                                     <label htmlFor="1">Employee</label>
                                                     <select className="form-control " id="user" name='user' disabled={data} value={info
@@ -358,7 +358,7 @@ const LeaveModal = (props) => {
                                                     {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
                                                 </div>
                                             </div>}
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="1"> Leave Type</label>
                                                 <select className="form-control text-capitalize " id="leaveType" name='leave_type_id' value={leave
@@ -373,7 +373,7 @@ const LeaveModal = (props) => {
                                                 {leave.leave_type_id_error && <small id="emailHelp" className="form-text error">{leave.leave_type_id_error}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group position-relative">
                                                 <label htmlFor="exampleInputJoining">From</label>
                                                 <input
@@ -393,7 +393,7 @@ const LeaveModal = (props) => {
                                                 {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group position-relative">
                                                 <label htmlFor="exampleInputJoining">To</label>
                                                 <input
@@ -413,13 +413,13 @@ const LeaveModal = (props) => {
                                                 {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="1"> Number of days</label>
                                                 <input type="text" className="form-control" id="1" value={day} disabled />
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="1"> Leave status</label>
                                                 <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
@@ -431,7 +431,7 @@ const LeaveModal = (props) => {
                                                 {status_info.leave_status_error && <small id="emailHelp" className="form-text error">{status_info.leave_status_error}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="1">Leave Reason</label>
                                                 <Form.Control as="textarea" onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
@@ -440,7 +440,7 @@ const LeaveModal = (props) => {
                                         </div>
 
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                            <div className="col-md-6">
+                                            <div className="col-md-6 pr-md-2 pl-md-2">
                                                 <div className="form-group">
                                                     <label htmlFor="1">Status</label>
                                                     <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
