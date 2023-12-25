@@ -114,11 +114,15 @@ const LeaveTypeModal = (props) => {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-3'> Leave Type</label>
-                                        <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={name} onChange={InputEvent} onBlur={HandleValidate} />
-                                        {error && <small id="emailHelp" className="form-text error">{error}</small>}
-                                        {Backerror && <small id="emailHelp" className="form-text error">{Backerror}</small>}
+                                    <div className="row">
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="1" className='mt-3'> Leave Type</label>
+                                                <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter Leave Type" name='name' value={name} onChange={InputEvent} onBlur={HandleValidate} />
+                                                {error && <small id="emailHelp" className="form-text error">{error}</small>}
+                                                {Backerror && <small id="emailHelp" className="form-text error">{Backerror}</small>}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>

@@ -33,7 +33,7 @@
 
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 1.2rem;
-        margin-left: 18px;
+        margin-left: 8px;
     }
 
     .navbar .navbar-menu-wrapper {
@@ -258,7 +258,7 @@
 
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 1.085rem;
-        margin-left: 13px;
+        /* margin-left: 13px; */
     }
 
     .gHZEHz {
@@ -714,11 +714,6 @@
         padding: 9px 0px;
     }
 
-    /* 
-    .brand-logo img {
-        width: 169px;
-    } */
-
     .sidebar .nav .nav-item .nav-link .menu-title {
         font-size: 0.85rem;
     }
@@ -733,15 +728,6 @@
     .sidebar .nav.sub-menu .nav-item .nav-link {
         padding: 0.75rem 2rem 0.75rem 1rem;
     }
-
-    /* 
-    .navbar {
-        padding-bottom: 11px !important;
-    } */
-
-    /* .sidebar-wrap {
-        padding-right: 11px;
-    } */
 
     #two .form-control-lg {
         height: 2.29rem;

@@ -169,28 +169,36 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
-                                    <div className='form-group'>
-                                        <label>File</label>
-                                        <div className='d-flex justify-content-between'>
-                                            <div className="custom-file">
-                                                <Form.Control type="file" className="form-control visibility-hidden" id="document" name='file' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
-                                                <label className="custom-file-label" htmlFor="document">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
+                                    <div className="row">
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className='form-group'>
+                                                <label>File</label>
+                                                <div className='d-flex justify-content-between'>
+                                                    <div className="custom-file">
+                                                        <Form.Control type="file" className="form-control visibility-hidden" id="document" name='file' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={fileChange} />
+                                                        <label className="custom-file-label" htmlFor="document">{`${document.imageName ? document.imageName : 'Upload file'}`}</label>
+                                                    </div>
+                                                    {data && <button disabled={!document.imageName || document.image} className='custom-file-btn'>
+                                                        <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
+                                                    </button>}
+                                                </div>
                                             </div>
-                                            {data && <button disabled={!document.imageName || document.image} className='custom-file-btn'>
-                                                <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
-                                            </button>}
+                                            {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                         </div>
-                                    </div>
-                                    {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
-                                    <div className="form-group">
-                                        <label htmlFor="1" className='mt-1'>File Name</label>
-                                        <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onBlur={validationName} />
-                                        {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="2" className='mt-1'>Description</label>
-                                        <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onBlur={validationDescription} />
-                                        {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="1" className='mt-1'>File Name</label>
+                                                <input type="text" className="form-control" id="1" placeholder="Enter your name" name='name' onChange={InputEvent} value={document.name} onBlur={validationName} />
+                                                {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="2" className='mt-1'>Description</label>
+                                                <input type="text" className="form-control" id="2" placeholder="Enter your description" name='description' onChange={InputEvent} value={document.description} onBlur={validationDescription} />
+                                                {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
+                                            </div>
+                                        </div>
                                     </div>
                                     {Error.length !== 0 && <ol>
                                         {Error.map((val) => {

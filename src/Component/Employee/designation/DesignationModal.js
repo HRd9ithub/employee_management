@@ -124,19 +124,23 @@ function DesignationModal({ data, getdesignation, permission }) {
             <div className="card">
               <div className="card-body">
                 <form className="forms-sample">
-                  <div className="form-group">
-                    <label htmlFor="exampleInputfname" className="mt-3">Designation Name</label>
-                    <input
-                      type="text"
-                      className="form-control text-capitalize"
-                      id="exampleInputfname"
-                      placeholder="Enter Designation name"
-                      name="name"
-                      value={name}
-                      onChange={InputEvent}
-                      onBlur={handlenameValidate}
-                    />
-                    {(nameError || error) && (<small id="emailHelp" className="form-text error">{nameError || error}</small>)}
+                  <div className="row">
+                    <div className="col-md-12 pr-md-2 pl-md-2">
+                      <div className="form-group">
+                        <label htmlFor="exampleInputfname" className="mt-3">Designation Name</label>
+                        <input
+                          type="text"
+                          className="form-control text-capitalize"
+                          id="exampleInputfname"
+                          placeholder="Enter Designation name"
+                          name="name"
+                          value={name}
+                          onChange={InputEvent}
+                          onBlur={handlenameValidate}
+                        />
+                        {(nameError || error) && (<small id="emailHelp" className="form-text error">{nameError || error}</small>)}
+                      </div>
+                    </div>
                   </div>
                   <div className="d-flex justify-content-center modal-button">
                     <button

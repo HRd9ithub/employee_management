@@ -160,7 +160,7 @@ function UserRoleModal({ data, getuserRole, permission }) {
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample row">
-                                    <div className="form-group col-12 ">
+                                    <div className="form-group col-12 pr-md-0 pl-md-0">
                                         <label htmlFor="1">User Role</label>
                                         <input type="text" className="form-control text-capitalize" id="1" placeholder="Enter user role" name="name" value={name} onChange={InputEvent} onBlur={handlenameValidate} />
                                         {error && (<small id="emailHelp" className="form-text error">{error}</small>)}
