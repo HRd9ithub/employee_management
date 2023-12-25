@@ -539,15 +539,6 @@ span.eye-icon {
   color: #0b53a0 !important;
 }
 
-.input-group {
-  border: 1px solid #7777776e;
-  border-radius: 5px;
-}
-
-.input-group-prepend .input-group-text {
-  padding: 5px 0px 5px 10px;
-}
-
 .swal2-icon.swal2-warning {
   border-color: #fb0000 !important;
   color: #fb0000 !important;
@@ -557,6 +548,9 @@ span.eye-icon {
 
 .card-body {
   padding: 0.25rem 1.25rem;
+}
+.card .card-body.set-padding {
+  padding: 1rem 1.5rem !important;
 }
 
 .btn-primary:hover,
@@ -1118,6 +1112,11 @@ span.eye-icon {
 .input-group {
   border: 1px solid #7777776e;
   border-radius: 5px;
+}
+
+.input-group-prepend + .form-control {
+  border: unset !important;
+  padding: 0 !important;
 }
 
 .input-group-prepend .input-group-text {
@@ -3187,8 +3186,7 @@ input[type="date"]::-webkit-clear-button {
 
 .input-search-full:focus {
   color: #000;
-  border-color: #80bdff;
-  border: 1px solid #80bdff;
+  border-color: #0a4a92;
   outline: 0;
   background-color: #fff;
   box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, .1);
@@ -4182,6 +4180,13 @@ input[type="search"] {
 }
 
 /* attendance page */
+.attendance-header h3 {
+  padding: 0 10px;
+  color: #004392;
+  border-left: 3px solid #004392;
+
+}
+
 .attendance-list-item {
   box-shadow: 0 0 4px rgba(0, 0, 0, .2);
 }
@@ -4244,6 +4249,7 @@ input[type="search"] {
 .attendance-list-item ul li:last-child div {
   border-bottom: none;
   padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .attendance-list-item ul li.punch-out::after {

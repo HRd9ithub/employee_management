@@ -149,7 +149,7 @@ return (
                                             <hr className='my-4' />
                                             <div className="form-group">
                                                 <h5 className="mb-0 text-gray mr-1">Comment</h5>
-                                                <textarea id='comment' rows={2} cols={10} className="form-control" name="Comment" value={comment} onChange={onChangeComment}/>
+                                                <textarea id='comment' rows={4} cols={10} className="form-control" name="Comment" value={comment} onChange={onChangeComment}/>
                                             </div>
                                             {error.length !== 0 &&
                                                 <ol>

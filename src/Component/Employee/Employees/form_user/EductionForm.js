@@ -207,7 +207,7 @@ return (
                             <i className="fa-solid fa-trash-can "></i>
                         </div>}
                         <div className="row">
-                            <div className="col-md-4">
+                            <div className="col-md-4 pr-md-2">
                                 <div className="form-group">
                                     <label htmlFor="2" className='mt-3'>University Name</label>
                                     <input type="text" className="form-control" id="2" placeholder="Enter university name" name='university_name' onChange={(event) => InputEvent(event, ind)} value={val.university_name} onBlur={() => handleuniversityValidate(ind)} autoComplete='off' />
@@ -220,7 +220,7 @@ return (
 
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 pl-md-2 pr-md-2">
                                 <div className="form-group">
                                     <label htmlFor="3" className='mt-3'>Degree</label>
                                     <input type="text" className="form-control" id="3" placeholder="Enter degree" name='degree' onChange={(event) => InputEvent(event, ind)} value={val.degree}  onBlur={() => handleDegreeValidate(ind)} autoComplete='off' />
@@ -232,7 +232,7 @@ return (
                                     })}
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 pl-md-2">
                                 <div className="form-group">
                                     <label htmlFor="1" className='mt-3'>Percentage</label>
                                     <input type="text" className="form-control" id="1" placeholder="Enter percentage" name='percentage' onChange={(event) => InputEvent(event, ind)} value={val.percentage}  onBlur={() => handlepercentageValidate(ind)} autoComplete='off' />
@@ -244,7 +244,7 @@ return (
                                     })}
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 pr-md-2">
                                 <div className="form-group">
                                     <label htmlFor="6" className='mt-3'>Year</label>
                                     <input type="text" className="form-control" id="6" placeholder="Enter year" name='year' onChange={(event) => InputEvent(event, ind)} value={val.year} onBlur={() => handleYearValidate(ind)}  maxLength={4} autoComplete='off' />

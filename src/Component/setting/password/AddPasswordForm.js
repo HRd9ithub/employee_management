@@ -290,7 +290,7 @@ const AddPasswordForm = (props) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="note" className='mt-3'>Note</label>
-                                                <textarea type="text" autoComplete='off' rows={2} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
+                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
                                                 {noteError && <small id="note" className="form-text error">{noteError}</small>}
                                             </div>
                                         </div>

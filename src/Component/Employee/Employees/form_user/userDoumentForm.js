@@ -180,7 +180,7 @@ const UserDoumentForm = (props) => {
         <>
             <form className="forms-sample mt-4">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Identity Proof</label>
                             <div className='d-flex justify-content-between'>
@@ -195,7 +195,7 @@ const UserDoumentForm = (props) => {
                             {idProoferror && <small id="id_proof" className="form-text error">{idProoferror}</small>}
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Photo</label>
                             <div className='d-flex justify-content-between'>
@@ -210,7 +210,7 @@ const UserDoumentForm = (props) => {
                             {photoerror && <small id="id_proof" className="form-text error">{photoerror}</small>}
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Resume File</label>
                             <div className='d-flex justify-content-between'>
@@ -224,7 +224,7 @@ const UserDoumentForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Offer Letter</label>
                             <div className='d-flex justify-content-between'>
@@ -238,7 +238,7 @@ const UserDoumentForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Joining Letter</label>
                             <div className='d-flex justify-content-between'>
@@ -252,7 +252,7 @@ const UserDoumentForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 pl-md-2 pr-md-2">
                         <div className='form-group'>
                             <label>Other</label>
                             <div className='d-flex justify-content-between'>
@@ -267,9 +267,9 @@ const UserDoumentForm = (props) => {
                         </div>
                     </div>
                     {error.map((elem) => {
-                        return <div className="col-12" key={elem}><li className='error'>{elem}</li></div>
+                        return <div className="col-12 pl-md-2 pr-md-2" key={elem}><li className='error'>{elem}</li></div>
                     })}
-                    <div className="col-12">
+                    <div className="col-12 pl-md-2 pr-md-2">
                         <div className="submit-section d-flex justify-content-between py-3">
                             <button className="btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
                             <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>

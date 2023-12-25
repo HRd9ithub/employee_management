@@ -137,7 +137,7 @@ const RequestModal = ({ data }) => {
                                 <form className="forms-sample">
                                     <div className="row">
                                         {/* ====================   select  Date ============*/}
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group position-relative">
                                                 <label htmlFor="work_date" className='mt-3'>Work Date</label>
                                                 <div onClick={() => { !data && ref.current.showPicker(); }}>
@@ -157,24 +157,30 @@ const RequestModal = ({ data }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             {/* ====================   description   ============*/}
                                             <div className="form-group">
                                                 <label htmlFor="request" className='mt-3'>Description</label>
-                                                <textarea name="description" id="request" cols="30" rows="2" className="form-control work-report-description" autoComplete="off" value={request.description} onChange={handleChange} onBlur={handleDescriptionValidation}></textarea>
+                                                <textarea name="description" id="request" cols="30" rows="4" className="form-control work-report-description" autoComplete="off" value={request.description} onChange={handleChange} onBlur={handleDescriptionValidation}></textarea>
                                                 {descriptionError && <small className="from-text error" id="request" >{descriptionError}</small>}
                                             </div>
                                         </div>
                                     </div>
                                     {error.length !== 0 &&
-                                        <ol>
-                                            {error?.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>}
-                                    <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSendRequest} >Send</button>
-                                        <button className="btn btn-light" onClick={handleRequestmodal}>Cancel</button>
+                                        <div className="row">
+                                            <div className="col-12 pl-md-2 pr-md-2">
+                                                <ol>
+                                                    {error?.map((val) => {
+                                                        return <li className='error' key={val}>{val}</li>
+                                                    })}
+                                                </ol>
+                                            </div>
+                                        </div>}
+                                    <div className="row">                                        
+                                        <div className='col-12 pl-md-2 pr-md-2 d-flex justify-content-center modal-button'>
+                                            <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSendRequest} >Send</button>
+                                            <button className="btn btn-light" onClick={handleRequestmodal}>Cancel</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
