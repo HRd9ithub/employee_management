@@ -362,7 +362,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                     <i className="fa-solid fa-trash-can " onClick={() => deleteRow(item._id, ind)}></i>
                                                 </div>}
                                                 <div className="row">
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-6">
                                                         {/* ====================   project select field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="project" className='mt-3'>Projects</label>
@@ -377,7 +377,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-6">
                                                         {/* ====================   hours field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="hours" className='mt-3'>Hours</label>
@@ -387,7 +387,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-12">
                                                         {/* ====================   description field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="description" className='mt-3' >Description</label>
@@ -405,9 +405,13 @@ function WorkReportModal({ data, permission, getReport }) {
                                     <div className="work-report-form">
                                         <NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink>
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
-                                        <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
+                                                <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />
+                                            </div>
+                                        </div>
                                     </div>
                                     {error.length !== 0 &&
                                         <ol>
