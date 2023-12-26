@@ -164,7 +164,7 @@ const ResetPassword = () => {
               <div className="login-page-logo text-center">
                 <img src='Images/d9_logo_black.png' alt="logo" />
               </div>
-              <img src="./Images/new-password.png" className='img-fluid side-img mx-auto' alt="" />
+              <img src="/Images/new-password.png" className='img-fluid side-img mx-auto' alt="" />
             </div>
             <div className="login-right col-lg-6 col-12 pl-0">
               <form onSubmit={handleSubmit}>
@@ -229,7 +229,7 @@ const ResetPassword = () => {
         : !isLoading &&
         <div className="row align-items-center px-0 py-4 link_expire">
           <div className="col-12 col-md-4 col-lg-4 col-lg-4 col-xxl-4 text-center">
-            <img src="./Images/warning-orange.png" alt="img" />
+            <img src="/Images/warning-orange.png" alt="img" />
           </div>
           <div className="col-12 col-md-8 col-lg-8 col-lg-8 col-xxl-8">
             <h2 className="link-expire-content">
