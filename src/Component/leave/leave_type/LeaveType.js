@@ -15,6 +15,7 @@ const LeaveType = () => {
     const [searchItem, setsearchItem] = useState("");
     const [permission, setpermission] = useState("");
     const [serverError, setServerError] = useState(false);
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -28,6 +29,7 @@ const LeaveType = () => {
     const getLeaveType = async () => {
         setisLoading(true);
         setServerError(false);
+        setPermissionToggle(true);
         customAxios().get('/leaveType/').then((res) => {
             let { success, data, permissions } = res.data;
             if (success) {
@@ -48,7 +50,7 @@ const LeaveType = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        })
+        }).finally(() => setPermissionToggle(false));
     };
 
     useEffect(() => {
@@ -110,7 +112,7 @@ const LeaveType = () => {
         return <Spinner />;
     }else if(serverError){
         return <Error500 />;
-    }else if (!permission || permission.permissions.list !== 1) {
+    }else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 

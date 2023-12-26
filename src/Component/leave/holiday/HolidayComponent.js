@@ -18,6 +18,7 @@ const HolidayComponent = () => {
     const [searchItem, setsearchItem] = useState("");
     const [permission, setpermission] = useState("");
     const [serverError, setServerError] = useState(false);
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -31,6 +32,7 @@ const HolidayComponent = () => {
     const get_holiday_detail = async () => {
         try {
             setisLoading(true);
+            setPermissionToggle(true);
             setServerError(false);
             const res = await customAxios().get('/holiday/');
             if (res.data.success) {
@@ -50,7 +52,8 @@ const HolidayComponent = () => {
                 }
             }
         } finally {
-            setisLoading(false)
+            setisLoading(false);
+            setPermissionToggle(false);
         }
     }
 
@@ -152,7 +155,7 @@ const HolidayComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 

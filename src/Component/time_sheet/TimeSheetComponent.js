@@ -27,6 +27,7 @@ const TimeSheetComponent = () => {
     const [user_id, setuser_id] = useState("");
     const [serverError, setServerError] = useState(false);
     const [searchItem, setsearchItem] = useState("");
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     let { get_username, userName, Loading } = useContext(AppProvider);
 
@@ -42,6 +43,7 @@ const TimeSheetComponent = () => {
     const getTimesheet = async (id, start, end) => {
         try {
             setisLoading(true)
+            setPermissionToggle(true)
             setServerError(false);
             const result = await customAxios().get(`/timesheet?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `);
             if (result.data.success) {
@@ -61,9 +63,8 @@ const TimeSheetComponent = () => {
                 }
             }
         } finally {
-            setTimeout(() => {
-                setisLoading(false)
-            }, 500)
+            setisLoading(false)
+            setPermissionToggle(false)
         }
     };
 
@@ -173,7 +174,7 @@ const TimeSheetComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
       }
 

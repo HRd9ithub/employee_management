@@ -22,6 +22,7 @@ const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
     const [records, setRecords] = useState([]);
     const [permission, setpermission] = useState("");
+    const [permissionToggle, setPermissionToggle] = useState(true);
     const [serverError, setServerError] = useState(false);
     const [toggle, settoggle] = useState(false);
     const [id, setId] = useState("");
@@ -46,6 +47,7 @@ const AttendanceComponent = () => {
     const getAttendance = async (start, end) => {
         try {
             setisLoading(true);
+            setPermissionToggle(true);
             setServerError(false);
             const res = await customAxios().get(`/attendance/?startDate=${start || startDate}&endDate=${end || endDate}`);
             if (res.data.success) {
@@ -105,7 +107,8 @@ const AttendanceComponent = () => {
                 }
             }
         } finally {
-            setisLoading(false)
+            setisLoading(false);
+            setPermissionToggle(false);
         }
     }
 
@@ -235,7 +238,7 @@ const AttendanceComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 

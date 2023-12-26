@@ -21,6 +21,7 @@ const ClientComponent = () => {
   const [permission, setpermission] = useState("");
   const [serverError, setServerError] = useState(false);
   const [searchItem, setsearchItem] = useState("");
+  const [permissionToggle, setPermissionToggle] = useState(true);
 
   const [tab, setTab] = useState('clients');
 
@@ -37,6 +38,7 @@ const ClientComponent = () => {
   const getClient = async () => {
     setServerError(false)
     setisLoading(true);
+    setPermissionToggle(true);
 
     customAxios().get(`/invoice/client`).then((res) => {
       if (res.data.success) {
@@ -58,7 +60,7 @@ const ClientComponent = () => {
           toast.error(error.response.data.message)
         }
       }
-    });
+    }).finally(() => setPermissionToggle(false))
   }
 
   useLayoutEffect(() => {
@@ -223,7 +225,7 @@ const ClientComponent = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if ((!permission || permission.name.toLowerCase() !== "admin") && !isLoading) {
+  } else if ((!permission || permission.name.toLowerCase() !== "admin") && !permissionToggle) {
     return <Error403 />;
   }
 

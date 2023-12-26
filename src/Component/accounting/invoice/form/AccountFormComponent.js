@@ -126,11 +126,9 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
 
   // bank name validation
   const handleBankNameValidate = () => {
-    if (!account.bank_name) {
+    if (!account.bank_name.trim()) {
       setBank_name_error("Bank name is a required field.")
-    } else if (!account.bank_name.match(alphSpaceFormat) || account.bank_name.trim().length <= 0) {
-      setBank_name_error("Bank name must be an alphabet and space only.")
-    } else {
+    }else {
       setBank_name_error('')
     }
   }
@@ -150,10 +148,7 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
       setaccount_number_error("Account number is a required field.")
     } else if (!account.account_number.toString().match(numberFormat)) {
       setaccount_number_error("Account number must be a number.")
-    } else if (account.account_number.toString().length < 12) {
-      setaccount_number_error("Your account number must be 12 characters.")
-    }
-    else {
+    } else {
       setaccount_number_error('')
     }
   }

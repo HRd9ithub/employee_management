@@ -32,6 +32,7 @@ const WorkReportComponent = () => {
     const [show, setShow] = useState(false)
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     let { get_username, userName } = useContext(AppProvider);
 
@@ -46,6 +47,7 @@ const WorkReportComponent = () => {
     // get report data
     const getReport = async (id, start, end) => {
         setisLoading(true);
+        setPermissionToggle(true);
         setServerError(false);
         customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `).then((result) => {
             if (result.data.success) {
@@ -67,7 +69,7 @@ const WorkReportComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        })
+        }).finally(() => setPermissionToggle(false));
     };
 
     useEffect(() => {
@@ -160,7 +162,7 @@ const WorkReportComponent = () => {
         return <Spinner />;
     }else if(serverError){
         return <Error500 />;
-    }else if (!permission || permission.permissions.list !== 1) {
+    }else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
       }
     

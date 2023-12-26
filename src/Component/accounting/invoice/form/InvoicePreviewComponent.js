@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {useEffect, useMemo, useRef, useState } from 'react'
 import { customAxios } from '../../../../service/CreateApi';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 import moment from 'moment';
 import { useReactToPrint } from 'react-to-print';
 import Swal from 'sweetalert2';
-import generatePDF, { Margin } from 'react-to-pdf';
 import Error403 from '../../../error_pages/Error403';
 import { Card, Dropdown } from 'react-bootstrap';
 import convertNumberFormat from '../../../../service/NumberFormat';
@@ -18,6 +17,8 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AccountFormComponent from './AccountFormComponent';
+import axios from 'axios';
+import fileDownload from 'js-file-download';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -46,7 +47,7 @@ const InvoicePreviewComponent = () => {
             if (res.data.success) {
                 const { data } = res.data;
                 if (data) {
-                   setbankDetail(data);
+                    setbankDetail(data);
                 }
                 setisLoading(false);
             }
@@ -149,14 +150,25 @@ const InvoicePreviewComponent = () => {
         INVOICE DOWNLOAD
     ----------------------*/
 
-    const invoiceDownload = useCallback(() => {
-        generatePDF(componentRef, {
-            method: "save",
-            filename: "invoice.pdf",
-            page: { margin: Margin.SMALL },
+    const invoiceDownload = async () => {
+        setisLoading(true)
+        axios.get(`${process.env.REACT_APP_API_KEY}/invoice/invoice-download?id=${id}`, {
+            responseType: 'blob',
+        }).then((res) => {
+            fileDownload(res.data, "invoice.pdf");
+            toast.success("Download successfully.")
+            setisLoading(false)
+        }).catch((error) => {
+            setisLoading(false)
+            if (!error.response || !error) {
+                toast.error(error?.message || "something went wrong.");
+            } else if (error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error(error.response.statusText);
+            }
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [componentRef.current])
+    }
 
     /* -------------------
         INVOICE PRINT
@@ -352,7 +364,7 @@ const InvoicePreviewComponent = () => {
                                                 <h4>{invoiceProvider.first_name?.concat(" ", invoiceProvider.last_name)}</h4>
                                                 <p className="mb-0">+91 {invoiceProvider.phone}</p>
                                                 <p className="mb-0 text-truncate">{invoiceProvider.email}</p>
-                                                {invoiceProvider.address && <p className="mb-0">{invoiceProvider.address?.concat(" ", invoiceProvider.state).concat(",", invoiceProvider.city).concat("-", clientData.postcode)}</p>}
+                                                {invoiceProvider.address && <p className="mb-0">{invoiceProvider.address?.concat(" ", invoiceProvider.state).concat(",", invoiceProvider.city).concat("-", invoiceProvider.postcode)}</p>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 mt-4">
@@ -441,7 +453,7 @@ const InvoicePreviewComponent = () => {
                                                             </table>
                                                         </div>
                                                     </div>}
-                                                {invoiceDetail.hasOwnProperty("attchmentFile") && invoiceDetail.attchmentFile.length !== 0 &&
+                                                {invoiceDetail.signImage &&
                                                     <div className="col-xl-4 col-lg-5 col-md-4 col-sm-6 ml-auto mt-4 signature-section">
                                                         <div style={{ backgroundColor: "rgb(247 250 255)", borderRadius: '5px' }}>
                                                             <img src={invoiceDetail.signImage} alt='signeture' width="100%" height="auto" />
@@ -463,7 +475,8 @@ const InvoicePreviewComponent = () => {
                                                         <h5 className='extra-heading'>Additional Notes</h5>
                                                         <div className="additional-notes-content" dangerouslySetInnerHTML={{ __html: invoiceDetail.note }}></div>
                                                     </div>}
-                                                {invoiceDetail.signImage &&
+
+                                                {invoiceDetail.hasOwnProperty("attchmentFile") && invoiceDetail.attchmentFile.length !== 0 &&
                                                     <div className="col-md-12 mt-4">
                                                         <h5 className='extra-heading'>Attachment</h5>
                                                         <ol className='mb-0'>
