@@ -244,7 +244,7 @@ const Dashboard = () => {
                {!isLoading && animateLoader &&
                     <div className="animate-celebration">
                          <div className="animate-celebration-content">
-                              <img src="./Images/birthday-emoji.png" alt="img" />
+                              <img src="/Images/birthday-emoji.png" alt="img" />
                               <h2 className='text-center my-3'>Happy Birthday</h2>
                               <p className='mb-0 text-center'>The warmest wishes to a great member of our team. May your special day be full of happiness, fun and cheer!</p>
                          </div>

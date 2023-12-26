@@ -64,7 +64,7 @@ const OtpVerification = () => {
             <div className="login-page-logo text-center">
               <img src='Images/d9_logo_black.png' alt="logo" />
             </div>
-            <img src="./Images/otp-2.png" className='img-fluid side-img mx-auto' alt="" />
+            <img src="/Images/otp-2.png" className='img-fluid side-img mx-auto' alt="" />
           </div>
           <div className="login-right col-lg-6 col-12 pl-0">
             <form onSubmit={handleSubmit}>

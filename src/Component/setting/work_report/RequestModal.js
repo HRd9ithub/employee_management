@@ -157,7 +157,7 @@ const RequestModal = ({ data }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
                                             {/* ====================   description   ============*/}
                                             <div className="form-group">
                                                 <label htmlFor="request" className='mt-3'>Description</label>

@@ -137,7 +137,7 @@ const AttendanceModal = ({ data, permission }) => {
                     <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="password-action--dropdown">
-                    {permission && permission.name.toLowerCase() !== "admin" && data && <>
+                    {permission && permission.name.toLowerCase() !== "admin" && <>
                         <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
                     </>}
                     {permission && permission.name.toLowerCase() === "admin" && <>
