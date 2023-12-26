@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
-import { alphSpaceDotFormat, numberFormat, percentageFormat } from '../../../common/RegaulrExp';
+import { numberFormat, percentageFormat } from '../../../common/RegaulrExp';
 
 const EductionForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
@@ -57,7 +57,7 @@ const EductionForm = (props) => {
 
     // degree name validation
     const handleDegreeValidate = (ind) => {
-        if (!eduction[ind].degree || eduction[ind].degree.trim().length <= 0) {
+        if (!eduction[ind].degree.trim()) {
             setdegree_error([...degree_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Degree is a required field.", id: ind }]);
@@ -71,16 +71,12 @@ const EductionForm = (props) => {
     }
     //  university name validation
     const handleuniversityValidate = (ind) => {
-        if (!eduction[ind].university_name) {
+        if (!eduction[ind].university_name.trim()) {
             setuniversity_name_error([...university_name_error.filter((val) => {
                 return val.id !== ind
             }), { name: "University name is a required field.", id: ind }]);
 
-        } else if (!eduction[ind].university_name.match(alphSpaceDotFormat) || !eduction[ind].university_name.trim()) {
-            setuniversity_name_error([...university_name_error.filter((val) => {
-                return val.id !== ind
-            }), { name: "University name must be an alphabet,dot and space only.", id: ind }])
-        } else {
+        }else {
             let temp = university_name_error.filter((elem) => {
                 return elem.id !== ind
             })
