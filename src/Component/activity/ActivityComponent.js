@@ -22,6 +22,7 @@ const ActivityComponent = () => {
     const [serverError, setServerError] = useState(false);
     const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
     const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     // page redirect
     let navigate = useNavigate();
@@ -29,6 +30,7 @@ const ActivityComponent = () => {
     //* get data for Backend
     const getActivity = async (start, end) => {
         setisLoading(true);
+        setPermissionToggle(true);
         setServerError(false);
         customAxios().get(`/activity?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}`).then((res) => {
             let { success, data, permissions } = res.data;
@@ -51,7 +53,7 @@ const ActivityComponent = () => {
                     setpermission(error.response.data.permissions);
                 }
             }
-        })
+        }).finally(() => setPermissionToggle(false));
     }
 
     useEffect(() => {
@@ -69,7 +71,7 @@ const ActivityComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 

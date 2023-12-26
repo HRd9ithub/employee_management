@@ -17,6 +17,7 @@ const UserRole = () => {
   const [searchItem, setsearchItem] = useState("");
   const [permission, setPermission] = useState("");
   const [serverError, setServerError] = useState(false);
+  const [permissionToggle, setPermissionToggle] = useState(true);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -30,6 +31,7 @@ const UserRole = () => {
   const getuserRole = async () => {
     try {
       setisLoading(true);
+      setPermissionToggle(true);
       setServerError(false)
       const res = await customAxios().get('/role');
       if (res.data.success) {
@@ -53,6 +55,7 @@ const UserRole = () => {
       }
     } finally {
       setisLoading(false);
+      setPermissionToggle(false);
     }
   };
 
@@ -116,7 +119,7 @@ const UserRole = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
     return <Error403 />;
   }
 
