@@ -346,12 +346,12 @@ function WorkReportModal({ data, permission, getReport }) {
                 <Modal.Body>
                     <div className=" grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body set-padding">
                                 <form className="forms-sample">
                                     <div className="row">
                                         {/* ====================   select  employee ============*/}
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                            <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="col-md-6">
                                                 <div className="form-group">
                                                     <label htmlFor="user" className='mt-3'>Employee</label>
                                                     <select className="form-control " id="user" name='userId' disabled={data} value={work.userId} onChange={handleChange} onBlur={userIdValidation} >
@@ -366,7 +366,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                 </div>
                                             </div>}
                                         {/* ====================   select  Date ============*/}
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                        <div className="col-md-6">
                                             <div className="form-group position-relative">
                                                 <label htmlFor="work_date" className='mt-3'>Work Date</label>
                                                 <div onClick={() => { workDateRef.current.showPicker(); }}>
@@ -394,7 +394,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                     <i className="fa-solid fa-trash-can " onClick={() => deleteRow(item._id, ind)}></i>
                                                 </div>}
                                                 <div className="row">
-                                                    <div className="col-md-6 pr-md-2 pl-md-2">
+                                                    <div className="col-md-6">
                                                         {/* ====================   project select field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="project" className='mt-3'>Projects</label>
@@ -409,7 +409,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    <div className="col-md-6 pr-md-2 pl-md-2">
+                                                    <div className="col-md-6">
                                                         {/* ====================   hours field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="hours" className='mt-3'>Hours</label>
@@ -448,7 +448,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                         <NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink>
                                     </div>
                                     <div className="row">
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                        <div className="col-md-6">
                                             <div className="form-group">
                                                 <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
                                                 <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />

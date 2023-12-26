@@ -103,7 +103,7 @@ const EmployeeEditForm = () => {
             </div>
           </div>
         </div>
-        <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+        <div className="grid-margin stretch-card inner-pages mb-lg-0 tab-view">
           <div className="card">
             {/* ............................Header one.......................... */}
             <div className="modal-header employee-form">

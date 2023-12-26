@@ -270,7 +270,7 @@ const AttendanceComponent = () => {
                                             <div className="col-md-6">
                                                 <div className="attendance-list-item p-4">
                                                     <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
-                                                        <h3 className="mb-0">Attendance</h3>
+                                                        <h3>Attendance</h3>
                                                         <h4 className="text-gray mb-0">{new Date().toDateString()}</h4>
                                                     </div>
                                                     <div className="bordered p-3 mt-3">
@@ -311,10 +311,10 @@ const AttendanceComponent = () => {
                                             </div>
                                             <div className="col-md-6">
                                                 <div className="attendance-list-item p-4">
-                                                    <div className="attendance-header d-flex justify-content-between align-items-center mb-3">
+                                                    <div className="attendance-header d-flex justify-content-between align-items-center">
                                                         <h3 className="mb-0">Activities</h3>
                                                     </div>
-                                                    <ul>
+                                                    <ul className="mt-4 mb-0">
                                                         {currentDataAll.map((val, ind) => {
                                                             return (
                                                                 <li className={`position-relative ${val.title === "Punch Out Time" && "punch-out"}`} key={ind}>
@@ -325,7 +325,6 @@ const AttendanceComponent = () => {
                                                                 </li>
                                                             )
                                                         })}
-
                                                     </ul>
                                                 </div>
                                             </div>

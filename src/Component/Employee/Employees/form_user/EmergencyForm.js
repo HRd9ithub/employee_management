@@ -156,35 +156,35 @@ const EmergencyForm = (props) => {
         <>
             <form className="forms-sample mt-2">
                 <div className='row'>
-                    <div className='col-md-4'>
+                    <div className='col-md-4 pl-md-2 pr-md-2'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Name</label>
                             <input type="text" className="form-control text-capitalize" id="2" placeholder="Enter name" name='name' onChange={InputEvent} value={emergency.name} autoComplete='off' onBlur={nameValidation} />
                             {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-4 pl-md-2 pr-md-2'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Email</label>
                             <input type="text" className="form-control" id="2" placeholder="Enter email address" name='email' onChange={InputEvent} value={emergency.email} autoComplete='off' onBlur={emailValidation} />
                             {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-4 pl-md-2 pr-md-2'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>Mobile Number</label>
                             <input type="text" className="form-control" id="2" inputMode='numeric' maxLength={10} placeholder="Enter mobile number" name='phone' onChange={InputEvent} value={emergency.phone} autoComplete='off'  onBlur={phoneVlidation}/>
                             {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-4'>
+                    <div className='col-md-4 pl-md-2 pr-md-2'>
                         <div className="form-group">
                             <label htmlFor="2" className='mt-3'>relationship</label>
                             <input type="text" className="form-control  text-capitalize" id="2" placeholder="Enter relationship" name='relationship' onChange={InputEvent} value={emergency.relationship} autoComplete='off' onBlur={relationshipValidtion}  />
                             {relationshipError && <small id="emailHelp" className="form-text error">{relationshipError}</small>}
                         </div>
                     </div>
-                    <div className='col-md-8'>
+                    <div className='col-md-8 pl-md-2 pr-md-2'>
                         <div className="form-group">
                             <label htmlFor="ADDREESS" className='mt-3'>Address</label>
                             <input type="text" className="form-control" id="ADDRESS" placeholder="Enter address" name='address' onChange={InputEvent} value={emergency.address} autoComplete='off' onBlur={addressValidtion} />
@@ -193,14 +193,20 @@ const EmergencyForm = (props) => {
                     </div>
                 </div>
                 {error.length !== 0 &&
-                <ol>
-                    {error.map((val) => {
-                        return <li className='error' key={val}>{val}</li>
-                    })}
-                </ol>}
-                <div className="submit-section d-flex justify-content-between py-3">
-                    <button className="btn btn-gradient-primary" type='submit' onClick={handleSubmit}>Save</button>
-                    <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                <div className="row">
+                    <div className="col-12 pl-md-2 pr-md-2">
+                        <ol>
+                            {error.map((val) => {
+                                return <li className='error' key={val}>{val}</li>
+                            })}
+                        </ol>
+                    </div>
+                </div>}
+                <div className="row">
+                    <div className="col-12 submit-section d-flex justify-content-between py-3 pl-md-2 pr-md-2">
+                        <button className="btn btn-gradient-primary" type='submit' onClick={handleSubmit}>Save</button>
+                        <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
+                    </div>
                 </div>
             </form>
             {isLoading && <Spinner />}
