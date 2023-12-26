@@ -33,7 +33,6 @@ export const calculatorBreakTime = (value) => {
     const sumHoras = [0, 0];
 
     for (let i = 0; i < breakTimes.length; i++) {
-        console.log('breakTimes :>> ', breakTimes);
         const [hours, minutes] = breakTimes[i].split(':').map(s => parseInt(s, 10));
 
         // hours
@@ -57,27 +56,16 @@ export const calculatorBreakTime = (value) => {
 
 export const sum = (data) => {
     const removeData = data.filter((item) => item.hasOwnProperty("totalHours"))
-    const sumHoras = [0, 0];
-
-    removeData.forEach((element,i) => {
-        const [hours, minutes] = element.totalHours.split(':').map(s => parseInt(s, 10));
     
-        // hours
-        sumHoras[0] += hours;
+        let totalMilliseconds = 0;
     
-        // minutes
-        if ((sumHoras[i] + minutes) > 59) {
-            const diff = sumHoras[1] + minutes - 60;
-            sumHoras[0] += 1;
-            sumHoras[1] = diff;
-        } else {
-            sumHoras[1] += minutes;
-        }
-    });
-
-    if (sumHoras.join(':') !== "0:0") {
-        return sumHoras.join(':');
-    } else {
-        return 0
-    }
+        removeData.forEach(entry => {
+            const clockIn = new Date(`${moment(entry.timestamp).format("YYYY-MM-DD")} ${entry.clock_in}`);
+            const clockOut = new Date(`${moment(entry.timestamp).format("YYYY-MM-DD")} ${entry.clock_out}`);
+            const timeDiff = clockOut - clockIn;
+            totalMilliseconds += timeDiff;
+        });
+    
+        const totalHours = new Date(totalMilliseconds).toISOString().substr(11, 5);
+        return totalHours;
 }

@@ -397,12 +397,12 @@ const AttendanceComponent = () => {
                                                         <TableCell>{sum(val.child)}</TableCell>
                                                         <TableCell>{calculatorBreakTime(val.child)}</TableCell>
                                                         <TableCell>
-                                                            {val.child.find((val) => {
+                                                            {(val.child.find((val) => {
                                                                 return !val.hasOwnProperty("clock_out");
-                                                            }) &&
+                                                            }) || (sum(val.child).split(":").length !== 0 && sum(val.child).split(":")[0] < "08" ))&&
                                                                 <div className='action'>
-                                                                    <AttendanceModal data={val.child.find((val) => {
-                                                                        return !val.hasOwnProperty("clock_out");
+                                                                    <AttendanceModal data={val.child.find((elem,ind) => {
+                                                                        return ind === (val.child.length - 1);
                                                                     })} permission={permission} />
                                                                 </div>}
                                                         </TableCell>
