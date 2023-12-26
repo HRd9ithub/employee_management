@@ -150,14 +150,14 @@ const HolidayModal = (props) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="name" className='mt-3'> Holiday Name</label>
                                                 <input type="text" className="form-control" id="name" placeholder="Enter holiday name" name='name' value={holiday.name} onChange={InputEvent} onBlur={nameValidate} />
                                                 {nameError && <small id="emailHelp" className="form-text error">{nameError}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="name" className='mt-3'>Date</label>
                                                 <div className="position-reactive">

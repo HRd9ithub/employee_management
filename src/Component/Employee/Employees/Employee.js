@@ -17,11 +17,12 @@ const Employee = () => {
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [permission, setPermission] = useState("");
+  const [permissionToggle, setPermissionToggle] = useState(true);
   const [serverError, setServerError] = useState(false);
   const [searchItem, setsearchItem] = useState("");
 
   // pagination state
-  const [count, setCount] = useState(5)
+  const [count, setCount] = useState(100)
   const [page, setpage] = useState(0)
 
   // sort state
@@ -91,6 +92,7 @@ const Employee = () => {
   const getAlluser = () => {
     setServerError(false)
     setisLoading(true);
+    setPermissionToggle(true);
 
     customAxios().get('/user').then((res) => {
       if (res.data.success) {
@@ -112,7 +114,7 @@ const Employee = () => {
           toast.error(error.response.data.message)
         }
       }
-    });
+    }).finally(() => setPermissionToggle(false))
   };
 
   useEffect(() => {
@@ -198,7 +200,7 @@ const Employee = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
     return <Error403 />;
   }
 

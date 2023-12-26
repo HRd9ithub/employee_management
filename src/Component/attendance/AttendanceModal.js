@@ -159,17 +159,17 @@ const AttendanceModal = ({ data, permission }) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
                                             <label className="mb-2">Attendance Adjustment</label>
                                             <div className="row">
-                                                <div className="col-md-6">
+                                                <div className="col-md-6 pr-md-2">
                                                     <div className="form-group">
                                                         <label htmlFor="clockIn">Clock In</label>
                                                         <input type="time" className="form-control" name='clockIn' value={initialState.clockIn} onChange={handleOnChange} onBlur={clockInValidation} ref={clockInRef} onClick={() => clockInRef.current.showPicker()} />
                                                         {clockInError && <small id="clockIn" className="form-text error">{clockInError}</small>}
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
+                                                <div className="col-md-6 pl-md-2">
                                                     <div className="form-group">
                                                         <label htmlFor="clockOut">Clock Out</label>
                                                         <input type="time" className="form-control" name='clockOut' value={initialState.clockOut} onChange={handleOnChange} onBlur={clockOutValidation} ref={clockOutRef} onClick={() => clockOutRef.current.showPicker()} />
@@ -178,23 +178,29 @@ const AttendanceModal = ({ data, permission }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-12">
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="explanation">Explanation</label>
-                                                <textarea id='explanation' rows={2} cols={10} className="form-control" name="explanation" value={initialState.explanation} onChange={handleOnChange} onBlur={explanationValidation} />
+                                                <textarea id='explanation' rows={4} cols={10} className="form-control" name="explanation" value={initialState.explanation} onChange={handleOnChange} onBlur={explanationValidation} />
                                                 {explanationError && <small id="explanation" className="form-text error">{explanationError}</small>}
                                             </div>
                                         </div>
                                     </div>
                                     {error.length !== 0 &&
-                                        <ol>
-                                            {error.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>}
-                                    <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleRequest}>Request</button>
-                                        <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                        <div className="row">
+                                            <div className="col-12 pl-md-2 pr-md-2">
+                                                <ol>
+                                                    {error.map((val) => {
+                                                        return <li className='error' key={val}>{val}</li>
+                                                    })}
+                                                </ol>
+                                            </div>
+                                        </div>}
+                                    <div className="row">                                        
+                                        <div className='col-12 pl-md-2 pr-md-2 d-flex justify-content-center modal-button'>
+                                            <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleRequest}>Request</button>
+                                            <button className="btn btn-light" onClick={handleClose}>Cancel</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

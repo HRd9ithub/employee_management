@@ -11,6 +11,8 @@ import { NavLink } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useContext } from 'react';
 import { AppProvider } from '../../context/RouteContext';
+import ReactQuill from 'react-quill';
+import 'quill/dist/quill.snow.css'
 
 function WorkReportModal({ data, permission, getReport }) {
     let workDateRef = useRef(null);
@@ -43,6 +45,30 @@ function WorkReportModal({ data, permission, getReport }) {
     const [error, setError] = useState([]);
 
     let { get_username, userName, Loading } = useContext(AppProvider);
+
+    const modules = {
+        toolbar: [
+            [{ size: ["small", false, "large", "huge"] }],
+            ["bold", "italic", "underline", "strike", "blockquote"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["link", "image"],
+            [
+                { list: "ordered" },
+                { list: "bullet" },
+                { indent: "-1" },
+                { indent: "+1" },
+                { align: [] }
+            ],
+            [{ "color": ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color'] }],
+        ]
+    };
+
+    const formats = [
+        "header", "height", "bold", "italic",
+        "underline", "strike", "blockquote",
+        "list", "color", "bullet", "indent",
+        "link", "image", "align", "size",
+    ];
 
     // modal show function
     const handleShow = () => {
@@ -228,7 +254,7 @@ function WorkReportModal({ data, permission, getReport }) {
     }
     // description
     const descriptionValidation = (ind) => {
-        if (!workData[ind].description) {
+        if (!workData[ind].description || workData[ind].description === "<p><br></p>") {
             setdescriptionError([...descriptionError.filter((val) => {
                 return val.id !== ind
             }), { name: "Description is a required field.", id: ind }]);
@@ -287,6 +313,12 @@ function WorkReportModal({ data, permission, getReport }) {
 
         setworkData(list)
     }
+    // description
+    const handleContentChange = (content,ind) => {
+        let list = [...workData];
+        list[ind].description = content;
+        setworkData(list);
+    }
 
     // * total hours  generator
     const totalHours = useMemo(() => {
@@ -314,7 +346,7 @@ function WorkReportModal({ data, permission, getReport }) {
                 <Modal.Body>
                     <div className=" grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body set-padding">
                                 <form className="forms-sample">
                                     <div className="row">
                                         {/* ====================   select  employee ============*/}
@@ -362,7 +394,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                     <i className="fa-solid fa-trash-can " onClick={() => deleteRow(item._id, ind)}></i>
                                                 </div>}
                                                 <div className="row">
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-6">
                                                         {/* ====================   project select field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="project" className='mt-3'>Projects</label>
@@ -377,7 +409,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-6">
                                                         {/* ====================   hours field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="hours" className='mt-3'>Hours</label>
@@ -387,14 +419,24 @@ function WorkReportModal({ data, permission, getReport }) {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-12">
                                                         {/* ====================   description field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="description" className='mt-3' >Description</label>
-                                                            <textarea name="description" id="description" rows="1" className="form-control work-report-description" value={item.description} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => descriptionValidation(ind)}></textarea>
+                                                            <ReactQuill
+                                                                theme="snow"
+                                                                modules={modules}
+                                                                formats={formats}
+                                                                id='description'
+                                                                placeholder="write your content ...."
+                                                                value={item.description}
+                                                                onChange={(content) => handleContentChange(content,ind)}
+                                                                onBlur={() => descriptionValidation(ind)}
+                                                            >
+                                                            </ReactQuill>
                                                             {descriptionError.map((val) => {
                                                                 return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
-                                                            })}
+                                                            })} 
                                                         </div>
                                                     </div>
                                                 </div>
@@ -405,9 +447,13 @@ function WorkReportModal({ data, permission, getReport }) {
                                     <div className="work-report-form">
                                         <NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink>
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
-                                        <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label htmlFor="total-hours" className='mt-3'>Total Hours</label>
+                                                <input type="text" className="form-control" id="total-ours" placeholder="Enter total Hours" name='totalHours' value={totalHours} disabled />
+                                            </div>
+                                        </div>
                                     </div>
                                     {error.length !== 0 &&
                                         <ol>

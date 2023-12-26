@@ -19,6 +19,7 @@ const DocumentComponent = () => {
     const [isLoading, setisLoading] = useState(false);
     const [toggle, setToggle] = useState(false);
     const [serverError, setServerError] = useState(false);
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -32,26 +33,26 @@ const DocumentComponent = () => {
     useEffect(() => {
         const getDocument = () => {
             setisLoading(true);
+            setPermissionToggle(true);
             setServerError(false);
             customAxios().get('/document/').then((res) => {
                 setDocumentData(res.data.data);
                 setpermission(res.data.permissions);
                 setisLoading(false);
-            })
-                .catch((error) => {
-                    setisLoading(false)
-                    if (!error.response) {
+            }).catch((error) => {
+                setisLoading(false)
+                if (!error.response) {
+                    setServerError(true)
+                    toast.error(error.message)
+                } else {
+                    if (error.response.status === 500) {
                         setServerError(true)
-                        toast.error(error.message)
-                    } else {
-                        if (error.response.status === 500) {
-                            setServerError(true)
-                        }
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        }
                     }
-                })
+                    if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
+                }
+            }).finally(() => setPermissionToggle(false));
         }
         getDocument();
         // eslint-disable-next-line
@@ -82,7 +83,7 @@ const DocumentComponent = () => {
             setisLoading(false)
             if (!error.response) {
                 toast.error(error.message);
-            }else if (error.response.data.message) {
+            } else if (error.response.data.message) {
                 toast.error(error.response.data.message);
             }
         })
@@ -150,12 +151,11 @@ const DocumentComponent = () => {
             fileDownload(res.data, name.concat(".", ext));
             toast.success("Download successfully.")
             setisLoading(false)
-        })
-            .catch((error) => {
+        }).catch((error) => {
                 setisLoading(false);
                 if (!error.response) {
                     toast.error(error.message);
-                }else if (error.response.data.message) {
+                } else if (error.response.data.message) {
                     toast.error(error.response.data.message);
                 } else {
                     toast.error(error.response.statusText);
@@ -168,9 +168,9 @@ const DocumentComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
-      }
+    }
 
     return (
         <>

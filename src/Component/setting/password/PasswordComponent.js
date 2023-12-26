@@ -24,6 +24,8 @@ const PasswordComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [records, setRecords] = useState([]);
   const [view, setView] = useState("");
+  const [permissionToggle, setPermissionToggle] = useState(true);
+
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
 
@@ -48,6 +50,7 @@ const PasswordComponent = () => {
   const getPasswordRecord = async () => {
     setServerError(false);
     setIsLoading(true);
+    setPermissionToggle(true);
     customAxios().get('/password').then((res) => {
       if (res.data.success) {
         let { permissions, data } = res.data;
@@ -68,7 +71,7 @@ const PasswordComponent = () => {
           toast.error(error.response.data.message)
         }
       }
-    })
+    }).finally(() => setPermissionToggle(false));
   }
 
   useEffect(() => {
@@ -139,7 +142,7 @@ const PasswordComponent = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
     return <Error403 />;
   }
 
@@ -257,7 +260,7 @@ const PasswordComponent = () => {
                     </div>
                   </div>
                 </div>
-                {permission?.name.toLowerCase() === "admin" && view.hasOwnProperty("access") && view.access.length !== 0 &&
+                {permission && permission?.name.toLowerCase() === "admin" && view.hasOwnProperty("access") && view.access.length !== 0 &&
                   <div className="access-employee-list mt-4">
                     <h3>Access Employee List:</h3>
                     <div className="row mt-3">

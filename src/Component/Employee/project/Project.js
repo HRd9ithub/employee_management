@@ -15,6 +15,7 @@ const Project = () => {
   const [searchItem, setsearchItem] = useState("");
   const [serverError, setServerError] = useState(false);
   const [permission, setPermission] = useState("");
+  const [permissionToggle, setPermissionToggle] = useState(true);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -28,6 +29,7 @@ const Project = () => {
   const getProject = async () => {
     setServerError(false);
     setIsLoading(true);
+    setPermissionToggle(true);
     customAxios().get('/project').then((res) => {
       if (res.data.success) {
         let { permissions, data } = res.data;
@@ -48,7 +50,7 @@ const Project = () => {
             toast.error(error.response.data.message)
           }
       }
-    })
+    }).finally(() => setPermissionToggle(false));
   }
 
   useEffect(() => {
@@ -110,7 +112,7 @@ const Project = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
     return <Error403 />;
   }
 

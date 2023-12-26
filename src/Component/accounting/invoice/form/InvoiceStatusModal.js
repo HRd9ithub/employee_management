@@ -165,7 +165,7 @@ function InvoiceStatusModal({ data, fetchInvoice }) {
                                         <div className="col-12">
                                             <div className="form-group">
                                                 <label htmlFor="note" className="mt-2">Additional Notes</label>
-                                                <textarea type="text" autoComplete='off' rows={2} cols={10} className="form-control" id="note" name='note' value={record.note} onChange={handleChange} />
+                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={record.note} onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>

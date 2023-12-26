@@ -32,6 +32,7 @@ const WorkReportComponent = () => {
     const [show, setShow] = useState(false)
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
+    const [permissionToggle, setPermissionToggle] = useState(true);
 
     let { get_username, userName } = useContext(AppProvider);
 
@@ -46,6 +47,7 @@ const WorkReportComponent = () => {
     // get report data
     const getReport = async (id, start, end) => {
         setisLoading(true);
+        setPermissionToggle(true);
         setServerError(false);
         customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `).then((result) => {
             if (result.data.success) {
@@ -67,7 +69,7 @@ const WorkReportComponent = () => {
                     toast.error(error.response.data.message)
                 }
             }
-        })
+        }).finally(() => setPermissionToggle(false));
     };
 
     useEffect(() => {
@@ -160,7 +162,7 @@ const WorkReportComponent = () => {
         return <Spinner />;
     }else if(serverError){
         return <Error500 />;
-    }else if (!permission || permission.permissions.list !== 1) {
+    }else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
       }
     
@@ -248,16 +250,14 @@ const WorkReportComponent = () => {
                             <Table className="common-table-section">
                                 <TableHead className="common-header">
                                     <TableRow>
-                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>
-                                            {/* <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}> */}
-                                            Employee
-                                            {/* </TableSortLabel> */}
-                                        </TableCell>}
                                         <TableCell>
                                             <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
                                                 Date
                                             </TableSortLabel>
                                         </TableCell>
+                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>
+                                            Employee
+                                        </TableCell>}
                                         <TableCell>
                                             <TableSortLabel active={orderBy === "totalHours"} direction={orderBy === "totalHours" ? order : "asc"} onClick={() => handleRequestSort("totalHours")}>
                                                 Total Hours
@@ -276,6 +276,7 @@ const WorkReportComponent = () => {
                                     {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                         return (
                                             <TableRow key={ind}>
+                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
                                                 {permission && permission.name.toLowerCase() === "admin" &&
                                                     <TableCell>
                                                         <div className='pr-3'>
@@ -283,7 +284,6 @@ const WorkReportComponent = () => {
                                                         </div>
                                                     </TableCell>
                                                 }
-                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
                                                 <TableCell>{val.totalHours}</TableCell>
                                                 <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
                                                 {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">
@@ -347,9 +347,7 @@ const WorkReportComponent = () => {
                                         <h5 className="text-secondary mb-0">{currElem.hours}h</h5>
                                     </div>
                                     <hr />
-                                    <div>
-                                        {currElem.description}
-                                    </div>
+                                    <div className="report-description-preview" dangerouslySetInnerHTML={{__html : currElem.description}}></div>
                                 </div>
                             })}
                         </div>

@@ -247,40 +247,52 @@ const AddPasswordForm = (props) => {
                             <div className="card-body">
                                 <form className="forms-sample">
                                     <div className="row">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="title" className='mt-3'>Title</label>
-                                            <input type="text" autoComplete='off' className="form-control" id="title" placeholder="Enter Title" name='title' value={password.title} onChange={handleChange} onBlur={titleValidation} />
-                                            {titleError && <small id="title" className="form-text error">{titleError}</small>}
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="title" className='mt-3'>Title</label>
+                                                <input type="text" autoComplete='off' className="form-control" id="title" placeholder="Enter Title" name='title' value={password.title} onChange={handleChange} onBlur={titleValidation} />
+                                                {titleError && <small id="title" className="form-text error">{titleError}</small>}
+                                            </div>
                                         </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="url" className='mt-3'>URL</label>
-                                            <input type="text" autoComplete='off' className="form-control" id="url" placeholder="Enter url" name='url' value={password.url} onChange={handleChange} onBlur={urlValidation} />
-                                            {urlError && <small id="url" className="form-text error">{urlError}</small>}
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="url" className='mt-3'>URL</label>
+                                                <input type="text" autoComplete='off' className="form-control" id="url" placeholder="Enter url" name='url' value={password.url} onChange={handleChange} onBlur={urlValidation} />
+                                                {urlError && <small id="url" className="form-text error">{urlError}</small>}
+                                            </div>
                                         </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="user_name" className='mt-3'>User Name</label>
-                                            <input type="text" autoComplete='off' className="form-control" id="user_name" placeholder="Enter user name" name='user_name' value={password.user_name} onChange={handleChange} onBlur={usernameValidation} />
-                                            {userNameError && <small id="user_name" className="form-text error">{userNameError}</small>}
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="user_name" className='mt-3'>User Name</label>
+                                                <input type="text" autoComplete='off' className="form-control" id="user_name" placeholder="Enter user name" name='user_name' value={password.user_name} onChange={handleChange} onBlur={usernameValidation} />
+                                                {userNameError && <small id="user_name" className="form-text error">{userNameError}</small>}
+                                            </div>
                                         </div>
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="password" className='mt-3'>Password</label>
-                                            <input type="text" autoComplete='off' className="form-control" id="password" placeholder="Enter password" name='password' value={password.password} onChange={handleChange} onBlur={passwordValidation} />
-                                            {passwordError && <small id="password" className="form-text error">{passwordError}</small>}
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="password" className='mt-3'>Password</label>
+                                                <input type="text" autoComplete='off' className="form-control" id="password" placeholder="Enter password" name='password' value={password.password} onChange={handleChange} onBlur={passwordValidation} />
+                                                {passwordError && <small id="password" className="form-text error">{passwordError}</small>}
+                                            </div>
                                         </div>
-                                        <div className="form-group col-12">
-                                            <label htmlFor="title" className='mt-3'>Employee</label>
-                                            <Select className=''
-                                                options={employeeData}
-                                                isMulti
-                                                placeholder="select employee"
-                                                value={accessEmployee}
-                                                onChange={setAccessEmployee}
-                                            />
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="title" className='mt-3'>Employee</label>
+                                                <Select className='employee-multiple-select'
+                                                    options={employeeData}
+                                                    isMulti
+                                                    placeholder="select employee"
+                                                    value={accessEmployee}
+                                                    onChange={setAccessEmployee}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="form-group col-12">
-                                            <label htmlFor="note" className='mt-3'>Note</label>
-                                            <textarea type="text" autoComplete='off' rows={2} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
-                                            {noteError && <small id="note" className="form-text error">{noteError}</small>}
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="note" className='mt-3'>Note</label>
+                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
+                                                {noteError && <small id="note" className="form-text error">{noteError}</small>}
+                                            </div>
                                         </div>
                                     </div>
                                     {error.length !== 0 &&

@@ -28,7 +28,8 @@ export const RouteReducer = (state, action) => {
                 ...state,
                 leave: action.payload.data,
                 leaveFilter: action.payload.data,
-                permission: action.payload.permissions
+                permission: action.payload.permissions,
+                permissionToggle : false
             }
             // eslint-disable-next-line
             break;
@@ -50,7 +51,8 @@ export const RouteReducer = (state, action) => {
         case "SERVER_ERROR":
             return {
                 ...state,
-                serverError: true
+                serverError: true,
+                permissionToggle : false
             }
             // eslint-disable-next-line
             break;

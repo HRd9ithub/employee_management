@@ -22,6 +22,7 @@ const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
     const [records, setRecords] = useState([]);
     const [permission, setpermission] = useState("");
+    const [permissionToggle, setPermissionToggle] = useState(true);
     const [serverError, setServerError] = useState(false);
     const [toggle, settoggle] = useState(false);
     const [id, setId] = useState("");
@@ -46,6 +47,7 @@ const AttendanceComponent = () => {
     const getAttendance = async (start, end) => {
         try {
             setisLoading(true);
+            setPermissionToggle(true);
             setServerError(false);
             const res = await customAxios().get(`/attendance/?startDate=${start || startDate}&endDate=${end || endDate}`);
             if (res.data.success) {
@@ -105,7 +107,8 @@ const AttendanceComponent = () => {
                 }
             }
         } finally {
-            setisLoading(false)
+            setisLoading(false);
+            setPermissionToggle(false);
         }
     }
 
@@ -235,7 +238,7 @@ const AttendanceComponent = () => {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;
-    } else if (!permission || permission.permissions.list !== 1) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 
@@ -270,7 +273,7 @@ const AttendanceComponent = () => {
                                             <div className="col-md-6">
                                                 <div className="attendance-list-item p-4">
                                                     <div className="attendance-header d-flex justify-content-between align-items-center flex-wrap">
-                                                        <h3 className="mb-0">Attendance</h3>
+                                                        <h3>Attendance</h3>
                                                         <h4 className="text-gray mb-0">{new Date().toDateString()}</h4>
                                                     </div>
                                                     <div className="bordered p-3 mt-3">
@@ -311,10 +314,10 @@ const AttendanceComponent = () => {
                                             </div>
                                             <div className="col-md-6">
                                                 <div className="attendance-list-item p-4">
-                                                    <div className="attendance-header d-flex justify-content-between align-items-center mb-3">
+                                                    <div className="attendance-header d-flex justify-content-between align-items-center">
                                                         <h3 className="mb-0">Activities</h3>
                                                     </div>
-                                                    <ul>
+                                                    <ul className="mt-4 mb-0">
                                                         {currentDataAll.map((val, ind) => {
                                                             return (
                                                                 <li className={`position-relative ${val.title === "Punch Out Time" && "punch-out"}`} key={ind}>
@@ -325,7 +328,6 @@ const AttendanceComponent = () => {
                                                                 </li>
                                                             )
                                                         })}
-
                                                     </ul>
                                                 </div>
                                             </div>

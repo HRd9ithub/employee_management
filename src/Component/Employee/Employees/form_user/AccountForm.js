@@ -41,10 +41,8 @@ const AccountForm = (props) => {
 
     // bank name validation
     const handleBankNameValidate = () => {
-        if (!account.bank_name) {
+        if (!account.bank_name.trim()) {
             setBank_name_error("Bank name is a required field.")
-        } else if (!account.bank_name.match(alphSpaceFormat) || account.bank_name.trim().length <= 0) {
-            setBank_name_error("Bank name must be an alphabet and space only.")
         } else {
             setBank_name_error('')
         }
@@ -65,10 +63,7 @@ const AccountForm = (props) => {
             setaccount_number_error("Account number is a required field.")
         } else if (!account.account_number.toString().match(numberFormat)) {
             setaccount_number_error("Account number must be a number.")
-        } else if (account.account_number.toString().length < 12) {
-            setaccount_number_error("Your account number must be 12 characters.")
-        }
-        else {
+        } else {
             setaccount_number_error('')
         }
     }
@@ -157,35 +152,35 @@ const AccountForm = (props) => {
         <>
             <form className="forms-sample">
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-4 pr-md-2 pl-md-2">
                         <div className="form-group">
                             <label htmlFor="2" className='mt-2'>Account Number</label>
                             <input type="text" className="form-control" id="2" maxLength={18} placeholder="Enter account number" name='account_number' onChange={InputEvent} value={account.account_number} onBlur={handleAccountNumberValidate} autoComplete='off' />
                             {account_number_error && <small id="emailHelp" className="form-text error">{account_number_error}</small>}
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 pr-md-2 pl-md-2">
                         <div className="form-group">
                             <label htmlFor="3" className='mt-2'>IFSC Code</label>
                             <input type="text" className="form-control" id="3" placeholder="Enter IFSC" name='ifsc_code' maxLength={11} onChange={InputEvent} value={account.ifsc_code} onBlur={handleIfscCodeValidate} autoComplete='off' />
                             {ifsc_code_error && <small id="emailHelp" className="form-text error">{ifsc_code_error}</small>}
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 pr-md-2 pl-md-2">
                         <div className="form-group">
                             <label htmlFor="1" className='mt-2'> Bank Name</label>
                             <input type="text" className="form-control" id="1" placeholder="Enter Bank name" name='bank_name' onChange={InputEvent} value={account.bank_name} onBlur={handleBankNameValidate} autoComplete='off' />
                             {bank_name_error && <small id="emailHelp" className="form-text error">{bank_name_error}</small>}
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 pr-md-2 pl-md-2">
                         <div className="form-group">
                             <label htmlFor="6" className='mt-2'> Branch Name</label>
                             <input type="text" className="form-control" id="6" placeholder="Enter Branch name" name='branch_name' onChange={InputEvent} value={account.branch_name} onBlur={handleBranchNameValidate} autoComplete='off' />
                             {branch_name_error && <small id="emailHelp" className="form-text error">{branch_name_error}</small>}
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-4 pr-md-2 pl-md-2">
                         <div className="form-group">
                             <label htmlFor="3" className='mt-2'>Account Holder Name</label>
                             <input type="text" className="form-control text-capitalize" id="3" placeholder="Enter Account Holder name" name='name' onChange={InputEvent} value={account.name} onBlur={handlenameValidate} autoComplete='off' />
@@ -193,14 +188,14 @@ const AccountForm = (props) => {
                         </div>
                     </div>
                     {error.length !== 0 && 
-                    <div className="col-12">
+                    <div className="col-12 pr-md-2 pl-md-2">
                         <ol>
                             {error.map((elem) => {
                                 return <li className='error' key={elem}>{elem}</li>
                             })}
                         </ol>
                     </div>}
-                    <div className="col-12">
+                    <div className="col-12 pr-md-2 pl-md-2">
                         <div className="submit-section d-flex justify-content-between pb-3">
                             <button className=" btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>
                             <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>

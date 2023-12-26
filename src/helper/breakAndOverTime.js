@@ -2,7 +2,7 @@ import moment from "moment";
 
 export const calculatorOverTime = (data) => {
     const sumHoras = sum(data);
-    if (sumHoras.split(":")[0] > 8) {
+    if (sumHoras !== 0 && sumHoras.split(":")[0] > 8) {
         const value = sumHoras.split(":")
         value[0] -= 8
         return value.join(":");
@@ -33,6 +33,7 @@ export const calculatorBreakTime = (value) => {
     const sumHoras = [0, 0];
 
     for (let i = 0; i < breakTimes.length; i++) {
+        console.log('breakTimes :>> ', breakTimes);
         const [hours, minutes] = breakTimes[i].split(':').map(s => parseInt(s, 10));
 
         // hours

@@ -15,6 +15,7 @@ const Designation = () => {
   const [searchItem, setsearchItem] = useState("");
   const [permission, setPermission] = useState("");
   const [serverError, setServerError] = useState(false);
+  const [permissionToggle, setPermissionToggle] = useState(true);
 
   // pagination state
   const [count, setCount] = useState(5)
@@ -24,10 +25,11 @@ const Designation = () => {
   const [order, setOrder] = useState("asc")
   const [orderBy, setOrderBy] = useState("id")
 
-  // get data in mysql
+  // get data in database
   const getdesignation = () => {
     setServerError(false);
     setisLoading(true);
+    setPermissionToggle(true);
     customAxios().get('/designation/').then((res) => {
       let { success, data, permissions } = res.data;
       if (success) {
@@ -48,7 +50,7 @@ const Designation = () => {
             toast.error(error.response.data.message)
           }
       }
-    })
+    }).finally(() => setPermissionToggle(false))
   };
 
   useEffect(() => {
@@ -108,7 +110,7 @@ const Designation = () => {
     return <Spinner />;
   } else if (serverError) {
     return <Error500 />;
-  } else if (!permission || permission.permissions.list !== 1) {
+  } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
     return <Error403 />;
   }
 
