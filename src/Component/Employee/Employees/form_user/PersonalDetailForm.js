@@ -149,50 +149,36 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             emailValidation();
         }
         phoneValidation();
-        // departmentValidation();
-        designationValidation();
-        roleValidation();
-        handleJoinDatevalidation();
-        reportValidation()
-
-        if (value !== "Personal") {
-            cityValidate();
-            addressValidation();
-            postcodeValidation();
-            genderValidation();
-        }
-        if (value !== "Profile") {
-            stateValidation();
-            handleDateOfBorthValidation();
-            bloodgroupValidation();
-            countryValidation();
-            marritalvalidation();
+        addressValidation();
+        countryValidation();
+        stateValidation();
+        cityValidate();
+        postcodeValidation();
+        handleDateOfBorthValidation();
+        genderValidation();
+        bloodgroupValidation();
+        marritalvalidation();
+        
+        if (match) {
+            designationValidation();
+            roleValidation();
+            handleJoinDatevalidation();
+            reportValidation()
         }
         setError([]);
-
-        if (value !== "Profile") {
-            if (!country || !maried_status || !state || !blood_group || !date_of_birth) {
+        
+        if (value === "Personal"){
+            if ( !first_name || !last_name || !email || !phone || !country || !maried_status || !state || !blood_group || !date_of_birth || !address || !city || !postcode || !gender) {
                 return false
             }
-            if (countryError || marritialError || stateError || bloodgroupError || dateofbirthError) {
+            if (countryError || marritialError || stateError || bloodgroupError || dateofbirthError || addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError) {
                 return false
             }
-        }
-
-        if (value !== "Personal") {
-            if (!address || !city || !postcode || !gender || !first_name || !last_name || !email || !phone) {
+        } else {
+            if (!joining_date || !role_id || !designation_id || !report_by || !first_name || !last_name || !email || !phone || !country || !maried_status || !state || !blood_group || !date_of_birth || !address || !city || !postcode || !gender) {
                 return false
             }
-            if (addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError) {
-                return false
-            }
-        }
-
-        if (value !== "Profile" && value !== "Personal") {
-            if (!first_name || !last_name || !email || !phone || !joining_date || !role_id || !designation_id || !report_by) {
-                return false
-            }
-            if (firstNameError || lastNameError || emailError || phoneError || joningDateError || reportToerror || roleError || designationError) {
+            if (joningDateError || reportToerror || roleError || designationError || countryError || marritialError || stateError || bloodgroupError || dateofbirthError || addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError) {
                 return false;
             }
         }
@@ -251,7 +237,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             }
         }
     };
-
 
     // first name validation 
     const firstNameValidation = () => {
@@ -473,18 +458,16 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     return (
         <>
             <form className="forms-sample">
-                {(match || value === "Profile") &&
-                    <div className="row">
-                        <div className="col-12 pr-md-2 pl-md-2">
-                            <div className="employee-id shadow rounded mb-4">
-                                <h5 >Employee Id : -  {employee.employee_id}</h5>
-                            </div>
+                <div className="row">
+                    <div className="col-12 pr-md-2 pl-md-2">
+                        <div className="employee-id shadow rounded mb-4">
+                            <h5 >Employee Id : -  {employee.employee_id}</h5>
                         </div>
-                    </div>}
+                    </div>
+                </div>
 
 
                 <div className="row">
-                    {(match || value === "Profile") && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputfname">First Name</label>
@@ -520,8 +503,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {addressError && <small id="emailHelp" className="form-text error">{addressError}</small>}
                             </div>
                         </div>
-                    </>}
-                    {(match || value === "Personal") && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">Country</label>
@@ -545,8 +526,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {stateError && <small id="emailHelp" className="form-text error">{stateError}</small>}
                             </div>
                         </div>
-                    </>}
-                    {(match || value === "Profile") && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputcity">City</label>
@@ -570,8 +549,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {postcodeError && <small id="emailHelp" className="form-text error">{postcodeError}</small>}
                             </div>
                         </div>
-                    </>}
-                    {(match || value === "Personal") &&
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group position-relative">
                                 <label htmlFor="exampleInputDate">Date Of Birth</label>
@@ -589,7 +566,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 </div>
                                 {dateofbirthError && <small id="emailHelp" className="form-text error">{dateofbirthError}</small>}
                             </div>
-                        </div>}
+                        </div>
                     {match &&
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group position-relative">
@@ -608,7 +585,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                             </div>
                         </div>}
-                    {(match || value === "Profile") && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputgender">Gender</label>
@@ -620,8 +596,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {genderError && <small id="emailHelp" className="form-text error">{genderError}</small>}
                             </div>
                         </div>
-                    </>}
-                    {(match || value === "Personal") && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputAge">Age</label>
@@ -635,8 +609,6 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {bloodgroupError && <small id="emailHelp" className="form-text error">{bloodgroupError}</small>}
                             </div>
                         </div>
-                    </>}
-                    {(match || value === "Personal") &&
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group">
                                 <label htmlFor="exampleInputMARIIT">Marital Status</label>
@@ -647,7 +619,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 </select>
                                 {marritialError && <small id="emailHelp" className="form-text error">{marritialError}</small>}
                             </div>
-                        </div>}
+                        </div>
                     {match && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <Form.Group>

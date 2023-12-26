@@ -30,10 +30,7 @@ const EmployeeModal = ({ show, handleClose, value, data, getuser }) => {
           <div className=" grid-margin stretch-card inner-pages mb-lg-0">
             <div className="card">
               <div className={`card-body ${value === 'Education' ? 'set-padding' : ''}`}>
-                {value === "Personal" ?
-                  <PersonalDetailForm userDetail={data} handleClose={handleClose} getuser={getuser} value={value} />
-                  :
-                  value === "Account"
+                {value === "Account"
                     ?
                     <AccountForm userDetail={data} handleClose={handleClose} getuser={getuser} />
                     :
