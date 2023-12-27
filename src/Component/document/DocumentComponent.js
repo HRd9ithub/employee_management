@@ -208,7 +208,6 @@ const DocumentComponent = () => {
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
                                         <TableRow>
-                                            {/* <TableCell>Id</TableCell> */}
                                             <TableCell>File</TableCell>
                                             <TableCell>
                                                 <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
@@ -229,13 +228,12 @@ const DocumentComponent = () => {
                                         {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    {/* <TableCell>{ind + 1}</TableCell> */}
                                                     <TableCell>
                                                         <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}`} target='_blank' >
                                                             <img
                                                                 className='mt-1 profile-action-icon'
                                                                 style={{ width: '70px', height: '70px' }}
-                                                                src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` : val.image.split(".").pop() === 'doc' ? '/images/doc.png' : '/images/pdf.png'}
+                                                                src={(val.image.split(".").pop() !== 'doc' && val.image.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${val.image}` : val.image.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
                                                                 alt="file"
                                                             />
                                                         </NavLink>
