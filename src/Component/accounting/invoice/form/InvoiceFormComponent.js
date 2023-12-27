@@ -21,6 +21,7 @@ import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import ErrorComponent from '../../../common/ErrorComponent.js';
 
 const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
@@ -1084,10 +1085,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                     </div>
                                     {
                                         invoiceIdError || issueDateError || itemNameError.length !== 0 || rateError.length !== 0 || quantiyError.length !== 0 || error.length !== 0 || extraFieldError ?
-                                            <div className='col-md-4 my-3'>
+                                            <div className='col-md-12 my-3'>
                                                 <div className='invoice-error-box p-3'>
-                                                    <span><i className="fa-solid fa-circle-exclamation"></i> Please fill the following details</span>
-                                                    <ol className='mt-3'>
+                                                    <span><i className="fa-solid fa-circle-exclamation mr-2"></i> Please fill the following details</span>
+                                                    <ol className='mt-3 mb-0'>
                                                         {invoiceIdError && <li className='mt-1'>{invoiceIdError}</li>}
                                                         {issueDateError && <li className='mt-1'>{issueDateError}</li>}
                                                         {itemNameError.length !== 0 && <li className='mt-1'> {itemNameError[0].item} </li>}

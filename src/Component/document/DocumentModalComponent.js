@@ -182,8 +182,8 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
                                                         <a className='btn-light btn' href={`${process.env.REACT_APP_IMAGE_API}/uploads/${document.imageName}`} target='_VIEW'>Preview</a>
                                                     </button>}
                                                 </div>
+                                                {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                             </div>
-                                            {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>}
                                         </div>
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">

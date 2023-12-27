@@ -97,6 +97,9 @@ h6,
   font-size: 13px;
   text-transform: lowercase;
 }
+.error.text-trensform-unset {
+  text-transform: unset;
+}
 .error::first-letter{
   text-transform: capitalize !important;
 }
@@ -1209,7 +1212,7 @@ span.eye-icon {
 
 .profile-image-card {
   box-shadow: 2px 1px 17px #7a7a7a52;
-  border-radius: 8px;
+  border-radius: 0.3rem !important;
   padding: 20px 15px;
 }
 
@@ -1218,7 +1221,7 @@ span.eye-icon {
   width: 250px;
   height: 250px;
   margin: 0px auto;
-  border-radius: 5px;
+  border-radius: 0.3rem !important;
   overflow: hidden;
   box-shadow: 2px 1px 17px #7a7a7a52;
   cursor: pointer;
@@ -1256,7 +1259,7 @@ span.eye-icon {
   align-items: center;
   width: 100% !important;
   height: 100% !important;
-  border-radius: 5px !important;
+  border-radius: 0.3rem !important;
 }
 
 .tab-view .modal-header {
@@ -2346,30 +2349,40 @@ svg {
   padding: 0px 0 15px 0 !important;
 }
 
-.experience-box .experience-list::before {
+.experience-box .experience-list {
+  position: relative;
+}
+
+.experience-box .experience-list li::before {
   background: #ddd;
   bottom: 0;
   content: "";
   width: 2px;
+  height: 100%;
   position: absolute;
-  top: 8px;
-  left: 23px;
+  top: 18px;
+  left: 4px;
 }
 
-.experience-box {
-  position: relative;
+.experience-box .experience-list li:last-child::before {
+  content: unset;
 }
 
-.experience-box .experience-list li .experience-user .before-circle {
-  background-color: #ddd;
-  border-radius: 50%;
+.experience-box .experience-list li::after {
+  content: "";
+  position: absolute;
+  background-color: #004b8f;
+  border-radius: 4px;
   height: 10px;
   width: 10px;
+  bottom: 0;
+  top: 6px;
+  left: 0;
 }
 
 .experience-box .experience-list li .experience-content {
   background-color: #fff;
-  margin: 0 20px 20px 40px;
+  margin: 0 20px 15px 25px;
   padding: 0;
   position: relative;
 }
@@ -2393,24 +2406,6 @@ svg {
 .experience-box .experience-list li {
   position: relative;
   list-style-type: none
-}
-
-.experience-box .experience-list li .experience-user .before-circle {
-  background-color: #004b8f;
-  border-radius: 50%;
-  height: 10px;
-  width: 10px;
-}
-
-.experience-box .experience-list li .experience-user {
-  background: #fff;
-  height: 10px;
-  width: 10px;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 4px;
-  left: 4px;
 }
 
 
@@ -3067,14 +3062,47 @@ input[type=password]::-ms-clear {
   box-shadow: 0px 5px 12px 0 rgba(0, 0, 0, .3);
 }
 
-.calendar-icon {
+.calendar-icon, .calendar-icon-holiday, .calendar-icon-work, .invoice-calendar-icon {
   position: absolute;
-  /* top: 26px;
-  right: 3px; */
-  top: 29px;
-  right: 6px;
+  font-size: 18px !important;
   color: #084e9c;
   background-color: #fff;
+}
+
+.calendar-icon {
+  top: 27px;
+  right: 6px;
+}
+
+.calendar-icon-holiday {
+  top: 43px;
+  right: 14px;
+}
+
+.calendar-icon-work {
+  top: 42px;
+  right: 6px;
+}
+
+.invoice-calendar-icon {
+  top: 7px;
+  right: 6px;
+}
+
+input[type="date"]:disabled+.calendar-icon,
+input[type="date"]:read-only+.calendar-icon,
+input[type="date"]:disabled+.calendar-icon-work,
+input[type="date"]:read-only+.calendar-icon-work,
+input[type="date"]:disabled+.calendar-icon-holiday,
+input[type="date"]:read-only+.calendar-icon-holiday,
+input[type="date"]:disabled+.invoice-calendar-icon,
+input[type="date"]:read-only+.invoice-calendar-icon {
+  background-color: #e8ecef;
+  cursor: not-allowed;
+}
+input:disabled + .invoice-calendar-icon, input:disabled + .calendar-icon-holiday, input:disabled + .calendar-icon, input:disabled + .calendar-icon-work {
+  background-color: #e9ecef;
+  pointer-events: none;
 }
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -3105,16 +3133,6 @@ input[type="date"]::-webkit-clear-button {
   -moz-appearance: none !important;
   -o-appearance: none;
   appearance: none;
-}
-
-.calendar-icon-holiday {
-  position: absolute;
-  /* top: 40px;
-  right: 20px; */
-  top: 42px;
-  right: 25px;
-  color: #084e9c;
-  background-color: #fff;
 }
 
 .react-datepicker__day--highlighted,
@@ -3256,11 +3274,13 @@ input[type="date"]::-webkit-clear-button {
 
 .range_icon {
   position: absolute;
-  top: 7px;
+  top: 5px;
   right: 6px;
   font-size: 21px;
   color: #004b8f;
   pointer-events: none;
+  padding-left: 4px !important;
+  background-color: white;
 }
 
 
@@ -3347,8 +3367,8 @@ select.form-control {
   outline: transparent;
   padding: 3px 7px !important;
   border-bottom: 1px solid #0a4a92;
-  border-radius: 1px !important;
   /* *opera browser border issue */
+  border-radius: 1px !important;
   -webkit-appearance: none;
   -moz-appearance: none;
   background: transparent;
@@ -3356,6 +3376,7 @@ select.form-control {
   background-repeat: no-repeat;
   background-position-x: 100%;
   background-position-y: 55%;
+  line-height: 1.9;
 }
 
 select.form-control:focus {
@@ -3670,16 +3691,6 @@ input[type="date"],
   margin-bottom: 0;
 }
 
-.calendar-icon-work {
-  position: absolute;
-  color: #084e9c;
-  /* right: 3px;
-  top: 40px; */
-  right: 6px;
-  top: 42px;
-  background-color: #fff;
-}
-
 .work-report-form {
   margin-bottom: 10px;
 }
@@ -3919,16 +3930,6 @@ textarea.form-control::-webkit-scrollbar-thumb {
   content: "\f073";
 }
 
-input[type="date"]:disabled+.calendar-icon,
-input[type="date"]:read-only+.calendar-icon,
-input[type="date"]:disabled+.calendar-icon-work,
-input[type="date"]:read-only+.calendar-icon-work,
-input[type="date"]:disabled+.calendar-icon-holiday,
-input[type="date"]:read-only+.calendar-icon-holiday {
-  background-color: #e8ecef;
-  cursor: not-allowed;
-}
-
 .dropdown .dropdown-toggle:after {
   content: "" !important;
 }
@@ -4043,16 +4044,19 @@ input[type="search"] {
   -moz-border-radius: 0px !important;
   -ms-border-radius: 0px !important;
   -o-border-radius: 0px !important;
+  min-height: unset !important;
 }
 .employee-multiple-select .css-1jqq78o-placeholder {
   margin-left: 6px;
   margin-right: 6px;
 }
-.employee-multiple-select .css-13cymwt-control {
-  min-height: unset !important;
-}
+
 .employee-multiple-select .css-t3ipsp-control {
   border-color: #0a4a92 !important;
+}
+
+.employee-multiple-select .css-1xc3v61-indicatorContainer, .employee-multiple-select .css-15lsz6c-indicatorContainer {
+  padding: 2px 8px !important;
 }
 
 .password-modal .modal-content {
@@ -4371,16 +4375,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   width: 200px;
 }
 
-.invoice-calendar-icon {
-  position: absolute;
-  /* top: 5px;
-  right: 0px; */
-  top: 8px;
-  right: 6px;
-  color: #084e9c;
-  background-color: #fff;
-}
-
 .field-input {
   padding-right: 10px;
 }
@@ -4694,13 +4688,18 @@ span.client-static-title {
 .invoice-error-box {
   border: 1px solid rgb(235, 73, 60);
   color: rgb(235, 73, 60);
-  width: 400px;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   background-color: rgba(235, 73, 60, 0.06);
+}
+.invoice-error-box li {
+  text-transform: lowercase;
+}
+.invoice-error-box li::first-letter {
+  text-transform: uppercase !important;
 }
 
 /* --------------------------
@@ -4795,11 +4794,6 @@ span.client-static-title {
 .dropdown.show>.btn-gradient-primary.dropdown-toggle {
   background-color: #0a4a92 !important;
   color: white !important;
-}
-
-input:disabled + .invoice-calendar-icon, input:disabled + .calendar-icon-holiday, input:disabled + .calendar-icon, input:disabled + .calendar-icon-work {
-  background-color: #e9ecef;
-  pointer-events: none;
 }
 
 /* -------- template design ---------------*/
@@ -4934,16 +4928,8 @@ select.form-control.currency-dropdown {
   outline: none !important;
 }
 
-.experience-list:last-child::before{
-  content: unset;
-}
-
 .report-description-preview p {
   margin-bottom: 0 !important;
-}
-
-.employee-multiple-select .css-1xc3v61-indicatorContainer {
-  padding: 2px 8px !important;
 }
 
 @media print {

@@ -123,9 +123,9 @@ const EmergencyForm = (props) => {
     // # validation for address
     const relationshipValidtion = () => {
         if (!emergency.relationship.trim()) {
-            setrelationshipError("Relation ship is a required field.");
+            setrelationshipError("Relationship is a required field.");
         } else if (!alphSpaceFormat.test(emergency.relationship)) {
-            setrelationshipError("Relation ship must be alphabetic.");
+            setrelationshipError("Relationship must be alphabetic.");
         } else {
             setrelationshipError("")
         }
@@ -179,7 +179,7 @@ const EmergencyForm = (props) => {
                     </div>
                     <div className='col-md-4 pl-md-2 pr-md-2'>
                         <div className="form-group">
-                            <label htmlFor="2" className='mt-3'>relationship</label>
+                            <label htmlFor="2" className='mt-3'>Relationship</label>
                             <input type="text" className="form-control  text-capitalize" id="2" placeholder="Enter relationship" name='relationship' onChange={InputEvent} value={emergency.relationship} autoComplete='off' onBlur={relationshipValidtion}  />
                             {relationshipError && <small id="emailHelp" className="form-text error">{relationshipError}</small>}
                         </div>
