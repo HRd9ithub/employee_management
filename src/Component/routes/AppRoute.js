@@ -13,7 +13,6 @@ import Project from "../Employee/project/Project";
 import Designation from '../Employee/designation/Designation';
 import Leave from '../leave/leaves/Leave';
 import LeaveType from '../leave/leave_type/LeaveType';
-import TimeSheetComponent from '../time_sheet/TimeSheetComponent';
 import DocumentComponent from '../document/DocumentComponent';
 import UserRole from '../setting/user_role/UserRole';
 import WorkReportComponent from '../setting/work_report/WorkReportComponent';
@@ -58,8 +57,6 @@ const AppRoute = ({setProgress}) => {
                 <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
                 {/* activity component */}
                 <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
-                {/* timesheet component */}
-                <Route exact path='/time-sheet' element={<ProtectedRoute authentication={true} ><TimeSheetComponent /></ProtectedRoute>}></Route>
                 {/* setting route */}
                 <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
