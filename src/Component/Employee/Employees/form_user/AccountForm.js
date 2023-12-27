@@ -5,6 +5,7 @@ import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
 import {alphSpaceFormat, alphaNumFormat, numberFormat} from "../../../common/RegaulrExp";
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const AccountForm = (props) => {
     let { userDetail, handleClose, getEmployeeDetail, getuser } = props;
@@ -189,11 +190,7 @@ const AccountForm = (props) => {
                     </div>
                     {error.length !== 0 && 
                     <div className="col-12 pr-md-2 pl-md-2">
-                        <ol>
-                            {error.map((elem) => {
-                                return <li className='error' key={elem}>{elem}</li>
-                            })}
-                        </ol>
+                        <ErrorComponent errors={error}/>
                     </div>}
                     <div className="col-12 pr-md-2 pl-md-2">
                         <div className="submit-section d-flex justify-content-between pb-3">

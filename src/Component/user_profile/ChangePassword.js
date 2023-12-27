@@ -51,9 +51,9 @@ const ChangePassword = () => {
     // repeat new password validation function
     const handleRepeatnewPasswordValidate = () => {
         if (!list.renewpassword) {
-            setrenewpasswordError("Confirm Password is a required field.");
+            setrenewpasswordError("Confirm password is a required field.");
         } else if (list.renewpassword !== list.newpassword) {
-            setrenewpasswordError("New Password and Confirm Password does not match.");
+            setrenewpasswordError("New password and confirm password does not match.");
         } else {
             setrenewpasswordError("")
         }
@@ -119,18 +119,18 @@ const ChangePassword = () => {
                 <div className="col-md-4 pl-md-2 pr-md-2">
                     <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
                     <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
-                    {passwordError && <small className="error">{passwordError}</small>}
+                    {passwordError && <small className="error text-trensform-unset">{passwordError}</small>}
                 </div>
 
                 <div className="col-md-4 pl-md-2 pr-md-2">
                     <label htmlFor="newPassword" className="col-form-label">New Password</label>
                     <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onBlur={handlenewPasswordValidate} />
-                    {newPasswordError && <small className="error">{newPasswordError}</small>}
+                    {newPasswordError && <small className="error text-trensform-unset">{newPasswordError}</small>}
                 </div>
                 <div className="col-md-4 pl-md-2 pr-md-2">
                     <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
                     <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
-                    {renewpasswordError && <small className="error">{renewpasswordError}</small>}
+                    {renewpasswordError && <small className="error text-trensform-unset">{renewpasswordError}</small>}
                 </div>
             </div>
             {error.length !== 0 &&

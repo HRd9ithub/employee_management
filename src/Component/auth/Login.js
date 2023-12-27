@@ -5,6 +5,7 @@ import Spinner from '../common/Spinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { emailFormat } from '../common/RegaulrExp';
+import ErrorComponent from "../common/ErrorComponent";
 
 const Login = () => {
   //initialistate state
@@ -117,18 +118,14 @@ const Login = () => {
                   </div>
                   {passwordError && <small className="form-text error text-left mt-2">{passwordError}</small>}
                 </div>
-                {Error.length !== 0 &&
-                <div className="col-12">
-                  <ol className='mb-0 mt-1 text-left'>
-                    {Error.map((val) => {
-                      return <li className='error' key={val}>{val}</li>
-                    })}
-                  </ol>
-                </div>
-                }
                 <div className="col-12 text-right my-3">
                   <NavLink to="/forgot-password" className='forgot-password-link d-block'>Forgot Password?</NavLink>
                 </div>
+                {Error.length !== 0 &&
+                  <div className="col-12">
+                     <ErrorComponent errors={Error} />
+                  </div>
+                }
                 <div className="col-12 login-button">
                   <button className='d-block w-100 mb-3' onClick={handleSubmit} disabled={loading}>Log In</button>
                 </div>

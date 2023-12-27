@@ -8,6 +8,7 @@ import { customAxios, customAxios1 } from "../../../../service/CreateApi";
 import { alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
 import { useMatch } from 'react-router-dom';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const ClientFormComponent = ({ data, getClientDetail }) => {
     const imageRef = useRef();
@@ -415,13 +416,12 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                                 {addressError && <small id="address" className="form-text error">{addressError}</small>}
                                             </div>
                                         </div>
+                                        {error.length !== 0 &&
+                                            <div className="col-12 pl-md-2 pr-md-2">
+                                                <ErrorComponent errors={error} />
+                                            </div>
+                                        }
                                     </div>
-                                    {error.length !== 0 &&
-                                        <ol>
-                                            {error?.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} > Save</button>
                                         <button className="btn btn-light" onClick={onHideModal}>Cancel</button>

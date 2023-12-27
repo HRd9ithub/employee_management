@@ -7,6 +7,7 @@ import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import ErrorComponent from '../common/ErrorComponent';
 
 const AttendanceModal = ({ data, permission }) => {
     const [show, setShow] = useState(false);
@@ -189,11 +190,7 @@ const AttendanceModal = ({ data, permission }) => {
                                     {error.length !== 0 &&
                                         <div className="row">
                                             <div className="col-12 pl-md-2 pr-md-2">
-                                                <ol>
-                                                    {error.map((val) => {
-                                                        return <li className='error' key={val}>{val}</li>
-                                                    })}
-                                                </ol>
+                                               <ErrorComponent errors={error} />
                                             </div>
                                         </div>}
                                     <div className="row">                                        

@@ -187,7 +187,7 @@ const TimeSheetComponent = () => {
                             <div>
                                 <ul id="breadcrumb" className="mb-0">
                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Time Sheet</NavLink></li>
+                                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Timesheet</NavLink></li>
                                 </ul>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ const TimeSheetComponent = () => {
                                 </div>
                                 {permission && permission.name.toLowerCase() === "admin" &&
                                     <button className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateTimeSheet} >
-                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate TimeSheet
+                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate Timesheet
                                     </button>}
                                 <div className="search-full pr-0">
                                     <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
