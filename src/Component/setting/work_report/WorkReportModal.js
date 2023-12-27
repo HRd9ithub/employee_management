@@ -13,6 +13,7 @@ import { useContext } from 'react';
 import { AppProvider } from '../../context/RouteContext';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css'
+import ErrorComponent from '../../common/ErrorComponent';
 
 function WorkReportModal({ data, permission, getReport }) {
     let workDateRef = useRef(null);
@@ -456,11 +457,12 @@ function WorkReportModal({ data, permission, getReport }) {
                                         </div>
                                     </div>
                                     {error.length !== 0 &&
-                                        <ol>
-                                            {error.map((val) => {
-                                                return <li key={val} className='error'>{val}</li>
-                                            })}
-                                        </ol>}
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <ErrorComponent errors={error} />
+                                            </div>
+                                      </div>
+                                    }
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleHide}>Cancel</button>

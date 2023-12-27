@@ -5,6 +5,7 @@ import Spinner from '../../../common/Spinner';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
 import { numberFormat, percentageFormat } from '../../../common/RegaulrExp';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const EductionForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props;
@@ -169,29 +170,29 @@ const EductionForm = (props) => {
         } finally { setisLoading(false) }
 }
 
-// add row of form
-const addDuplicate = () => {
-    const data = [...eduction, {
-        degree: '',
-        university_name: '',
-        year: '',
-        percentage: '',
-        user_id: userDetail.id
-    }]
+    // add row of form
+    const addDuplicate = () => {
+        const data = [...eduction, {
+            degree: '',
+            university_name: '',
+            year: '',
+            percentage: '',
+            user_id: userDetail.id
+        }]
 
-    setEduction(data)
-}
+        setEduction(data)
+    }
 
-// delete row
-const deleteRow = (ind) => {
-        let deleteField = [...eduction];
-        deleteField.splice(ind, 1);
-        setEduction(deleteField)
-        setuniversity_name_error(university_name_error.filter((val) => val.id !== ind))
-        setdegree_error(university_name_error.filter((val) => val.id !== ind))
-        setyear_error(university_name_error.filter((val) => val.id !== ind))
-        setpercentage_error(university_name_error.filter((val) => val.id !== ind))
-}
+    // delete row
+    const deleteRow = (ind) => {
+            let deleteField = [...eduction];
+            deleteField.splice(ind, 1);
+            setEduction(deleteField)
+            setuniversity_name_error(university_name_error.filter((val) => val.id !== ind))
+            setdegree_error(university_name_error.filter((val) => val.id !== ind))
+            setyear_error(university_name_error.filter((val) => val.id !== ind))
+            setpercentage_error(university_name_error.filter((val) => val.id !== ind))
+    }
 
 return (
     <>
@@ -256,13 +257,15 @@ return (
                     </div>
                 )
             })}
-            <div className="mt-2"><NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink></div>
-            {error.length !== 0 && <ol>
-                {error.map((val) => {
-                    return <li className='error' key={val}>{val}</li>
-                })}
-            </ol>}
-            <div className="submit-section d-flex justify-content-between py-3">
+            <div className="mt-2 mb-3"><NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink></div>
+            {error.length !== 0 && 
+              <div className="row">
+                <div className="col-md-12">
+                    <ErrorComponent errors={error}/>
+                </div>
+              </div>
+            }
+            <div className="submit-section d-flex justify-content-between pb-3">
                 <button className="btn btn-gradient-primary" disabled={disableBtn} type='submit' onClick={HandleSubmit}>Save</button>
                 <button className="btn btn-light" onClick={BackBtn}>{pathname.toLocaleLowerCase().includes('/employees') ? "Back" : "Cancel"}</button>
             </div>

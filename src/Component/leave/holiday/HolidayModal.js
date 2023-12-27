@@ -7,6 +7,7 @@ import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { alphSpaceFormat } from '../../common/RegaulrExp';
+import ErrorComponent from '../../common/ErrorComponent';
 
 const HolidayModal = (props) => {
     let { data, get_holiday_detail, permission } = props;
@@ -176,13 +177,12 @@ const HolidayModal = (props) => {
                                                 {dateError && <div className='error'>{dateError}</div>}
                                             </div>
                                         </div>
+                                        {error.length !== 0 &&
+                                            <div className="col-12 pl-md-2 pr-md-2">
+                                                <ErrorComponent errors={error} />
+                                            </div>
+                                        }
                                     </div>
-                                    {error.length !== 0 &&
-                                        <ol>
-                                            {error.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>

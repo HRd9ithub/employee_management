@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { customAxios } from "../../../../service/CreateApi";
 import { AppProvider } from '../../../context/RouteContext';
 import { alphaNumDeshFormat, alphabetFormat, emailFormat, numberFormat, passwordFormat } from '../../../common/RegaulrExp';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const AddEmployeeModal = ({ getAlluser, permission }) => {
     const history = useNavigate();
@@ -557,13 +558,12 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
                                                 {reportToerror && <small id="emailHelp" className="form-text error">{reportToerror}</small>}
                                             </Form.Group>
                                         </div>
+                                        {error.length !== 0 &&
+                                            <div className="col-md-12 pr-md-2 pl-md-2">
+                                                <ErrorComponent errors={error} />
+                                            </div>
+                                        }
                                     </div>
-                                    {error.length !== 0 &&
-                                        <ol>
-                                            {error?.map((val) => {
-                                                return <li className='error' key={val}>{val}</li>
-                                            })}
-                                        </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} > Save</button>
                                         <button className="btn btn-light" onClick={onHideModal}>Cancel</button>

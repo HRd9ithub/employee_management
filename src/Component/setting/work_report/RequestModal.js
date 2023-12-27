@@ -7,6 +7,7 @@ import Spinner from '../../common/Spinner';
 import moment from 'moment';
 import { useRef } from 'react';
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ErrorComponent from '../../common/ErrorComponent';
 
 const RequestModal = ({ data }) => {
     // request state
@@ -169,11 +170,7 @@ const RequestModal = ({ data }) => {
                                     {error.length !== 0 &&
                                         <div className="row">
                                             <div className="col-12 pl-md-2 pr-md-2">
-                                                <ol>
-                                                    {error?.map((val) => {
-                                                        return <li className='error' key={val}>{val}</li>
-                                                    })}
-                                                </ol>
+                                                <ErrorComponent errors={error} />
                                             </div>
                                         </div>}
                                     <div className="row">                                        

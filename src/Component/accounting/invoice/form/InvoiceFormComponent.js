@@ -21,7 +21,6 @@ import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import ErrorComponent from '../../../common/ErrorComponent.js';
 
 const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();

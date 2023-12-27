@@ -7,6 +7,7 @@ import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const EmergencyForm = (props) => {
     let { userDetail, getEmployeeDetail, handleClose, getuser } = props
@@ -193,15 +194,12 @@ const EmergencyForm = (props) => {
                     </div>
                 </div>
                 {error.length !== 0 &&
-                <div className="row">
-                    <div className="col-12 pl-md-2 pr-md-2">
-                        <ol>
-                            {error.map((val) => {
-                                return <li className='error' key={val}>{val}</li>
-                            })}
-                        </ol>
+                    <div className="row">
+                        <div className="col-12 pl-md-2 pr-md-2">
+                            <ErrorComponent errors={error} />
+                        </div>
                     </div>
-                </div>}
+                }
                 <div className="row">
                     <div className="col-12 submit-section d-flex justify-content-between py-3 pl-md-2 pr-md-2">
                         <button className="btn btn-gradient-primary" type='submit' onClick={handleSubmit}>Save</button>

@@ -7,13 +7,14 @@ import Spinner from '../common/Spinner';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { passwordFormat } from '../common/RegaulrExp';
+import ErrorComponent from "../common/ErrorComponent";
 
 const ResetPassword = () => {
   // get url for email and token
   const query = new URLSearchParams(useLocation().search);
   let email = query.get("email");
   const token = query.get("token");
-  if(email){
+  if (email) {
     email = email.replace(" ", "+");
   }
 
@@ -207,12 +208,8 @@ const ResetPassword = () => {
                     {confirm_password_error && <small className="form-text error text-left mt-2">{confirm_password_error}</small>}
                   </div>
                   {error.length !== 0 &&
-                    <div className="col-12">
-                      <ol className='mb-0 mt-1 text-left'>
-                        {error.map((val) => {
-                          return <li className='error' key={val}>{val}</li>
-                        })}
-                      </ol>
+                    <div className="col-12 mt-3">
+                      <ErrorComponent errors={error} />
                     </div>
                   }
                   <div className="col-12 login-button my-3">
