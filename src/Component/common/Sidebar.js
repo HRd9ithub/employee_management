@@ -1,7 +1,6 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
-// import { Trans } from 'react-i18next';
 import { AppProvider } from '../context/RouteContext';
 import Spinner from './Spinner';
 import { GetLocalStorage } from '../../service/StoreLocalStorage';
@@ -14,7 +13,7 @@ const Sidebar = () => {
   const [menu, setMenu] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [widthTogle, setWidthToggle] = useState("");
-  let location = useLocation();
+  let { pathname } = useLocation();
 
   // Global state
   let { setSidebarToggle, sidebarToggle, sidebarRef } = useContext(AppProvider)
@@ -43,8 +42,8 @@ const Sidebar = () => {
         let result = [];
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
-        const setting = ['User Role', 'Work Report','Password']
-        const accounting = ['Invoices',"Clients"]
+        const setting = ['User Role', 'Work Report', 'Password']
+        const accounting = ['Invoices', "Clients"]
 
         data.forEach((item) => {
           if (employee.includes(item.name)) {
@@ -80,7 +79,7 @@ const Sidebar = () => {
               }
               return val
             })
-          }else if (accounting.includes(item.name)) {
+          } else if (accounting.includes(item.name)) {
             let abc = result.find((val) => {
               return val.name === "accounting"
             })
@@ -91,7 +90,7 @@ const Sidebar = () => {
               }
               return val
             })
-          }else {
+          } else {
             result.push({ _id: item._id, name: item.name, icon: item.icon, route: item.path })
           }
         })
@@ -100,7 +99,7 @@ const Sidebar = () => {
     } catch (error) {
       if (!error.response) {
         toast.error(error.message);
-      }else if (error.response.data.message) {
+      } else if (error.response.data.message) {
         toast.error(error.response.data.message);
       }
     } finally {
@@ -152,17 +151,16 @@ const Sidebar = () => {
   }
 
   // add active class 
-  const HandleACtive = (menu) => {
+  const HandleACtive = useCallback((menu) => {
     if (menu.route !== "#") {
-      return "/"+location.pathname.split("/")[1].toLowerCase() === menu.route.toLowerCase()
+      return pathname === menu.route
     } else {
-      let result = menu.child.find((cur) => {
-       return cur.route.toLowerCase() === "/"+location.pathname.split("/")[1].toLowerCase()
-      //  return location.pathname.includes("employees") ? cur.route === "/employees" : location.pathname.includes("work-report") ? cur.route === "/work-report" : cur.route === location.pathname.toLowerCase()
+      const result = menu.child.find((cur) => {
+        return pathname.includes(cur.route)
       })
       return result ? true : false;
     }
-  }
+  }, [pathname])
 
   // mobile screen close for click menu
   const toggleSidebar = () => {
@@ -196,7 +194,6 @@ const Sidebar = () => {
           {menu.map((elem, ind) => {
             return (
               <li className={`nav-item item-hover ${HandleACtive(elem) ? 'active' : ''}`} key={ind}>
-                {/* <NavLink to={elem.route} className={data.hasOwnProperty(elem.name) && data[elem.name] ? 'nav-link menu-expanded' : 'nav-link'} data-toggle="collapse" onClick={() => { */}
                 <NavLink to={elem.route} className='nav-link' data-toggle="collapse" onClick={() => {
                   toggleMenuState(elem.name);
                   elem.route === "#" && toggleSidebar();
