@@ -341,16 +341,13 @@ const EmployeeViewComponent = () => {
                                                                                                 </h3>
                                                                                                 {data.education && data.education.length > 0 ?
                                                                                                     <div className="experience-box">
-                                                                                                        <ul className="experience-list">
+                                                                                                        <ul className="experience-list pl-0">
                                                                                                             {data.education.map((val) => {
                                                                                                                 return (
                                                                                                                     <li key={val._id}>
-                                                                                                                        <div className="experience-user">
-                                                                                                                            <div className="before-circle"></div>
-                                                                                                                        </div>
                                                                                                                         <div className="experience-content">
-                                                                                                                            <div className="timeline-content">
-                                                                                                                                <p className="name">{val.university_name}</p>
+                                                                                                                            <p className="name mb-0 font-weight-bold" style={{fontSize: "16px"}}>{val.university_name}</p>
+                                                                                                                            <div className="timeline-content ml-4">
                                                                                                                                 <div>{val.degree}</div>
                                                                                                                                 <span className="time">{val.percentage}</span>
                                                                                                                                 <span className="time">{val.year}</span>
