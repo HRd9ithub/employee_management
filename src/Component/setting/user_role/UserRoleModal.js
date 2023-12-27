@@ -6,6 +6,7 @@ import { Table } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { customAxios } from "../../../service/CreateApi";
 import { alphSpaceFormat } from "../../common/RegaulrExp";
+import ErrorComponent from "../../common/ErrorComponent";
 
 function UserRoleModal({ data, getuserRole, permission }) {
     const [show, setShow] = useState(false);
@@ -190,11 +191,10 @@ function UserRoleModal({ data, getuserRole, permission }) {
                                         </tbody>
                                     </Table>
                                     {Error.length !== 0 &&
-                                        <ol>
-                                            {Error.map((val) => {
-                                                return <li className="error" key={val} >{val}</li>
-                                            })}
-                                        </ol>}
+                                        <div className="col-12 pl-md-2 pr-md-2">
+                                            <ErrorComponent errors={Error} />
+                                        </div>
+                                    }
                                     <div className="col-12">
                                         <div className="d-flex justify-content-center modal-button">
                                             <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit}> {data ? "Update" : "Save"} </button>

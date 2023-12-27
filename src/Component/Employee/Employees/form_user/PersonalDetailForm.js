@@ -12,6 +12,7 @@ import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
 import { alphabetFormat, emailFormat, numberFormat } from "../../../common/RegaulrExp.js";
+import ErrorComponent from "../../../common/ErrorComponent.js";
 
 function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value }) {
 
@@ -702,11 +703,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                 {error.length !== 0 && 
                     <div className="row">
                         <div className="col-12 pl-md-2 pr-md-2">
-                            <ol>
-                                {error?.map((val) => {
-                                    return <li key={val} className="error">{val}</li>
-                                })}
-                            </ol>
+                           <ErrorComponent errors={error}/>
                         </div>
                     </div>}
                 <div className="row">

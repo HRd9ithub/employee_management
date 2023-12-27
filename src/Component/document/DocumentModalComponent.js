@@ -5,6 +5,7 @@ import Spinner from '../common/Spinner';
 import { Form } from 'react-bootstrap';
 import { customAxios1 } from '../../service/CreateApi';
 import { alphNumSpaceFormat } from '../common/RegaulrExp';
+import ErrorComponent from '../common/ErrorComponent';
 
 const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
     const [show, setShow] = useState(false);
@@ -110,7 +111,7 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
         }).catch((error) => {
             if (!error.response) {
                 toast.error(error.message)
-            }else {
+            } else {
                 if (error.response.data.message) {
                     toast.error(error.response.data.message)
                 } else {
@@ -165,7 +166,7 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
                     <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className=" grid-margin stretch-card inner-pages mb-lg-0 doc-modal">
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
                             <div className="card-body">
                                 <form className="forms-sample">
@@ -199,12 +200,12 @@ const DocumentModalComponent = ({ data, setToggle, toggle, permission }) => {
                                                 {descriptioneError && <small id="emailHelp" className="form-text error">{descriptioneError}</small>}
                                             </div>
                                         </div>
+                                        {Error.length !== 0 && 
+                                            <div className="col-12 pl-md-2 pr-md-2">
+                                                <ErrorComponent errors={Error} />
+                                            </div>
+                                        }
                                     </div>
-                                    {Error.length !== 0 && <ol>
-                                        {Error.map((val) => {
-                                            return <li className='error' key={val}>{val}</li>
-                                        })}
-                                    </ol>}
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={HandleSubmit}>{data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>

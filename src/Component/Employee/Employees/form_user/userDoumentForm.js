@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import Spinner from '../../../common/Spinner';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { customAxios1 } from '../../../../service/CreateApi';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const UserDoumentForm = (props) => {
     let { userDetail, getEmployeeDetail, getuser, handleClose } = props;
@@ -33,17 +34,17 @@ const UserDoumentForm = (props) => {
     const InputEvent = (e) => {
         if (e.target.files.length !== 0) {
             setFile({ ...file, [e.target.name]: e.target.files[0], [`${e.target.name}_name`]: e.target.files[0].name })
-            if(e.target.name === "id_proof"){
+            if (e.target.name === "id_proof") {
                 setidProofError("");
             }
-            if(e.target.name === "photo"){
+            if (e.target.name === "photo") {
                 setphotoError("");
             }
-        }else{
-            if(e.target.name === "id_proof" && !file.id_proof_name){
+        } else {
+            if (e.target.name === "id_proof" && !file.id_proof_name) {
                 setidProofError("Identity Proof is a required field.")
             }
-            if(e.target.name === "photo" || !file.photo_name){
+            if (e.target.name === "photo" || !file.photo_name) {
                 setphotoError("Photo is a required field.");
             }
         }
@@ -185,7 +186,7 @@ const UserDoumentForm = (props) => {
                             <label>Identity Proof</label>
                             <div className='d-flex justify-content-between'>
                                 <div className="custom-file">
-                                    <Form.Control type="file" className="form-control visibility-hidden" id="id_proof" name='id_proof' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent}/>
+                                    <Form.Control type="file" className="form-control visibility-hidden" id="id_proof" name='id_proof' lang="es" accept="image/png,image/jpeg,image/jpg,.doc,.pdf" onChange={InputEvent} />
                                     <label className="custom-file-label" htmlFor="id_proof">{`${file.id_proof_name ? file.id_proof_name : 'Upload file'}`}</label>
                                 </div>
                                 <button disabled={!file.id_proof_name || file.id_proof} className='custom-file-btn'>
@@ -266,9 +267,11 @@ const UserDoumentForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    {error.map((elem) => {
-                        return <div className="col-12 pl-md-2 pr-md-2" key={elem}><li className='error'>{elem}</li></div>
-                    })}
+                    {error.length !== 0 &&
+                        <div className="col-12 pl-md-2 pr-md-2">
+                            <ErrorComponent errors={error} />
+                        </div>
+                    }
                     <div className="col-12 pl-md-2 pr-md-2">
                         <div className="submit-section d-flex justify-content-between py-3">
                             <button className="btn btn-gradient-primary" type='submit' onClick={HandleSubmit}>Save</button>

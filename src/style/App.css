@@ -4686,6 +4686,7 @@ span.client-static-title {
 }
 
 .invoice-error-box {
+  margin-bottom : 15px;
   border: 1px solid rgb(235, 73, 60);
   color: rgb(235, 73, 60);
   border-radius: 5px;

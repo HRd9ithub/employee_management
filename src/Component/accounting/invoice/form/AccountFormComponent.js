@@ -4,6 +4,7 @@ import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, alphaNumFormat, numberFormat } from "../../../common/RegaulrExp";
 import { Modal } from 'react-bootstrap';
 import Spinner from '../../../common/Spinner';
+import ErrorComponent from '../../../common/ErrorComponent';
 
 const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
   const [account, setAccount] = useState({
@@ -128,7 +129,7 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
   const handleBankNameValidate = () => {
     if (!account.bank_name.trim()) {
       setBank_name_error("Bank name is a required field.")
-    }else {
+    } else {
       setBank_name_error('')
     }
   }
@@ -326,12 +327,8 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
                       </div>
                     </div>
                     {error.length !== 0 &&
-                      <div className="col-12">
-                        <ol>
-                          {error.map((elem) => {
-                            return <li className='error' key={elem}>{elem}</li>
-                          })}
-                        </ol>
+                      <div className="col-12 pl-md-2 pr-md-2">
+                        <ErrorComponent errors={error} />
                       </div>}
                     <div className="col-12">
                       <div className="submit-section d-flex justify-content-between pb-3">

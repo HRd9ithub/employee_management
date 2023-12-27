@@ -7,6 +7,7 @@ import moment from 'moment';
 import Spinner from '../../common/Spinner';
 import { customAxios } from '../../../service/CreateApi';
 import { useMemo } from 'react';
+import ErrorComponent from '../../common/ErrorComponent';
 
 const LeaveModal = (props) => {
     let { data, getLeave, permission, startDate, endDate, user_id_drop } = props;
@@ -125,7 +126,6 @@ const LeaveModal = (props) => {
         let { description } = reason
         let { user_id } = info
 
-        // edit api call
         let common = {
             leave_type_id,
             user_id,
@@ -452,12 +452,8 @@ const LeaveModal = (props) => {
                                                 </div>
                                             </div>}
                                         {error.length !== 0 &&
-                                            <div className="col-12">
-                                                <ol>
-                                                    {error.map((val) => {
-                                                        return <li className='error' key={val} >{val}</li>
-                                                    })}
-                                                </ol>
+                                            <div className="col-12 pr-md-2 pl-md-2">
+                                                <ErrorComponent errors={error} />
                                             </div>}
                                         <div className="col-12">
                                             <div className='d-flex justify-content-center modal-button'>
