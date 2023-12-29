@@ -210,7 +210,7 @@ const InvoicePreviewComponent = () => {
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                 <div className=" container-fluid py-4">
-                    <div className="background-wrapper bg-white pt-4">
+                    <div className="background-wrapper bg-white pb-4">
                         {/* ====================== breadcrumb */}
                         <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>
@@ -225,7 +225,7 @@ const InvoicePreviewComponent = () => {
                                 </div>
                                 <div className="col-12 col-sm-5 d-flex justify-content-end" id="two">
                                     <Dropdown>
-                                        <Dropdown.Toggle className="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle" id="dropdown-basic">
+                                        <Dropdown.Toggle className="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle mr-2" id="dropdown-basic">
                                             Action&nbsp; <i className="fa-solid fa-angle-down"></i>
                                         </Dropdown.Toggle>
 

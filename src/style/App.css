@@ -505,6 +505,16 @@ span.eye-icon {
   color: white;
 }
 
+.row-std {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  margin-bottom: 10px !important;
+  border-bottom: 1px solid #dfdfdf;
+}
+.row-std.remove-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
 .employee-content .row-std {
   padding: 1rem 1rem 0.5rem 0rem !important;
   position: relative;

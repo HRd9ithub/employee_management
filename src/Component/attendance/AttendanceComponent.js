@@ -252,7 +252,7 @@ const AttendanceComponent = () => {
                 transition={{ duration: 0.5 }}
             >
                 <div className=" container-fluid py-4">
-                    <div className="background-wrapper bg-white py-4">
+                    <div className="background-wrapper bg-white pb-4">
                         <div className=''>
                             <div className='row align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">

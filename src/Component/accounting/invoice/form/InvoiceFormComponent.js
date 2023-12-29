@@ -661,7 +661,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                 <div className=" container-fluid py-4">
-                    <div className="background-wrapper bg-white pt-4">
+                    <div className="background-wrapper bg-white pb-4">
                         {/* ====================== breadcrumb ==================*/}
                         <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>

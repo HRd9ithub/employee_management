@@ -91,81 +91,83 @@ const EmployeeEditForm = () => {
 
   return (
     <>
-      <div className="container-fluid px-4">
-        <div className='row justify-content-start align-items-center row-std m-0 my-3'>
-          <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
-            <div>
-              <ul id="breadcrumb" className="mb-0">
-                <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
-                <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Edit</NavLink></li>
-              </ul>
+      <div className="container-fluid p-4"> 
+        <div className="background-wrapper bg-white">
+          <div className='row justify-content-start align-items-center row-std remove-margin-bottom m-0 px-4'>
+            <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
+              <div>
+                <ul id="breadcrumb" className="mb-0">
+                  <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                  <li><NavLink to="/employees" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Employee</NavLink></li>
+                  <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Edit</NavLink></li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="grid-margin stretch-card inner-pages mb-lg-0 tab-view">
-          <div className="card">
-            {/* ............................Header one.......................... */}
-            <div className="modal-header employee-form">
-              <Tabs
-                value={value}
-                onChange={changeTab}
-                aria-label="secondary tabs example"
-              >
-                <Tab value="Personal" label="Personal Information" className="tab-panel-button" />
-                <Tab value="Account" label="Account Information" className="tab-panel-button" />
-                <Tab value="Education" label="Education Information" className="tab-panel-button" />
-                <Tab value="Document" label="Document Information" className="tab-panel-button" />
-                <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
-                <Tab value="login" label="Login Information" className="tab-panel-button" />
-              </Tabs>
-            </div>
+          <div className="grid-margin stretch-card inner-pages mb-lg-0 tab-view">
+            <div className="card">
+              {/* ............................Header one.......................... */}
+              <div className="modal-header employee-form">
+                <Tabs
+                  value={value}
+                  onChange={changeTab}
+                  aria-label="secondary tabs example"
+                >
+                  <Tab value="Personal" label="Personal Information" className="tab-panel-button" />
+                  <Tab value="Account" label="Account Information" className="tab-panel-button" />
+                  <Tab value="Education" label="Education Information" className="tab-panel-button" />
+                  <Tab value="Document" label="Document Information" className="tab-panel-button" />
+                  <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
+                  <Tab value="login" label="Login Information" className="tab-panel-button" />
+                </Tabs>
+              </div>
 
-            {/* ............................Header two.......................... */}
-            <div className="modal-header-none">
-              <Dropdown>
-                <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
-                  {value && value + " Information"} <i className="fa-solid fa-chevron-down"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Information</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleChanges("Account")}>Account Information</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleChanges("Education")}>Education Information</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleChanges("Document")}>Document Information</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Information</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleChanges("login")}>Login Information</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+              {/* ............................Header two.......................... */}
+              <div className="modal-header-none">
+                <Dropdown>
+                  <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
+                    {value && value + " Information"} <i className="fa-solid fa-chevron-down"></i>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("Account")}>Account Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("Education")}>Education Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("Document")}>Document Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("login")}>Login Information</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
 
-            <div className="card-body">
-              {value === "Personal" ?
-                <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
-                : value === "Account" ?
-                  <AccountForm
-                    userDetail={userDetail}
-                    userId={userId}
-                    getEmployeeDetail={getEmployeeDetail}
-                  />
-                  : value === "Education" ?
-                    <EductionForm
+              <div className="card-body">
+                {value === "Personal" ?
+                  <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
+                  : value === "Account" ?
+                    <AccountForm
                       userDetail={userDetail}
-                      getEmployeeDetail={getEmployeeDetail}
                       userId={userId}
-                    /> :
-                    value === "Document" ?
-                      <UserDoumentForm
+                      getEmployeeDetail={getEmployeeDetail}
+                    />
+                    : value === "Education" ?
+                      <EductionForm
                         userDetail={userDetail}
                         getEmployeeDetail={getEmployeeDetail}
-                        userId={userId} />
-                      : value === "login" ?
-                        <LoginInfo userId={userId} />
-                        :
-                        <EmergencyForm
+                        userId={userId}
+                      /> :
+                      value === "Document" ?
+                        <UserDoumentForm
                           userDetail={userDetail}
                           getEmployeeDetail={getEmployeeDetail}
                           userId={userId} />
-              }
+                        : value === "login" ?
+                          <LoginInfo userId={userId} />
+                          :
+                          <EmergencyForm
+                            userDetail={userDetail}
+                            getEmployeeDetail={getEmployeeDetail}
+                            userId={userId} />
+                }
+              </div>
             </div>
           </div>
         </div>

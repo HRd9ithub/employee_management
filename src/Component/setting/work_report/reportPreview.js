@@ -47,8 +47,8 @@ const ReportPreview = () => {
     return (
         <>
             <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                <div className=" container-fluid py-4">
-                    <div className="background-wrapper bg-white py-4">
+                <div className="container-fluid py-4">
+                    <div className="background-wrapper bg-white pb-4">
                         <div className='row justify-content-end align-items-center row-std m-0'>
                             <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center">
                                 <div>
@@ -60,7 +60,7 @@ const ReportPreview = () => {
                                 </div>
                             </div>
                             <div className="col-12 col-sm-6 d-flex justify-content-end" id="two">
-                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={downloadReport}>
+                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mr-2' onClick={downloadReport}>
                                     <i className="fa-solid fa-download"></i>&nbsp; Download
                                 </button >
                                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report")} >
