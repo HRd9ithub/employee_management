@@ -173,7 +173,7 @@ const EmployeeViewComponent = () => {
                                         <div className="row m-0">
                                             <div className="col-xl-4 text-center pl-0 pr-xl-3 pr-0 mb-4">
                                                 <div className="profile-image-card">
-                                                    <div className="profile-image">
+                                                    <div className={!match ? "no-animate profile-image" : "profile-image"}>
                                                         {image && <Avatar alt={data.first_name} className='text-capitalize img text-center' src={image} onClick={() => ref.current?.click()} />}
                                                         {match &&
                                                             <input type="file" accept="image/png, image/jpg, image/jpeg" ref={ref} className="d-none" onChange={imageChange} />
