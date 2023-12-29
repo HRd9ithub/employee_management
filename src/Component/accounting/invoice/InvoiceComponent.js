@@ -508,9 +508,9 @@ const InvoiceComponent = () => {
                                     <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
                                   </>
                                   : <>
-                                    <i className="fa-solid fa-arrow-up-right-from-square text-orange" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
+                                    <i className="fa-solid fa-arrow-up-right-from-square" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
                                     {val.status !== "Paid" && <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>}
-                                    <i className="fa-regular fa-copy text-primary" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                                    <i className="fa-regular fa-copy" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
                                     <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
                                   </>
                                 }
