@@ -144,7 +144,6 @@ const AttendanceModal = ({ data, permission }) => {
                     {permission && permission.name.toLowerCase() === "admin" && <>
                         <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
                 </Dropdown.Menu>
-                <Dropdown.Divider />
             </Dropdown>
 
             {/* <i className="fa-solid fa-user-clock" title="Regularize" onClick={handleShow}></i> */}

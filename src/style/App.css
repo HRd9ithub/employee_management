@@ -1226,6 +1226,9 @@ span.eye-icon {
   box-shadow: 2px 1px 17px #7a7a7a52;
   cursor: pointer;
 }
+.profile-image.no-animate {
+  cursor: default;
+}
 .profile-image img {
   width: 100%;
   height: 100%;
@@ -1249,6 +1252,9 @@ span.eye-icon {
   background-color: rgba(0, 0, 0, .5);
   pointer-events: none;
   transition: all 0.3s ease;
+}
+.profile-image.no-animate::after {
+  display: none;
 }
 .profile-image:hover::after {
   transform: scale(1, 1);
@@ -1769,8 +1775,8 @@ input[type="checkbox"] {
 }
 
 .background-wrapper {
-  border: 1px solid #dfdfdf;
-  /* box-shadow: 0.5px 4px 5px #89848496; */
+  /* border: 1px solid #dfdfdf; */
+  border-top: 3px solid #0a4a92;
   box-shadow: 0 1px 3px #00000029;
 }
 
@@ -3005,22 +3011,43 @@ input[type=password]::-ms-clear {
 
 .action i {
   cursor: pointer;
-
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  font-size: 13px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 11px #cccccc;
+  color: white;
+  background-color: rgb(7, 75, 154);
+  transition: all 0.3s ease;
 }
 
 .action i.fa-solid.fa-pen-to-square {
-  color: green;
+  background-color: green;
 }
 
 .action i.fa-solid.fa-trash-can {
-  color: red;
+  background-color: red;
+}
+.action i.fa-solid.fa-arrow-up-right-from-square {
+  background-color: orange;
 }
 
-.action i.fa-solid.fa-eye,
-.action i.fa-solid.fa-download,
-.action i.fa-solid.fa-user-clock,
-.action i.fa-regular.fa-copy {
+.action i:hover {
   color: rgb(7, 75, 154);
+  background-color: #f2f2f2 !important;
+} 
+.action i.fa-solid.fa-pen-to-square:hover {
+  color: green;
+}
+.action i.fa-solid.fa-trash-can:hover {
+  color: red;
+}
+.action i.fa-solid.fa-arrow-up-right-from-square:hover {
+  color: orange;
 }
 
 .common-table-section {
@@ -3768,7 +3795,7 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* user staus inactive dot style */
-.user-status-inactive {
+.user-status-inactive, .user-status-inactive:hover {
   color: red !important;
   text-decoration: none;
 }
@@ -3931,7 +3958,7 @@ textarea.form-control::-webkit-scrollbar-thumb {
 }
 
 .dropdown .dropdown-toggle:after {
-  content: "" !important;
+  display: none;
 }
 
 input[type="search"] {
@@ -4017,20 +4044,6 @@ input[type="search"] {
   justify-content: center;
   background-color: #aaa;
   cursor: pointer;
-}
-
-.activity-col-box {
-  max-height: 74vh !important;
-  overflow-y: auto;
-}
-
-.activity-col-box::-webkit-scrollbar {
-  width: 6px;
-  background-color: white;
-}
-
-.activity-col-box::-webkit-scrollbar-thumb {
-  background-color: rgb(209, 209, 209);
 }
 
 /* ==================== Password component style ========================= */
@@ -4931,6 +4944,13 @@ select.form-control.currency-dropdown {
 
 .report-description-preview p {
   margin-bottom: 0 !important;
+}
+
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
+  color: #004b8f !important;
+}
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+  background-color: #004b8f !important;
 }
 
 @media print {
