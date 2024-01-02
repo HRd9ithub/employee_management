@@ -3882,6 +3882,12 @@ img {
   text-decoration: none;
   color: unset;
 }
+.notification-list .notification-item.new-notification, .notification-list .notification-item.new-notification:hover {
+  background-color: #30a8ea36;
+}
+.notification-list .notification-item.new-notification p {
+  color: black !important;
+}
 
 .notification-list .notification-item:hover {
   background-color: #f5f5f5;
