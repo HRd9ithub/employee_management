@@ -9,7 +9,7 @@ import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 
-const AttendanceModal = ({ data, permission }) => {
+const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
@@ -133,6 +133,7 @@ const AttendanceModal = ({ data, permission }) => {
 
     return (
         <>
+         {((permission && permission.name.toLowerCase() !== "admin") || (permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data)) && 
             <Dropdown>
                 <Dropdown.Toggle id="password-action">
                     <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
@@ -141,12 +142,10 @@ const AttendanceModal = ({ data, permission }) => {
                     {permission && permission.name.toLowerCase() !== "admin" && <>
                         <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
                     </>}
-                    {permission && permission.name.toLowerCase() === "admin" && <>
+                    {permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data && <>
                         <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
                 </Dropdown.Menu>
-            </Dropdown>
-
-            {/* <i className="fa-solid fa-user-clock" title="Regularize" onClick={handleShow}></i> */}
+            </Dropdown>}
 
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>

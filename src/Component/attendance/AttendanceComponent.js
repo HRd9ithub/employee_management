@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
@@ -234,6 +234,16 @@ const AttendanceComponent = () => {
         }
     }
 
+    const actionToggle = useMemo(() => {
+        if (permission && permission.name.toLowerCase() !== "admin") {
+            return true
+        } else if (permission && permission.name.toLowerCase() === "admin") {
+            const data = records.find((val) => val.attendance_regulations_data);
+            return data ? true : false
+        }
+        // eslint-disable-next-line
+    }, [records]);
+
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
@@ -373,9 +383,10 @@ const AttendanceComponent = () => {
                                             <TableCell>
                                                 Break Time
                                             </TableCell>
-                                            <TableCell>
-                                                Action
-                                            </TableCell>
+                                            {actionToggle &&
+                                                <TableCell>
+                                                    Action
+                                                </TableCell>}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -396,16 +407,17 @@ const AttendanceComponent = () => {
                                                         <TableCell>{moment(val._id.date).format("DD MMM YYYY")}</TableCell>
                                                         <TableCell>{sum(val.child)}</TableCell>
                                                         <TableCell>{calculatorBreakTime(val.child)}</TableCell>
+                                                        {actionToggle && 
                                                         <TableCell>
                                                             {(val.child.find((val) => {
                                                                 return !val.hasOwnProperty("clock_out");
-                                                            }) || (sum(val.child).split(":").length !== 0 && sum(val.child).split(":")[0] < "08" ))&&
+                                                            }) || (sum(val.child).split(":").length !== 0 && sum(val.child).split(":")[0] < "08")) &&
                                                                 <div className='action'>
-                                                                    <AttendanceModal data={val.child.find((elem,ind) => {
+                                                                    <AttendanceModal data={val.child.find((elem, ind) => {
                                                                         return ind === (val.child.length - 1);
-                                                                    })} permission={permission} />
+                                                                    })} permission={permission} attendance_regulations_data={val.attendance_regulations_data} />
                                                                 </div>}
-                                                        </TableCell>
+                                                        </TableCell>}
                                                     </TableRow>
                                                     <TableRow>
                                                         {/* child table show */}
