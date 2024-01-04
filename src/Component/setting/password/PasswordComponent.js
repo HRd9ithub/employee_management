@@ -154,8 +154,8 @@ const PasswordComponent = () => {
         animate={{ opacity: 1, transform: 'translateY(0px)' }}
         transition={{ duration: 0.5 }}
       >
-        <div className=" container-fluid pt-4">
-          <div className="background-wrapper bg-white pt-4">
+        <div className=" container-fluid py-4">
+          <div className="background-wrapper bg-white pb-4">
             <div className='row justify-content-start align-items-center row-std m-0'>
               <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
                 <div>
@@ -170,7 +170,7 @@ const PasswordComponent = () => {
               </div>
             </div>
             {records.length !== 0 ?
-              <div className="row justify-content-start align-items-center row-std m-0 pb-3">
+              <div className="row justify-content-start align-items-center m-0 pb-3">
                 {records.map((item) => {
                   return (
                     <div className="col-md-4 mt-3" key={item._id} > {/** onClick={showModal} */}

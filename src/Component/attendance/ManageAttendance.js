@@ -98,7 +98,7 @@ const ManageAttendance = () => {
 return (
     <>
         <div className="container-fluid py-4">
-            <div className="background-wrapper bg-white py-4">
+            <div className="background-wrapper bg-white pb-4">
                 <div className='row justify-content-end align-items-center row-std m-0 px-4'>
                     <div className="col-12 col-sm-7 d-flex justify-content-between align-items-center p-0">
                         <div>
