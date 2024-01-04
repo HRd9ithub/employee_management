@@ -334,11 +334,11 @@ const Leave = () => {
                                                     Duration
                                                 </TableSortLabel>
                                             </TableCell>
-                                            <TableCell>
+                                            {/* <TableCell>
                                                 <TableSortLabel active={orderBy === "leave_for"} direction={orderBy === "leave_for" ? order : "asc"} onClick={() => handleRequestSort("leave_for")}>
                                                     Leave For
                                                 </TableSortLabel>
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell>
                                                 <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
                                                     Reason
@@ -374,7 +374,7 @@ const Leave = () => {
                                                     <TableCell>{moment(val.from_date).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>{moment(val.to_date).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>{val.duration}</TableCell>
-                                                    <TableCell>{val.leave_for}</TableCell>
+                                                    {/* <TableCell>{val.leave_for}</TableCell> */}
                                                     <TableCell>{val.reason}</TableCell>
                                                     <TableCell>{moment(val.createdAt).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>
