@@ -114,42 +114,44 @@ const ChangePassword = () => {
     }
 
     return (
-        <form>
-            <div className="row mb-3">
-                <div className="col-md-4 pl-md-2 pr-md-2">
-                    <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
-                    <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
-                    {passwordError && <small className="error text-trensform-unset">{passwordError}</small>}
-                </div>
-
-                <div className="col-md-4 pl-md-2 pr-md-2">
-                    <label htmlFor="newPassword" className="col-form-label">New Password</label>
-                    <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onBlur={handlenewPasswordValidate} />
-                    {newPasswordError && <small className="error text-trensform-unset">{newPasswordError}</small>}
-                </div>
-                <div className="col-md-4 pl-md-2 pr-md-2">
-                    <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
-                    <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
-                    {renewpasswordError && <small className="error text-trensform-unset">{renewpasswordError}</small>}
-                </div>
-            </div>
-            {error.length !== 0 &&
-                <div className="row">
-                    <div className="col-12 pl-md-2 pr-md-2">
-                        <ol>
-                            {error.map((val) => {
-                                return <li className='error' key={val} >{val}</li>
-                            })}
-                        </ol>
+        <>
+            <form>
+                <div className="row mb-3">
+                    <div className="col-md-4 pl-md-2 pr-md-2">
+                        <label htmlFor="currentPassword" className="col-form-label">Current Password</label>
+                        <input name="password" type="password" className="form-control" id="currentPassword" placeholder='Enter password' value={list.password} onChange={InputEvent} onBlur={handlepasswordValidate} />
+                        {passwordError && <small className="error text-trensform-unset">{passwordError}</small>}
                     </div>
-                </div>}
-            <div className="row">                
-                <div className="col-12 pl-md-2 pr-md-2 submit-section pb-3">
-                    <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
+
+                    <div className="col-md-4 pl-md-2 pr-md-2">
+                        <label htmlFor="newPassword" className="col-form-label">New Password</label>
+                        <input name="newpassword" type="password" className="form-control" id="newPassword" placeholder='Enter new password' value={list.newpassword} onChange={InputEvent} onBlur={handlenewPasswordValidate} />
+                        {newPasswordError && <small className="error text-trensform-unset">{newPasswordError}</small>}
+                    </div>
+                    <div className="col-md-4 pl-md-2 pr-md-2">
+                        <label htmlFor="renewPassword" className="col-form-label">Confirm Password</label>
+                        <input name="renewpassword" type="password" className="form-control" id="renewPassword" placeholder='Re-enter New Password' value={list.renewpassword} onChange={InputEvent} onBlur={handleRepeatnewPasswordValidate} />
+                        {renewpasswordError && <small className="error text-trensform-unset">{renewpasswordError}</small>}
+                    </div>
                 </div>
-            </div>
+                {error.length !== 0 &&
+                    <div className="row">
+                        <div className="col-12 pl-md-2 pr-md-2">
+                            <ol>
+                                {error.map((val) => {
+                                    return <li className='error' key={val} >{val}</li>
+                                })}
+                            </ol>
+                        </div>
+                    </div>}
+                <div className="row">
+                    <div className="col-12 pl-md-2 pr-md-2 submit-section pb-3">
+                        <button type="submit" className="btn btn-gradient-primary" onClick={changePaasword}>Change Password</button>
+                    </div>
+                </div>
+            </form>
             {isLoading && <Spinner />}
-        </form>
+        </>
     )
 }
 

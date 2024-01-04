@@ -30,9 +30,12 @@ const WorkReportComponent = () => {
     const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
     const [user_id, setuser_id] = useState("");
     const [show, setShow] = useState(false)
+    const [showModal, setShowModal] = useState(false)
     const [serverError, setServerError] = useState(false);
     const [description, setdescription] = useState([]);
     const [permissionToggle, setPermissionToggle] = useState(true);
+    const [localStorageToggle, setLocalStorageToggle] = useState(false);
+    const [newRecord, setNewRecord] = useState("");
 
     let { get_username, userName } = useContext(AppProvider);
 
@@ -73,12 +76,30 @@ const WorkReportComponent = () => {
     };
 
     useEffect(() => {
-        get_username();
-        getReport();
+        if (!localStorageToggle || localStorage.getItem("filter")) {
+            const filter = JSON.parse(localStorage.getItem("filter"));
+            const newdata = JSON.parse(localStorage.getItem("data"));
+            get_username();
+            if (filter) {
+                getReport(filter.id, new Date(filter.date), new Date(filter.date));
+                setStartDate(new Date(filter.date));
+                setendtDate(new Date(filter.date));
+                setuser_id(filter.id);
+                if (newdata) {
+                    setNewRecord(newdata)
+                    setShowModal(true);
+                }
+                setLocalStorageToggle(true)
+            } else {
+                getReport();
+            }
+            setTimeout(() => {
+                localStorage.removeItem("filter")
+                localStorage.removeItem("data")
+            }, 1000);
+        }
         // eslint-disable-next-line
-    }, []);
-
-
+    }, [localStorageToggle, localStorage.getItem("filter")]);
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -88,7 +109,6 @@ const WorkReportComponent = () => {
     const onChangeRowsPerPage = (e) => {
         setCount(e.target.value)
     }
-
 
     // sort function
     const handleRequestSort = (name) => {
@@ -141,11 +161,11 @@ const WorkReportComponent = () => {
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d);
-        permission && permission.name.toLowerCase() !== "admin"  && getReport(user_id, start._d, end._d)
+        permission && permission.name.toLowerCase() !== "admin" && getReport(user_id, start._d, end._d)
     }
 
     const generateReport = () => {
-        getReport(user_id,startDate, endDate)
+        getReport(user_id, startDate, endDate)
     }
 
     // modal show 
@@ -156,20 +176,21 @@ const WorkReportComponent = () => {
     // modal Hide 
     const handleClose = () => {
         setShow(false)
+        setShowModal(false)
     }
 
     if (isLoading) {
         return <Spinner />;
-    }else if(serverError){
+    } else if (serverError) {
         return <Error500 />;
-    }else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
-      }
-    
+    }
+
     return (
         <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-            <div className=" container-fluid pt-4">
-                <div className="background-wrapper bg-white pt-4">
+            <div className=" container-fluid py-4">
+                <div className="background-wrapper bg-white pb-4">
                     <div className=''>
                         <div className='row justify-content-end align-items-center row-std m-0'>
                             <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
@@ -202,10 +223,10 @@ const WorkReportComponent = () => {
                                         </div>
                                     </div>
                                     {permission && permission.name.toLowerCase() === "admin" &&
-                                    <button
-                                        className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
-                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
-                                    </button>}
+                                        <button
+                                            className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
+                                            <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
+                                        </button>}
                                     {permission && permission.name.toLowerCase() !== "admin" && <RequestModal />}
                                     <WorkReportModal permission={permission && permission} getReport={getReport} />
                                     {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
@@ -215,18 +236,18 @@ const WorkReportComponent = () => {
                         <div className='container-fluid show-at-small-screen'>
                             <div className='row'>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
-                                    <div className="form-group mb-0">
-                                        <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
-                                            <option value="">All</option>
-                                            {userName.map((val) => {
-                                                return (
-                                                    <option key={val._id} value={val._id}>{val.name}</option>
-                                                )
-                                            })}
-                                        </select>
-                                    </div>
-                                </div>}
+                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                        <div className="form-group mb-0">
+                                            <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
+                                                <option value="">All</option>
+                                                {userName.map((val) => {
+                                                    return (
+                                                        <option key={val._id} value={val._id}>{val.name}</option>
+                                                    )
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div>}
                                 <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
                                     <div className="form-group mb-0 position-relative">
                                         <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
@@ -234,12 +255,12 @@ const WorkReportComponent = () => {
                                     </div>
                                 </div>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
-                                    <button
-                                        className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateReport} >
-                                        <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
-                                    </button>
-                                </div>}
+                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                        <button
+                                            className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateReport} >
+                                            <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
+                                        </button>
+                                    </div>}
                             </div>
                         </div>
                     </div>
@@ -286,7 +307,7 @@ const WorkReportComponent = () => {
                                                 }
                                                 <TableCell>{val.totalHours}</TableCell>
                                                 <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
-                                                {permission && permission.name.toLowerCase() === "admin" ? <TableCell align="center">
+                                                {(permission && permission.name.toLowerCase() === "admin") || date_today.toDateString() === new Date(val.date).toDateString() ? <TableCell align="center">
                                                     <div className="action">
                                                         <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
                                                     </div>
@@ -347,9 +368,41 @@ const WorkReportComponent = () => {
                                         <h5 className="text-secondary mb-0">{currElem.hours}h</h5>
                                     </div>
                                     <hr />
-                                    <div className="report-description-preview" dangerouslySetInnerHTML={{__html : currElem.description}}></div>
+                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                 </div>
                             })}
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
+            <Modal
+                show={showModal}
+                animation={true}
+                size="md"
+                aria-labelledby="example-modal-sizes-title-sm"
+                className="department-modal work-report-view-modal"
+                centered
+            >
+                <Modal.Header className="small-modal">
+                    <Modal.Title>
+                        Add Data
+                    </Modal.Title>
+                    <p className="close-modal" onClick={handleClose}>
+                        <i className="fa-solid fa-xmark"></i>
+                    </p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                        <div className="card"><div className="card-body table_section" >
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h4 className="mb-0">{newRecord?.user?.first_name?.concat(" ",newRecord?.user?.last_name)}</h4>
+                                <h5 className="text-secondary mb-0">{moment(newRecord.date).format("DD MMM YYYY")}</h5>
+                            </div>
+                            <hr />
+                            <div className="report-description-preview" >
+                                {newRecord?.description}
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </Modal.Body>

@@ -154,31 +154,13 @@ const Employee = () => {
   }
 
   const descedingComparator = (a, b, orderBy) => {
-    if (orderBy === "role") {
-      if (b[orderBy].name < a[orderBy].name) {
-        return -1
-      }
-      if (b[orderBy].name > a[orderBy].name) {
-        return 1
-      }
-      return 0
-    } else if (orderBy === "report") {
-      if (b[orderBy]?.name < a[orderBy]?.name) {
-        return -1
-      }
-      if (b[orderBy]?.name > a[orderBy]?.name) {
-        return 1
-      }
-      return 0
-    } else {
-      if (b[orderBy] < a[orderBy]) {
-        return -1
-      }
-      if (b[orderBy] > a[orderBy]) {
-        return 1
-      }
-      return 0
+    if (b[orderBy] < a[orderBy]) {
+      return -1
     }
+    if (b[orderBy] > a[orderBy]) {
+      return 1
+    }
+    return 0
   }
 
   const getComparator = (order, orderBy) => {
@@ -207,8 +189,8 @@ const Employee = () => {
   return (
     <>
       <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-        <div className=" container-fluid pt-4">
-          <div className="background-wrapper bg-white pt-4">
+        <div className="container-fluid py-4">
+          <div className="background-wrapper bg-white pb-4">
             <div>
               <div className='row justify-content-end align-items-center row-std m-0'>
                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
@@ -261,16 +243,6 @@ const Employee = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
-                          Role
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "report"} direction={orderBy === "report" ? order : "asc"} onClick={() => handleRequestSort("report")}>
-                          Report To
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
                         Status
                       </TableCell>
                       {permission && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1) &&
@@ -291,12 +263,6 @@ const Employee = () => {
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
-                          <TableCell>{val?.role ? val.role?.name : <HiOutlineMinus />}</TableCell>
-                          <TableCell>
-                            <div className={`pr-3 name_col ${val.report.status === "Inactive" ? 'user-status-inactive' : ''}`}>
-                              {val.report ? val?.report.name : <HiOutlineMinus />}
-                            </div>
-                          </TableCell>
                           <TableCell>
                             <Switch
                               className="status-switch"
