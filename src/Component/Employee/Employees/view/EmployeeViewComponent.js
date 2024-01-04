@@ -17,7 +17,6 @@ import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 import { GetLocalStorage } from '../../../../service/StoreLocalStorage';
 import Swal from 'sweetalert2';
 import { Dropdown } from 'react-bootstrap';
-import { motion } from "framer-motion";
 
 const EmployeeViewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -145,7 +144,6 @@ const EmployeeViewComponent = () => {
         <>
             {/* <div className=" container-fluid pt-4"> */}
             {(match || (!match && permission && permission.permissions.list === 1)) ?
-                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
                     <div className=" container-fluid py-4">
                         <div className="background-wrapper bg-white py-4">
                             <div className=' container-fluid'>
@@ -533,8 +531,7 @@ const EmployeeViewComponent = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </motion.div > : <Error403 />}
+                    </div> : <Error403 />}
             <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getUserData} />
         </>
     )

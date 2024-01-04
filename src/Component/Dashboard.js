@@ -36,7 +36,6 @@ const Dashboard = () => {
      const handleChange = date => {
           setstartDate(date);
           datefilter(date)
-          birthFilter(date)
      };
 
      useEffect(() => {
@@ -107,7 +106,6 @@ const Dashboard = () => {
           let data = holidayfilter.filter((val) => {
                return val.date === moment(date).format("YYYY-MM-DD")
           })
-
           setHoliday(data)
      }
 
@@ -117,25 +115,6 @@ const Dashboard = () => {
                return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM") && val._id !== userId
           })
           setBirthDayFilter(birth)
-     }
-
-     // view all click
-     const allStatusChange = async () => {
-          try {
-               setisLoading(true);
-               const res = await customAxios().post('/leave/status')
-               if (res.data.success) {
-                    navigate('/leaves')
-                    setisLoading(false)
-               }
-          } catch (error) {
-               setisLoading(false)
-               if (!error.response) {
-                    toast.error(error.message)
-               } else if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-               }
-          }
      }
 
      return (
@@ -174,7 +153,7 @@ const Dashboard = () => {
                                              </NavLink>
                                         </div>
                                         <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
-                                             <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link" onClick={allStatusChange}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link" style={{ cursor: "default" }}>
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Leave Request</h3>
@@ -210,12 +189,8 @@ const Dashboard = () => {
                                                        {holiday.map((val) => {
                                                             return <li key={val._id} className='my-2' style={{ background: '#ff3a3a' }}><h4 className='my-1'>{dateFormat(val.date)} - {val.name}</h4></li>
                                                        })}
-                                                       {birthDayFilter.map((val) => {
-                                                            return <li key={val._id} className='my-2'><h4 className='my-1'>Happy Birthday {val.first_name?.concat(" ", val.last_name)}</h4></li>
-                                                       })}
                                                   </ul>
-                                                  {holiday.length === 0 && birthDayFilter.length === 0 &&
-                                                       <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No Records Found !</h3>}
+                                                  {holiday.length === 0 && <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No Records Found !</h3>}
                                              </div>
                                         </div>
                                    </div>
@@ -235,6 +210,21 @@ const Dashboard = () => {
                                              </div>
                                         </div>
                                    </div>
+                                   {birthDayFilter.length !== 0 &&
+                                        <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
+                                             <div className='my-chart'>
+                                                  <div className='my-chart-head text-center'>Birthday</div>
+                                                  <div className='p-3'>
+                                                       <ul>
+                                                            {birthDayFilter.map((val) => {
+                                                                 return <li key={val._id} className='my-2'><h4 className='my-1'>{val.first_name?.concat(" ", val.last_name)}</h4></li>
+                                                            })}
+                                                       </ul>
+                                                       {birthDayFilter.length === 0 &&
+                                                            <h3 className='text-center' style={{ 'color': '#a3aab1' }}>No Records Found !</h3>}
+                                                  </div>
+                                             </div>
+                                        </div>}
                               </div>
                          </div>
                     </div>}
