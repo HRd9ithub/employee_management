@@ -18,51 +18,72 @@ const Notification = () => {
 
     // status change
     const notificationStatusChange = async (item) => {
-        const { date, _id } = item;
-        if (date) {
-            try {
-                setisLoading(true);
-                const res = await customAxios().put(`/report_request/${_id}`)
-                if (res.data.success) {
-                    setisLoading(false);
-                    getLeaveNotification();
-                    localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
-                    if(item.title === "Add Request"){
-                        localStorage.setItem("data", JSON.stringify(item))
+        const { date, _id,status } = item;
+        if(status === "Pending"){
+            if (date) {
+                try {
+                    setisLoading(true);
+                    const res = await customAxios().put(`/report_request/${_id}`)
+                    if (res.data.success) {
+                        setisLoading(false);
+                        getLeaveNotification();
+                        localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
+                        if(item.title === "Add Request"){
+                            localStorage.setItem("data", JSON.stringify(item))
+                        }
+                        history('/work-report')
                     }
-                    history('/work-report')
+                } catch (error) {
+                    setisLoading(false)
+                    if (!error.response) {
+                        toast.error(error.message)
+                    } else if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
                 }
-            } catch (error) {
-                setisLoading(false)
-                if (!error.response) {
-                    toast.error(error.message)
-                } else if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                }
+            } else {
+                try {
+                    setisLoading(true);
+                    const res = await customAxios().patch(`/leave/${_id}`, { status: "Read" })
+                    if (res.data.success) {
+                        setisLoading(false);
+                        if (pathname === "/leaves") {
+                            getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
+                        } else {
+                            history('/leaves')
+                        }
+                    }
+                } catch (error) {
+                    setisLoading(false)
+                    if (!error.response) {
+                        toast.error(error.message)
+                    } else if (error.response.data.message) {
+                        toast.error(error.response.data.message)
+                    }
+                };
+                setendtDate(new Date(item.to_date))
+                setStartDate(new Date(item.from_date))
+                setuser_id(item.user_id)
             }
-        } else {
-            try {
-                setisLoading(true);
-                const res = await customAxios().patch(`/leave/${_id}`, { status: "Read" })
-                if (res.data.success) {
-                    setisLoading(false);
-                    if (pathname === "/leaves") {
-                        getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
-                    } else {
-                        history('/leaves')
-                    }
+        }else{
+            if (date) {
+                getLeaveNotification();
+                localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
+                if(item.title === "Add Request"){
+                    localStorage.setItem("data", JSON.stringify(item))
                 }
-            } catch (error) {
-                setisLoading(false)
-                if (!error.response) {
-                    toast.error(error.message)
-                } else if (error.response.data.message) {
-                    toast.error(error.response.data.message)
+                history('/work-report')
+            } else {
+                if (pathname === "/leaves") {
+                    getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
+                } else {
+                    history('/leaves')
                 }
-            };
-            setendtDate(new Date(item.to_date))
-            setStartDate(new Date(item.from_date))
-            setuser_id(item.user_id)
+                setendtDate(new Date(item.to_date))
+                setStartDate(new Date(item.from_date))
+                setuser_id(item.user_id)
+            }
+
         }
     }
 
@@ -101,7 +122,7 @@ const Notification = () => {
                         <div className="notification-list">
                             {notification.map((item) => {
                                 return (
-                                    <Dropdown.Item className="notification-item" key={item._id} onClick={() => notificationStatusChange(item)}>
+                                    <Dropdown.Item className={`notification-item ${item.status === "Pending" ? "new-notification" : ""}`} key={item._id} onClick={() => notificationStatusChange(item)}>
                                         <div className={`notification-content d-flex justify-content-start align-items-start w-100`}>
                                             <div>
                                                 <div className="notification-image">
