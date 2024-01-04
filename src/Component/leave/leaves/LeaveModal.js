@@ -16,7 +16,6 @@ const LeaveModal = (props) => {
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
     const [user, setUser] = useState([])
     let [page, setPage] = useState(false)
-    let [leaveType, setleaveType] = useState("")
     const [leave, setleave] = useState({
         leave_type_id: '',
         leave_type_id_error: '',
@@ -51,11 +50,6 @@ const LeaveModal = (props) => {
     // modal show function
     const handleShow = () => {
         if (data) {
-            if (data?.leaveType?.toLowerCase() === "casual leave") {
-                const date = new Date();
-                date.setDate(date.getDate() + 4);
-                setleaveType(moment(date).format("YYYY-MM-DD"))
-            }
             setleave({ leave_type_id: data.leave_type_id })
             setStatus({ leave_status: data.leave_for, status: data.status })
             setReason({ description: data.reason })
@@ -85,19 +79,7 @@ const LeaveModal = (props) => {
     //leave type  onchange function
     const InputEvent = (e) => {
         const value = e.target.value;
-        if (value && value !== "0") {
-            setleave({ ...leave, leave_type_id: value })
-            const data = leaveTypeDetail.find((val) => val._id === value)
-            if (data?.name.toLowerCase() === "casual leave") {
-                const date = new Date();
-                date.setDate(date.getDate() + 4);
-                setleaveType(moment(date).format("YYYY-MM-DD"))
-            } else {
-                setleaveType("");
-            }
-        } else {
-            setleave({ ...leave, leave_type_id: value })
-        }
+        setleave({ ...leave, leave_type_id: value })
     }
 
     // submit function
@@ -355,7 +337,6 @@ const LeaveModal = (props) => {
                                                         })}
                                                     </select>
                                                     {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
-                                                    {/* {user.length === 0 && <small id="emailHelp" className="form-text error">Please insert at least one user.</small>} */}
                                                 </div>
                                             </div>}
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -382,7 +363,6 @@ const LeaveModal = (props) => {
                                                     value={from.from_date}
                                                     name='date'
                                                     disabled={!leave.leave_type_id || leave.leave_type_id === "0"}
-                                                    min={leaveType && leaveType}
                                                     ref={fromDateRef}
                                                     onChange={fromDateChange}
                                                     autoComplete='off'

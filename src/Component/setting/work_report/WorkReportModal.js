@@ -15,7 +15,7 @@ import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css'
 import ErrorComponent from '../../common/ErrorComponent';
 
-function WorkReportModal({ data, permission, getReport }) {
+function WorkReportModal({ data, permission, getReport,showModal }) {
     let workDateRef = useRef(null);
     // common state
     const [show, setShow] = useState(false);
@@ -74,7 +74,7 @@ function WorkReportModal({ data, permission, getReport }) {
     // modal show function
     const handleShow = () => {
         if (data) {
-            let { _id, userId, date, totalHours, work } = data;
+            const { _id, userId, date, totalHours, work } = data;
             setId(_id);
 
             setWork({
@@ -100,11 +100,6 @@ function WorkReportModal({ data, permission, getReport }) {
             userId: "",
             date: moment(new Date()).format("YYYY-MM-DD"),
         })
-        setworkData([{
-            projectId: "",
-            description: "",
-            hours: "0"
-        }])
     }
 
     // modal open starting call api
@@ -376,6 +371,7 @@ function WorkReportModal({ data, permission, getReport }) {
                                                         autoComplete='off'
                                                         ref={workDateRef}
                                                         name='date'
+                                                        disabled={data}
                                                         onChange={handleChange}
                                                         value={work.date}
                                                         onBlur={workDateValidation}
