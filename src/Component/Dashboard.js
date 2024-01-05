@@ -55,7 +55,7 @@ const Dashboard = () => {
                          setHolidayfilter(holidayDay);
                          setleaveRequest(leaveRequest);
                          let birthDayFilter = birthDay.find((item) => {
-                              return item._id === userId && moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
+                              return moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
                          });
                          let monthDay = birthDay.map((item) => {
                               return moment(item.date_of_birth).format("DD-MM")
@@ -118,7 +118,7 @@ const Dashboard = () => {
      // Filtering the date of birth
      const birthFilter = (date) => {
           let birth = birthDay.filter((val) => {
-               return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM") && val._id !== userId
+               return moment(val.date_of_birth).format("DD-MM") === moment(date).format("DD-MM")
           })
           setBirthDayFilter(birth)
      }
@@ -240,7 +240,7 @@ const Dashboard = () => {
                                                   <div className='p-3'>
                                                        <ul>
                                                             {birthDayFilter.map((val) => {
-                                                                 return <li key={val._id} className='my-2'><h4 className='my-1'>{val.first_name?.concat(" ", val.last_name)}</h4></li>
+                                                                 return <li key={val._id} className='my-2'><h4 className='my-1'>{val._id === userId ? "Wish you a very happy birthday!" : val.first_name?.concat(" ", val.last_name)}</h4></li>
                                                             })}
                                                        </ul>
                                                        {birthDayFilter.length === 0 &&
