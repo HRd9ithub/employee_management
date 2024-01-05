@@ -4969,6 +4969,29 @@ select.form-control.currency-dropdown {
   background-color: #004b8f !important;
 }
 
+.highlighted-birth-date {
+  position: relative;
+}
+.highlighted-birth-date::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 5px;
+  left: 0;
+  overflow: hidden;
+  background-color: white;
+  background-image: url(../../public/Images/cake3.gif);
+  background-position: center;
+  background-size: cover;
+}
+.react-datepicker__day--highlighted.highlighted-birth-date::after {
+  top: 0 !important;
+}
+.highlighted-birth-date.react-datepicker__day--highlighted::before, .highlighted-birth-date.react-datepicker__day--today::before, .highlighted-birth-date.react-datepicker__day--highlighted {
+  background-color: white !important;
+}
+
 @media print {
   .template-section .row:nth-child(3), .extra-section .row {
     display: flex;

@@ -27,6 +27,7 @@ const Dashboard = () => {
      const [holidayfilter, setHolidayfilter] = useState([])
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
+     const [monthDayArray, setmonthDayArray] = useState([])
 
      let { UserData } = useContext(AppProvider)
 
@@ -36,6 +37,7 @@ const Dashboard = () => {
      const handleChange = date => {
           setstartDate(date);
           datefilter(date)
+          birthFilter(date)
      };
 
      useEffect(() => {
@@ -55,6 +57,10 @@ const Dashboard = () => {
                          let birthDayFilter = birthDay.find((item) => {
                               return item._id === userId && moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
                          });
+                         let monthDay = birthDay.map((item) => {
+                              return moment(item.date_of_birth).format("DD-MM")
+                         });
+                         setmonthDayArray(monthDay)
                          if (birthDayFilter) {
                               let data = JSON.parse(localStorage.getItem("employeeBirthday"));
                               if (!data) {
@@ -117,6 +123,16 @@ const Dashboard = () => {
           setBirthDayFilter(birth)
      }
 
+
+     const isHighlighted = (date) => {
+          // Replace this condition with your own logic for highlighting dates
+          return monthDayArray.includes(moment(date).format("DD-MM"))
+     };
+
+     const dayClassNames = (date) => {
+          return isHighlighted(date) ? 'highlighted-birth-date' : null;
+     };
+
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
@@ -174,8 +190,15 @@ const Dashboard = () => {
                                                   holidayfilter.forEach((val) => {
                                                        highlight.push(subDays(new Date(val.date), 0));
                                                   })
+                                                  birthDay.forEach((val) => {
+                                                       const monthDay = moment(val.date).format("MM-DD");
+                                                       const year = new Date().getFullYear();
+                                                       const date = year.toString().concat("-", monthDay)
+                                                       highlight.push(subDays(new Date(date), 0));
+                                                  })
+                                                  console.log(highlight, "highlight");
                                                   return (
-                                                       <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} />
+                                                       <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
                                                   );
                                              })()}
                                         </div>
