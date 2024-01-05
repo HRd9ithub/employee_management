@@ -1835,7 +1835,7 @@ select.status-select {
 }
 
 .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day.react-datepicker__day--today::before {
-  background: #32aff3;
+  background: #32aff3 !important;
   left: 50%;
 }
 
@@ -4976,10 +4976,10 @@ select.form-control.currency-dropdown {
 .highlighted-birth-date::after {
   content: "";
   position: absolute;
-  width: 30px;
-  height: 30px;
-  top: 5px;
-  left: 0;
+  width: 32px;
+  height: 32px;
+  top: 4px;
+  left: -1px;
   overflow: hidden;
   background-color: white;
   background-image: url(../../public/Images/cake3.gif);
@@ -4987,7 +4987,7 @@ select.form-control.currency-dropdown {
   background-size: cover;
 }
 .react-datepicker__day--highlighted.highlighted-birth-date::after {
-  top: 0 !important;
+  top: -1px !important;
 }
 .highlighted-birth-date.react-datepicker__day--highlighted::before, .highlighted-birth-date.react-datepicker__day--today::before, .highlighted-birth-date.react-datepicker__day--highlighted {
   background-color: white !important;
