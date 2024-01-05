@@ -37,6 +37,7 @@ const Dashboard = () => {
      const handleChange = date => {
           setstartDate(date);
           datefilter(date)
+          birthFilter(date)
      };
 
      useEffect(() => {
