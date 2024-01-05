@@ -2614,6 +2614,7 @@ svg {
 
 .box-dashboard .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
   padding: 0.7rem 0;
+  user-select: none !important;
 }
 
 /* .dashboard-custom-date-picker .react-datepicker .react-datepicker__month-container .react-datepicker__month .react-datepicker__week .react-datepicker__day {
