@@ -11,11 +11,10 @@ import { NavLink } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useContext } from 'react';
 import { AppProvider } from '../../context/RouteContext';
-import ReactQuill from 'react-quill';
-import 'quill/dist/quill.snow.css'
+import JoditEditor from 'jodit-react';
 import ErrorComponent from '../../common/ErrorComponent';
 
-function WorkReportModal({ data, permission, getReport,showModal }) {
+function WorkReportModal({ data, permission, getReport, showModal }) {
     let workDateRef = useRef(null);
     // common state
     const [show, setShow] = useState(false);
@@ -47,30 +46,6 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
 
     let { get_username, userName, Loading } = useContext(AppProvider);
 
-    const modules = {
-        toolbar: [
-            [{ size: ["small", false, "large", "huge"] }],
-            ["bold", "italic", "underline", "strike", "blockquote"],
-            [{ list: "ordered" }, { list: "bullet" }],
-            ["link", "image"],
-            [
-                { list: "ordered" },
-                { list: "bullet" },
-                { indent: "-1" },
-                { indent: "+1" },
-                { align: [] }
-            ],
-            [{ "color": ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466", 'custom-color'] }],
-        ]
-    };
-
-    const formats = [
-        "header", "height", "bold", "italic",
-        "underline", "strike", "blockquote",
-        "list", "color", "bullet", "indent",
-        "link", "image", "align", "size",
-    ];
-
     // modal show function
     const handleShow = () => {
         if (data) {
@@ -100,6 +75,11 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
             userId: "",
             date: moment(new Date()).format("YYYY-MM-DD"),
         })
+        setworkData([{
+            projectId: "",
+            description: "",
+            hours: "0"
+        }])
     }
 
     // modal open starting call api
@@ -209,8 +189,8 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
             }
             if (!val.hours) {
                 hError.push({ name: "Working hours is a required field.", id: ind })
-            } else if (val.hours.toString() > 24 || val.hours.toString() < 1) {
-                hError.push({ name: "Working hours range from 1 to 24 hours.", id: ind })
+            } else if (val.hours.toString() > 24 || val.hours.toString() < 0) {
+                hError.push({ name: "Working hours range from 0 to 24 hours.", id: ind })
             }
         })
         setprojectError(pError);
@@ -249,7 +229,7 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
         }
     }
     // description
-    const descriptionValidation = (ind) => {
+    const descriptionValidation = (ind,newContent) => {
         if (!workData[ind].description || workData[ind].description === "<p><br></p>") {
             setdescriptionError([...descriptionError.filter((val) => {
                 return val.id !== ind
@@ -268,10 +248,10 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
             sethoursError([...hoursError.filter((val) => {
                 return val.id !== ind
             }), { name: "Working hours is a required field.", id: ind }]);
-        } else if (workData[ind].hours.toString() > 24 || workData[ind].hours.toString() < 1) {
+        } else if (workData[ind].hours.toString() > 24 || workData[ind].hours.toString() < 0) {
             sethoursError([...hoursError.filter((val) => {
                 return val.id !== ind
-            }), { name: "Working hours range from 1 to 24 hours.", id: ind }]);
+            }), { name: "Working hours range from 0 to 24 hours.", id: ind }]);
         } else {
             let temp = hoursError.filter((elem) => {
                 return elem.id !== ind
@@ -321,7 +301,14 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
         const initialValue = 0;
         const sumWithInitial = workData.reduce((total, num) => Number(total) + Number(num.hours), initialValue);
         return sumWithInitial
-    }, [workData])
+    }, [workData]);
+
+    const config = useMemo(() => {
+        return{
+			readonly: false,
+			placeholder: 'write your content ....'
+		}
+    },[]);
 
     return (
         <>
@@ -410,7 +397,7 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
                                                         {/* ====================   hours field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="hours" className='mt-3'>Hours</label>
-                                                            <input type="number" className="form-control" min={1} max={24} id="hours" inputMode='numeric' placeholder="Enter Working Hours" name='hours' value={item.hours} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => hourValidation(ind)} autoComplete='off' />
+                                                            <input type="number" className="form-control" min={0} max={24} id="hours" inputMode='numeric' placeholder="Enter Working Hours" name='hours' value={item.hours} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => hourValidation(ind)} autoComplete='off' />
                                                             {hoursError.map((val) => {
                                                                 return val.id === ind && <small id="hours-field" className="form-text error" key={val.id}>{val.name}</small>
                                                             })}
@@ -420,20 +407,16 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
                                                         {/* ====================   description field  ============*/}
                                                         <div className="form-group">
                                                             <label htmlFor="description" className='mt-3' >Description</label>
-                                                            <ReactQuill
-                                                                theme="snow"
-                                                                modules={modules}
-                                                                formats={formats}
-                                                                id='description'
-                                                                placeholder="write your content ...."
+                                                            <JoditEditor
+                                                                config={config}
                                                                 value={item.description}
-                                                                onChange={(content) => handleContentChange(content,ind)}
-                                                                onBlur={() => descriptionValidation(ind)}
-                                                            >
-                                                            </ReactQuill>
+                                                                tabIndex={1} // tabIndex of textarea
+                                                                onChange={newContent => handleContentChange(newContent,ind)} // preferred to use only this option to update the content for performance reasons
+                                                                onBlur={(newContent) =>  descriptionValidation(ind)}
+                                                            />
                                                             {descriptionError.map((val) => {
                                                                 return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
-                                                            })} 
+                                                            })}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -457,7 +440,7 @@ function WorkReportModal({ data, permission, getReport,showModal }) {
                                             <div className="col-md-12">
                                                 <ErrorComponent errors={error} />
                                             </div>
-                                      </div>
+                                        </div>
                                     }
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Save'}</button>
