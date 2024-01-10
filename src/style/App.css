@@ -4993,6 +4993,11 @@ select.form-control.currency-dropdown {
   background-color: white !important;
 }
 
+.leave-box-section{
+  background-color: #eaeff0;
+  border-radius: 5px;
+}
+
 @media print {
   .template-section .row:nth-child(3), .extra-section .row {
     display: flex;

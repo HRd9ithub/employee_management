@@ -20,6 +20,7 @@ const initialistate = {
     userName: [],
     reportData: [],
     summary: "",
+    leaveSetting: [],
 }
 const RouteContext = ({ children }) => {
     const [Loading, setLoading] = useState(false);
