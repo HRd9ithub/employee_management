@@ -15,144 +15,32 @@ const LeaveModal = (props) => {
     const [isLoading, setisLoading] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
     const [user, setUser] = useState([])
-    let [page, setPage] = useState(false)
-    const [leave, setleave] = useState({
-        leave_type_id: '',
-        leave_type_id_error: '',
-    });
-    const [from, setFrom] = useState({
-        from_date: '',
-        from_date_error: '',
-    });
-    const [to, setTo] = useState({
-        to_date: '',
-        to_date_error: '',
-    });
-    const [status_info, setStatus] = useState({
-        leave_status: "",
-        leave_status_error: "",
-        status: 'Approved'
-    })
-    const [info, setinfo] = useState({
-        user_id: "",
-        user_id_error: ""
-    })
-    const [reason, setReason] = useState({
-        description: "",
-        description_error: ""
-    })
+    const [page, setPage] = useState(false)
     const [id, setId] = useState('')
-    const [error, setError] = useState([])
+    const [error, setError] = useState([]);
+
+    const [inputData, setInputData] = useState({
+        user_id: "",
+        leave_type_id: "",
+        leave_for: "Full",
+        from_date: "",
+        to_date: "",
+        reason: "",
+        status: "Approved"
+    })
+
+    const [userIdError, setUserIdError] = useState("");
+    const [leaveTypeIdError, setleaveTypeIdError] = useState("");
+    const [fromDateError, setfromDateError] = useState("");
+    const [toDateError, settoDateError] = useState("");
+    const [reasonError, setreasonError] = useState("");
 
     const fromDateRef = useRef();
     const toDateRef = useRef();
 
-    // modal show function
-    const handleShow = () => {
-        if (data) {
-            setleave({ leave_type_id: data.leave_type_id })
-            setStatus({ leave_status: data.leave_for, status: data.status })
-            setReason({ description: data.reason })
-            setFrom({ from_date: data.from_date })
-            setTo({ to_date: data.to_date })
-            setinfo({ user_id: data.user_id })
-            setId(data._id)
-        }
-        setPage(true)
-        setShow(true)
-    }
-
-    // modal close function
-    const handleClose = (e) => {
-        e.preventDefault();
-        setShow(false)
-        setleave({ leave_type_id: '', leave_type_id_error: "" })
-        setStatus({ leave_status: '', leave_status_error: '', status: "Approved" })
-        setReason({ description: '', description_error: '' })
-        setFrom({ from_date: '', from_date_error: '' })
-        setTo({ to_date: '', to_date_error: "" })
-        setinfo({ user_id: '', user_id_error: "" })
-        setError([])
-        setPage(false)
-    }
-
-    //leave type  onchange function
-    const InputEvent = (e) => {
-        const value = e.target.value;
-        setleave({ ...leave, leave_type_id: value })
-    }
-
-    // submit function
-    const HandleSubmit = (e) => {
-        e.preventDefault();
-        permission && permission.name?.toLowerCase() === 'admin' && userValidation()
-        leaveTypeValidation();
-        fromDateValidation();
-        toDateValidation();
-        leaveStatusValidation();
-        descriptionValidate()
-        setError([])
-
-        if (!leave.leave_type_id || !from.from_date || !to.to_date || !status_info.leave_status || !reason.description || (permission && permission.name?.toLowerCase() === 'admin' && !info.user_id)) {
-            return false;
-        }
-        if (leave.leave_type_id_error || from.from_date_error || to.to_date_error || status_info.leave_status_error || reason.description_error || (permission && permission.name?.toLowerCase() === 'admin' && info.user_id_error)) {
-            return false
-        }
-        setisLoading(true);
-        // object destructuring
-        let { leave_type_id } = leave
-        let { from_date } = from
-        let { to_date } = to
-        let { leave_status, status } = status_info
-        let { description } = reason
-        let { user_id } = info
-
-        let common = {
-            leave_type_id,
-            user_id,
-            from_date: moment(from_date).format("YYYY-MM-DD"),
-            to_date: moment(to_date).format("YYYY-MM-DD"),
-            leave_for: leave_status,
-            reason: description,
-            duration: day,
-            status: (permission && permission.name?.toLowerCase() === 'admin') ? status : "Pending"
-        }
-        let url = ""
-        if (id) {
-            url = customAxios().put(`/leave/${id}`, common)
-        } else {
-            url = customAxios().post('/leave', common)
-        }
-        url.then(data => {
-            if (data.data.success) {
-                toast.success(data.data.message);
-                setShow(false)
-                setleave({ leave_type_id: '', leave_type_id_error: "" })
-                setStatus({ leave_status: '', leave_status_error: '', status: "Approved" })
-                setReason({ description: '', description_error: '' })
-                setFrom({ from_date: '', from_date_error: '' })
-                setTo({ to_date: '', to_date_error: "" })
-                setinfo({ user_id: '', user_id_error: "" })
-                getLeave(startDate, endDate, user_id_drop);
-            }
-        }).catch((error) => {
-            if (!error.response) {
-                toast.error(error.message);
-            } else {
-                if (error.response.data.message) {
-                    toast.error(error.response.data.message)
-                } else {
-                    setError(error.response.data.error);
-                }
-            }
-        }).finally(() => {
-            setPage(false);
-            setisLoading(false)
-        })
-
-    }
-
+    /*------------------
+        mouting funcation
+    ------------------ */
     useEffect(() => {
         // leave type get data in api
         const getLeaveType = async () => {
@@ -205,100 +93,186 @@ const LeaveModal = (props) => {
         // eslint-disable-next-line
     }, [page])
 
+
+    /*------------------
+        modal section
+    ------------------ */
+    const handleShow = () => {
+        if (data) {
+            setInputData({
+                user_id: data.user_id,
+                leave_type_id: data.leave_type_id,
+                leave_for: data.leave_for,
+                from_date: data.from_date,
+                to_date: data.to_date,
+                reason: data.reason,
+                status: data.status
+            })
+            setId(data._id)
+        }
+        setPage(true)
+        setShow(true)
+    }
+
+    const handleClose = (e) => {
+        e.preventDefault();
+        setShow(false);
+        setInputData({
+            user_id: "",
+            leave_type_id: "",
+            leave_for: "Full",
+            from_date: "",
+            to_date: "",
+            reason: "",
+            status: "Approved"
+        });
+        setUserIdError("");
+        setleaveTypeIdError("");
+        setfromDateError("");
+        settoDateError("");
+        setreasonError("");
+        setError([])
+        setPage(false)
+    }
+
+    /*--------------------
+        Form section  
+    ---------------------*/
+
+    // numbers of day genrate
+    const duration = useMemo(() => {
+        if (inputData.from_date && inputData.to_date && inputData.leave_for !== "Half") {
+            const date = inputData.from_date
+            return moment(inputData.to_date).diff(moment(date), 'days') + 1
+        } else if (inputData.leave_for === "Half") {
+            return 0.5
+        } else {
+            return 0
+        }
+    }, [inputData])
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setInputData({ ...inputData, [name]: value })
+    }
+
     //user validation
     const userValidation = () => {
-        if (!info.user_id || info.user_id === '0') {
-            setinfo({ ...info, user_id_error: "Employee is a required field." })
-            return false
+        if (!inputData.user_id || inputData.user_id === '0') {
+            setUserIdError("Employee is a required field.");
         } else {
-            setinfo({ ...info, user_id_error: '' })
+            setUserIdError("");
         }
     }
     // leave type validation
     const leaveTypeValidation = () => {
-        if (!leave.leave_type_id || leave.leave_type_id === '0') {
-            setleave({ ...leave, leave_type_id_error: "Leave type is a required field." })
-            return false
+        if (!inputData.leave_type_id || inputData.leave_type_id === '0') {
+            setleaveTypeIdError("Leave type is a required field.")
         } else {
-            setleave({ ...leave, leave_type_id_error: '' })
+            setleaveTypeIdError("");
         }
     }
     // from date validation
     const fromDateValidation = () => {
-        if (!from.from_date) {
-            setFrom({ ...from, from_date_error: "From date is a required field." })
-            return false
+        if (!inputData.from_date) {
+            setfromDateError("From date is a required fied.");
         } else {
-            setFrom({ ...from, from_date_error: '' })
+            setfromDateError("");
         }
     }
-
-    // from date onchange function
-    const fromDateChange = (e) => {
-        setFrom({ ...from, from_date: e.target.value })
-        if (to.to_date) {
-            if (e.target.value >= to.to_date) {
-                setTo({ ...to, to_date: "" })
-            }
-        }
-    }
-
-
     // to date validation
     const toDateValidation = () => {
-        if (!to.to_date) {
-            setTo({ ...to, to_date_error: "To date is a required field." })
-            return false
+        if (!inputData.to_date) {
+            settoDateError("To date is a required field.");
         } else {
-            setTo({ ...to, to_date_error: '' })
+            settoDateError("");
         }
     }
-    // to date onchange function
-    const toDateChange = (e) => {
-        setTo({ ...to, to_date: e.target.value })
-    }
-
-    // leave status validation
-    const leaveStatusValidation = () => {
-        if (!status_info.leave_status || status_info.leave_status === '0') {
-            setStatus({ ...status_info, leave_status_error: "Leave status is a required field." })
-            return false
-        } else {
-            setStatus({ ...status_info, leave_status_error: '' })
-        }
-    }
-
-    // numbers of day genrate
-
-    let day = useMemo(() => {
-        if (from.from_date && to.to_date) {
-            let text = from.from_date
-            return moment(to.to_date).diff(moment(text), 'days') + 1
-        } else {
-            return 0
-        }
-    }, [from, to])
-
-    useMemo(() => {
-        if (day > 1) {
-            status_info.leave_status === "Half" && setStatus({ ...status_info, leave_status: "0" })
-        }
-    }, [day, status_info])
-
-    // reason onchange function
-    const reasonChange = (e) => {
-        setReason({ ...reason, description: e.target.value })
-    }
-
     // reason validate
-    const descriptionValidate = () => {
-        if (!reason.description.trim()) {
-            setReason({ ...reason, description_error: 'Leave Reason is a required field.' })
-            // return false
+    const reasonValidate = () => {
+        if (!inputData.reason.trim()) {
+            setreasonError("Reason is a required field.");
         } else {
-            setReason({ ...reason, description_error: '' })
+            setreasonError("");
         }
     }
+
+
+    // submit function
+    const HandleSubmit = (e) => {
+        e.preventDefault();
+        // object destructuring
+        const { user_id, leave_type_id, leave_for, from_date, to_date, reason, status } = inputData;
+
+        if (leave_for !== "Half") {
+            toDateValidation();
+        }
+
+        permission && permission.name?.toLowerCase() === 'admin' && userValidation()
+        leaveTypeValidation();
+        fromDateValidation();
+        reasonValidate()
+        setError([]);
+
+
+        if (!leave_type_id || !leave_for || !from_date || (leave_for !== "Half" && !to_date) || !reason || (permission && permission.name?.toLowerCase() === 'admin' && !user_id)) {
+            return false;
+        }
+        if (leaveTypeIdError || fromDateError || reasonError || (permission && permission.name?.toLowerCase() === 'admin' && userIdError)) {
+            return false
+        }
+        setisLoading(true);
+
+
+        let common = {
+            leave_type_id,
+            user_id,
+            from_date: moment(from_date).format("YYYY-MM-DD"),
+            to_date: leave_for === "Full" ? moment(to_date).format("YYYY-MM-DD") : moment(from_date).format("YYYY-MM-DD"),
+            leave_for,
+            reason,
+            duration: duration,
+            status: (permission && permission.name?.toLowerCase() === 'admin') ? status : "Pending"
+        }
+        let url = ""
+        if (id) {
+            url = customAxios().put(`/leave/${id}`, common)
+        } else {
+            url = customAxios().post('/leave', common)
+        }
+        url.then(data => {
+            if (data.data.success) {
+                toast.success(data.data.message);
+                setShow(false);
+                setId("");
+                setInputData({
+                    user_id: "",
+                    leave_type_id: "",
+                    leave_for: "Full",
+                    from_date: "",
+                    to_date: "",
+                    reason: "",
+                    status: "Approved"
+                })
+                getLeave(startDate, endDate, user_id_drop);
+            }
+        }).catch((error) => {
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                } else {
+                    setError(error.response.data.error);
+                }
+            }
+        }).finally(() => {
+            setPage(false);
+            setisLoading(false)
+        })
+
+    }
+
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
@@ -321,14 +295,10 @@ const LeaveModal = (props) => {
                                 <form className="forms-sample">
                                     <div className="row">
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
-                                            <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="col-md-12 pr-md-2 pl-md-2">
                                                 <div className="form-group">
-                                                    <label htmlFor="1">Employee</label>
-                                                    <select className="form-control " id="user" name='user' disabled={data} value={info
-                                                        .user_id} onChange={(e) => {
-                                                            setinfo({ ...info, user_id: e.target.value })
-                                                        }
-                                                        } onBlur={userValidation} >
+                                                    <label htmlFor="user_id">Employee</label>
+                                                    <select className="form-control " id="user_id" name='user_id' disabled={data} value={inputData.user_id} onChange={handleChange} onBlur={userValidation}>
                                                         <option value='0'>Select Employee </option>
                                                         {user.map((val) => {
                                                             return (
@@ -336,14 +306,13 @@ const LeaveModal = (props) => {
                                                             )
                                                         })}
                                                     </select>
-                                                    {info.user_id_error && <small id="emailHelp" className="form-text error">{info.user_id_error}</small>}
+                                                    {userIdError && <small id="user_id" className="form-text error">{userIdError}</small>}
                                                 </div>
                                             </div>}
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="1"> Leave Type</label>
-                                                <select className="form-control text-capitalize " id="leaveType" name='leave_type_id' value={leave
-                                                    .leave_type_id} onChange={InputEvent} onBlur={leaveTypeValidation} >
+                                                <label htmlFor="leave_type_id"> Leave Type</label>
+                                                <select className="form-control text-capitalize " id="leave_type_id" name='leave_type_id' value={inputData.leave_type_id} onChange={handleChange} onBlur={leaveTypeValidation}>
                                                     <option value='0'>Select Leave Type </option>
                                                     {leaveTypeDetail.map((val) => {
                                                         return (
@@ -351,79 +320,78 @@ const LeaveModal = (props) => {
                                                         )
                                                     })}
                                                 </select>
-                                                {leave.leave_type_id_error && <small id="emailHelp" className="form-text error">{leave.leave_type_id_error}</small>}
+                                                {leaveTypeIdError && <small id="leave_type_id" className="form-text error">{leaveTypeIdError}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="leave_for"> Leave status</label>
+                                                <select className="form-control " id="leave_for" name='leave_for' value={inputData.leave_for} onChange={handleChange}>
+                                                    <option value='Full'>Full</option>
+                                                    <option value='Half'>Half</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group position-relative">
-                                                <label htmlFor="exampleInputJoining">From</label>
+                                                <label htmlFor="from_date">From</label>
                                                 <input
                                                     type="date"
+                                                    id='from_date'
                                                     className="form-control"
-                                                    value={from.from_date}
-                                                    name='date'
-                                                    disabled={!leave.leave_type_id || leave.leave_type_id === "0"}
+                                                    value={inputData.from_date}
+                                                    name='from_date'
                                                     ref={fromDateRef}
-                                                    onChange={fromDateChange}
+                                                    onChange={handleChange}
                                                     autoComplete='off'
                                                     onClick={() => { fromDateRef.current.showPicker(); }}
                                                     onBlur={fromDateValidation}
                                                 />
-                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { leave.leave_type_id && leave.leave_type_id !== "0" && fromDateRef.current.showPicker(); }} />
-                                                {from.from_date_error && <small id="emailHelp" className="form-text error">{from.from_date_error}</small>}
+                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { fromDateRef.current.showPicker(); }} />
+                                                {fromDateError && <small id="from_date" className="form-text error">{inputData.leave_for === "Half" ? "Date is a required field." : fromDateError}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group position-relative">
-                                                <label htmlFor="exampleInputJoining">To</label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    value={to.to_date || ''}
-                                                    name='todate'
-                                                    disabled={from.from_date === ''}
-                                                    ref={toDateRef}
-                                                    onChange={toDateChange}
-                                                    autoComplete='off'
-                                                    onClick={() => { toDateRef.current.showPicker(); }}
-                                                    onBlur={toDateValidation}
-                                                    min={from.from_date || new Date()}
-                                                />
-                                                <CalendarMonthIcon className='calendar-icon' onClick={() => { from.from_date !== "" && toDateRef.current.showPicker(); }} />
-                                                {to.to_date_error && <small id="emailHelp" className="form-text error">{to.to_date_error}</small>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="1"> Number of days</label>
-                                                <input type="text" className="form-control" id="1" value={day} disabled />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="1"> Leave status</label>
-                                                <select className="form-control " id="leavestatus" name='leave_status' value={status_info.leave_status
-                                                } onChange={(e) => { setStatus({ ...status_info, leave_status: e.target.value }) }} onBlur={leaveStatusValidation} >
-                                                    <option value='0'>Select Leave Status </option>
-                                                    <option value='Full'>Full</option>
-                                                    <option value='Half' disabled={day > 1}>Half</option>
-                                                </select>
-                                                {status_info.leave_status_error && <small id="emailHelp" className="form-text error">{status_info.leave_status_error}</small>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="1">Leave Reason</label>
-                                                <Form.Control as="textarea" onChange={reasonChange} value={reason.description} onBlur={descriptionValidate} />
-                                                {reason.description_error && <small id="emailHelp" className="form-text error">{reason.description_error}</small>}
-                                            </div>
-                                        </div>
-
-                                        {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                        {inputData.leave_for === "Full" &&
                                             <div className="col-md-6 pr-md-2 pl-md-2">
+                                                <div className="form-group position-relative">
+                                                    <label htmlFor="to_date">To</label>
+                                                    <input
+                                                        id='to_date'
+                                                        type="date"
+                                                        className="form-control"
+                                                        value={inputData.to_date || ''}
+                                                        name='to_date'
+                                                        disabled={inputData.from_date === ''}
+                                                        ref={toDateRef}
+                                                        onChange={handleChange}
+                                                        autoComplete='off'
+                                                        onClick={() => { toDateRef.current.showPicker(); }}
+                                                        min={inputData.from_date || new Date()}
+                                                        onBlur={toDateValidation}
+                                                    />
+                                                    <CalendarMonthIcon className='calendar-icon' onClick={() => { inputData.from_date !== "" && toDateRef.current.showPicker(); }} />
+                                                    {toDateError && <small id="to_date" className="form-text error">{toDateError}</small>}
+                                                </div>
+                                            </div>}
+
+                                        <div className={`pr-md-2 pl-md-2 ${inputData.leave_for === "Half" ? "col-md-6" : "col-md-12"}`}>
+                                            <div className="form-group">
+                                                <label htmlFor="duration"> Number of days</label>
+                                                <input type="text" className="form-control" id="duration" value={duration} disabled />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="reason">Leave Reason</label>
+                                                <Form.Control as="textarea" rows={4} name='reason' id='reason' onChange={handleChange} value={inputData.reason} onBlur={reasonValidate} />
+                                                {reasonError && <small id="reason" className="form-text error">{reasonError}</small>}
+                                            </div>
+                                        </div>
+                                        {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&
+                                            <div className="col-md-12 pr-md-2 pl-md-2">
                                                 <div className="form-group">
-                                                    <label htmlFor="1">Status</label>
-                                                    <select className="form-control " id="status" name='status' value={status_info.status} onChange={(e) => setStatus({ ...status_info, status: e.target.value })}>
+                                                    <label htmlFor="status">Status</label>
+                                                    <select className="form-control " id="status" name='status' value={inputData.status} onChange={handleChange}>
                                                         {data && <option value="Pending"> Pending</option>}
                                                         {data && <option value='Read'>Read </option>}
                                                         <option value='Approved'>Approved</option>

@@ -29,7 +29,8 @@ export const RouteReducer = (state, action) => {
                 leave: action.payload.data,
                 leaveFilter: action.payload.data,
                 permission: action.payload.permissions,
-                permissionToggle : false
+                permissionToggle : false,
+                leaveSetting : action.payload.leaveSettings
             }
             // eslint-disable-next-line
             break;
