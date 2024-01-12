@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useState } from 'react';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 
 const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
+    console.log("rendering")
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
@@ -208,4 +209,4 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
     )
 }
 
-export default AttendanceModal
+export default memo(AttendanceModal)

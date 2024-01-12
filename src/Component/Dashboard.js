@@ -196,7 +196,6 @@ const Dashboard = () => {
                                                        const date = year.toString().concat("-", monthDay)
                                                        highlight.push(subDays(new Date(date), 0));
                                                   })
-                                                  console.log(highlight, "highlight");
                                                   return (
                                                        <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
                                                   );

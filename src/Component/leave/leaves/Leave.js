@@ -24,7 +24,7 @@ const Leave = () => {
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
 
-    let { getLeave, user_id, setuser_id, leave, startDate, permissionToggle,setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave, user_id, setuser_id, leave, startDate, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -228,7 +228,7 @@ const Leave = () => {
             >
                 <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white pb-4">
-                        <div className=''>
+                        <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
                                     <div>
@@ -299,9 +299,21 @@ const Leave = () => {
                                 </div>
                             </div>
                         </div>
-
                         {/* table */}
                         <div className="mx-4">
+                        {((permission && permission.name?.toLowerCase() !== "admin") || user_id )&&
+                            <div className="row">
+                                {leaveSetting.map((val,ind) => {
+                                    return (
+                                        <div className="col-md-3" key={ind}>
+                                            <div className="p-3 d-flex justify-content-between align-content-center leave-box-section">
+                                                <h6 className="mb-0">{val.type}</h6>
+                                                <h6 className="mb-0">{val.cal}/{val.totalLeave}</h6>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>}
                             <TableContainer >
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
@@ -334,11 +346,11 @@ const Leave = () => {
                                                     Duration
                                                 </TableSortLabel>
                                             </TableCell>
-                                            {/* <TableCell>
+                                            <TableCell>
                                                 <TableSortLabel active={orderBy === "leave_for"} direction={orderBy === "leave_for" ? order : "asc"} onClick={() => handleRequestSort("leave_for")}>
                                                     Leave For
                                                 </TableSortLabel>
-                                            </TableCell> */}
+                                            </TableCell>
                                             <TableCell>
                                                 <TableSortLabel active={orderBy === "reason"} direction={orderBy === "reason" ? order : "asc"} onClick={() => handleRequestSort("reason")}>
                                                     Reason
@@ -374,7 +386,7 @@ const Leave = () => {
                                                     <TableCell>{moment(val.from_date).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>{moment(val.to_date).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>{val.duration}</TableCell>
-                                                    {/* <TableCell>{val.leave_for}</TableCell> */}
+                                                    <TableCell>{val.leave_for}</TableCell>
                                                     <TableCell>{val.reason}</TableCell>
                                                     <TableCell>{moment(val.createdAt).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>
