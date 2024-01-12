@@ -14,18 +14,21 @@ import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
 import { customAxios } from "../../../service/CreateApi";
-import RequestModal from "./RequestModal";
+// import RequestModal from "./RequestModal";
 import DowlonadReport from "./dowlonadReport";
 import { AppProvider } from "../../context/RouteContext";
 import ranges from "../../../helper/calcendarOption";
+import ErrorComponent from "../../common/ErrorComponent";
 
 const WorkReportComponent = () => {
-    let date_today = new Date();
+    const date_today = new Date();
+    const matchDate = [moment(date_today).format("YYYY-MM-DD"),moment(date_today).subtract(1, "d").format("YYYY-MM-DD")]
     // eslint-disable-next-line
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
     const [permission, setpermission] = useState("");
     const [isLoading, setisLoading] = useState(false);
+    const [isSubLoading, setisSubLoading] = useState(false);
     const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
     const [endDate, setendtDate] = useState(moment(date_today).subtract(1, "day"));
     const [user_id, setuser_id] = useState("");
@@ -36,8 +39,9 @@ const WorkReportComponent = () => {
     const [permissionToggle, setPermissionToggle] = useState(true);
     const [localStorageToggle, setLocalStorageToggle] = useState(false);
     const [newRecord, setNewRecord] = useState("");
+    const [error, setError] = useState([]);
 
-    let { get_username, userName } = useContext(AppProvider);
+    let { get_username, userName,getLeaveNotification } = useContext(AppProvider);
 
     // pagination state
     const [count, setCount] = useState(50)
@@ -176,7 +180,69 @@ const WorkReportComponent = () => {
     // modal Hide 
     const handleClose = () => {
         setShow(false)
-        setShowModal(false)
+        setShowModal(false);
+        setNewRecord("");
+    }
+
+    // approved request
+    const acceptRequest = async (e) => {
+        e && e.preventDefault();
+        const { userId, date, totalHours, work, wortReportId, _id } = newRecord;
+
+        let url = "";
+
+        if (wortReportId) {
+            url = customAxios().patch(`/report/${wortReportId}`, { userId, date, totalHours, work, _id })
+        } else {
+            url = customAxios().post('/report', { userId, date, totalHours, work, _id })
+        }
+
+        setisSubLoading(true);
+        url.then(data => {
+            if (data.data.success) {
+                toast.success(data.data.message);
+                getLeaveNotification();
+                getReport(userId);
+                setShowModal(false)
+                setisSubLoading(false);
+                setNewRecord("");
+            }
+        }).catch((error) => {
+            setisSubLoading(false);
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                } else {
+                    setError(error.response.data.error)
+                }
+            }
+        })
+    }
+
+    // declined request
+    const declinedRequest = async() => {
+        try {
+            const { userId, _id } = newRecord;
+            setisSubLoading(true);
+            const res = await customAxios().put(`/report_request/${_id}`,{ status: "Declined" })
+            if (res.data.success) {
+                toast.success(res.data.message);
+                getLeaveNotification();
+                getReport(userId);
+                setShowModal(false)
+                setisSubLoading(false);
+                setNewRecord("");
+            }
+        } catch (error) {
+            setisSubLoading(false)
+            if (!error.response) {
+                toast.error(error.message)
+            } else if (error.response.data.message) {
+                toast.error(error.response.data.message)
+            }
+        }
     }
 
     if (isLoading) {
@@ -191,7 +257,7 @@ const WorkReportComponent = () => {
         <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
             <div className=" container-fluid py-4">
                 <div className="background-wrapper bg-white pb-4">
-                    <div className=''>
+                    <div>
                         <div className='row justify-content-end align-items-center row-std m-0'>
                             <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
                                 <div>
@@ -227,7 +293,7 @@ const WorkReportComponent = () => {
                                             className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
                                             <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
                                         </button>}
-                                    {permission && permission.name.toLowerCase() !== "admin" && <RequestModal />}
+                                    {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} />}
                                     <WorkReportModal permission={permission && permission} getReport={getReport} />
                                     {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                                 </div>
@@ -307,16 +373,11 @@ const WorkReportComponent = () => {
                                                 }
                                                 <TableCell>{val.totalHours}</TableCell>
                                                 <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
-                                                {(permission && permission.name.toLowerCase() === "admin") || date_today.toDateString() === new Date(val.date).toDateString() ? <TableCell align="center">
+                                                <TableCell align="center">
                                                     <div className="action">
-                                                        <WorkReportModal permission={permission && permission} getReport={getReport} data={val} />
+                                                        <WorkReportModal permission={permission && permission} getReport={getReport} data={val} isRequest={!((permission && permission.name.toLowerCase() === "admin") || matchDate.includes(moment(val.date).format("YYYY-MM-DD")))} />
                                                     </div>
-                                                </TableCell> :
-                                                    <TableCell>
-                                                        <div className="action">
-                                                            <RequestModal data={val.date} />
-                                                        </div>
-                                                    </TableCell>}
+                                                </TableCell>
                                             </TableRow>
                                         )
                                     }) :
@@ -365,7 +426,7 @@ const WorkReportComponent = () => {
                                 return <div className="card-body table_section" key={currElem._id}>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
-                                        <h5 className="text-secondary mb-0">{currElem.hours}h</h5>
+                                        <h5 className="mb-0">{currElem.hours}h</h5>
                                     </div>
                                     <hr />
                                     <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
@@ -375,6 +436,8 @@ const WorkReportComponent = () => {
                     </div>
                 </Modal.Body>
             </Modal>
+
+            {/* request data */}
             <Modal
                 show={showModal}
                 animation={true}
@@ -385,7 +448,7 @@ const WorkReportComponent = () => {
             >
                 <Modal.Header className="small-modal">
                     <Modal.Title>
-                        Add Data
+                        {newRecord.title} - {moment(newRecord.date).format("DD MMM YYYY")}
                     </Modal.Title>
                     <p className="close-modal" onClick={handleClose}>
                         <i className="fa-solid fa-xmark"></i>
@@ -393,19 +456,34 @@ const WorkReportComponent = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className=" grid-margin stretch-card inner-pages mb-lg-0">
-                        <div className="card"><div className="card-body table_section" >
-                            <div className="d-flex justify-content-between align-items-center">
-                                <h4 className="mb-0">{newRecord?.user?.first_name?.concat(" ",newRecord?.user?.last_name)}</h4>
-                                <h5 className="text-secondary mb-0">{moment(newRecord.date).format("DD MMM YYYY")}</h5>
+                        <div className="card">
+                            {newRecord && newRecord.work.map((val) => {
+                                return (
+                                    <div className="card-body table_section" key={val._id}>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <h4 className="mb-0">{val?.project?.name}</h4>
+                                            <h5 className="mb-0">{val.hours}h</h5>
+                                        </div>
+                                        <hr />
+                                        <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: val.description }}></div>
+                                    </div>
+                                )
+                            })}
+                            {error.length !== 0 &&
+                                <div className="row mx-0 mt-2 mb-0">
+                                    <div className="col-md-12">
+                                        <ErrorComponent errors={error} />
+                                    </div>
+                                </div>
+                            }
+                            <div className='d-flex justify-content-center modal-button m-3'>
+                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={acceptRequest} >Approved</button>
+                                <button className="btn btn-light" onClick={declinedRequest}>Declined</button>
                             </div>
-                            <hr />
-                            <div className="report-description-preview" >
-                                {newRecord?.description}
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </Modal.Body>
+                {isSubLoading && <Spinner/>}
             </Modal>
         </motion.div >)
 };

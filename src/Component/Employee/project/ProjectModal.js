@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../../common/Spinner';
 import { toast } from 'react-hot-toast';
 import { customAxios } from '../../../service/CreateApi';
 
-function ProjectModal({ data, getProject, permission, records }) {
+function ProjectModal({ data, getProject, permission }) {
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [error, seterror] = useState('');
@@ -129,4 +129,4 @@ function ProjectModal({ data, getProject, permission, records }) {
     );
 }
 
-export default ProjectModal
+export default memo(ProjectModal)
