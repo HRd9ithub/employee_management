@@ -23,14 +23,12 @@ const Notification = () => {
             if (date) {
                 try {
                     setisLoading(true);
-                    const res = await customAxios().put(`/report_request/${_id}`)
+                    const res = await customAxios().put(`/report_request/${_id}`,{ status: "Read" })
                     if (res.data.success) {
                         setisLoading(false);
                         getLeaveNotification();
                         localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
-                        if(item.title === "Add Request"){
-                            localStorage.setItem("data", JSON.stringify(item))
-                        }
+                        localStorage.setItem("data", JSON.stringify(item))
                         history('/work-report')
                     }
                 } catch (error) {
@@ -69,9 +67,7 @@ const Notification = () => {
             if (date) {
                 getLeaveNotification();
                 localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
-                if(item.title === "Add Request"){
-                    localStorage.setItem("data", JSON.stringify(item))
-                }
+                localStorage.setItem("data", JSON.stringify(item))
                 history('/work-report')
             } else {
                 if (pathname === "/leaves") {
@@ -133,11 +129,9 @@ const Notification = () => {
                                             <div className="notification-details w-100">
                                                 <div className="w-100 d-flex justify-content-between align-items-center">
                                                     <p className='mb-0'>{item.user ? item.user.first_name?.concat(" ", item.user?.last_name) : <HiOutlineMinus />}</p>
-                                                    {/* <p className='mb-0 text-dark-secondary'>{timeAgo(item.createdAt)}</p> */}
                                                     <i className="fa-solid fa-xmark" onClick={(e) => notificationDelete(e, item)}></i>
                                                 </div>
                                                 <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.title ? timeAgo(item.createdAt) + "  -  " + item.title : timeAgo(item.createdAt) + " - " + item.leaveType + " Request"}</p>
-                                                {item.description && <p className='notifictaion-description mt-1 mb-0 text-dark-secondary text-wrap w-100'>{item.description}</p>}
                                             </div>
                                         </div>
                                     </Dropdown.Item>

@@ -334,7 +334,7 @@ const LeaveModal = (props) => {
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group position-relative">
-                                                <label htmlFor="from_date">From</label>
+                                                <label htmlFor="from_date">{inputData.leave_for === "Full" ? "From" : "Date"}</label>
                                                 <input
                                                     type="date"
                                                     id='from_date'

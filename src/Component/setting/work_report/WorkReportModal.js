@@ -13,8 +13,9 @@ import { useContext } from 'react';
 import { AppProvider } from '../../context/RouteContext';
 import JoditEditor from 'jodit-react';
 import ErrorComponent from '../../common/ErrorComponent';
+import { Tooltip } from '@mui/material';
 
-function WorkReportModal({ data, permission, getReport, showModal }) {
+function WorkReportModal({ data, permission, getReport, isRequest }) {
     let workDateRef = useRef(null);
     // common state
     const [show, setShow] = useState(false);
@@ -27,7 +28,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
     // initialistate state
     const [work, setWork] = useState({
         userId: "",
-        date: moment(new Date()).format("YYYY-MM-DD"),
+        date: "",
     })
 
     const [workData, setworkData] = useState([{
@@ -43,6 +44,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
     const [descriptionError, setdescriptionError] = useState([]);
     const [hoursError, sethoursError] = useState([]);
     const [error, setError] = useState([]);
+    const [title, setTitle] = useState("");
 
     let { get_username, userName, Loading } = useContext(AppProvider);
 
@@ -59,6 +61,9 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
             });
             setworkData(work);
         }
+        if (isRequest) {
+            setTitle(data ? "Edit Request" : "Add Request")
+        }
         setShow(true)
     }
     // modal hide  function
@@ -71,9 +76,10 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
         setdescriptionError([])
         sethoursError([])
         setError([]);
+        setdateError("")
         setWork({
             userId: "",
-            date: moment(new Date()).format("YYYY-MM-DD"),
+            date: "",
         })
         setworkData([{
             projectId: "",
@@ -135,10 +141,14 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
             return false;
         } else {
             let url = "";
-            if (id) {
-                url = customAxios().patch(`/report/${id}`, { userId, date, totalHours, work: workData })
+            if (!isRequest) {
+                if (id) {
+                    url = customAxios().patch(`/report/${id}`, { userId, date, totalHours, work: workData })
+                } else {
+                    url = customAxios().post('/report/', { userId, date, totalHours, work: workData })
+                }
             } else {
-                url = customAxios().post('/report/', { userId, date, totalHours, work: workData })
+                url = customAxios().post("/report_request", { userId, date, totalHours, work: workData, title, wortReportId: id })
             }
             setisLoading(true);
             url.then(data => {
@@ -229,7 +239,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
         }
     }
     // description
-    const descriptionValidation = (ind,newContent) => {
+    const descriptionValidation = (ind, newContent) => {
         if (!workData[ind].description || workData[ind].description === "<p><br></p>") {
             setdescriptionError([...descriptionError.filter((val) => {
                 return val.id !== ind
@@ -290,7 +300,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
         setworkData(list)
     }
     // description
-    const handleContentChange = (content,ind) => {
+    const handleContentChange = (content, ind) => {
         let list = [...workData];
         list[ind].description = content;
         setworkData(list);
@@ -304,26 +314,28 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
     }, [workData]);
 
     const config = useMemo(() => {
-        return{
-			readonly: false,
-			placeholder: 'write your content ....'
-		}
-    },[]);
+        return {
+            readonly: false,
+            placeholder: 'write your content ....'
+        }
+    }, []);
 
     return (
         <>
-            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
+            {data ? isRequest ?
+                <Tooltip title="Edit Request" placement="top">
+                    <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
+                </Tooltip>
+                : <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
                 permission && permission.permissions.create === 1 &&
                 <button
                     className='btn btn-gradient-primary btn-rounded btn-fw text-center ' onClick={handleShow} >
-                    <i className="fa-solid fa-plus" ></i>&nbsp;Add
+                    <i className="fa-solid fa-plus" ></i>&nbsp;{isRequest ? "Add Request" : "Add"}
                 </button >
             }
-            {/* Department Name * */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal modal_Section' centered>
                 <Modal.Header className='small-modal'>
-                    <Modal.Title>{data ? 'Edit Work Report' : 'Add Work Report'}
-                    </Modal.Title>
+                    <Modal.Title>{data ? isRequest ? 'Edit Request' : "Edit Work Report" : isRequest ? 'Add Request' : "Add Work Report"}</Modal.Title>
                     <p className='close-modal' onClick={handleHide} ><i className="fa-solid fa-xmark"></i></p>
                 </Modal.Header>
                 <Modal.Body>
@@ -338,7 +350,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
                                                 <div className="form-group">
                                                     <label htmlFor="user" className='mt-3'>Employee</label>
                                                     <select className="form-control " id="user" name='userId' disabled={data} value={work.userId} onChange={handleChange} onBlur={userIdValidation} >
-                                                        <option value='0'>Select Employee </option>
+                                                        <option value=''>Select Employee </option>
                                                         {userName.map((val) => {
                                                             return (
                                                                 val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
@@ -362,8 +374,8 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
                                                         onChange={handleChange}
                                                         value={work.date}
                                                         onBlur={workDateValidation}
-                                                        max={moment(new Date()).format("YYYY-MM-DD")}
-                                                        min={permission?.name?.toLowerCase() !== "admin" ? moment(new Date()).subtract(1, "day").format("YYYY-MM-DD") : ""}
+                                                        max={isRequest ? moment(new Date()).subtract(2, "day").format("YYYY-MM-DD") : moment(new Date()).format("YYYY-MM-DD")}
+                                                        min={permission?.name?.toLowerCase() !== "admin" && !isRequest ? moment(new Date()).subtract(1, "day").format("YYYY-MM-DD") : ""}
                                                     />
                                                     <CalendarMonthIcon className='calendar-icon-work' />
                                                     {dateError && <small id="date-field" className="form-text error">{dateError}</small>}
@@ -383,7 +395,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
                                                         <div className="form-group">
                                                             <label htmlFor="project" className='mt-3'>Projects</label>
                                                             <select className="form-control " id="project" name='projectId' value={item.projectId} onChange={(e) => handleWorkChange(e, ind)} onBlur={() => projectValidation(ind)}>
-                                                                <option value='0'>Select Project </option>
+                                                                <option value=''>Select Project </option>
                                                                 {project.map((val) => {
                                                                     return <option key={val._id} value={val._id} >{val.name}</option>
                                                                 })}
@@ -411,8 +423,8 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
                                                                 config={config}
                                                                 value={item.description}
                                                                 tabIndex={1} // tabIndex of textarea
-                                                                onChange={newContent => handleContentChange(newContent,ind)} // preferred to use only this option to update the content for performance reasons
-                                                                onBlur={(newContent) =>  descriptionValidation(ind)}
+                                                                onChange={newContent => handleContentChange(newContent, ind)} // preferred to use only this option to update the content for performance reasons
+                                                                onBlur={(newContent) => descriptionValidation(ind)}
                                                             />
                                                             {descriptionError.map((val) => {
                                                                 return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
@@ -443,7 +455,7 @@ function WorkReportModal({ data, permission, getReport, showModal }) {
                                         </div>
                                     }
                                     <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{data ? 'Update' : 'Save'}</button>
+                                        <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleSubmit} >{isRequest ? "Send" : data ? 'Update' : 'Save'}</button>
                                         <button className="btn btn-light" onClick={handleHide}>Cancel</button>
                                     </div>
                                 </form>
