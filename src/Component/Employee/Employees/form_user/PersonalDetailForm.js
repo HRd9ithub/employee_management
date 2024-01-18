@@ -131,6 +131,12 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const InputEvent = (event) => {
         let { name, value } = event.target;
 
+        const staticName = ["postcode","phone"]
+
+        if(staticName.includes(name)){
+            value = value.replace(/[^0-9]/g, "");
+        }
+
         setEmployee({ ...employee, [name]: value });
     };
 

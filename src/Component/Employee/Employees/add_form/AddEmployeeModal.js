@@ -140,6 +140,10 @@ const AddEmployeeModal = ({ getAlluser, permission }) => {
     const handleChange = (e) => {
         let { name, value } = e.target;
 
+        if(name === "mobile_no"){
+            value = value.replace(/[^0-9]/g, "");
+        }
+
         setEmployee({ ...employee, [name]: value })
     }
 
