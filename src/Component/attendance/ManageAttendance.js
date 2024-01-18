@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
 import Error500 from '../error_pages/Error500';
 import Error403 from '../error_pages/Error403';
+import { AppProvider } from '../context/RouteContext';
 
 const ManageAttendance = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -14,6 +15,8 @@ const ManageAttendance = () => {
     const [comment,setComment] = useState("");
     const [error, setError] = useState([]);
     const [permission, setpermission] = useState("");
+
+    let { getLeaveNotification, Loading } = useContext(AppProvider);
 
     const navigate = useNavigate();
     const {id} = useParams();
@@ -73,6 +76,7 @@ const ManageAttendance = () => {
                 toast.success(data.data.message);
                 setComment("");
                 navigate("/attendance");
+                getLeaveNotification();
             }
         }).catch((error) => {
             if (!error.response) {
@@ -87,7 +91,7 @@ const ManageAttendance = () => {
         }).finally(() => setisLoading(false))
     }    
 
-    if (isLoading) {
+    if (isLoading || Loading) {
         return <Spinner />;
     }else if (serverError) {
         return <Error500 />;
@@ -159,7 +163,7 @@ return (
                                                 </ol>}
                                             <div className="submit-section d-flex justify-content-end">
                                                 <button className="btn btn-gradient-primary" onClick={(e) => handleAddComment(e,"Approved",val)}>Approve</button>
-                                                <button className="btn btn-light" onClick={(e) => handleAddComment(e,"Reject",val)}>Reject</button>
+                                                <button className="btn btn-light" onClick={(e) => handleAddComment(e,"Declined",val)}>Reject</button>
                                             </div>
                                         </form>
                                     </div>

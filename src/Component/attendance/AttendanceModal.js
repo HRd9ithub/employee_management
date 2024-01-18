@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 
 const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
-    console.log("rendering")
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",

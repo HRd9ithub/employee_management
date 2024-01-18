@@ -18,16 +18,16 @@ const Notification = () => {
 
     // status change
     const notificationStatusChange = async (item) => {
-        const { date, _id,status } = item;
-        if(status === "Pending"){
+        const { date, _id, status } = item;
+        if (status === "Pending") {
             if (date) {
                 try {
                     setisLoading(true);
-                    const res = await customAxios().put(`/report_request/${_id}`,{ status: "Read" })
+                    const res = await customAxios().put(`/report_request/${_id}`, { status: "Read" })
                     if (res.data.success) {
                         setisLoading(false);
                         getLeaveNotification();
-                        localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
+                        localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                         localStorage.setItem("data", JSON.stringify(item))
                         history('/work-report')
                     }
@@ -40,44 +40,66 @@ const Notification = () => {
                     }
                 }
             } else {
-                try {
-                    setisLoading(true);
-                    const res = await customAxios().patch(`/leave/${_id}`, { status: "Read" })
-                    if (res.data.success) {
-                        setisLoading(false);
-                        if (pathname === "/leaves") {
-                            getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
-                        } else {
-                            history('/leaves')
+                if (item.attendanceId) {
+                    try {
+                        setisLoading(true);
+                        const res = await customAxios().patch(`/attendance/${_id}`)
+                        if (res.data.success) {
+                            setisLoading(false);
+                            getLeaveNotification();
+                            history(`/attendance/${item.attendanceId}`)
                         }
-                    }
-                } catch (error) {
-                    setisLoading(false)
-                    if (!error.response) {
-                        toast.error(error.message)
-                    } else if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                };
-                setendtDate(new Date(item.to_date))
-                setStartDate(new Date(item.from_date))
-                setuser_id(item.user_id)
+                    } catch (error) {
+                        setisLoading(false)
+                        if (!error.response) {
+                            toast.error(error.message)
+                        } else if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        }
+                    };
+                } else {
+                    try {
+                        setisLoading(true);
+                        const res = await customAxios().patch(`/leave/${_id}`, { status: "Read" })
+                        if (res.data.success) {
+                            setisLoading(false);
+                            if (pathname === "/leaves") {
+                                getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
+                            } else {
+                                history('/leaves')
+                            }
+                        }
+                    } catch (error) {
+                        setisLoading(false)
+                        if (!error.response) {
+                            toast.error(error.message)
+                        } else if (error.response.data.message) {
+                            toast.error(error.response.data.message)
+                        }
+                    };
+                    setendtDate(new Date(item.to_date))
+                    setStartDate(new Date(item.from_date))
+                    setuser_id(item.user_id)
+                }
             }
-        }else{
+        } else {
             if (date) {
-                getLeaveNotification();
-                localStorage.setItem("filter", JSON.stringify({date,id : item.userId}));
+                localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                 localStorage.setItem("data", JSON.stringify(item))
                 history('/work-report')
             } else {
-                if (pathname === "/leaves") {
-                    getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
+                if (item.attendanceId) {
+                    history(`/attendance/${item.attendanceId}`)
                 } else {
-                    history('/leaves')
+                    if (pathname === "/leaves") {
+                        getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
+                    } else {
+                        history('/leaves')
+                    }
+                    setendtDate(new Date(item.to_date))
+                    setStartDate(new Date(item.from_date))
+                    setuser_id(item.user_id);
                 }
-                setendtDate(new Date(item.to_date))
-                setStartDate(new Date(item.from_date))
-                setuser_id(item.user_id)
             }
 
         }
@@ -88,11 +110,11 @@ const Notification = () => {
         if (e && e.stopPropagation) e.stopPropagation();
         try {
             setisLoading(true);
-            const res = await customAxios().post(`/leave/status?id=${item._id}&report=${item.date ? item.date : ""}`);
+            const res = await customAxios().post(`/leave/status?id=${item._id}&report=${item.date ? item.date : ""}&attendance=${item.attendanceId ? item.attendanceId : ""}`);
             if (res.data.success) {
                 getLeaveNotification();
                 setisLoading(false)
-            }
+            }  
         } catch (error) {
             setisLoading(false)
             if (!error.response) {
@@ -131,7 +153,7 @@ const Notification = () => {
                                                     <p className='mb-0'>{item.user ? item.user.first_name?.concat(" ", item.user?.last_name) : <HiOutlineMinus />}</p>
                                                     <i className="fa-solid fa-xmark" onClick={(e) => notificationDelete(e, item)}></i>
                                                 </div>
-                                                <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.title ? timeAgo(item.createdAt) + "  -  " + item.title : timeAgo(item.createdAt) + " - " + item.leaveType + " Request"}</p>
+                                                <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.title ? timeAgo(item.createdAt) + "  -  " + item.title : item.leaveType ? timeAgo(item.createdAt) + " - " + item.leaveType + " Request" : timeAgo(item.createdAt) + " - Attendance Regularize"}</p>
                                             </div>
                                         </div>
                                     </Dropdown.Item>
