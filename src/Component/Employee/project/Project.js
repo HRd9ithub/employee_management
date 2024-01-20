@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Error403 from "../../error_pages/Error403"
 import Error500 from '../../error_pages/Error500';
 import { customAxios } from '../../../service/CreateApi';
+import Swal from 'sweetalert2';
 
 const Project = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,12 +44,12 @@ const Project = () => {
         setServerError(true)
         toast.error(error.message)
       } else {
-          if (error.response.status === 500) {
-            setServerError(true)
-          }
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+        if (error.response.status === 500) {
+          setServerError(true)
+        }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
       }
     }).finally(() => setPermissionToggle(false));
   }
@@ -62,6 +63,39 @@ const Project = () => {
   const recordsFilter = useMemo(() => {
     return records.filter((item) => item.name.toLowerCase().includes(searchItem.toLowerCase()));
   }, [records, searchItem]);
+
+  // delete function
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Delete Project",
+      text: "Are you sure you want to delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1bcfb4",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      width: "450px",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setIsLoading(true);
+        const res = await customAxios().delete(`/project/${id}`);
+        if (res.data.success) {
+          getProject();
+          toast.success(res.data.message);
+        }
+      }
+    }).catch((error) => {
+      setIsLoading(false);
+      if (!error.response) {
+        toast.error(error.message)
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })
+  };
 
 
   // pagination function
@@ -160,7 +194,7 @@ const Project = () => {
                           Project Name
                         </TableSortLabel>
                       </TableCell>
-                      {permission && permission.permissions.update === 1 &&
+                      {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -172,10 +206,11 @@ const Project = () => {
                         <TableRow key={ind}>
                           <TableCell>{ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
-                          {permission && permission.permissions.update === 1 &&
+                          {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                             <TableCell>
                               <div className='action'>
-                                  <ProjectModal data={val} getProject={getProject} />
+                                {permission.permissions.update === 1 && <ProjectModal data={val} getProject={getProject} />}
+                                {permission.permissions.delete === 1 && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                               </div>
                             </TableCell>}
                         </TableRow>
