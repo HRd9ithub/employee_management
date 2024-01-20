@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
 import { customAxios } from '../../../service/CreateApi'
+import Swal from 'sweetalert2';
 
 const LeaveType = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -51,6 +52,39 @@ const LeaveType = () => {
                 }
             }
         }).finally(() => setPermissionToggle(false));
+    };
+
+    // delete function
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Delete Leave Type",
+            text: "Are you sure you want to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1bcfb4",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel",
+            width: "450px",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setisLoading(true);
+                const res = await customAxios().delete(`/leaveType/${id}`);
+                if (res.data.success) {
+                    getLeaveType();
+                    toast.success(res.data.message);
+                }
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message)
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
     };
 
     useEffect(() => {
@@ -110,9 +144,9 @@ const LeaveType = () => {
 
     if (isLoading) {
         return <Spinner />;
-    }else if(serverError){
+    } else if (serverError) {
         return <Error500 />;
-    }else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
+    } else if ((!permission || permission.permissions.list !== 1) && !permissionToggle) {
         return <Error403 />;
     }
 
@@ -166,7 +200,7 @@ const LeaveType = () => {
                                                     LeaveType
                                                 </TableSortLabel>
                                             </TableCell>
-                                            {permission && permission.permissions.update === 1 &&
+                                            {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                                                 <TableCell>
                                                     Action
                                                 </TableCell>}
@@ -178,10 +212,11 @@ const LeaveType = () => {
                                                 <TableRow key={val._id}>
                                                     <TableCell>{ind + 1}</TableCell>
                                                     <TableCell>{val.name}</TableCell>
-                                                    {permission && permission.permissions.update === 1 &&
+                                                    {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                                                         <TableCell>
                                                             <div className='action'>
-                                                                <LeaveTypeModal data={val} getLeaveType={getLeaveType} />
+                                                                {permission.permissions.update === 1 && <LeaveTypeModal data={val} getLeaveType={getLeaveType} />}
+                                                                {permission.permissions.delete === 1 && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                             </div>
                                                         </TableCell>
                                                     }

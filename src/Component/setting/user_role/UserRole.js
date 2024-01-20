@@ -10,6 +10,7 @@ import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { customAxios } from "../../../service/CreateApi";
+import Swal from "sweetalert2";
 
 const UserRole = () => {
   const [isLoading, setisLoading] = useState(false);
@@ -57,6 +58,39 @@ const UserRole = () => {
       setisLoading(false);
       setPermissionToggle(false);
     }
+  };
+
+  // delete function
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Delete User Role",
+      text: "Are you sure you want to delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1bcfb4",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      width: "450px",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setisLoading(true);
+        const res = await customAxios().delete(`/role/${id}`);
+        if (res.data.success) {
+          getuserRole();
+          toast.success(res.data.message);
+        }
+      }
+    }).catch((error) => {
+      setisLoading(false);
+      if (!error.response) {
+        toast.error(error.message)
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })
   };
 
   useEffect(() => {
@@ -174,7 +208,7 @@ const UserRole = () => {
                           User Role
                         </TableSortLabel>
                       </TableCell>
-                      {permission && permission.permissions.update === 1 &&
+                      {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -186,13 +220,11 @@ const UserRole = () => {
                         <TableRow key={ind}>
                           <TableCell>{ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
-                          {permission && permission.permissions.update === 1 &&
+                          {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                             <TableCell>
                               <div className='action'>
-                                <UserRoleModal
-                                  data={val}
-                                  getuserRole={getuserRole}
-                                />
+                                {permission.permissions.update === 1 && <UserRoleModal data={val} getuserRole={getuserRole} />}
+                                {permission.permissions.delete === 1 && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                               </div>
                             </TableCell>}
                         </TableRow>

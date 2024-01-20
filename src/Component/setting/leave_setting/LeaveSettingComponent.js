@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import Spinner from '../../common/Spinner';
 import Error500 from '../../error_pages/Error500';
 import Error403 from '../../error_pages/Error403';
+import Swal from 'sweetalert2';
 
 const LeaveSettingComponent = () => {
     const [records, setRecords] = useState([]);
@@ -59,6 +60,41 @@ const LeaveSettingComponent = () => {
     useLayoutEffect(() => {
         getLeaveSetting();
     }, [])
+
+    /*--------------------
+     delete leave setting data
+    ----------------------*/
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Delete Leave Setting",
+            text: "Are you sure you want to delete?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1bcfb4",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel",
+            width: "450px",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setisLoading(true);
+                const res = await customAxios().delete(`/leave-setting/${id}`);
+                if (res.data.success) {
+                    getLeaveSetting();
+                    toast.success(res.data.message);
+                }
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message)
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
+    };
 
     /*--------------------
      pagination and sort table
@@ -159,12 +195,12 @@ const LeaveSettingComponent = () => {
                                 <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
                                     <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
                                         <div className="search-full pr-0">
-                                            <input tye="search" className="input-search-full" autoComplete='off' placeholder="Search" value={searchItem} onChange={handleSearch}/>
+                                            <input tye="search" className="input-search-full" autoComplete='off' placeholder="Search" value={searchItem} onChange={handleSearch} />
                                             <i className="fas fa-search"></i>
                                         </div>
                                         <div className="search-box mr-3">
                                             <form name="search-inner">
-                                                <input type="search" className="input-search" autoComplete='off' value={searchItem} onChange={handleSearch}/>
+                                                <input type="search" className="input-search" autoComplete='off' value={searchItem} onChange={handleSearch} />
                                             </form>
                                             <i className="fas fa-search"></i>
                                         </div>
@@ -206,6 +242,7 @@ const LeaveSettingComponent = () => {
                                                     <TableCell>
                                                         <div className='action'>
                                                             <LeaveSettingModal data={val} permission={permission} getLeaveSetting={getLeaveSetting} />
+                                                            <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>

@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import Error403 from "../../error_pages/Error403"
 import Error500 from '../../error_pages/Error500';
 import { customAxios } from "../../../service/CreateApi";
+import Swal from "sweetalert2";
 
 const Designation = () => {
   const [isLoading, setisLoading] = useState(false);
@@ -42,13 +43,13 @@ const Designation = () => {
       if (!error.response) {
         setServerError(true)
         toast.error(error.message)
-      }else {
-          if (error.response.status === 500) {
-            setServerError(true)
-          }
-          if (error.response.data.message) {
-            toast.error(error.response.data.message)
-          }
+      } else {
+        if (error.response.status === 500) {
+          setServerError(true)
+        }
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
       }
     }).finally(() => setPermissionToggle(false))
   };
@@ -62,6 +63,39 @@ const Designation = () => {
   const recordsFilter = useMemo(() => {
     return records.filter((item) => item.name.toLowerCase().includes(searchItem.toLowerCase()));
   }, [records, searchItem]);
+
+  // delete function
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Delete Designation",
+      text: "Are you sure you want to delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#1bcfb4",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      width: "450px",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setisLoading(true);
+        const res = await customAxios().delete(`/designation/${id}`);
+        if (res.data.success) {
+          getdesignation();
+          toast.success(res.data.message);
+        }
+      }
+    }).catch((error) => {
+      setisLoading(false);
+      if (!error.response) {
+        toast.error(error.message)
+      } else {
+        if (error.response.data.message) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })
+  };
 
   // pagination function
   const onChangePage = (e, page) => {
@@ -158,7 +192,7 @@ const Designation = () => {
                           Designation Name
                         </TableSortLabel>
                       </TableCell>
-                      {permission && permission.permissions.update === 1 &&
+                      {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                         <TableCell>
                           Action
                         </TableCell>}
@@ -170,13 +204,11 @@ const Designation = () => {
                         <TableRow key={ind}>
                           <TableCell>{ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
-                          {permission && permission.permissions.update === 1 &&
+                          {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                             <TableCell>
                               <div className='action'>
-                                <DesignationModal
-                                  data={val}
-                                  getdesignation={getdesignation}
-                                />
+                                {permission.permissions.update === 1 && <DesignationModal data={val} getdesignation={getdesignation} />}
+                                {permission.permissions.delete === 1 && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                               </div>
                             </TableCell>}
                         </TableRow>
