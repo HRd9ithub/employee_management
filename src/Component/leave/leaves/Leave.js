@@ -37,7 +37,7 @@ const Leave = () => {
     useEffect(() => {
         getLeave(startDate, endDate, user_id)
         // eslint-disable-next-line
-    }, [])
+    }, [endDate,user_id])
 
     // status change modal SHOW
     const handlesshowModal = (status, id) => {
@@ -173,13 +173,11 @@ const Leave = () => {
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d)
-        getLeave(start._d, end._d, user_id)
     }
 
     // user change function
     const userChange = (e) => {
         setuser_id(e.target.value)
-        getLeave(startDate, endDate, e.target.value)
     }
 
     // eslint-disable-next-line
@@ -308,7 +306,7 @@ const Leave = () => {
                                         <div className="col-md-3" key={ind}>
                                             <div className="p-3 d-flex justify-content-between align-content-center leave-box-section">
                                                 <h6 className="mb-0">{val.type}</h6>
-                                                <h6 className="mb-0">{val.cal}/{val.totalLeave}</h6>
+                                                <h6 className="mb-0">{val.remaining}/{val.totalLeave}</h6>
                                             </div>
                                         </div>
                                     )

@@ -243,6 +243,9 @@ const Employee = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
+                          Remaining leave
+                      </TableCell>
+                      <TableCell>
                         Status
                       </TableCell>
                       {permission && (permission.permissions.update === 1 || permission.permissions.list === 1 || permission.permissions.delete === 1) &&
@@ -263,6 +266,17 @@ const Employee = () => {
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
+                          <TableCell>
+                                {val.leave.map((elem) => {
+                                  return (
+                                     <div>
+                                        <span>{elem.shortName}</span>
+                                        <span>: </span>
+                                        <span>{elem.remaining}/{elem.totalLeave}</span>
+                                     </div>
+                                  )
+                                })}
+                          </TableCell>
                           <TableCell>
                             <Switch
                               className="status-switch"
