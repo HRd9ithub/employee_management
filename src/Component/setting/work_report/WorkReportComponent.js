@@ -97,10 +97,6 @@ const WorkReportComponent = () => {
             } else {
                 getReport();
             }
-            setTimeout(() => {
-                localStorage.removeItem("filter")
-                localStorage.removeItem("data")
-            }, 1000);
         }
         // eslint-disable-next-line
     }, [localStorageToggle, localStorage.getItem("filter")]);
@@ -182,6 +178,8 @@ const WorkReportComponent = () => {
         setShow(false)
         setShowModal(false);
         setNewRecord("");
+        localStorage.removeItem("filter")
+        localStorage.removeItem("data")
     }
 
     // approved request
@@ -206,6 +204,8 @@ const WorkReportComponent = () => {
                 setShowModal(false)
                 setisSubLoading(false);
                 setNewRecord("");
+                localStorage.removeItem("filter")
+                localStorage.removeItem("data")
             }
         }).catch((error) => {
             setisSubLoading(false);
@@ -234,6 +234,8 @@ const WorkReportComponent = () => {
                 setShowModal(false)
                 setisSubLoading(false);
                 setNewRecord("");
+                localStorage.removeItem("filter")
+                localStorage.removeItem("data")
             }
         } catch (error) {
             setisSubLoading(false)
@@ -293,8 +295,8 @@ const WorkReportComponent = () => {
                                             className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
                                             <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
                                         </button>}
-                                    {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} />}
-                                    <WorkReportModal permission={permission && permission} getReport={getReport} />
+                                    {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} setuser_id={setuser_id}/>}
+                                    <WorkReportModal permission={permission && permission} getReport={getReport} setuser_id={setuser_id}/>
                                     {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                                 </div>
                             </div>
@@ -362,23 +364,28 @@ const WorkReportComponent = () => {
                                 <TableBody>
                                     {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                                         return (
-                                            <TableRow key={ind}>
-                                                <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
-                                                {permission && permission.name.toLowerCase() === "admin" &&
-                                                    <TableCell>
-                                                        <div className='pr-3'>
-                                                            {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                            val.name ?
+                                                <TableRow key={ind} >
+                                                    <TableCell colSpan={7} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for}){permission && permission.name.toLowerCase() === "admin" && val.user && " - " + val.user?.first_name.concat(" ", val.user.last_name)}</TableCell>
+                                                </TableRow>
+                                                :
+                                                <TableRow key={ind}>
+                                                    <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
+                                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                                        <TableCell>
+                                                            <div className='pr-3'>
+                                                                {val.user ? <NavLink to={"/employees/view/" + val.user_id} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                                            </div>
+                                                        </TableCell>
+                                                    }
+                                                    <TableCell>{val.totalHours}</TableCell>
+                                                    <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
+                                                    <TableCell align="center">
+                                                        <div className="action">
+                                                            <WorkReportModal permission={permission && permission} getReport={getReport} data={val} isRequest={!((permission && permission.name.toLowerCase() === "admin") || matchDate.includes(moment(val.date).format("YYYY-MM-DD")))} setuser_id={setuser_id}/>
                                                         </div>
                                                     </TableCell>
-                                                }
-                                                <TableCell>{val.totalHours}</TableCell>
-                                                <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
-                                                <TableCell align="center">
-                                                    <div className="action">
-                                                        <WorkReportModal permission={permission && permission} getReport={getReport} data={val} isRequest={!((permission && permission.name.toLowerCase() === "admin") || matchDate.includes(moment(val.date).format("YYYY-MM-DD")))} />
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
+                                                </TableRow>
                                         )
                                     }) :
                                         <TableRow>
