@@ -184,23 +184,19 @@ const Leave = () => {
     const actionToggle = useMemo(() => {
         if (permission) {
             if (permission.permissions.update === 1 || permission.permissions.delete === 1) {
-                if (permission.name?.toLowerCase() === "admin") {
-                    let data = leave.find((val) => {
-                        return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
-                    })
-                    if (data || leave.length === 0) {
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    let data = leave.find((val) => {
-                        return val.status === "Pending" || val.status === "Read"
-                    })
-                    if (data || leave.length === 0) {
-                        return true
-                    }
-                }
+                // if (permission.name?.toLowerCase() === "admin") {
+                //     let data = leave.find((val) => {
+                //         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
+                //     })
+                //     if (data || leave.length === 0) {
+                //         return true
+                //     } else {
+                //         return false
+                //     }
+                // } else {
+                //     return true
+                // }
+                return true
             } else {
                 return false
             }
@@ -397,7 +393,7 @@ const Leave = () => {
                                                                 {(permission && permission.permissions.update === 1 && (val.status !== 'Approved' && val.status !== "Declined") ||
                                                                     !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())) &&
                                                                     <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />}
-                                                                {permission && permission.name.toLowerCase() !== "admin" && (val.status === "Read" || val.status === "Pending") && <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
+                                                                <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>
                                                             </div>
                                                         </TableCell>}
                                                 </TableRow>
