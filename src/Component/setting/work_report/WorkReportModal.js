@@ -15,7 +15,7 @@ import JoditEditor from 'jodit-react';
 import ErrorComponent from '../../common/ErrorComponent';
 import { Tooltip } from '@mui/material';
 
-function WorkReportModal({ data, permission, getReport, isRequest }) {
+function WorkReportModal({ data, permission, getReport, isRequest, setuser_id }) {
     let workDateRef = useRef(null);
     // common state
     const [show, setShow] = useState(false);
@@ -155,6 +155,7 @@ function WorkReportModal({ data, permission, getReport, isRequest }) {
                 if (data.data.success) {
                     toast.success(data.data.message)
                     getReport(userId);
+                    setuser_id(userId)
                     setShow(false)
                     setisLoading(false);
                     setId('');
