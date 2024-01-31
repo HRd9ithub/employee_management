@@ -19,7 +19,7 @@ const Notification = () => {
     // status change
     const notificationStatusChange = async (item) => {
         const { date, _id, status } = item;
-        if (status === "Pending") {
+        if (status === "Pending" || (item.deleteAt &&  item.isNotificationStatus)) {
             if (date) {
                 try {
                     setisLoading(true);
@@ -60,7 +60,7 @@ const Notification = () => {
                 } else {
                     try {
                         setisLoading(true);
-                        const res = await customAxios().patch(`/leave/${_id}`, { status: "Read" })
+                        const res = await customAxios().patch(`/leave/${_id}`, { status: item.deleteAt ? status :"Read" })
                         if (res.data.success) {
                             setisLoading(false);
                             if (pathname === "/leaves") {
@@ -132,7 +132,7 @@ const Notification = () => {
                 <Dropdown alignRight>
                     <Dropdown.Toggle className="nav-link count-indicator new-notification">
                         <i className={`fa-solid fa-bell nav-icons ${notification.length === 0 && "mr-2"}`}></i>
-                        {notification.filter((val) => val.status === "Pending").length !== 0 && <span className="badge badge-light">{notification.filter((val) => val.status === "Pending").length}</span>}
+                        {notification.filter((val) => val.status === "Pending" || val.isNotificationStatus).length !== 0 && <span className="badge badge-light">{notification.filter((val) => val.status === "Pending" || val.isNotificationStatus).length}</span>}
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu navbar-dropdown preview-list px-2" style={{ width: "26rem" }} >
                         <h6 className="px-1 py-3 mb-0 new-message">Notifications</h6>
@@ -140,7 +140,7 @@ const Notification = () => {
                         <div className="notification-list">
                             {notification.map((item) => {
                                 return (
-                                    <Dropdown.Item className={`notification-item ${item.status === "Pending" ? "new-notification" : ""}`} key={item._id} onClick={() => notificationStatusChange(item)}>
+                                    <Dropdown.Item className={`notification-item ${item.status === "Pending" || item.isNotificationStatus ? "new-notification" : ""}`} key={item._id} onClick={() => notificationStatusChange(item)}>
                                         <div className={`notification-content d-flex justify-content-start align-items-start w-100`}>
                                             <div>
                                                 <div className="notification-image">
@@ -153,7 +153,7 @@ const Notification = () => {
                                                     <p className='mb-0'>{item.user ? item.user.first_name?.concat(" ", item.user?.last_name) : <HiOutlineMinus />}</p>
                                                     <i className="fa-solid fa-xmark" onClick={(e) => notificationDelete(e, item)}></i>
                                                 </div>
-                                                <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.title ? timeAgo(item.createdAt) + "  -  " + item.title : item.leaveType ? timeAgo(item.createdAt) + " - " + item.leaveType + " Request" : timeAgo(item.createdAt) + " - Attendance Regularize"}</p>
+                                                <p className='mt-1 mb-0 ellipsis text-dark-secondary'>{item.deleteAt ? timeAgo(item.createdAt) + " - Leave Cancelled" : item.title ? timeAgo(item.createdAt) + "  -  " + item.title : item.leaveType ? timeAgo(item.createdAt) + " - " + item.leaveType + " Request" : timeAgo(item.createdAt) + " - Attendance Regularize"}</p>
                                             </div>
                                         </div>
                                     </Dropdown.Item>
