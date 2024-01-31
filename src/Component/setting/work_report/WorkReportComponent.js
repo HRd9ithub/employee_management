@@ -48,7 +48,7 @@ const WorkReportComponent = () => {
     const [page, setpage] = useState(0)
 
     // sort state
-    const [order, setOrder] = useState("desc")
+    const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
 
     // get report data
