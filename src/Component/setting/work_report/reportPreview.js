@@ -115,7 +115,7 @@ const ReportPreview = () => {
                                                         {!val.userId && val.name !== "Leave" && <TableCell colSpan={4} align="center" className="Holiday_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
                                                         {!val.userId && val.name === "Leave" && <TableCell colSpan={4} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for})</TableCell>}
                                                         {val.userId && <TableCell style={{ width: "15%" }}>{moment(val.date).format("DD MMM YYYY")}</TableCell>}
-                                                        {val.userId && <TableCell style={{ width: "15%" }}>{val.totalHours}</TableCell>}
+                                                        {val.userId && <TableCell style={{ width: "15%" }}>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>}
                                                         {val.userId && <TableCell>
                                                             {val.work?.map((currElem, ind) => {
                                                                 return <div className="card-body table_section" key={currElem._id}>
