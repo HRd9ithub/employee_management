@@ -36,7 +36,6 @@ const Dashboard = () => {
 
      // calcedar date change function
      const handleChange = date => {
-          console.warn(moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY"), "dbuy");
           if(moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")){
                setBirtDayToggle(!birthDayToggle)
           }else{
