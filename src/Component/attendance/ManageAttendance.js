@@ -63,14 +63,15 @@ const ManageAttendance = () => {
         setisLoading(true);
         setError([]);
 
-        const{ attendanceId,clock_in,clock_out} = data;
+        const{ attendanceId,clock_in,clock_out,userId} = data;
 
         customAxios().post('/attendance/comment', {
             comment,
             status: name,
             attendanceRegulationId : attendanceId,
             clock_in ,
-            clock_out
+            clock_out,
+            userId
         }).then(data => {
             if (data.data.success) {
                 toast.success(data.data.message);

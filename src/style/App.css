@@ -4900,7 +4900,7 @@ span.client-static-title {
 }
 
 .text-red {
-  color: red;
+  color: red !important;
 }
 
 .text-maroon {
