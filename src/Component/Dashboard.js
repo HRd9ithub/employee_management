@@ -28,6 +28,7 @@ const Dashboard = () => {
      const [birthDay, setBirthDay] = useState([])
      const [birthDayFilter, setBirthDayFilter] = useState([])
      const [monthDayArray, setmonthDayArray] = useState([])
+     const [birthDayToggle, setBirtDayToggle] = useState(true);
 
      let { UserData } = useContext(AppProvider)
 
@@ -35,9 +36,15 @@ const Dashboard = () => {
 
      // calcedar date change function
      const handleChange = date => {
-          setstartDate(date);
-          datefilter(date)
+          console.warn(moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY"), "dbuy");
+          if(moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")){
+               setBirtDayToggle(!birthDayToggle)
+          }else{
+               setBirtDayToggle(true)
+          }
+          datefilter(date);
           birthFilter(date)
+          setstartDate(date);
      };
 
      useEffect(() => {
@@ -197,7 +204,7 @@ const Dashboard = () => {
                                                        highlight.push(subDays(new Date(date), 0));
                                                   })
                                                   return (
-                                                       <DatePickers inline selected={startDate} onChange={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
+                                                       <DatePickers inline selected={startDate} onSelect={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
                                                   );
                                              })()}
                                         </div>
@@ -232,7 +239,7 @@ const Dashboard = () => {
                                              </div>
                                         </div>
                                    </div>
-                                   {birthDayFilter.length !== 0 &&
+                                   {birthDayToggle && birthDayFilter.length !== 0 &&
                                         <div className='col-lg-4 col-md-6 mt-3 box-dashboard'>
                                              <div className='my-chart'>
                                                   <div className='my-chart-head text-center'>Birthday</div>
