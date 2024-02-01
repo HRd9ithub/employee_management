@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
@@ -34,6 +34,7 @@ const AttendanceComponent = () => {
     const [startDate, setStartDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
     const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
     const [open, setOpen] = useState("");
+    const [openSub, setOpenSub] = useState("");
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -58,39 +59,39 @@ const AttendanceComponent = () => {
                 if (currentData.length === 0) {
                     settoggle(false);
                 } else {
-                    settoggle(!currentData[0].hasOwnProperty("clock_out"));
-                    setId(currentData[0]._id);
+                    settoggle(currentData[0].time[currentData[0].time.length - 1].clock_out ? false : true);
+                    setId(currentData[0].time[currentData[0].time.length - 1]._id);
                     setcurrentData(currentData[0]);
 
                     // activity data store
-                    for (let i = 0; i < currentData.length; i++) {
-                        if (currentData[i].clock_out) {
-                            temp.push({
-                                _id: currentData[i]._id,
-                                userId: currentData[i].userId,
-                                timestamp: currentData[i].timestamp,
-                                time: currentData[i].clock_out,
+                    for (let i = 0; i < currentData[0].time.length; i++) {
+                        temp.unshift({
+                            _id: currentData[0].time[i]._id,
+                            // userId: currentData[0].time[i].userId,
+                            // timestamp: currentData[0].time[i].timestamp,
+                            time: currentData[0].time[i].clock_in,
+                            title: "Punch In Time"
+                        })
+                        if (currentData[0].time[i].clock_out) {
+                            temp.unshift({
+                                _id: currentData[0].time[i]._id,
+                                // userId: currentData[0].time[i].userId,
+                                // timestamp: currentData[0].time[i].timestamp,
+                                time: currentData[0].time[i].clock_out,
                                 title: "Punch Out Time"
                             })
                         }
-                        temp.push({
-                            _id: currentData[i]._id,
-                            userId: currentData[i].userId,
-                            timestamp: currentData[i].timestamp,
-                            time: currentData[i].clock_in,
-                            title: "Punch In Time"
-                        })
                     }
                     setcurrentDataAll(temp);
 
                     // overtime get
-                    if (currentData.filter((item) => item.hasOwnProperty("totalHours")).length >= 1) {
-                        setOverTime(calculatorOverTime(currentData));
+                    if (currentData[0].time.filter((item) => item.hasOwnProperty("totalHours")).length >= 1) {
+                        setOverTime(calculatorOverTime(currentData[0].time));
                     }
 
                     // generate break time
-                    if (currentData.length > 1) {
-                        setbreakTime(calculatorBreakTime(currentData));
+                    if (currentData[0].time.length > 1) {
+                        setbreakTime(calculatorBreakTime(currentData[0].time));
                     }
                 }
             }
@@ -226,24 +227,30 @@ const AttendanceComponent = () => {
     }
 
     // Collapse onchange
-    const handleCollapse = (id) => {
+    const handleCollapse = useCallback((id) => {
         if (open === id) {
             setOpen("");
+            setOpenSub("");
         } else {
+            setOpenSub("");
             setOpen(id);
         }
-    }
+    },[open]);
 
-    const actionToggle = useMemo(() => {
-        if (permission && permission.name.toLowerCase() !== "admin") {
-            return true
-        } else if (permission && permission.name.toLowerCase() === "admin") {
-            const data = records.find((val) => val.attendance_regulations_data);
-            return data ? true : false
+    // Collapse onchange
+    const handlesubCollapse = useCallback((id) => {
+        if (openSub === id) {
+            setOpenSub("");
+        } else {
+            setOpenSub(id);
         }
-        // eslint-disable-next-line
-    }, [records]);
+    },[openSub])
 
+    // 9:30 hours check function
+    const hoursCheck = useCallback((data) => {
+        return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] > "09" && sum(data).split(":")[1] < "30")) && "true"
+    },[])
+     
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
@@ -263,7 +270,7 @@ const AttendanceComponent = () => {
             >
                 <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white pb-4">
-                        <div className=''>
+                        <div>
                             <div className='row align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                                     <div>
@@ -366,27 +373,11 @@ const AttendanceComponent = () => {
                                     <TableHead className="common-header">
                                         <TableRow>
                                             <TableCell style={{ width: "10px", padding: "16px 0" }} />
-                                            {permission && permission.name.toLowerCase() === "admin" &&
-                                                <TableCell>
-                                                    <TableSortLabel active={orderBy === "user"} direction={orderBy === "user" ? order : "asc"} onClick={() => handleRequestSort("user")}>
-                                                        Employee
-                                                    </TableSortLabel>
-                                                </TableCell>}
                                             <TableCell>
-                                                <TableSortLabel active={orderBy === "date"} direction={orderBy === "date" ? order : "asc"} onClick={() => handleRequestSort("date")}>
-                                                    Date
+                                                <TableSortLabel active={orderBy === "user"} direction={orderBy === "user" ? order : "asc"} onClick={() => handleRequestSort("user")}>
+                                                    Employee
                                                 </TableSortLabel>
                                             </TableCell>
-                                            <TableCell>
-                                                Total Hours
-                                            </TableCell>
-                                            <TableCell>
-                                                Break Time
-                                            </TableCell>
-                                            {actionToggle &&
-                                                <TableCell>
-                                                    Action
-                                                </TableCell>}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -403,42 +394,74 @@ const AttendanceComponent = () => {
                                                                 {open === val._id ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                                             </IconButton>
                                                         </TableCell>
-                                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell>{val.user.name}</TableCell>}
-                                                        <TableCell>{moment(val._id.date).format("DD MMM YYYY")}</TableCell>
-                                                        <TableCell>{sum(val.child)}</TableCell>
-                                                        <TableCell>{calculatorBreakTime(val.child)}</TableCell>
-                                                        {actionToggle && 
-                                                        <TableCell>
-                                                            {(val.child.find((val) => {
-                                                                return !val.hasOwnProperty("clock_out");
-                                                            }) || (sum(val.child).split(":").length !== 0 && sum(val.child).split(":")[0] < "08")) &&
-                                                                <div className='action'>
-                                                                    <AttendanceModal data={val.child.find((elem, ind) => {
-                                                                        return ind === (val.child.length - 1);
-                                                                    })} permission={permission} attendance_regulations_data={val.attendance_regulations_data} />
-                                                                </div>}
-                                                        </TableCell>}
+                                                        <TableCell>{val.user.name}</TableCell>
                                                     </TableRow>
                                                     <TableRow>
-                                                        {/* child table show */}
                                                         <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
                                                             <Collapse in={open === val._id} timeout="auto" unmountOnExit>
                                                                 <Table size="small" aria-label="purchases">
                                                                     <TableHead className="common-header">
                                                                         <TableRow>
-                                                                            <TableCell>Clock In</TableCell>
-                                                                            <TableCell>Clock Out</TableCell>
-                                                                            <TableCell >Hours</TableCell>
+                                                                            <TableCell style={{ width: "10px", padding: "16px 0" }} />
+                                                                            <TableCell>Date</TableCell>
+                                                                            <TableCell>Total Hours</TableCell>
+                                                                            <TableCell>Break Time</TableCell>
+                                                                            <TableCell>Action</TableCell>
                                                                         </TableRow>
                                                                     </TableHead>
                                                                     <TableBody>
-                                                                        {val.child.map((elem) => {
+                                                                        {val.child.map((elem, id) => {
                                                                             return (
-                                                                                <TableRow key={elem._id}>
-                                                                                    <TableCell component="th" scope="row">{elem.clock_in}</TableCell>
-                                                                                    <TableCell>{elem.clock_out ? elem.clock_out : <HorizontalRuleIcon />}</TableCell>
-                                                                                    <TableCell>{elem.totalHours ? elem.totalHours : <HorizontalRuleIcon />}</TableCell>
-                                                                                </TableRow>
+                                                                                <React.Fragment key={elem._id}>
+                                                                                    <TableRow>
+                                                                                        <TableCell style={{ width: "10px", padding: "16px 0" }}>
+                                                                                            <IconButton
+                                                                                                aria-label="expand row"
+                                                                                                size="small"
+                                                                                                onClick={() => handlesubCollapse(id)}
+                                                                                            >
+                                                                                                {openSub === id ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                                                            </IconButton>
+                                                                                        </TableCell>
+                                                                                        <TableCell scope="row" className={hoursCheck(val.child[id].time) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
+                                                                                        <TableCell scope="row">{sum(val.child[id].time)}</TableCell>
+                                                                                        <TableCell scope="row">{calculatorBreakTime(val.child[id].time)}</TableCell>
+                                                                                            <TableCell>
+                                                                                                {hoursCheck(val.child[id].time) &&
+                                                                                                    <div className='action'>
+                                                                                                        <AttendanceModal data={val.child[id].time.find((elem, ind) => {
+                                                                                                            return ind === (val.child[id].time.length - 1);
+                                                                                                        })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
+                                                                                                    </div>}
+                                                                                            </TableCell>
+                                                                                    </TableRow>
+                                                                                    <TableRow>
+                                                                                        <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
+                                                                                            <Collapse in={openSub === id} timeout="auto" unmountOnExit>
+                                                                                                <Table size="small" aria-label="purchases">
+                                                                                                    <TableHead className="common-header">
+                                                                                                        <TableRow>
+                                                                                                            <TableCell>Clock In</TableCell>
+                                                                                                            <TableCell>Clock Out</TableCell>
+                                                                                                            <TableCell >Hours</TableCell>
+                                                                                                        </TableRow>
+                                                                                                    </TableHead>
+                                                                                                    <TableBody>
+                                                                                                        {val.child[id].time.map((elem, id) => {
+                                                                                                            return (
+                                                                                                                <TableRow key={id}>
+                                                                                                                    <TableCell component="th" scope="row">{elem.clock_in ? elem.clock_in : <HorizontalRuleIcon />}</TableCell>
+                                                                                                                    <TableCell>{elem.clock_out ? elem.clock_out : <HorizontalRuleIcon />}</TableCell>
+                                                                                                                    <TableCell>{elem.totalHours ? elem.totalHours : <HorizontalRuleIcon />}</TableCell>
+                                                                                                                </TableRow>
+                                                                                                            )
+                                                                                                        })}
+                                                                                                    </TableBody>
+                                                                                                </Table>
+                                                                                            </Collapse>
+                                                                                        </TableCell>
+                                                                                    </TableRow>
+                                                                                </React.Fragment>
                                                                             )
                                                                         })}
                                                                     </TableBody>
@@ -446,6 +469,7 @@ const AttendanceComponent = () => {
                                                             </Collapse>
                                                         </TableCell>
                                                     </TableRow>
+
                                                 </React.Fragment>
                                             )
                                         }) :

@@ -9,7 +9,7 @@ import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 
-const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
+const AttendanceModal = ({ data, permission, attendance_regulations_data, timestamp }) => {
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
@@ -90,7 +90,7 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
 
         // destructuring Object
         const { clockIn, clockOut, explanation } = initialState;
-        const { _id, userId, timestamp } = data;
+        const { _id } = data;
 
         explanationValidation();
         clockInValidation();
@@ -104,7 +104,7 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
         customAxios().post('/attendance/regulation', {
             clockIn: clockIn && moment(clockIn, "hh:mm").format("hh:mm A"),
             clockOut: clockOut && moment(clockOut, "hh:mm").format("hh:mm A"),
-            explanation, userId, timestamp, id: _id
+            explanation, timestamp, id: _id
         }).then(data => {
             if (data.data.success) {
                 toast.success(data.data.message)
@@ -143,13 +143,13 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data }) => {
                         <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
                     </>}
                     {permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data && <>
-                        <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${data._id}`)}><label>Requests</label></Dropdown.Item> </>}
+                        <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${attendance_regulations_data.attendanceId}`)}><label>Requests</label></Dropdown.Item> </>}
                 </Dropdown.Menu>
             </Dropdown>}
 
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
-                    <Modal.Title>Attendance Regulation - {data && moment(data.timestamp).format("DD MMM YYYY")}</Modal.Title>
+                    <Modal.Title>Attendance Regulation - {timestamp && moment(timestamp).format("DD MMM YYYY")}</Modal.Title>
                     <p className='close-modal' onClick={handleClose}><i className="fa-solid fa-xmark"></i></p>
                 </Modal.Header>
                 <Modal.Body>
