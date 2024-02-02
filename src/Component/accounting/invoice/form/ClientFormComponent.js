@@ -5,7 +5,7 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { toast } from 'react-hot-toast';
 import { customAxios, customAxios1 } from "../../../../service/CreateApi";
-import { alphabetFormat, emailFormat, numberFormat } from '../../../common/RegaulrExp';
+import { alphabetFormat, emailFormat, gstinRegex, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
 import { useMatch } from 'react-router-dom';
 import ErrorComponent from '../../../common/ErrorComponent';
@@ -17,8 +17,8 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
 
     const [modalShow, setModalShow] = useState(false);
     const [client, setclient] = useState({
-        first_name: "",
-        last_name: "",
+        business_name: "",
+        client_industry: "",
         email: "",
         phone: "",
         country: "",
@@ -26,13 +26,15 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         city: "",
         address: "",
         postcode: "",
-        profile_image: ""
+        profile_image: "",
+        GSTIN: "",
+        pan_number: ""
     });
     const [isLoading, setisLoading] = useState(false);
     const [image, setImage] = useState("");
 
-    const [firstNameError, setfirstNameError] = useState('');
-    const [lastNameError, setlastNameError] = useState('');
+    const [businessNameError, setbusinessNameError] = useState('');
+    const [GSTINError, setGSTINError] = useState('');
     const [emailError, setemailError] = useState('');
     const [phoneError, setphoneError] = useState('');
     const [countryError, setcountryError] = useState('');
@@ -48,8 +50,8 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
     const showModal = () => {
         if (data) {
             setclient({
-                first_name: data.first_name,
-                last_name: data.last_name,
+                business_name: data.business_name,
+                client_industry: data.client_industry,
                 email: data.email,
                 phone: data.phone,
                 country: data.country,
@@ -57,7 +59,9 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                 city: data.city,
                 address: data.address,
                 postcode: data.postcode,
-                profile_image: process.env.REACT_APP_IMAGE_API + "/" + data.profile_image
+                profile_image: process.env.REACT_APP_IMAGE_API + "/" + data.profile_image,
+                GSTIN: data.GSTIN,
+                pan_number: data.pan_number,
             })
         }
         setModalShow(true);
@@ -70,8 +74,10 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         }
         setModalShow(false);
         setclient({
-            first_name: "",
-            last_name: "",
+            GSTIN: "",
+            pan_number: "",
+            business_name: "",
+            client_industry: "",
             email: "",
             phone: "",
             country: "",
@@ -81,10 +87,15 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
             postcode: "",
             profile_image: ""
         });
-        setfirstNameError('');
-        setlastNameError("");
+        setbusinessNameError('');
         setemailError("");
         setphoneError("");
+        setGSTINError("");
+        setcountryError("");
+        setstateError("");
+        setcityError("");
+        setpostcodeError("");
+        setaddressError("");
         setError([]);
     }
 
@@ -94,7 +105,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        setclient({ ...client, [name]: value })
+        setclient({ ...client, [name]: value });
     }
 
     const imageChange = (e) => {
@@ -104,26 +115,15 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         }
     }
 
-    // first name validation 
-    const firstNameValidation = () => {
-        if (!client.first_name) {
-            setfirstNameError("First Name is a required field.");
-        } else if (!alphabetFormat.test(client.first_name)) {
-            setfirstNameError("First Name must be alphabetic.");
+    // business name validation 
+    const businessNameValidation = () => {
+        if (!client.business_name.trim()) {
+            setbusinessNameError("Business Name is a required field.");
         } else {
-            setfirstNameError("");
+            setbusinessNameError("");
         }
     }
-    // last name validation 
-    const lastNameValidation = () => {
-        if (!client.last_name) {
-            setlastNameError("Last Name is a required field.");
-        } else if (!alphabetFormat.test(client.last_name)) {
-            setlastNameError("Last Name must be alphabetic.");
-        } else {
-            setlastNameError("");
-        }
-    }
+
     // email validation 
     const emailValidation = () => {
         if (!client.email) {
@@ -234,12 +234,28 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         }
     }
 
+    // GSTIN validation
+    const GSTINValidation = () => {
+        if (client.GSTIN) {
+            if (client.GSTIN.trim().length !== 15) {
+                setGSTINError("GST number should be exactly 15 characters.");
+            } else if (!client.GSTIN.match(gstinRegex)) {
+                setGSTINError("Invalid GSTIN");
+            } else {
+                setclient({ ...client, pan_number: client.GSTIN.slice(2, 12) });
+                setGSTINError("");
+            }
+        } else {
+            setGSTINError("");
+            setclient({ ...client, pan_number: "" });
+        }
+    }
+
     // submit function
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError([]);
-        firstNameValidation();
-        lastNameValidation();
+        businessNameValidation();
         if (!emailError) {
             emailValidation();
         }
@@ -249,19 +265,19 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         cityValidate();
         postcodeValidation();
         addressValidation();
+        GSTINValidation();
 
-        let { first_name, last_name, email, phone, country, state, city, address, postcode } = client;
+        let { business_name, client_industry, email, phone, country, state, city, address, postcode, GSTIN, pan_number } = client;
 
-        if (!first_name || !last_name || !email || !phone || !country || !state || !city || !address || !postcode) {
+        if (!business_name || !email || !phone || !country || !state || !city || !address || !postcode) {
             return false;
-        } else if (firstNameError || lastNameError || emailError || phoneError || countryError || stateError || cityError || postcodeError || addressError) {
+        } else if (businessNameError || emailError || phoneError || countryError || stateError || cityError || postcodeError || addressError || GSTINError) {
             return false;
         } else {
             setisLoading(true);
             let formdata = new FormData();
             formdata.append('profile_image', image);
-            formdata.append('first_name', first_name.charAt(0).toUpperCase() + first_name.slice(1));
-            formdata.append('last_name', last_name.charAt(0).toUpperCase() + last_name.slice(1));
+            formdata.append('business_name', business_name.charAt(0).toUpperCase() + business_name.slice(1));
             formdata.append('email', email);
             formdata.append('phone', phone);
             formdata.append('country', country);
@@ -269,6 +285,9 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
             formdata.append('city', city);
             formdata.append('postcode', postcode);
             formdata.append('address', address);
+            formdata.append('client_industry', client_industry);
+            formdata.append('GSTIN', GSTIN);
+            formdata.append('pan_number', pan_number);
             data && formdata.append('userId', data.userId)
             let url = "";
             if (data) {
@@ -282,8 +301,10 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                     setModalShow(false)
                     toast.success(result.data.message);
                     setclient({
-                        first_name: "",
-                        last_name: "",
+                        GSTIN: "",
+                        pan_number: "",
+                        business_name: "",
+                        client_industry: "",
                         email: "",
                         phone: "",
                         country: "",
@@ -341,7 +362,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                     <div className="row">
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className='client-profile-div'>
-                                                <label  >
+                                                <label>
                                                     {client.profile_image && <img src={client.profile_image} width="120px" height="120px" alt='client-logo' />}
                                                     <input type="file" accept='image/png, image/jpg, image/jpeg' name="image" id="image" className='d-none' ref={imageRef} onChange={imageChange} />
                                                     <i className="fa-solid fa-camera"></i>
@@ -350,16 +371,15 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="first_name">Business Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="first_name" placeholder="Enter Business Name" name="first_name" value={client.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
-                                                {firstNameError && <small id="first_name" className="form-text error">{firstNameError}</small>}
+                                                <label htmlFor="business_name">Business Name</label>
+                                                <input type="text" className="form-control text-capitalize" id="business_name" placeholder="Enter Business Name" name="business_name" value={client.business_name} onChange={handleChange} onBlur={businessNameValidation} maxLength={25} />
+                                                {businessNameError && <small id="business_name" className="form-text error">{businessNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="last_name">Client Industry</label>
-                                                <input type="text" className="form-control text-capitalize" id="last_name" placeholder="Enter Client Industry" name="last_name" value={client.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' maxLength={25} />
-                                                {lastNameError && <small id="last_name" className="form-text error">{lastNameError}</small>}
+                                                <label htmlFor="client_industry">Client Industry</label>
+                                                <input type="text" className="form-control text-capitalize" id="client_industry" placeholder="Enter Client Industry" name="client_industry" value={client.client_industry} onChange={handleChange} autoComplete='off' maxLength={25} />
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
@@ -417,41 +437,19 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                             </div>
                                         </div>
                                         <div className="col-md-12 pr-md-2 pl-md-2">
-                                            <h4 class="mb-3">Tax Information <small class="text-gray">(optional)</small></h4>
+                                            <h4 className="mb-3">Tax Information <small className="text-gray">(optional)</small></h4>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="address">Business GSTIN</label>
-                                                <input type="text" className="form-control" id="address" placeholder="Enter Business GSTIN" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
-                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
+                                                <label htmlFor="GSTIN">Business GSTIN</label>
+                                                <input type="text" className="form-control" id="GSTIN" placeholder="Enter Business GSTIN" name="GSTIN" value={client.GSTIN} onChange={handleChange} onBlur={GSTINValidation} />
+                                                {GSTINError && <small id="address" className="form-text error text-capitalize">{GSTINError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="address">Business PAN Number</label>
-                                                <input type="text" className="form-control" id="address" placeholder="Enter Business PAN Number" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
-                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="address">Client Type</label>
-                                                <select className="form-control" id='country' name="country">
-                                                    <option value="">Select Type</option>
-                                                    <option value="individual">Individual</option>
-                                                    <option value="company">Company</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="address">Tax Treatment</label>
-                                                <select className="form-control" id='country' name="country" value={client.country} onChange={handleChange} onBlur={countryValidation} >
-                                                    <option value="">Select Treatment</option>
-                                                    {country.map((elem, ind) => {
-                                                        return <option key={ind} value={elem}>{elem}</option>
-                                                    })}
-                                                </select>
+                                                <label htmlFor="pan_number">Business PAN Number</label>
+                                                <input type="text" className="form-control" id="pan_number" placeholder="Enter Business PAN Number" name="pan_number" value={client.pan_number} readOnly />
                                             </div>
                                         </div>
                                         {error.length !== 0 &&
