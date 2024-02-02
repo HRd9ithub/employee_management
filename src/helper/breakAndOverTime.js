@@ -2,9 +2,11 @@ import moment from "moment";
 
 export const calculatorOverTime = (data) => {
     const sumHoras = sum(data);
-    if (sumHoras !== 0 && sumHoras.split(":")[0] > 8) {
-        const value = sumHoras.split(":")
-        value[0] -= 8
+    if (sumHoras !== 0 && sumHoras.split(":")[0] >= "09" && sumHoras.split(":")[1] >= "30") {
+        const value = sumHoras.split(":");
+        value[0] -= 9
+        value[1] -= 30
+
         return value.join(":");
     }else{
         return 0
@@ -12,7 +14,6 @@ export const calculatorOverTime = (data) => {
 }
 
 export const calculatorBreakTime = (value) => {
-
     const data = value.sort(function (a, b) {
         // Convert the date strings to Date objects
         const dateA = new Date(a.createdAt);

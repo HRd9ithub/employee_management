@@ -292,7 +292,7 @@ const InvoicePreviewComponent = () => {
                                                         <tbody>
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Billed To:</span></td>
-                                                                <td><span className='invoice-value-summary'>{clientData.first_name?.concat(" ", clientData.last_name)}</span></td>
+                                                                <td><span className='invoice-value-summary'>{clientData.business_name}</span></td>
                                                             </tr>
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Phone:</span></td>
@@ -370,10 +370,13 @@ const InvoicePreviewComponent = () => {
                                         <div className="col-md-6 mt-4">
                                             <div className="bill-by-to-section h-100">
                                                 <h3>Billed To</h3>
-                                                <h4>{clientData.first_name?.concat(" ", clientData.last_name)}</h4>
+                                                <h4>{clientData.business_name}</h4>
+                                                {clientData.client_industry && <p className="mb-0">{clientData.client_industry}</p>}
                                                 <p className="mb-0">+91 {clientData.phone}</p>
                                                 <p className="mb-0 text-truncate">{clientData.email}</p>
                                                 {clientData.address && <p className="mb-0">{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</p>}
+                                                {clientData.GSTIN && <p className="mb-0">GSTIN: {clientData.GSTIN}</p>}
+                                                {clientData.pan_number && <p className="mb-0">PAN: {clientData.pan_number}</p>}
                                             </div>
                                         </div>
                                     </div>

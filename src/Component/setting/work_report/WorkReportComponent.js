@@ -48,7 +48,7 @@ const WorkReportComponent = () => {
     const [page, setpage] = useState(0)
 
     // sort state
-    const [order, setOrder] = useState("desc")
+    const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("date")
 
     // get report data
@@ -378,7 +378,7 @@ const WorkReportComponent = () => {
                                                             </div>
                                                         </TableCell>
                                                     }
-                                                    <TableCell>{val.totalHours}</TableCell>
+                                                    <TableCell>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
                                                     <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
                                                     <TableCell align="center">
                                                         <div className="action">

@@ -273,13 +273,13 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
     const TOTALSGST = useMemo(() => {
         return parseFloat(tableData.reduce((total, cur) => {
-            return total + (tax === "CGST" && parseFloat(cur.SGST)) 
+            return total + (tax === "CGST" && parseFloat(cur.SGST))
         }, 0)).toFixed(2)
     }, [tableData])
 
     const TOTALIGST = useMemo(() => {
         return parseFloat(tableData.reduce((total, cur) => {
-            return total + (tax === "IGST" && parseFloat(cur.IGST)) 
+            return total + (tax === "IGST" && parseFloat(cur.IGST))
         }, 0)).toFixed(2)
     }, [tableData])
 
@@ -811,7 +811,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Toggle className="btn button-bill text-left col-12 client-icon-drop" id="dropdown-basic">
                                                         {Object.keys(clientData).length !== 0 ? <>
                                                             {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
-                                                            <span className='text-capitalize'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
+                                                            <span className='text-capitalize'>{clientData.business_name}</span>
                                                         </> : <span className='static-title'> Select Client</span>}
                                                     </Dropdown.Toggle>
 
@@ -838,7 +838,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 <span >Business Name</span>
                                                             </div>
                                                             <div className='business-info-value'>
-                                                                <span className='Business-title'>{clientData.first_name?.concat(" ", clientData.last_name)}</span>
+                                                                <span className='Business-title'>{clientData.business_name}</span>
                                                             </div>
                                                         </div>
                                                         <div className='business-name'>
@@ -873,6 +873,24 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 <span className='Business-title'>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</span>
                                                             </div>
                                                         </div>
+                                                        {clientData.GSTIN &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >GSTIN</span>
+                                                                </div>
+                                                                <div className='business-info-value address'>
+                                                                    <span className='Business-title'>{clientData.GSTIN}</span>
+                                                                </div>
+                                                            </div>}
+                                                        {clientData.pan_number &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >PAN</span>
+                                                                </div>
+                                                                <div className='business-info-value address'>
+                                                                    <span className='Business-title'>{clientData.pan_number}</span>
+                                                                </div>
+                                                            </div>}
                                                     </div> :
                                                     <div>
                                                         <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
@@ -944,33 +962,33 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                             <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount - TOTALSGST - TOTALSGST - TOTALIGST).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
-                                                    {tax === "CGST" && 
-                                                    <tr>
-                                                        <td>
-                                                            <p className="text-left mb-0">CGST:</p>
-                                                        </td>
-                                                        <td>
-                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
-                                                        </td>
-                                                    </tr>}
-                                                    {tax === "CGST" && 
-                                                    <tr>
-                                                        <td>
-                                                            <p className="text-left mb-0">SGST:</p>
-                                                        </td>
-                                                        <td>
-                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
-                                                        </td>
-                                                    </tr>}
-                                                    {tax === "IGST" && 
-                                                    <tr>
-                                                        <td>
-                                                            <p className="text-left mb-0">IGST:</p>
-                                                        </td>
-                                                        <td>
-                                                            <p className="text-right mb-0">{TOTALIGST}</p>
-                                                        </td>
-                                                    </tr>}
+                                                    {tax === "CGST" &&
+                                                        <tr>
+                                                            <td>
+                                                                <p className="text-left mb-0">CGST:</p>
+                                                            </td>
+                                                            <td>
+                                                                <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
+                                                            </td>
+                                                        </tr>}
+                                                    {tax === "CGST" &&
+                                                        <tr>
+                                                            <td>
+                                                                <p className="text-left mb-0">SGST:</p>
+                                                            </td>
+                                                            <td>
+                                                                <p className="text-right mb-0">{currency.value?.slice(6)} {TOTALSGST}</p>
+                                                            </td>
+                                                        </tr>}
+                                                    {tax === "IGST" &&
+                                                        <tr>
+                                                            <td>
+                                                                <p className="text-left mb-0">IGST:</p>
+                                                            </td>
+                                                            <td>
+                                                                <p className="text-right mb-0">{TOTALIGST}</p>
+                                                            </td>
+                                                        </tr>}
                                                     <tr>
                                                         <td colSpan="2"><hr /></td>
                                                     </tr>

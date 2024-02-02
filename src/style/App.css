@@ -4472,7 +4472,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .business-name {
   display: flex;
-  margin-top: 16px;
+  margin-top: 13px;
 }
 
 .business-info {
@@ -4900,7 +4900,7 @@ span.client-static-title {
 }
 
 .text-red {
-  color: red;
+  color: red !important;
 }
 
 .text-maroon {
@@ -4979,8 +4979,10 @@ select.form-control.currency-dropdown {
   position: absolute;
   width: 32px;
   height: 32px;
-  top: 4px;
-  left: -1px;
+  top: 9px;
+  left: -3px;
+  /* top: 4px;
+  left: -1px; */
   overflow: hidden;
   background-color: white;
   background-image: url(../../public/Images/cake3.gif);
@@ -4997,6 +4999,10 @@ select.form-control.currency-dropdown {
 .leave-box-section{
   background-color: #eaeff0;
   border-radius: 5px;
+}
+
+.Business-title{
+  font-size: 13px;
 }
 
 @media print {
