@@ -14,6 +14,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import ClientFormComponent from '../invoice/form/ClientFormComponent';
+import { HiOutlineMinus } from "react-icons/hi";
 
 const ClientComponent = () => {
   const [records, setRecords] = useState([]);
@@ -299,6 +300,16 @@ const ClientComponent = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
+                        <TableSortLabel active={orderBy === "client_industry"} direction={orderBy === "client_industry" ? order : "asc"} onClick={() => handleRequestSort("client_industry")}>
+                          Client Industry
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
+                        <TableSortLabel active={orderBy === "GSTIN"} direction={orderBy === "GSTIN" ? order : "asc"} onClick={() => handleRequestSort("GSTIN")}>
+                          GSTIN
+                        </TableSortLabel>
+                      </TableCell>
+                      <TableCell>
                         <TableSortLabel active={orderBy === "country"} direction={orderBy === "country" ? order : "asc"} onClick={() => handleRequestSort("country")}>
                           Country
                         </TableSortLabel>
@@ -332,9 +343,11 @@ const ClientComponent = () => {
                     {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
                       return (
                         <TableRow key={val._id}>
-                          <TableCell>{val.first_name?.concat(" ", val.last_name)}</TableCell>
+                          <TableCell>{val.business_name}</TableCell>
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
+                          <TableCell>{val.client_industry ? val.client_industry :  <HiOutlineMinus/> }</TableCell>
+                          <TableCell>{val.GSTIN ? val.GSTIN  : <HiOutlineMinus/> }</TableCell>
                           <TableCell>{val.country}</TableCell>
                           <TableCell>{val.state}</TableCell>
                           <TableCell>{val.city}</TableCell>
