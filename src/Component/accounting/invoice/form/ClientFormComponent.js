@@ -350,15 +350,15 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="first_name">First Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="first_name" placeholder="Enter First name" name="first_name" value={client.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
+                                                <label htmlFor="first_name">Business Name</label>
+                                                <input type="text" className="form-control text-capitalize" id="first_name" placeholder="Enter Business Name" name="first_name" value={client.first_name} onChange={handleChange} onBlur={firstNameValidation} autoComplete='off' maxLength={25} />
                                                 {firstNameError && <small id="first_name" className="form-text error">{firstNameError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="last_name">Last Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="last_name" placeholder="Enter last name" name="last_name" value={client.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' maxLength={25} />
+                                                <label htmlFor="last_name">Client Industry</label>
+                                                <input type="text" className="form-control text-capitalize" id="last_name" placeholder="Enter Client Industry" name="last_name" value={client.last_name} onChange={handleChange} onBlur={lastNameValidation} autoComplete='off' maxLength={25} />
                                                 {lastNameError && <small id="last_name" className="form-text error">{lastNameError}</small>}
                                             </div>
                                         </div>
@@ -414,6 +414,44 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                                 <label htmlFor="address">Address</label>
                                                 <input type="text" className="form-control" id="address" placeholder="Enter address" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
                                                 {addressError && <small id="address" className="form-text error">{addressError}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <h4 class="mb-3">Tax Information <small class="text-gray">(optional)</small></h4>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="address">Business GSTIN</label>
+                                                <input type="text" className="form-control" id="address" placeholder="Enter Business GSTIN" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
+                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="address">Business PAN Number</label>
+                                                <input type="text" className="form-control" id="address" placeholder="Enter Business PAN Number" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
+                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="address">Client Type</label>
+                                                <select className="form-control" id='country' name="country">
+                                                    <option value="">Select Type</option>
+                                                    <option value="individual">Individual</option>
+                                                    <option value="company">Company</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="address">Tax Treatment</label>
+                                                <select className="form-control" id='country' name="country" value={client.country} onChange={handleChange} onBlur={countryValidation} >
+                                                    <option value="">Select Treatment</option>
+                                                    {country.map((elem, ind) => {
+                                                        return <option key={ind} value={elem}>{elem}</option>
+                                                    })}
+                                                </select>
                                             </div>
                                         </div>
                                         {error.length !== 0 &&
