@@ -242,8 +242,8 @@ const Employee = () => {
                           Mobile
                         </TableSortLabel>
                       </TableCell>
-                      <TableCell>
-                          Remaining leave
+                      <TableCell align="center">
+                        Remaining leave
                       </TableCell>
                       <TableCell>
                         Status
@@ -266,16 +266,16 @@ const Employee = () => {
                           </TableCell>
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
-                          <TableCell>
-                                {val.leave.map((elem) => {
-                                  return (
-                                     <div>
-                                        <span>{elem.shortName}</span>
-                                        <span>: </span>
-                                        <span>{elem.remaining}/{elem.totalLeave}</span>
-                                     </div>
-                                  )
-                                })}
+                          <TableCell align="center">
+                            {val.monthsDiff >= 3 ? val.leave.map((elem) => {
+                              return (
+                                <div>
+                                  <span>{elem.shortName}</span>
+                                  <span>: </span>
+                                  <span>{elem.remaining}/{elem.totalLeave}</span>
+                                </div>
+                              )
+                            }) : <HiOutlineMinus />}
                           </TableCell>
                           <TableCell>
                             <Switch

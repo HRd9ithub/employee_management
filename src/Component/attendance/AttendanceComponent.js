@@ -31,8 +31,8 @@ const AttendanceComponent = () => {
     const [time, setTime] = useState("");
     const [overTime, setOverTime] = useState(0);
     const [breakTime, setbreakTime] = useState(0);
-    const [startDate, setStartDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
-    const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())).subtract(1, "day"));
+    const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
+    const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())));
     const [open, setOpen] = useState("");
     const [openSub, setOpenSub] = useState("");
 
@@ -248,7 +248,7 @@ const AttendanceComponent = () => {
 
     // 9:30 hours check function
     const hoursCheck = useCallback((data) => {
-        return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] > "09" && sum(data).split(":")[1] < "30")) && "true"
+        return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] >= "09" && sum(data).split(":")[1] < "30")) && "true"
     },[])
      
     if (isLoading) {
