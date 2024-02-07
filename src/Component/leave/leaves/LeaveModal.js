@@ -141,10 +141,10 @@ const LeaveModal = (props) => {
 
     // numbers of day genrate
     const duration = useMemo(() => {
-        if (inputData.from_date && inputData.to_date && inputData.leave_for !== "Half") {
+        if (inputData.from_date && inputData.to_date && inputData.leave_for !== "First Half" && inputData.leave_for !== "Second Half") {
             const date = inputData.from_date
             return moment(inputData.to_date).diff(moment(date), 'days') + 1
-        } else if (inputData.leave_for === "Half") {
+        } else if (inputData.leave_for === "First Half" || inputData.leave_for === "Second Half") {
             return 0.5
         } else {
             return 0
@@ -204,7 +204,7 @@ const LeaveModal = (props) => {
         // object destructuring
         const { user_id, leave_type_id, leave_for, from_date, to_date, reason, status } = inputData;
 
-        if (leave_for !== "Half") {
+        if (leave_for !== "First Half" && leave_for !== "Second Half") {
             toDateValidation();
         }
 
@@ -215,7 +215,7 @@ const LeaveModal = (props) => {
         setError([]);
 
 
-        if (!leave_type_id || !leave_for || !from_date || (leave_for !== "Half" && !to_date) || !reason || (permission && permission.name?.toLowerCase() === 'admin' && !user_id)) {
+        if (!leave_type_id || !leave_for || !from_date || (leave_for !== "First Half" && leave_for !== "Second Half" && !to_date) || !reason || (permission && permission.name?.toLowerCase() === 'admin' && !user_id)) {
             return false;
         }
         if (leaveTypeIdError || fromDateError || reasonError || (permission && permission.name?.toLowerCase() === 'admin' && userIdError)) {
@@ -328,7 +328,8 @@ const LeaveModal = (props) => {
                                                 <label htmlFor="leave_for"> Leave status</label>
                                                 <select className="form-control " id="leave_for" name='leave_for' value={inputData.leave_for} onChange={handleChange}>
                                                     <option value='Full'>Full</option>
-                                                    <option value='Half'>Half</option>
+                                                    <option value='First Half'>First Half</option>
+                                                    <option value='Second Half'>Second Half</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -348,7 +349,7 @@ const LeaveModal = (props) => {
                                                     onBlur={fromDateValidation}
                                                 />
                                                 <CalendarMonthIcon className='calendar-icon' onClick={() => { fromDateRef.current.showPicker(); }} />
-                                                {fromDateError && <small id="from_date" className="form-text error">{inputData.leave_for === "Half" ? "Date is a required field." : fromDateError}</small>}
+                                                {fromDateError && <small id="from_date" className="form-text error">{inputData.leave_for === "First Half" || inputData.leave_for === "Second Half" ? "Date is a required field." : fromDateError}</small>}
                                             </div>
                                         </div>
                                         {inputData.leave_for === "Full" &&
@@ -374,7 +375,7 @@ const LeaveModal = (props) => {
                                                 </div>
                                             </div>}
 
-                                        <div className={`pr-md-2 pl-md-2 ${inputData.leave_for === "Half" ? "col-md-6" : "col-md-12"}`}>
+                                        <div className={`pr-md-2 pl-md-2 ${inputData.leave_for === "First Half" || inputData.leave_for === "Second Half" ? "col-md-6" : "col-md-12"}`}>
                                             <div className="form-group">
                                                 <label htmlFor="duration"> Number of days</label>
                                                 <input type="text" className="form-control" id="duration" value={duration} disabled />
