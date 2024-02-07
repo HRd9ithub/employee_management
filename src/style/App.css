@@ -2469,10 +2469,20 @@ svg {
 }
 
 .employee-active {
-  background: linear-gradient(45deg, #34c2d0b5 0%, #aedce0 100%);
+  /* background: linear-gradient(45deg, #34c2d0b5 0%, #aedce0 100%); */
+  background: linear-gradient(45deg, #90caf9, #1f88df 100%);
 }
 
 .employee-active:hover {
+  /* background: linear-gradient(45deg, #34c2d0 0%, #98dce1 100%); */
+  background: linear-gradient(45deg, #74addb, #0383eb 100%);
+  box-shadow: 1px 2px 3px grey;
+}
+.leave-request {
+  background: linear-gradient(45deg, #34c2d0b5 0%, #aedce0 100%);
+}
+
+.leave-request:hover {
   background: linear-gradient(45deg, #34c2d0 0%, #98dce1 100%);
   box-shadow: 1px 2px 3px grey;
 }
