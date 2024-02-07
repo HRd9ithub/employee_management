@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
@@ -17,6 +17,7 @@ import ranges from '../../helper/calcendarOption';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Error403 from '../error_pages/Error403';
+import { AppProvider } from '../context/RouteContext';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -34,7 +35,7 @@ const AttendanceComponent = () => {
     const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
     const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())));
     const [open, setOpen] = useState("");
-    const [openSub, setOpenSub] = useState("");
+    const [user_id, setuser_id] = useState("");
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -42,15 +43,17 @@ const AttendanceComponent = () => {
 
     // sort state
     const [order, setOrder] = useState("asc")
-    const [orderBy, setOrderBy] = useState("date")
+    const [orderBy, setOrderBy] = useState("date");
+
+    let { get_username, userName } = useContext(AppProvider);
 
     //get attendance
-    const getAttendance = async (start, end) => {
+    const getAttendance = async (id,start, end) => {
         try {
             setisLoading(true);
             setPermissionToggle(true);
             setServerError(false);
-            const res = await customAxios().get(`/attendance/?startDate=${start || startDate}&endDate=${end || endDate}`);
+            const res = await customAxios().get(`/attendance/?startDate=${start || startDate}&endDate=${end || endDate}&id=${id || user_id}`);
             if (res.data.success) {
                 const { data, permissions, currentData } = res.data;
                 setRecords(data)
@@ -115,6 +118,11 @@ const AttendanceComponent = () => {
 
     useEffect(() => {
         getAttendance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[startDate,endDate,user_id])
+
+    useEffect(() => {
+        get_username();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -223,34 +231,27 @@ const AttendanceComponent = () => {
     const handleCallback = (start, end, label) => {
         setStartDate(start._d)
         setendtDate(end._d);
-        getAttendance(start._d, end._d)
+    }
+    
+    // user onchange
+    const userOnChange = (event) => {
+        setuser_id(event.target.value)
     }
 
     // Collapse onchange
     const handleCollapse = useCallback((id) => {
         if (open === id) {
             setOpen("");
-            setOpenSub("");
         } else {
-            setOpenSub("");
             setOpen(id);
         }
-    },[open]);
-
-    // Collapse onchange
-    const handlesubCollapse = useCallback((id) => {
-        if (openSub === id) {
-            setOpenSub("");
-        } else {
-            setOpenSub(id);
-        }
-    },[openSub])
+    }, [open]);
 
     // 9:30 hours check function
     const hoursCheck = useCallback((data) => {
         return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] >= "09" && sum(data).split(":")[1] < "30")) && "true"
-    },[])
-     
+    }, [])
+
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
@@ -356,17 +357,32 @@ const AttendanceComponent = () => {
                         {/* table */}
                         <div className="mx-4 pt-4">
                             <div className="row align-items-center">
-                                <div className="col-md-8">
+                                <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0">{moment(startDate).format("DD MMM YYYY").toString().concat(" - ", moment(endDate).format("DD MMM YYYY"))}</h5>
                                 </div>
-                                <div className="col-md-4 ml-auto">
-                                    <div className="form-group mb-0 position-relative">
-                                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback}>
-                                            <input className="form-control mb-0" />
-                                        </DateRangePicker>
-                                        <CalendarMonthIcon className="range_icon" />
+                                <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
+                                <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
+                                    {permission && permission.name.toLowerCase() === "admin" &&
+                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
+                                            <div className="form-group mb-0">
+                                                <select className="form-control mb-0" id="employee" name='user_id' value={user_id} onChange={userOnChange}>
+                                                    <option value="">All</option>
+                                                    {userName.map((val) => {
+                                                        return (
+                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>}
+                                    <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
+                                        <div className="form-group mb-0 position-relative">
+                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
+                                            <CalendarMonthIcon className="range_icon" />
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                             <TableContainer >
                                 <Table className="common-table-section expanted-table">
@@ -402,8 +418,9 @@ const AttendanceComponent = () => {
                                                                 <Table size="small" aria-label="purchases">
                                                                     <TableHead className="common-header">
                                                                         <TableRow>
-                                                                            <TableCell style={{ width: "10px", padding: "16px 0" }} />
                                                                             <TableCell>Date</TableCell>
+                                                                            <TableCell>Clock In</TableCell>
+                                                                            <TableCell>Clock Out</TableCell>
                                                                             <TableCell>Total Hours</TableCell>
                                                                             <TableCell>Break Time</TableCell>
                                                                             <TableCell>Action</TableCell>
@@ -414,51 +431,30 @@ const AttendanceComponent = () => {
                                                                             return (
                                                                                 <React.Fragment key={elem._id}>
                                                                                     <TableRow>
-                                                                                        <TableCell style={{ width: "10px", padding: "16px 0" }}>
-                                                                                            <IconButton
-                                                                                                aria-label="expand row"
-                                                                                                size="small"
-                                                                                                onClick={() => handlesubCollapse(id)}
-                                                                                            >
-                                                                                                {openSub === id ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                                                                            </IconButton>
-                                                                                        </TableCell>
                                                                                         <TableCell scope="row" className={hoursCheck(val.child[id].time) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
+                                                                                        <TableCell>
+                                                                                            <div>
+                                                                                                {val.child[id].time.map((elem, id) => {
+                                                                                                    return <div className='my-1' key={id}>{elem.clock_in ? elem.clock_in : <HorizontalRuleIcon />}</div>
+                                                                                                })}
+                                                                                            </div>
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            <div>
+                                                                                                {val.child[id].time.map((elem, id) => {
+                                                                                                    return <div className='my-1' key={id}>{elem.clock_out ? elem.clock_out : <HorizontalRuleIcon />}</div>
+                                                                                                })}
+                                                                                            </div>
+                                                                                        </TableCell>
                                                                                         <TableCell scope="row">{sum(val.child[id].time)}</TableCell>
                                                                                         <TableCell scope="row">{calculatorBreakTime(val.child[id].time)}</TableCell>
-                                                                                            <TableCell>
-                                                                                                {hoursCheck(val.child[id].time) &&
-                                                                                                    <div className='action'>
-                                                                                                        <AttendanceModal data={val.child[id].time.find((elem, ind) => {
-                                                                                                            return ind === (val.child[id].time.length - 1);
-                                                                                                        })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
-                                                                                                    </div>}
-                                                                                            </TableCell>
-                                                                                    </TableRow>
-                                                                                    <TableRow>
-                                                                                        <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
-                                                                                            <Collapse in={openSub === id} timeout="auto" unmountOnExit>
-                                                                                                <Table size="small" aria-label="purchases">
-                                                                                                    <TableHead className="common-header">
-                                                                                                        <TableRow>
-                                                                                                            <TableCell>Clock In</TableCell>
-                                                                                                            <TableCell>Clock Out</TableCell>
-                                                                                                            <TableCell >Hours</TableCell>
-                                                                                                        </TableRow>
-                                                                                                    </TableHead>
-                                                                                                    <TableBody>
-                                                                                                        {val.child[id].time.map((elem, id) => {
-                                                                                                            return (
-                                                                                                                <TableRow key={id}>
-                                                                                                                    <TableCell component="th" scope="row">{elem.clock_in ? elem.clock_in : <HorizontalRuleIcon />}</TableCell>
-                                                                                                                    <TableCell>{elem.clock_out ? elem.clock_out : <HorizontalRuleIcon />}</TableCell>
-                                                                                                                    <TableCell>{elem.totalHours ? elem.totalHours : <HorizontalRuleIcon />}</TableCell>
-                                                                                                                </TableRow>
-                                                                                                            )
-                                                                                                        })}
-                                                                                                    </TableBody>
-                                                                                                </Table>
-                                                                                            </Collapse>
+                                                                                        <TableCell>
+                                                                                            {hoursCheck(val.child[id].time) ?
+                                                                                                <div className='action'>
+                                                                                                    <AttendanceModal data={val.child[id].time.find((elem, ind) => {
+                                                                                                        return ind === (val.child[id].time.length - 1);
+                                                                                                    })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
+                                                                                                </div> :  <HorizontalRuleIcon />}
                                                                                         </TableCell>
                                                                                     </TableRow>
                                                                                 </React.Fragment>

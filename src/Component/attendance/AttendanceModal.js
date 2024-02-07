@@ -8,6 +8,7 @@ import Spinner from '../common/Spinner';
 import { Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 const AttendanceModal = ({ data, permission, attendance_regulations_data, timestamp }) => {
     const [show, setShow] = useState(false);
@@ -133,19 +134,17 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
 
     return (
         <>
-         {((permission && permission.name.toLowerCase() !== "admin") || (permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data)) && 
-            <Dropdown>
-                <Dropdown.Toggle id="password-action">
-                    <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu className="password-action--dropdown">
-                    {permission && permission.name.toLowerCase() !== "admin" && <>
-                        <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>
-                    </>}
-                    {permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data && <>
-                        <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${attendance_regulations_data.attendanceId}`)}><label>Requests</label></Dropdown.Item> </>}
-                </Dropdown.Menu>
-            </Dropdown>}
+            {((permission && permission.name.toLowerCase() !== "admin") || (permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data)) ?
+                <Dropdown>
+                    <Dropdown.Toggle id="password-action">
+                        <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="password-action--dropdown">
+                        {permission && permission.name.toLowerCase() !== "admin" && <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>}
+                        {permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data && <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${attendance_regulations_data.attendanceId}`)}><label>Requests</label></Dropdown.Item>}
+                    </Dropdown.Menu>
+                </Dropdown>
+                : <HorizontalRuleIcon />}
 
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
@@ -188,10 +187,10 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
                                     {error.length !== 0 &&
                                         <div className="row">
                                             <div className="col-12 pl-md-2 pr-md-2">
-                                               <ErrorComponent errors={error} />
+                                                <ErrorComponent errors={error} />
                                             </div>
                                         </div>}
-                                    <div className="row">                                        
+                                    <div className="row">
                                         <div className='col-12 pl-md-2 pr-md-2 d-flex justify-content-center modal-button'>
                                             <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleRequest}>Request</button>
                                             <button className="btn btn-light" onClick={handleClose}>Cancel</button>
