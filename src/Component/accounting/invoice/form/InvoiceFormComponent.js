@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion } from "framer-motion";
@@ -11,6 +12,7 @@ import toast from 'react-hot-toast';
 import { customAxios, customAxios1 } from '../../../../service/CreateApi';
 import Spinner from '../../../common/Spinner';
 import Error500 from '../../../error_pages/Error500';
+import BusinessFormComponent from './BusinessFormComponent';
 import ClientFormComponent from './ClientFormComponent';
 import moment from 'moment';
 import Error403 from '../../../error_pages/Error403';
@@ -21,6 +23,7 @@ import axios from "axios";
 import convertNumberFormat from '../../../../service/NumberFormat.js';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import CreateIcon from '@mui/icons-material/Create';
 
 const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
@@ -30,6 +33,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
     const noteEditorRef = useRef(null);
     const [permission, setPermission] = useState("");
     const [permissionToggle, setPermissionToggle] = useState(true);
+    const [image, setImage] = useState("/Images/d9.jpg");
+    const [businessLogo, setBusinessLogo] = useState("");
+    const [businessNames, setbusinessNames] = useState([]);
+    const [businessData, setbusinessData] = useState({});
     const [clientNames, setClientNames] = useState([]);
     const [clientData, setClientData] = useState({});
     const [clienError, setClienError] = useState("");
@@ -308,6 +315,62 @@ const InvoiceFormComponent = ({ setProgress }) => {
     }
 
     /*---------------------
+        business section
+    -----------------------*/
+    // get business name
+    const getBunsinessName = () => {
+        setServerError(false)
+
+        customAxios().get('/invoice/business/name').then((res) => {
+            const { data } = res.data;
+            if (res.data.success) {
+                setbusinessNames(data);
+            }
+        }).catch((error) => {
+            if (!error.response) {
+                setServerError(true)
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
+    }
+
+    // get business detail
+    const getBusinessDetail = (id) => {
+        setProgress(10);
+        setServerError(false);
+        setProgress(20);
+        customAxios().get(`/invoice/business/${id}`).then((res) => {
+            setProgress(50);
+            if (res.data.success) {
+                setProgress(80);
+                getBunsinessName();
+                const { data } = res.data;
+                setbusinessData(data);
+            }
+        }).catch((error) => {
+            setProgress(80);
+            if (!error.response) {
+                setServerError(true)
+                toast.error(error.message);
+            } else {
+                if (error.response.status === 500) {
+                    setServerError(true)
+                }
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        }).finally(() => setProgress(100))
+    }
+
+    /*---------------------
         client section
     -----------------------*/
     // get client name
@@ -371,6 +434,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
 
     useLayoutEffect(() => {
+        getBunsinessName();
         getClientName();
         if (id || duplicateId) {
             getInvoiceDetail();
@@ -437,7 +501,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
-            tax === "CGST" ? formdata.append('gstType', "CGST & SGST") : formdata.append('gstType',tax);
+            tax === "CGST" ? formdata.append('gstType', "CGST & SGST") : formdata.append('gstType', tax);
 
             let url = "";
             if (id) {
@@ -451,7 +515,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     toast.success(result.data.message);
                     if (status) {
                         navigate("/invoice");
-                    } else{
+                    } else {
                         navigate(`/invoice/preview/${result.data.id}`);
                     }
                 }
@@ -510,8 +574,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 const { data } = res.data;
                 if (data.length !== 0) {
                     const result = data[0]
-                    setTax(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"");
-                    setGst(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" :"IGST");
+                    setTax(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" : "");
+                    setGst(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" : "IGST");
                     setcurrency({ value: result.currency, label: result.currency });
                     setHeading({
                         invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
@@ -637,7 +701,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 quantity: v.quantity,
                 rate: v.rate,
                 amount: v.amount,
-                GST: v.GST, 
+                GST: v.GST,
                 CGST: parseFloat(value1 / 2).toFixed(2),
                 SGST: parseFloat(value1 / 2).toFixed(2)
             }
@@ -648,6 +712,20 @@ const InvoiceFormComponent = ({ setProgress }) => {
         })
         settableData(data)
     }
+    // business logo changes
+    const businessLogoChange = (event) => {
+        const { files } = event.target;
+        if (files.length !== 0) {
+            setBusinessLogo(files[0]);
+            setImage(URL.createObjectURL(files[0]));
+        }
+    }
+
+    // business logo remove
+    const businessLogoRemove = () => {
+        setImage("");
+        setBusinessLogo("");
+    }
 
     if (isLoading) {
         return <Spinner />
@@ -656,6 +734,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
     } else if ((!permission || permission.name.toLowerCase() !== "admin") && !permissionToggle) {
         return <Error403 />;
     }
+
 
     return (
         <>
@@ -741,69 +820,127 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     </button>
                                                 </div>
                                             </div>
+                                            <div className="col-md-8 col-sm-6 d-flex ml-auto flex-column align-items-end">
+                                                {image ? <>
+                                                    <div className='business-logo-box position-relative'>
+                                                        <img src={image} alt="logo" width={150} height={150} />
+                                                        <i className="fa-solid fa-xmark business-logo-remove" onClick={businessLogoRemove}></i>
+                                                    </div>
+                                                    <label className='edit-logo'>
+                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
+                                                        <CreateIcon /> Change
+                                                    </label>
+                                                </> :
+                                                    <label className='add-new-logo'>
+                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
+                                                        <div><i className="fa-regular fa-image"></i> Add Business Logo</div>
+                                                    </label>
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 {/* bill part */}
                                 <div className="form-contents">
                                     <div className="row align-content-center">
-                                        <div className='col-md-6'>
+                                        {/* ===== Billed by part ====== */}
+                                        <div className='col-md-6 '>
                                             <div className='bill-box-section'>
                                                 <h4>Billed By</h4>
-                                                <div className="dropdown ">
-                                                    <button className="btn button-bill text-left col-12 dropdown-toggle" type="button">
-                                                        <span className='bill-logo mx-2' >{UserData.profile_image && <img src={`${process.env.REACT_APP_IMAGE_API}/${UserData.profile_image}`} alt='p_image' />}</span>
-                                                        <span className='text-capitalize'>{UserData.first_name?.concat(" ", UserData.last_name)}</span>
-                                                    </button>
-                                                </div>
-                                                <div className='p-3 business-detail'>
-                                                    <div className="d-flex justify-content-between">
-                                                        <label className='Business-title'>Business details</label>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Business Name</span>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle className="btn button-bill text-left col-12 client-icon-drop" id="dropdown-basic">
+                                                        {Object.keys(businessData).length !== 0 ? <>
+                                                            {businessData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${businessData.profile_image}`} alt='p_image' /></span>}
+                                                            <span className='text-capitalize'>{businessData.business_name}</span>
+                                                        </> : <span className='static-title'> Select Business</span>}
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu className='col-md-12'>
+                                                        {businessNames.map((val) => {
+                                                            return (<React.Fragment key={val._id}>
+                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => businessData._id !== val._id && getBusinessDetail(val._id)}>{val.business_name}</Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                            </React.Fragment>)
+                                                        })}
+                                                        <div className='d-flex justify-content-center my-2'>
+                                                            <BusinessFormComponent getBusinessDetail={getBusinessDetail} />
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>{UserData.first_name?.concat(" ", UserData.last_name)}</span>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                                {Object.keys(businessData).length !== 0 ?
+                                                    <div className='p-3 business-detail'>
+                                                        <div className="d-flex justify-content-between">
+                                                            <label className='Business-title'>Business details</label>
+                                                            <BusinessFormComponent data={businessData} getBusinessDetail={getBusinessDetail} />
                                                         </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Email</span>
+                                                        <div className='business-name'>
+                                                            <div className='business-info'>
+                                                                <span >Business Name</span>
+                                                            </div>
+                                                            <div className='business-info-value'>
+                                                                <span className='Business-title'>{businessData.business_name}</span>
+                                                            </div>
                                                         </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>{UserData.email}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span >Phone No</span>
-                                                        </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>{UserData.phone}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className='business-name'>
-                                                        <div className='business-info'>
-                                                            <span>Country</span>
-                                                        </div>
-                                                        <div className='business-info-value'>
-                                                            <span className='Business-title'>{UserData.country}</span>
-                                                        </div>
-                                                    </div>
-                                                    {UserData.address &&
                                                         <div className='business-name'>
                                                             <div className='business-info'>
                                                                 <span >Address</span>
                                                             </div>
                                                             <div className='business-info-value address'>
-                                                                <span className='Business-title'>{UserData.address?.concat(" ", UserData.state).concat(",", UserData.city).concat("-", UserData.postcode)}</span>
+                                                                <span className='Business-title'>{businessData.address}{businessData.city && ", " + businessData.city}{businessData.state && ", " + businessData.state}{businessData.country && ", " + businessData.country}{businessData.postcode && " " + businessData.postcode}</span>
                                                             </div>
-                                                        </div>}
-                                                </div>
+                                                        </div>
+                                                        {businessData.GSTIN &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >GSTIN</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{businessData.GSTIN}</span>
+                                                                </div>
+                                                            </div>}
+                                                        {businessData.pan_number &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >PAN</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{businessData.pan_number}</span>
+                                                                </div>
+                                                            </div>}
+                                                        {businessData.email &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >Email</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{businessData.email}</span>
+                                                                </div>
+                                                            </div>}
+                                                        {businessData.phone &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >Phone</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{businessData.phone}</span>
+                                                                </div>
+                                                            </div>}
+                                                    </div> :
+                                                    <div>
+                                                        <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
+                                                            <div className='static-client-div w-100 px-3'>
+                                                                <span className='client-static-title mt-3 mt-md-0'>Select a Business from list</span>
+                                                                <span className='client-static-title'>Or</span>
+                                                                <div className="mb-3">
+                                                                    <BusinessFormComponent getBusinessDetail={getBusinessDetail} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {clienError && <div className='error mt-0' >{clienError}</div>}
+                                                    </div>}
                                             </div>
                                         </div>
+                                        {/* ===== Billed To part ====== */}
                                         <div className='col-md-6 '>
                                             <div className='bill-box-section'>
                                                 <h4>Billed To</h4>
@@ -818,7 +955,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
                                                             return (<React.Fragment key={val._id}>
-                                                                <Dropdown.Item className="list-client" value={val._id || ""} onClick={() => clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => clientData._id !== val._id && clientChange(val._id)}>{val.name}</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                             </React.Fragment>)
                                                         })}
@@ -843,34 +980,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                         </div>
                                                         <div className='business-name'>
                                                             <div className='business-info'>
-                                                                <span >Email</span>
-                                                            </div>
-                                                            <div className='business-info-value'>
-                                                                <span className='Business-title'>{clientData.email}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className='business-name'>
-                                                            <div className='business-info'>
-                                                                <span >Phone No :</span>
-                                                            </div>
-                                                            <div className='business-info-value'>
-                                                                <span className='Business-title'>{clientData.phone}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className='business-name'>
-                                                            <div className='business-info'>
-                                                                <span >country</span>
-                                                            </div>
-                                                            <div className='business-info-value'>
-                                                                <span className='Business-title'>{clientData.country}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className='business-name'>
-                                                            <div className='business-info'>
                                                                 <span >Address</span>
                                                             </div>
                                                             <div className='business-info-value address'>
-                                                                <span className='Business-title'>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</span>
+                                                                <span className='Business-title'>{clientData.address}{clientData.city && ", " + clientData.city}{clientData.state && ", " + clientData.state}{clientData.country && ", " + clientData.country}{clientData.postcode && " " + clientData.postcode}</span>
                                                             </div>
                                                         </div>
                                                         {clientData.GSTIN &&
@@ -891,11 +1004,29 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                     <span className='Business-title'>{clientData.pan_number}</span>
                                                                 </div>
                                                             </div>}
+                                                        {clientData.email &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >Email</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{clientData.email}</span>
+                                                                </div>
+                                                            </div>}
+                                                        {clientData.phone &&
+                                                            <div className='business-name'>
+                                                                <div className='business-info'>
+                                                                    <span >Phone</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{clientData.phone}</span>
+                                                                </div>
+                                                            </div>}
                                                     </div> :
                                                     <div>
                                                         <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
                                                             <div className='static-client-div w-100 px-3'>
-                                                                <span className='client-static-title mt-3 mt-md-0'>Select a Client/Business from list</span>
+                                                                <span className='client-static-title mt-3 mt-md-0'>Select a Client from list</span>
                                                                 <span className='client-static-title'>Or</span>
                                                                 <div className="mb-3">
                                                                     <ClientFormComponent getClientDetail={getClientDetail} />

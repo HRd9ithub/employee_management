@@ -4432,6 +4432,57 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   margin: 10px 0;
 }
 
+.add-new-logo{
+  display: inline-flex;
+  outline: none;
+  width: auto;
+  line-height: 1.5;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 400;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px dashed rgb(180, 194, 213);
+  height: 3rem;
+  padding: 0px 1.5rem;
+  white-space: nowrap;
+  background: rgb(247, 250, 255);
+  color: rgb(97, 113, 131);
+  appearance: none !important;
+}
+
+.business-logo-remove{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  background: black;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.business-logo-box{
+  border: 1px dashed #004b8f;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+.edit-logo{
+  color: #004b8f;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
 .bill-box-section {
   border-radius: 10px;
   background-color: #f6faff;
@@ -4456,15 +4507,17 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .client-icon-drop {
+  position: relative;
   cursor: pointer !important;
 }
 
-.dropdown .client-icon-drop.dropdown-toggle:after {
+.dropdown .client-icon-drop::before {
   position: absolute;
   content: "\f078" !important;
   font-family: FontAwesome;
-  right: 10px;
-  top: 17px;
+  right: 15px;
+  top: 16px;
+  color: #c3c4c6;
   font-size: 12px;
 }
 
@@ -4487,6 +4540,24 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .business-info {
   width: 180px;
+}
+
+.business-info span{
+  display: block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  font-size: 0.875rem;
+  color: rgb(81, 97, 115);
+}
+
+.Business-title {
+  display: block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  color: rgb(22, 28, 38);
+  font-size: 14px;
 }
 
 .business-info-value {
@@ -4579,6 +4650,10 @@ span.client-static-title {
   text-align: center;
   border-radius: 50%;
   padding: 5px;
+}
+
+table.common-table-section tbody tr td.client-address{
+  white-space: wrap !important;
 }
 
 /*------------------ table css --------------------------- */
@@ -5009,10 +5084,6 @@ select.form-control.currency-dropdown {
 .leave-box-section{
   background-color: #eaeff0;
   border-radius: 5px;
-}
-
-.Business-title{
-  font-size: 13px;
 }
 
 @media print {
