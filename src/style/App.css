@@ -4656,12 +4656,31 @@ table.common-table-section tbody tr td.client-address{
   white-space: wrap !important;
 }
 
+/* ------------------ rename table modal------------------- */
+.rename-table-head{
+  display: block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  font-size: 0.875rem;
+  color: rgb(81, 97, 115);
+}
+
 /*------------------ table css --------------------------- */
 
 .head-item {
   background: #004b8f;
   color: white;
   border-radius: 36px !important;
+}
+
+.invoice-desciption-button{
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  font-size: 0.975rem;
+  color: rgb(81, 97, 115);
+  cursor: pointer;
 }
 
 .body-div {
@@ -4896,7 +4915,7 @@ table.common-table-section tbody tr td.client-address{
   font-size: 13px;
   color: rgba(0, 0, 0, 0.65);
   font-weight: 500;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 
 .summary-card-body {
