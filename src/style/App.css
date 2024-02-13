@@ -3052,7 +3052,7 @@ input[type=password]::-ms-clear {
   justify-content: center;
   align-items: center;
   box-shadow: 1px 1px 11px #cccccc;
-  color: white;
+  color: white !important;
   background-color: rgb(7, 75, 154);
   transition: all 0.3s ease;
 }
@@ -3069,17 +3069,17 @@ input[type=password]::-ms-clear {
 }
 
 .action i:hover {
-  color: rgb(7, 75, 154);
+  color: rgb(7, 75, 154) !important;
   background-color: #f2f2f2 !important;
 } 
 .action i.fa-solid.fa-pen-to-square:hover {
-  color: green;
+  color: green !important;
 }
 .action i.fa-solid.fa-trash-can:hover {
-  color: red;
+  color: red !important;
 }
 .action i.fa-solid.fa-arrow-up-right-from-square:hover {
-  color: orange;
+  color: orange !important;
 }
 
 .common-table-section {
@@ -4667,12 +4667,31 @@ table.common-table-section tbody tr td.client-address{
   white-space: wrap !important;
 }
 
+/* ------------------ rename table modal------------------- */
+.rename-table-head{
+  display: block;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  font-size: 0.875rem;
+  color: rgb(81, 97, 115);
+}
+
 /*------------------ table css --------------------------- */
 
 .head-item {
   background: #004b8f;
   color: white;
   border-radius: 36px !important;
+}
+
+.invoice-desciption-button{
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0px;
+  font-size: 0.975rem;
+  color: rgb(81, 97, 115);
+  cursor: pointer;
 }
 
 .body-div {
@@ -4907,7 +4926,7 @@ table.common-table-section tbody tr td.client-address{
   font-size: 13px;
   color: rgba(0, 0, 0, 0.65);
   font-weight: 500;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 
 .summary-card-body {
