@@ -2427,21 +2427,21 @@ svg {
 
 
 /* =========================================== Dashboard ================================================= */
+.show-dashboard-box {
+  display: none;
+}
+.hidden-dashboard-box {
+  display: block;
+}
 
 .common-box-dashboard {
   border-radius: 5px;
   color: #ffff;
   overflow: hidden !important;
-  padding: 22px;
+  padding: 20px 5px;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-/* .common-box-dashboard img {
-  position: absolute;
-  right: 20px;
-  top: 0;
-  width: 103px;
-} */
 .common-box-dashboard img {
   position: absolute;
   right: 0;
@@ -2500,8 +2500,19 @@ svg {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0 5px;
+}
+.common-box-dashboard .common-info-dashboard h3 {
+  font-size: 18px !important;
+}
+.common-box-dashboard .common-info-dashboard h3:last-child {
+  margin: 0 0 0 10px;
 }
 
+.box-dashboard {
+  margin: 0 7px;
+  flex: 1;
+}
 .box-dashboard a:hover {
   color: white;
 }

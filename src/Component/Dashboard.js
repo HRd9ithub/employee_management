@@ -146,11 +146,58 @@ const Dashboard = () => {
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    {!isLoading && <div className=''>
+                    {!isLoading &&                    <div className=''>
                          <div className='container-fluid inner-pages py-3'>
                               {/* Summary part of dashboard */}
-                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" &&
-                                   <div className="row mt-3">
+                              {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
+                                   <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap hidden-dashboard-box">
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Total Employees</h3>
+                                                       <h3 className="mb-0">{totalEmployee}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Present Today</h3>
+                                                       <h3 className="mb-0">{presentToday}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Absent Today</h3>
+                                                       <h3 className="mb-0">{absentTodayCount}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Half Leave</h3>
+                                                       <h3 className="mb-0">{halfLeaveToday}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard">
+                                             <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link" style={{ cursor: "default" }}>
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Leave Request</h3>
+                                                       <h3 className="mb-0">{leaveRequest}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                   </div>
+                                   <div className="row mt-3 show-dashboard-box">
                                         <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
@@ -197,6 +244,7 @@ const Dashboard = () => {
                                              </NavLink>
                                         </div>
                                    </div>
+                                   </>
                               }
 
                               <div className='row'>

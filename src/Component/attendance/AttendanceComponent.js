@@ -357,32 +357,38 @@ const AttendanceComponent = () => {
                         {/* table */}
                         <div className="mx-4 pt-4">
                             <div className="row align-items-center">
-                                <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
+                                <div className="col-12 col-md-5 col-xl-3 d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0">{moment(startDate).format("DD MMM YYYY").toString().concat(" - ", moment(endDate).format("DD MMM YYYY"))}</h5>
                                 </div>
-                                <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                                <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
-                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                            <div className="form-group mb-0">
-                                                <select className="form-control mb-0" id="employee" name='user_id' value={user_id} onChange={userOnChange}>
-                                                    <option value="">All</option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                        )
-                                                    })}
-                                                </select>
+                                <div className="col-12 col-md-7 col-xl-9" id="two">
+                                    <div className="row justify-content-end">
+                                        <div className="col-sm-6 col-xl-4 mt-2">
+                                            {permission && permission.name.toLowerCase() === "admin" &&
+                                                <div className="search-full pr-0">
+                                                    <div className="form-group mb-0">
+                                                        <select className="form-control mb-0" id="employee" name='user_id' value={user_id} onChange={userOnChange}>
+                                                            <option value="">All</option>
+                                                            {userName.map((val) => {
+                                                                return (
+                                                                    val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                </div>}
+                                        </div>
+                                        <div className="col-sm-6 col-xl-4 my-2">
+                                            <div className="form-group mb-0 position-relative">
+                                                <div className="form-group mb-0 position-relative">
+                                                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
+                                                    <CalendarMonthIcon className="range_icon" />
+                                                </div>
                                             </div>
-                                        </div>}
-                                    <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
-                                        <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
+                                    {/* <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
+                                    </div> */}
                                 </div>
-                            </div>
                             </div>
                             <TableContainer >
                                 <Table className="common-table-section expanted-table">

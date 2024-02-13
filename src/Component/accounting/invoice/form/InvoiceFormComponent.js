@@ -902,75 +902,71 @@ const InvoiceFormComponent = ({ setProgress }) => {
                             </div>
                             <form>
                                 {/* head */}
-                                <div className='row'>
-                                    <div className="col-12">
-                                        <div className="row">
-                                            <div className="col-md-4 col-sm-6">
-                                                <table className='w-100'>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
-                                                            <td className='common-head-invoice'>
-                                                                <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId || ""} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
-                                                                {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='common-head-invoice field-input'><label htmlFor='issue_date' className="mb-0">Issue Date</label></td>
-                                                            <td className='common-head-invoice position-relative' onClick={() => { issueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='issue_date' value={heading.issue_date || ""} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
-                                                                <CalendarMonthIcon className='invoice-calendar-icon' />
-                                                                {issueDateError && <small id="invoiceId" className="form-text error">{issueDateError}</small>}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
-                                                            <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} min={heading.issue_date} disabled={!heading.issue_date} />
-                                                                <CalendarMonthIcon className='invoice-calendar-icon' />
-                                                            </td>
-                                                        </tr>
-                                                        {extra_field.length !== 0 &&
-                                                            extra_field.map((val, ind) => {
-                                                                return (
-                                                                    <tr key={ind}>
-                                                                        <td className='common-head-invoice field-input'>
-                                                                            <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name || ""} onChange={(event) => handleFieldChange(event, ind)} />
-                                                                        </td>
-                                                                        <td className='common-head-invoice'>
-                                                                            <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
-                                                                            <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value || ""} onChange={(event) => handleFieldChange(event, ind)} />
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </table>
-                                                <div className='text-left my-2'>
-                                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addExtraField} >
-                                                        <i className="fa-solid fa-plus"></i>&nbsp;Add Field
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-8 col-sm-6 d-flex ml-auto flex-column align-items-end">
-                                                {image ? <>
-                                                    <div className='business-logo-box position-relative'>
-                                                        <img src={image} alt="logo" width={150} height={150} />
-                                                        <i className="fa-solid fa-xmark business-logo-remove" onClick={businessLogoRemove}></i>
-                                                    </div>
-                                                    <label className='edit-logo'>
-                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
-                                                        <CreateIcon /> Change
-                                                    </label>
-                                                </> :
-                                                    <label className='add-new-logo'>
-                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' value={image || ""} onChange={businessLogoChange} />
-                                                        <div><i className="fa-regular fa-image"></i> Add Business Logo</div>
-                                                    </label>
+                                <div className="row invoice-head-section">
+                                    <div className="col-md-4 col-sm-6">
+                                        <table className='w-100'>
+                                            <tbody>
+                                                <tr>
+                                                    <td className='common-head-invoice field-input'><label htmlFor='invoice-id' className="mb-0">Invoice No</label></td>
+                                                    <td className='common-head-invoice'>
+                                                        <input type="text" className='form-control' name='invoiceId' value={heading.invoiceId || ""} onChange={headingChange} onBlur={invoiceIdValidation} disabled={id} />
+                                                        {invoiceIdError && <small id="invoiceId" className="form-text error">{invoiceIdError}</small>}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='common-head-invoice field-input'><label htmlFor='issue_date' className="mb-0">Issue Date</label></td>
+                                                    <td className='common-head-invoice position-relative' onClick={() => { issueDateRef.current.showPicker(); }}>
+                                                        <input type="date" className='form-control' name='issue_date' value={heading.issue_date || ""} onChange={headingChange} ref={issueDateRef} onBlur={issueDateValidation} />
+                                                        <CalendarMonthIcon className='invoice-calendar-icon' />
+                                                        {issueDateError && <small id="invoiceId" className="form-text error">{issueDateError}</small>}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
+                                                    <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
+                                                        <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} />
+                                                        <CalendarMonthIcon className='invoice-calendar-icon' />
+                                                    </td>
+                                                </tr>
+                                                {extra_field.length !== 0 &&
+                                                    extra_field.map((val, ind) => {
+                                                        return (
+                                                            <tr key={ind}>
+                                                                <td className='common-head-invoice field-input'>
+                                                                    <input type="text" placeholder="Field name" autoComplete='off' className='form-control' name='name' value={val.name || ""} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                </td>
+                                                                <td className='common-head-invoice'>
+                                                                    <i className="fa-solid fa-xmark remove-field-icon" onClick={() => handleRemovefiled(ind)}></i>
+                                                                    <input type="text" className='form-control' autoComplete='off' name='value' placeholder="Field value" value={val.value || ""} onChange={(event) => handleFieldChange(event, ind)} />
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })
                                                 }
-                                            </div>
+                                            </tbody>
+                                        </table>
+                                        <div className='text-left my-2'>
+                                            <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={addExtraField} >
+                                                <i className="fa-solid fa-plus"></i>&nbsp;Add Field
+                                            </button>
                                         </div>
+                                    </div>
+                                    <div className="col-md-8 col-sm-6 d-flex ml-auto flex-column align-items-end">
+                                        {image ? <>
+                                            <div className='business-logo-box position-relative'>
+                                                <img src={image} alt="logo" width={150} height={150} />
+                                                <i className="fa-solid fa-xmark business-logo-remove" onClick={businessLogoRemove}></i>
+                                            </div>
+                                            <label className='edit-logo'>
+                                                <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
+                                                <CreateIcon /> Change
+                                            </label>
+                                        </> :
+                                            <label className='add-new-logo'>
+                                                <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
+                                                <div><i className="fa-regular fa-image"></i> Add Business Logo</div>
+                                            </label>
+                                        }
                                     </div>
                                 </div>
                                 {/* bill part */}

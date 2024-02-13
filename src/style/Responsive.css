@@ -844,6 +844,27 @@
     .business-info{
         width: 120px;
     }
+
+    .show-dashboard-box {
+        display: flex !important; 
+    }
+    .hidden-dashboard-box {
+        display: none !important;
+    }
+    .common-box-dashboard {
+        padding: 22px;
+    }
+    .common-box-dashboard .common-info-dashboard {
+        margin: unset;
+    }
+    .common-box-dashboard .common-info-dashboard h3:last-child {
+        margin: unset;
+    }
+      
+    .box-dashboard {
+        margin: unset;
+        flex: unset;
+    }
 }
 
 @media (max-width: 1152px) {
@@ -2042,6 +2063,13 @@
         margin: 0 !important;
         width: 100px;
         height: 100px;
+    }
+    .invoice-head-section {
+        flex-direction: column-reverse;
+    }
+    .invoice-head-section .flex-column.align-items-end {
+        align-items: start !important;
+        margin-bottom: 15px;
     }
 }
 
