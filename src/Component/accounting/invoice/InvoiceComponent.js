@@ -23,6 +23,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import convertNumberFormat from "../../../service/NumberFormat";
+import { HiOutlineMinus } from "react-icons/hi";
 
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
@@ -522,34 +523,32 @@ const InvoiceComponent = () => {
                             <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
                               <Collapse in={open === val._id} timeout="auto" unmountOnExit>
                                 <Table size="small" aria-label="purchases">
-                                  <TableHead className="common-header">
-                                    <TableRow>
-                                      <TableCell>Item Name</TableCell>
-                                      {val.gstType && <TableCell>GST</TableCell>}
-                                      <TableCell>Rate</TableCell>
-                                      <TableCell >Quantity</TableCell>
-                                      {val.gstType === "IGST" && <TableCell>IGST</TableCell>}
-                                      {val.gstType === "CGST & SGST" && <TableCell>CGST</TableCell>}
-                                      {val.gstType === "CGST & SGST" && <TableCell>SGST</TableCell>}
-                                      <TableCell >Amount ({val.currency.slice(6)})</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {val.productDetails.map((elem) => {
-                                      return (
-                                        <TableRow key={elem._id}>
-                                          <TableCell component="th" scope="row">{elem.itemName}</TableCell>
-                                          {val.gstType && <TableCell>{elem.GST}</TableCell>}
-                                          <TableCell>{elem.rate}</TableCell>
-                                          <TableCell>{elem.quantity}</TableCell>
-                                          {val.gstType === "IGST" && <TableCell>{elem.IGST}</TableCell>}
-                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.CGST}</TableCell>}
-                                          {val.gstType === "CGST & SGST" && <TableCell>{elem.SGST}</TableCell>}
-                                          <TableCell>{convertNumberFormat(elem.amount)}</TableCell>
-                                        </TableRow>
-                                      )
-                                    })}
-                                  </TableBody>
+                                  {val?.productDetails.hasOwnProperty("tableHead") &&
+                                    <TableHead className="common-header">
+                                      <TableRow>
+                                        {val?.productDetails.tableHead.map((elem, ind) => {
+                                          return elem.toggle && <TableCell component="th" key={ind}>{elem.field}{elem.name === "amount" && `(${val.currency?.slice(6)})`}</TableCell>
+                                        })}
+                                      </TableRow>
+                                    </TableHead>}
+                                  {val?.productDetails.hasOwnProperty("tableBody") &&
+                                    <TableBody>
+                                      {val?.productDetails.tableBody.map((curElem, id) => {
+                                        return (
+                                          <TableRow key={id}>
+                                            {val?.productDetails?.tableHead.map((column, id) => {
+                                              return (
+                                                <React.Fragment key={id}>
+                                                  {column.toggle && (column.name === "amount" ? <TableCell component="td">{convertNumberFormat(curElem[column.name])}</TableCell> : <TableCell component="td">{curElem[column.name] ? curElem[column.name] : <HiOutlineMinus />}
+                                                    {column.name === "itemName" && curElem.description && <div dangerouslySetInnerHTML={{ __html: curElem.description }}></div>}
+                                                  </TableCell>)}
+                                                </React.Fragment>
+                                              )
+                                            })}
+                                          </TableRow>
+                                        )
+                                      })}
+                                    </TableBody>}
                                 </Table>
                               </Collapse>
                             </TableCell>

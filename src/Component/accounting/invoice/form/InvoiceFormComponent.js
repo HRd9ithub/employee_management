@@ -24,6 +24,7 @@ import convertNumberFormat from '../../../../service/NumberFormat.js';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import CreateIcon from '@mui/icons-material/Create';
+import RenameComponent from './RenameComponent.js';
 
 const InvoiceFormComponent = ({ setProgress }) => {
     const navigate = useNavigate();
@@ -33,13 +34,14 @@ const InvoiceFormComponent = ({ setProgress }) => {
     const noteEditorRef = useRef(null);
     const [permission, setPermission] = useState("");
     const [permissionToggle, setPermissionToggle] = useState(true);
-    const [image, setImage] = useState("/Images/d9.jpg");
+    const [image, setImage] = useState("");
     const [businessLogo, setBusinessLogo] = useState("");
     const [businessNames, setbusinessNames] = useState([]);
     const [businessData, setbusinessData] = useState({});
     const [clientNames, setClientNames] = useState([]);
     const [clientData, setClientData] = useState({});
     const [clienError, setClienError] = useState("");
+    const [businessError, setBusinessError] = useState("");
     const [isLoading, setisLoading] = useState(false);
     const [serverError, setServerError] = useState(false);
     const [heading, setHeading] = useState({
@@ -61,8 +63,12 @@ const InvoiceFormComponent = ({ setProgress }) => {
         itemName: '',
         quantity: '1',
         rate: '1',
-        amount: 1
+        amount: 1,
+        total: 1,
+        description: "",
+        descriptionToggle: false
     }]);
+    const [tableId, setTableId] = useState("");
     const [itemNameError, setitemNameError] = useState([]);
     const [rateError, setrateError] = useState([]);
     const [quantiyError, setquantiyError] = useState([]);
@@ -75,10 +81,26 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
     const [gst, setGst] = useState("IGST");
     const [tax, setTax] = useState("");
+    // add tax type
+    const [taxTypeToggle, settaxTypeToggle] = useState("None");
 
     const { id, duplicateId } = useParams();
     const { UserData } = useContext(AppProvider);
     const [show, setShow] = useState(false);
+
+    const staticHead = [
+        { field: "Item Name", name: "itemName", toggle: true, error: [], },
+        { field: "GST", toggle: false, name: "GST", error: [], hide: true },
+        { field: "Rate", name: "rate", toggle: true, error: [] },
+        { field: "Quantity", name: "quantity", toggle: true, error: [], },
+        { field: "IGST", name: "IGST", toggle: false, error: [], hide: true },
+        { field: "SGST", name: "SGST", toggle: false, error: [], hide: true },
+        { field: "CGST", name: "CGST", toggle: false, error: [], hide: true },
+        { field: "Amount", name: "amount", toggle: true, error: [] },
+        { field: "Total", name: "total", toggle: false, error: [], hide: true },
+    ]
+    const [count, setCount] = useState(1);
+    const [newcolumns, setnewcolumns] = useState(staticHead);
 
     /*---------------------
         heading section
@@ -146,7 +168,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
             itemName: '',
             quantity: '1',
             rate: '1',
-            amount: 1
+            amount: 1,
+            total: 1,
+            description: "",
+            descriptionToggle: false
         }]
         if (tax) {
             const value = data.map(v => {
@@ -155,7 +180,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 v = gst === "IGST" ? { ...v, IGST: parseFloat(value1).toFixed(2) } : { ...v, CGST: parseFloat(value1 / 2).toFixed(2), SGST: parseFloat(value1 / 2).toFixed(2) }
                 return {
                     ...v,
-                    amount: v.quantity * v.rate + value1
+                    amount: v.quantity * v.rate,
+                    total: v.quantity * v.rate + value1,
                 }
             })
             settableData(value)
@@ -200,7 +226,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                         list[ind]['CGST'] = parseFloat(value1 / 2).toFixed(2);
                         list[ind]['SGST'] = parseFloat(value1 / 2).toFixed(2);
                     }
-                    list[ind]['amount'] = list[ind].rate * value + value1
+                    list[ind]['amount'] = list[ind].rate * value
+                    list[ind]['total'] = list[ind].rate * value + value1
                     break;
                 case "rate":
                     const value2 = (list[ind].quantity * value * list[ind].GST) / 100;
@@ -210,7 +237,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                         list[ind]['CGST'] = parseFloat(value2 / 2).toFixed(2);
                         list[ind]['SGST'] = parseFloat(value2 / 2).toFixed(2);
                     }
-                    list[ind]['amount'] = list[ind].quantity * value + value2
+                    list[ind]['amount'] = list[ind].quantity * value
+                    list[ind]['total'] = list[ind].quantity * value + value2
                     break;
                 case "GST":
                     const IGST = (list[ind].quantity * value * list[ind].rate) / 100;
@@ -220,7 +248,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                         list[ind]['CGST'] = parseFloat(IGST / 2).toFixed(2);
                         list[ind]['SGST'] = parseFloat(IGST / 2).toFixed(2);
                     }
-                    list[ind]['amount'] = list[ind].quantity * list[ind].rate + IGST
+                    list[ind]['amount'] = list[ind].quantity * list[ind].rate
+                    list[ind]['total'] = list[ind].quantity * list[ind].rate + IGST
                     list[ind]['GST'] = value
                     break;
 
@@ -230,12 +259,27 @@ const InvoiceFormComponent = ({ setProgress }) => {
         } else {
             if (name === 'quantity') {
                 list[ind]['amount'] = tableData[ind].rate * value
+                list[ind]['total'] = tableData[ind].rate * value
             }
             if (name === 'rate') {
                 list[ind]['amount'] = tableData[ind].quantity * value
+                list[ind]['total'] = tableData[ind].quantity * value
             }
         }
         settableData(list)
+    }
+
+    // toggle decription
+    const toggleDescription = (id) => {
+        let list = [...tableData];
+        list[id].descriptionToggle = true;
+        settableData(list);
+    }
+    // change  decription
+    const handleDescriptionChange = (value, id) => {
+        let list = [...tableData];
+        list[id].description = value;
+        settableData(list);
     }
 
     const addRowButtonDisable = useMemo(() => {
@@ -272,10 +316,16 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
     }, [currency])
 
-    const totalAmount = useMemo(() => {
+    const Amount = useMemo(() => {
         return tableData.reduce((total, cur) => {
             return total + cur.amount
         }, 0)
+    }, [tableData])
+
+    const totalAmount = useMemo(() => {
+        return tax ? tableData.reduce((total, cur) => {
+            return total + cur.total
+        }, 0) : Amount
     }, [tableData])
 
     const TOTALSGST = useMemo(() => {
@@ -353,6 +403,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 getBunsinessName();
                 const { data } = res.data;
                 setbusinessData(data);
+                setBusinessError("");
             }
         }).catch((error) => {
             setProgress(80);
@@ -415,6 +466,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                 getClientName();
                 const { data } = res.data;
                 setClientData(data);
+                setClienError("");
             }
         }).catch((error) => {
             setProgress(80);
@@ -436,8 +488,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
     useLayoutEffect(() => {
         getBunsinessName();
         getClientName();
+        getInvoiceDetail();
         if (id || duplicateId) {
-            getInvoiceDetail();
         } else {
             setcurrency({ label: 'INR - ₹', value: 'INR - ₹' })
         }
@@ -464,6 +516,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
         }
         setError([]);
         Object.keys(clientData).length !== 0 ? setClienError("") : setClienError("Client Business Name is Empty.");
+        Object.keys(businessData).length !== 0 ? setBusinessError("") : setBusinessError("Your Name is Empty.");
 
         invoiceIdValidation();
         issueDateValidation();
@@ -478,26 +531,35 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
         const { invoiceId, issue_date, due_date } = heading;
 
-        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData) {
+        if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData || Object.keys(clientData).length === 0 || Object.keys(businessData).length === 0) {
             return false
         } else {
+            console.log('clientData :>> ', clientData);
             setisLoading(true);
             let formdata = new FormData();
             formdata.append('invoiceId', invoiceId);
             formdata.append('issue_date', issue_date);
             due_date && formdata.append('due_date', due_date);
+            formdata.append('businessLogo', businessLogo);
+            formdata.append('totalSubAmount', parseFloat(Amount).toFixed(2));
             formdata.append('totalAmount', parseFloat(totalAmount).toFixed(2));
-            formdata.append('userId', UserData._id)
+            formdata.append('userId', UserData._id);
+            formdata.append('businessId', businessData._id);
             formdata.append('clientId', clientData._id);
             attchFile.map((val) => formdata.append('image', val.url))
             formdata.append('signImage', !signImageToggle || signatureRef?.current.isEmpty() ? signImage : signatureRef.current.toDataURL('image/png'));
             formdata.append('extra_field', JSON.stringify(extra_field));
             note && formdata.append('note', note);
             formdata.append('tableData', JSON.stringify(tableData));
+            formdata.append('newColumns', JSON.stringify(newcolumns.map((val) => {
+                return { field: val.field, name: val.name, toggle: val.toggle, hide: val.hide }
+            })));
             status && formdata.append('status', status);
+            tableId && formdata.append('tableId', tableId);
             formdata.append('currency', currency.value);
             formdata.append('contact', contact);
             formdata.append('currencyValue', currencyValue);
+            formdata.append('taxType', taxTypeToggle);
             conditions?.forEach((val) => {
                 formdata.append('terms', val);
             })
@@ -573,29 +635,56 @@ const InvoiceFormComponent = ({ setProgress }) => {
             if (res.data.success) {
                 const { data } = res.data;
                 if (data.length !== 0) {
-                    const result = data[0]
+                    const result = data[0];
+                    if (unique) {
+                        setClientData(result.invoiceClient[0]);
+                        let file = [];
+                        result.attchmentFile.forEach((val) => {
+                            if (val.split(".")[1] === "pdf") {
+                                file.push({ url: val, icon: '/Images/pdf-attch.png' });
+                            } else if (val.split(".")[1] === "csv") {
+                                file.push({ url: val, icon: '/Images/csv.png' });
+                            } else {
+                                file.push({ url: val, icon: process.env.REACT_APP_IMAGE_API + "/uploads/" + val });
+                            }
+                        })
+                        setattchFile(file);
+                        setcurrency({ value: result.currency, label: result.currency });
+                        if (result.productDetails.length !== 0) {
+                            result.productDetails[0].hasOwnProperty("tableHead") && setnewcolumns(result.productDetails[0].tableHead)
+                            result.productDetails[0].hasOwnProperty("tableBody") && settableData(result.productDetails[0].tableBody)
+                            setTableId(result.productDetails[0]._id)
+                        }
+                    }
+                    setBusinessLogo(result.businessLogo);
+                    if (result.businessLogo) {
+                        setImage(process.env.REACT_APP_IMAGE_API + "/uploads/" + result.businessLogo)
+                    }
                     setTax(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" : "");
                     setGst(result.gstType ? result.gstType === "IGST" ? result.gstType : "CGST" : "IGST");
-                    setcurrency({ value: result.currency, label: result.currency });
+                    settaxTypeToggle(result.taxType);
                     setHeading({
-                        invoiceId: duplicateId ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
+                        invoiceId: duplicateId || !unique ? "D9" + Math.random().toString().slice(2, 8) : result.invoiceId,
                         issue_date: moment(result.issue_date).format("YYYY-MM-DD"),
                         due_date: result.due_date && moment(result.due_date).format("YYYY-MM-DD"),
                     });
                     result.hasOwnProperty("extra_field") && setextra_field(JSON.parse(result.extra_field));
-                    setClientData(result.invoiceClient[0]);
-                    settableData(result.productDetails);
-                    let file = [];
-                    result.attchmentFile.forEach((val) => {
-                        if (val.split(".")[1] === "pdf") {
-                            file.push({ url: val, icon: '/Images/pdf-attch.png' });
-                        } else if (val.split(".")[1] === "csv") {
-                            file.push({ url: val, icon: '/Images/csv.png' });
-                        } else {
-                            file.push({ url: val, icon: process.env.REACT_APP_IMAGE_API + "/uploads/" + val });
+                    setbusinessData(result.invoiceProvider[0]);
+                    if (result.productDetails.length !== 0 && !unique) {
+                        if (result.productDetails[0].hasOwnProperty("tableHead")) {
+                            setnewcolumns(result.productDetails[0].tableHead);
+                            settableData((val) => val.map((elem) => {
+                                return {
+                                    ...elem, 
+                                    GST: 18, 
+                                    CGST: "0.09",
+                                    SGST: "0.09",
+                                    IGST: "0.18",
+                                    total: 1.18
+                                }
+                            }))
                         }
-                    })
-                    setattchFile(file);
+                    }
                     setContact(result?.contact);
                     let conditions = [];
                     if (result.terms.length !== 0) {
@@ -607,11 +696,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     }
                     setTerms(conditions);
 
-                    if (id) {
-                        setsignImage(result.signImage);
-                        result.signImage ? setsignImageToggle(false) : setsignImageToggle(true);
-                    }
-                    setNote(result.note)
+                    setsignImage(result.signImage);
+                    result.signImage ? setsignImageToggle(false) : setsignImageToggle(true);
+
+                    setNote(result.note);
                 }
                 setisLoading(false);
             }
@@ -681,36 +769,81 @@ const InvoiceFormComponent = ({ setProgress }) => {
         setShow(false)
     }
 
+    // tax changes
+    const handleTaxChange = (event) => {
+        settaxTypeToggle(event.target.value);
+    }
+
     // submit GST
     const handleGst = (e) => {
         e.preventDefault();
-        setTax(gst);
+        let storeColumn = [...newcolumns];
+        const removeName = ["GST", "IGST", "SGST", "CGST", "total"]
+        const CGSTHead = ["GST", "SGST", "CGST", "total"]
+        const IGSTHead = ["GST", "IGST", "total"]
+        if (taxTypeToggle === "None") {
+            storeColumn = storeColumn.map((val) => {
+                if (removeName.includes(val.name)) {
+                    return { ...val, hide: true, toggle: false }
+                }
+                return val
+            });
+            const data = tableData.map(v => {
+                return {
+                    ...v,
+                    amount: v.quantity * v.rate
+                }
+            });
+            settableData(data);
+            setTax("");
+        } else {
+            storeColumn = storeColumn.map((val) => {
+                if (removeName.includes(val.name)) {
+                    if (gst === "IGST") {
+                        return IGSTHead.includes(val.name) ? { ...val, hide: false, toggle: true } : { ...val, hide: true, toggle: false }
+                    } else if (gst === "CGST") {
+                        return CGSTHead.includes(val.name) ? { ...val, hide: false, toggle: true } : { ...val, hide: true, toggle: false }
+                    }
+                }
+                return val
+            });
+
+            setTax(gst);
+            const data = tableData.map(v => {
+                v.GST = v.GST ? v.GST : 18
+                const value1 = (v.quantity * v.rate * v.GST) / 100;
+                v = gst === "IGST" ? {
+                    ...v,
+                    itemName: v.itemName,
+                    quantity: v.quantity,
+                    rate: v.rate,
+                    amount: v.amount,
+                    GST: v.GST,
+                    IGST: parseFloat(value1).toFixed(2),
+                    description: v.description,
+                    descriptionToggle: v.descriptionToggle
+                } : {
+                    ...v,
+                    itemName: v.itemName,
+                    quantity: v.quantity,
+                    rate: v.rate,
+                    amount: v.amount,
+                    GST: v.GST,
+                    CGST: parseFloat(value1 / 2).toFixed(2),
+                    SGST: parseFloat(value1 / 2).toFixed(2),
+                    description: v.description,
+                    descriptionToggle: v.descriptionToggle
+                }
+                return {
+                    ...v,
+                    amount: v.quantity * v.rate,
+                    total: v.quantity * v.rate + value1
+                }
+            })
+            settableData(data);
+        }
+        setnewcolumns(storeColumn)
         setShow(false);
-        const data = tableData.map(v => {
-            v.GST = v.GST ? v.GST : 18
-            const value1 = (v.quantity * v.rate * v.GST) / 100;
-            v = gst === "IGST" ? {
-                itemName: v.itemName,
-                quantity: v.quantity,
-                rate: v.rate,
-                amount: v.amount,
-                GST: v.GST,
-                IGST: parseFloat(value1).toFixed(2)
-            } : {
-                itemName: v.itemName,
-                quantity: v.quantity,
-                rate: v.rate,
-                amount: v.amount,
-                GST: v.GST,
-                CGST: parseFloat(value1 / 2).toFixed(2),
-                SGST: parseFloat(value1 / 2).toFixed(2)
-            }
-            return {
-                ...v,
-                amount: v.quantity * v.rate + value1
-            }
-        })
-        settableData(data)
     }
     // business logo changes
     const businessLogoChange = (event) => {
@@ -793,7 +926,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                         <tr>
                                                             <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
                                                             <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
-                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} />
+                                                                <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} min={heading.issue_date} disabled={!heading.issue_date} />
                                                                 <CalendarMonthIcon className='invoice-calendar-icon' />
                                                             </td>
                                                         </tr>
@@ -832,7 +965,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     </label>
                                                 </> :
                                                     <label className='add-new-logo'>
-                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' onChange={businessLogoChange} />
+                                                        <input type="file" name="logo" id="business-logo" accept='image/*' className='d-none' value={image || ""} onChange={businessLogoChange} />
                                                         <div><i className="fa-regular fa-image"></i> Add Business Logo</div>
                                                     </label>
                                                 }
@@ -858,7 +991,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {businessNames.map((val) => {
                                                             return (<React.Fragment key={val._id}>
-                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => businessData._id !== val._id && getBusinessDetail(val._id)}>{val.business_name}</Dropdown.Item>
+                                                                <Dropdown.Item className="list-client" value={val._id || ''} onClick={() => businessData._id !== val._id && getBusinessDetail(val._id)}>{val.business_name}</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                             </React.Fragment>)
                                                         })}
@@ -927,7 +1060,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                             </div>}
                                                     </div> :
                                                     <div>
-                                                        <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
+                                                        <div className={`static business-detail ${businessError ? "client-error" : ""}`}>
                                                             <div className='static-client-div w-100 px-3'>
                                                                 <span className='client-static-title mt-3 mt-md-0'>Select a Business from list</span>
                                                                 <span className='client-static-title'>Or</span>
@@ -936,7 +1069,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {clienError && <div className='error mt-0' >{clienError}</div>}
+                                                        {businessError && <div className='error mt-0' >{businessError}</div>}
                                                     </div>}
                                             </div>
                                         </div>
@@ -955,7 +1088,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Menu className='col-md-12'>
                                                         {clientNames.map((val) => {
                                                             return (<React.Fragment key={val._id}>
-                                                                <Dropdown.Item className="list-client" value={val._id} onClick={() => clientData._id !== val._id && clientChange(val._id)}>{val.name}</Dropdown.Item>
+                                                                <Dropdown.Item className="list-client" value={val._id || ''} onClick={() => clientData._id !== val._id && clientChange(val._id)}>{val.name}</Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                             </React.Fragment>)
                                                         })}
@@ -1044,21 +1177,33 @@ const InvoiceFormComponent = ({ setProgress }) => {
                             <div className='my-4'>
                                 <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
                                     <h4 className="mb-0">Item Details</h4>
-                                    {/* ======================  currency drop down ====================== */}
-                                    <Select
-                                        className="basic-single currency-dropdown"
-                                        classNamePrefix="select"
-                                        isClearable={false}
-                                        isSearchable={true}
-                                        name="currency"
-                                        value={currency}
-                                        options={currencyList}
-                                        onChange={currencyChange}
-                                    />
+                                    <div className='d-flex align-content-center'>
+                                        {/* ======================  currency drop down ====================== */}
+                                        <Select
+                                            className="basic-single currency-dropdown"
+                                            classNamePrefix="select"
+                                            isClearable={false}
+                                            isSearchable={true}
+                                            name="currency"
+                                            value={currency || {}}
+                                            options={currencyList}
+                                            onChange={currencyChange}
+                                        />
+                                        {/* ======  Rename/Add Fields ===============*/}
+                                        <RenameComponent
+                                            staticHead={staticHead}
+                                            newcolumns={newcolumns}
+                                            setnewcolumns={setnewcolumns}
+                                            settableData={settableData}
+                                            count={count}
+                                            setCount={setCount}
+                                        />
+                                    </div>
                                 </div>
                                 {/* table display */}
                                 <ItemComponent
                                     currency={currency}
+                                    newcolumns={newcolumns}
                                     tableData={tableData}
                                     removeRowTable={removeRowTable}
                                     handleItemchange={handleItemchange}
@@ -1069,6 +1214,8 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                     quantiyError={quantiyError}
                                     setquantiyError={setquantiyError}
                                     tax={tax}
+                                    toggleDescription={toggleDescription}
+                                    handleDescriptionChange={handleDescriptionChange}
                                 />
 
                                 <div className='row my-3'>
@@ -1087,10 +1234,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <p className="text-left mb-0">Sub Total:</p>
+                                                            <p className="text-left mb-0">Amount:</p>
                                                         </td>
                                                         <td>
-                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(totalAmount - TOTALSGST - TOTALSGST - TOTALIGST).toFixed(2))}</p>
+                                                            <p className="text-right mb-0">{currency.value?.slice(6)} {convertNumberFormat(parseFloat(Amount).toFixed(2))}</p>
                                                         </td>
                                                     </tr>
                                                     {tax === "CGST" &&
@@ -1232,17 +1379,18 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                         </div>
                                     </div>
                                     {
-                                        invoiceIdError || issueDateError || itemNameError.length !== 0 || rateError.length !== 0 || quantiyError.length !== 0 || error.length !== 0 || extraFieldError ?
+                                        invoiceIdError || issueDateError || businessError || clienError || itemNameError.length !== 0 || rateError.length !== 0 || quantiyError.length !== 0 || error.length !== 0 || extraFieldError ?
                                             <div className='col-md-12 my-3'>
                                                 <div className='invoice-error-box p-3'>
                                                     <span><i className="fa-solid fa-circle-exclamation mr-2"></i> Please fill the following details</span>
                                                     <ol className='mt-3 mb-0'>
                                                         {invoiceIdError && <li className='mt-1'>{invoiceIdError}</li>}
                                                         {issueDateError && <li className='mt-1'>{issueDateError}</li>}
+                                                        {businessError && <li className='mt-1'>{businessError}</li>}
+                                                        {clienError && <li className='mt-1'>{clienError}</li>}
                                                         {itemNameError.length !== 0 && <li className='mt-1'> {itemNameError[0].item} </li>}
                                                         {rateError.length !== 0 && <li className='mt-1'> {rateError[0].rate} </li>}
                                                         {quantiyError.length !== 0 && <li className='mt-1'> {quantiyError[0].Quantity} </li>}
-                                                        {clienError && <li className='mt-1'>{clienError}</li>}
                                                         {extraFieldError && <li className='mt-1'>{extraFieldError}</li>}
                                                         {error.map((item, index) => (
                                                             <li key={index} className='mt-1'>{item}</li>
@@ -1278,17 +1426,20 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                 <form className="forms-sample">
                                     <div className="form-group">
                                         <label htmlFor="exampleInputfname" className='mt-3' >Select Tax Type</label>
-                                        <select className="form-control" disabled>
-                                            <option value="gst" selected>GST</option>
+                                        <select className="form-control" value={taxTypeToggle} onChange={handleTaxChange}>
+                                            <option value="None">NONE</option>
+                                            <option value="GST">GST</option>
                                         </select>
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="exampleInputfname">GST Type</label>
-                                        <div className="d-flex align-items-center gst-tax">
-                                            <Form.Check type="radio" checked={gst === "IGST"} label="IGST" className="pr-5" name='GST' id="IGST" value={gst || ""} onChange={() => setGst("IGST")} />
-                                            <Form.Check type="radio" checked={gst === "CGST"} label="CGST & SGST" name='GST' id="CGST" value={gst || ""} onChange={() => setGst("CGST")} />
+                                    {taxTypeToggle === "GST" &&
+                                        <div className="form-group">
+                                            <label htmlFor="exampleInputfname">GST Type</label>
+                                            <div className="d-flex align-items-center gst-tax">
+                                                <Form.Check type="radio" checked={gst === "IGST"} label="IGST" className="pr-5" name='GST' id="IGST" value={gst || ""} onChange={() => setGst("IGST")} />
+                                                <Form.Check type="radio" checked={gst === "CGST"} label="CGST & SGST" name='GST' id="CGST" value={gst || ""} onChange={() => setGst("CGST")} />
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                     <div className='d-flex justify-content-center modal-button'>
                                         <button type="submit" className="btn btn-gradient-primary mr-2" onClick={handleGst}>Add</button>
                                         <button className="btn btn-light" onClick={handleClose}>Cancel</button>
