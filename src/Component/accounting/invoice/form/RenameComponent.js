@@ -8,7 +8,7 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
     const [row, setRow] = useState(1);
 
     // fixed header
-    const fixedHeader = ["itemName", "GST", "rate", "quantity", "amount", "CGST", "SGST", "IGST"];
+    const fixedHeader = ["itemName", "GST", "rate", "quantity", "amount", "CGST", "SGST", "IGST", "total"];
 
     useEffect(() => {
         setData(staticHead)
@@ -125,7 +125,7 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
                                 {
                                     data.map((val, ind) => {
                                         return (
-                                            <div className='row' key={ind}>
+                                            !val.hide && <div className='row' key={ind}>
                                                 <div className="col-md-6 mb-2">
                                                     <input className='form-control' type="text" value={val.field || ''} onChange={(event) => renameColumn(val.name, event.target.value)} onBlur={() => handleinputValidation(ind)} />
                                                     {val.error?.length !== 0 && val.error?.map((val, id) => {

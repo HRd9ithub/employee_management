@@ -56,8 +56,8 @@ const ItemComponent = (props) => {
                                                                     val.id === ind && <span className='error' key={val.id}>{val.item}</span>
                                                                 ))}
                                                             </div> :
-                                                            column.name === "GST" ? <input className='form-control' type="text" value={itemData.GST || ""} name='GST' onChange={(e) => handleItemchange(e, ind)} /> :
-                                                                column.name === "quantity" ?
+                                                            column.name === "GST" ? <input className='form-control' type="number" value={itemData.GST || ""} name='GST' onChange={(e) => handleItemchange(e, ind)} /> :
+                                                                column.name === "rate" ?
                                                                     <div style={{ height: "38px" }}>
                                                                         <input className='form-control' type="number" min="0" name="rate" value={itemData.rate || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
                                                                             if (!itemData.rate.trim()) {
@@ -77,7 +77,7 @@ const ItemComponent = (props) => {
                                                                         {rateError.map((val) => (
                                                                             val.id === ind && <span className='error' key={val.id}>{val.rate}</span>
                                                                         ))}
-                                                                    </div> : column.name === "rate" ?
+                                                                    </div> : column.name === "quantity" ?
                                                                         <div style={{ height: "38px" }}>
                                                                             <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity || ''} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
                                                                                 if (!itemData.quantity) {
@@ -105,6 +105,8 @@ const ItemComponent = (props) => {
                                                                                     <input className='form-control' type="text" value={itemData.IGST || ''} readOnly /> :
                                                                                     column.name === "amount" ?
                                                                                         <input className='form-control' type="text" value={convertNumberFormat(itemData.amount) || ''} readOnly /> :
+                                                                                    column.name === "total" ?
+                                                                                        <input className='form-control' type="text" value={convertNumberFormat(itemData.total) || ''} readOnly /> :
                                                                                         <input
                                                                                             className='form-control'
                                                                                             type="text"

@@ -461,15 +461,15 @@ const InvoicePreviewComponent = () => {
                                                             </table>
                                                         </div>
                                                     </div>}
-                                                <div className="table-total-section p-3 mt-4 ml-auto">
+                                                <div className="table-total-section p-3 col-xl-4 col-lg-5 col-md-4 col-sm-6 ml-auto mt-4">
                                                     <table className="w-100">
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <p className="text-left mb-0">Sub Total:</p>
+                                                                    <p className="text-left mb-0">Amount:</p>
                                                                 </td>
                                                                 <td>
-                                                                    <p className="text-right mb-0">{invoiceDetail?.currency?.slice(6)} {convertNumberFormat(parseFloat(invoiceDetail.totalAmount - TOTALSGST - TOTALSGST - TOTALIGST).toFixed(2))}</p>
+                                                                    <p className="text-right mb-0">{invoiceDetail?.currency?.slice(6)} {convertNumberFormat(parseFloat(invoiceDetail.totalSubAmount).toFixed(2))}</p>
                                                                 </td>
                                                             </tr>
                                                             {invoiceDetail.gstType === "CGST & SGST" &&

@@ -3041,7 +3041,7 @@ input[type=password]::-ms-clear {
   justify-content: center;
   align-items: center;
   box-shadow: 1px 1px 11px #cccccc;
-  color: white;
+  color: white !important;
   background-color: rgb(7, 75, 154);
   transition: all 0.3s ease;
 }
@@ -3058,17 +3058,17 @@ input[type=password]::-ms-clear {
 }
 
 .action i:hover {
-  color: rgb(7, 75, 154);
+  color: rgb(7, 75, 154) !important;
   background-color: #f2f2f2 !important;
 } 
 .action i.fa-solid.fa-pen-to-square:hover {
-  color: green;
+  color: green !important;
 }
 .action i.fa-solid.fa-trash-can:hover {
-  color: red;
+  color: red !important;
 }
 .action i.fa-solid.fa-arrow-up-right-from-square:hover {
-  color: orange;
+  color: orange !important;
 }
 
 .common-table-section {
