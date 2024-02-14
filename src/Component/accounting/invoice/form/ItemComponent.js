@@ -13,6 +13,13 @@ const ItemComponent = (props) => {
         }
     }, []);
 
+    const colSpanToggle = useMemo(() => {
+           const data = newcolumns.filter((val) => {
+            return val.toggle;
+           })
+           return data.length
+    },[newcolumns])
+
 
     return (
         <>
@@ -123,7 +130,7 @@ const ItemComponent = (props) => {
                                                 <td className="text-center"><i className="fa-solid fa-xmark text-maroon cursor-pointer" onClick={() => removeRowTable(ind)}></i></td>}
                                         </tr>
                                         <tr>
-                                            <td className='py-0 pb-2'>
+                                            <td className='py-0 pb-2' colSpan={colSpanToggle}>
                                                 {!itemData.descriptionToggle ?
                                                     <div className='invoice-desciption-button'>
                                                         <i className="fa-regular fa-square-plus mr-1"></i>

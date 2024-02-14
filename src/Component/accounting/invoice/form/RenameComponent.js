@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Table } from 'react-bootstrap'
 import { BiColumns } from 'react-icons/bi';
+import { HiOutlineMinus } from 'react-icons/hi';
 
 const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, count, setCount }) => {
     const [show, setShow] = useState(false);
@@ -115,10 +116,10 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
                                     </div>
                                 </div>
                                 <div className='row'>
-                                    <div className="col-md-6 pb-3">
+                                    <div className="col-md-9 pb-3">
                                         <span className='rename-table-head'>Column Name</span>
                                     </div>
-                                    <div className="col-md-6 pb-3 text-center">
+                                    <div className="col-md-3 pb-3 text-center">
                                         <span className='rename-table-head'>Action</span>
                                     </div>
                                 </div>
@@ -126,21 +127,21 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
                                     data.map((val, ind) => {
                                         return (
                                             !val.hide && <div className='row' key={ind}>
-                                                <div className="col-md-6 mb-2">
+                                                <div className="col-md-9 mb-2">
                                                     <input className='form-control' type="text" value={val.field || ''} onChange={(event) => renameColumn(val.name, event.target.value)} onBlur={() => handleinputValidation(ind)} />
                                                     {val.error?.length !== 0 && val.error?.map((val, id) => {
                                                         return <span className="form-text error" key={id}>{val}</span>
                                                     })}
                                                 </div>
-                                                {ind !== 0 &&
-                                                    <div className="col-md-6">
-                                                        <div className="d-flex align-items-center justify-content-center" style={{ gap: "13px" }}>
+                                                {ind !== 0 ?
+                                                    <div className="col-md-3">
+                                                        <div className="d-flex align-items-center justify-content-center w-100" style={{ gap: "8px" }}>
                                                             {val.toggle ?
-                                                                <div className="text-center cursor-pointer w-50" onClick={() => toggleHideShow(ind, val.toggle)}>
+                                                                <div className="text-center cursor-pointer" onClick={() => toggleHideShow(ind, val.toggle)}>
                                                                     <i className="fa-regular fa-eye"></i>
                                                                     <h6 className='mb-0'>Hide</h6>
                                                                 </div> :
-                                                                <div className="text-center cursor-pointer w-50" onClick={() => toggleHideShow(ind, val.toggle)}>
+                                                                <div className="text-center cursor-pointer" onClick={() => toggleHideShow(ind, val.toggle)}>
                                                                     <i className="fa-regular fa-eye-slash"></i>
                                                                     <h6 className='mb-0'>Unhide</h6>
                                                                 </div>}
@@ -150,13 +151,18 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
                                                                     <h6 className='mb-0'>Delete</h6>
                                                                 </div>}
                                                         </div>
+                                                    </div> :
+                                                    <div className="col-md-3">
+                                                        <div className="d-flex align-items-center justify-content-center" style={{ gap: "13px" }}>
+                                                            <HiOutlineMinus />
+                                                        </div>
                                                     </div>}
                                             </div>
                                         )
                                     })
                                 }
                                 <div className='row'>
-                                    <div className='col-md-12'>
+                                    <div className='col-md-12 rename-header'>
                                         <Table responsive="md" gap="10" style={{ background: "rgb(247, 250, 255)" }}>
                                             <thead className='head-item'>
                                                 <tr>

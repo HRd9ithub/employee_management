@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { customAxios } from '../../../service/CreateApi';
 import ErrorComponent from '../../common/ErrorComponent';
 
-function LeaveSettingModal({ data, getLeaveSetting, permission }) {
+function LeaveSettingModal({ data, getLeaveSetting, userId }) {
     const [show, setShow] = useState(false);
     const [page, setpage] = useState(false);
     const [leaveType, setleaveType] = useState([]);
@@ -18,6 +18,7 @@ function LeaveSettingModal({ data, getLeaveSetting, permission }) {
     const [isLoading, setisLoading] = useState(false)
     const [leaveTypeError, setleaveTypeError] = useState("");
     const [totalLeaveError, settotalLeaveError] = useState("");
+    
 
     useEffect(() => {
         const getLeaveType = async () => {
@@ -50,7 +51,8 @@ function LeaveSettingModal({ data, getLeaveSetting, permission }) {
         if (data) {
             setInputData({
                 leaveTypeId: data.leaveTypeId,
-                totalLeave : data.totalLeave
+                totalLeave : data.totalLeave,
+                userId: data.userId
             })
             setId(data._id);
         }
@@ -103,7 +105,7 @@ function LeaveSettingModal({ data, getLeaveSetting, permission }) {
         handleLeaveTypeValiadation();
         handleTotalLeaveValiadation();
 
-       const { leaveTypeId, totalLeave} = inputData;
+       const { leaveTypeId, totalLeave  } = inputData;
 
         if (!leaveTypeId || !totalLeave || leaveTypeError || totalLeaveError) {
             return false
@@ -111,9 +113,9 @@ function LeaveSettingModal({ data, getLeaveSetting, permission }) {
 
         let url = "";
         if (id) {
-            url = customAxios().put(`/leave-setting/${id}`, {  leaveTypeId, totalLeave })
+            url = customAxios().put(`/leave-setting/${id}`, {  leaveTypeId, totalLeave, userId })
         } else {
-            url = customAxios().post('/leave-setting', {  leaveTypeId, totalLeave })
+            url = customAxios().post('/leave-setting', {  leaveTypeId, totalLeave, userId })
         }
 
         setisLoading(true);
@@ -146,10 +148,7 @@ function LeaveSettingModal({ data, getLeaveSetting, permission }) {
 
     return (
         <>
-            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :
-                permission && permission.permissions.create === 1 &&
-                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow} ><i className="fa-solid fa-plus" ></i>&nbsp;Add</button>
-            }
+            {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i> :<button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShow} ><i className="fa-solid fa-plus" ></i>&nbsp;Add</button>}
             {/* Department Name * */}
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
