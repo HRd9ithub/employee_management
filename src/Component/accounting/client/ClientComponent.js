@@ -285,18 +285,13 @@ const ClientComponent = () => {
                   <TableHead className="common-header">
                     <TableRow>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "name"} direction={orderBy === "name" ? order : "asc"} onClick={() => handleRequestSort("name")}>
+                        <TableSortLabel active={orderBy === "business_name"} direction={orderBy === "business_name" ? order : "asc"} onClick={() => handleRequestSort("business_name")}>
                           Name
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "email"} direction={orderBy === "email" ? order : "asc"} onClick={() => handleRequestSort("email")}>
-                          Email
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
-                          Phone
+                        <TableSortLabel active={orderBy === "address"} direction={orderBy === "address" ? order : "asc"} onClick={() => handleRequestSort("address")}>
+                          Address
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -310,28 +305,13 @@ const ClientComponent = () => {
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "country"} direction={orderBy === "country" ? order : "asc"} onClick={() => handleRequestSort("country")}>
-                          Country
+                        <TableSortLabel active={orderBy === "email"} direction={orderBy === "email" ? order : "asc"} onClick={() => handleRequestSort("email")}>
+                          Email
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
-                        <TableSortLabel active={orderBy === "state"} direction={orderBy === "state" ? order : "asc"} onClick={() => handleRequestSort("state")}>
-                          State
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "city"} direction={orderBy === "city" ? order : "asc"} onClick={() => handleRequestSort("city")}>
-                          City
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "postcode"} direction={orderBy === "postcode" ? order : "asc"} onClick={() => handleRequestSort("postcode")}>
-                          Postcode
-                        </TableSortLabel>
-                      </TableCell>
-                      <TableCell>
-                        <TableSortLabel active={orderBy === "address"} direction={orderBy === "address" ? order : "asc"} onClick={() => handleRequestSort("address")}>
-                          Address
+                        <TableSortLabel active={orderBy === "phone"} direction={orderBy === "phone" ? order : "asc"} onClick={() => handleRequestSort("phone")}>
+                          Phone
                         </TableSortLabel>
                       </TableCell>
                       <TableCell>
@@ -344,20 +324,16 @@ const ClientComponent = () => {
                       return (
                         <TableRow key={val._id}>
                           <TableCell>{val.business_name}</TableCell>
-                          <TableCell>{val.email}</TableCell>
-                          <TableCell>{val.phone}</TableCell>
+                          <TableCell className='client-address'>{val.address}{val.city && ", " + val.city}{val.state && ", " + val.state}{val.country && ", " + val.country}{val.postcode && " " + val.postcode}</TableCell>
                           <TableCell>{val.client_industry ? val.client_industry :  <HiOutlineMinus/> }</TableCell>
                           <TableCell>{val.GSTIN ? val.GSTIN  : <HiOutlineMinus/> }</TableCell>
-                          <TableCell>{val.country}</TableCell>
-                          <TableCell>{val.state}</TableCell>
-                          <TableCell>{val.city}</TableCell>
-                          <TableCell>{val.postcode}</TableCell>
-                          <TableCell>{val.address}</TableCell>
+                          <TableCell>{val.email ? val.email : <HiOutlineMinus/>}</TableCell>
+                          <TableCell>{val.phone ? val.phone : <HiOutlineMinus/>}</TableCell>
                           <TableCell>
                             <div className='action'>
                               {tab === "deletes" ?
                                 <>
-                                  <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
+                                  <i className="fa-solid fa-clock-rotate-left" onClick={() => restoreInvoice(val._id)}></i>
                                   <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
                                 </>
                                 : <>

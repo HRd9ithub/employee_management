@@ -270,7 +270,6 @@ const LeaveModal = (props) => {
             setPage(false);
             setisLoading(false)
         })
-
     }
 
     return (
@@ -395,8 +394,12 @@ const LeaveModal = (props) => {
                                                     <select className="form-control " id="status" name='status' value={inputData.status} onChange={handleChange}>
                                                         {data && <option value="Pending"> Pending</option>}
                                                         {data && <option value='Read'>Read </option>}
-                                                        <option value='Approved'>Approved</option>
-                                                        <option value='Declined'>Declined</option>
+                                                        {data && (data.status === "Approved" || data.status === "Declined") && <option value='Approved'>Approved</option>}
+                                                        {data && (data.status === "Approved" || data.status === "Declined") && <option value='Declined'>Declined</option>}
+                                                        {!data && <>
+                                                            <option value='Approved'>Approve</option>
+                                                            <option value='Declined'>Decline</option>
+                                                        </>}
                                                     </select>
                                                 </div>
                                             </div>}

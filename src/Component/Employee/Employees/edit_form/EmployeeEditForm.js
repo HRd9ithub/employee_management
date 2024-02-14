@@ -11,6 +11,7 @@ import UserDoumentForm from "../form_user/userDoumentForm";
 import EmergencyForm from "../form_user/EmergencyForm";
 import { NavLink } from "react-router-dom";
 import PersonalDetailForm from "../form_user/PersonalDetailForm";
+import LeaveSettingComponent from "../../../setting/leave_setting/LeaveSettingComponent";
 import { toast } from "react-hot-toast";
 import LoginInfo from "../view/LoginInfo";
 import Error403 from "../../../error_pages/Error403";
@@ -119,6 +120,7 @@ const EmployeeEditForm = () => {
                   <Tab value="Document" label="Document Information" className="tab-panel-button" />
                   <Tab value="Emergency" label="Emergency Contact Information" className="tab-panel-button" />
                   <Tab value="login" label="Login Information" className="tab-panel-button" />
+                  <Tab value="leave-setting" label="Leave Setting" className="tab-panel-button" />
                 </Tabs>
               </div>
 
@@ -135,6 +137,7 @@ const EmployeeEditForm = () => {
                     <Dropdown.Item onClick={() => handleChanges("Document")}>Document Information</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Information</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleChanges("login")}>Login Information</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleChanges("leave-setting")}>Leave Setting</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
@@ -161,6 +164,9 @@ const EmployeeEditForm = () => {
                           userId={userId} />
                         : value === "login" ?
                           <LoginInfo userId={userId} />
+                          :
+                          value === "leave-setting" ? 
+                           <LeaveSettingComponent userId={userId} />
                           :
                           <EmergencyForm
                             userDetail={userDetail}

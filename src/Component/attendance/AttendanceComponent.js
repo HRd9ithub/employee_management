@@ -167,12 +167,14 @@ const AttendanceComponent = () => {
 
     // timer logic
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTime(moment(new Date()).format("hh:mm:ss A"));
-        }, 1000)
-
-        return () => clearInterval(intervalId);
-    }, []);
+        if(permission && permission?.name?.toLowerCase() !== "admin"){
+            const intervalId = setInterval(() => {
+                setTime(moment(new Date()).format("hh:mm:ss A"));
+            }, 1000)
+    
+            return () => clearInterval(intervalId);
+        }
+    }, [permission]);
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -249,7 +251,11 @@ const AttendanceComponent = () => {
 
     // 9:30 hours check function
     const hoursCheck = useCallback((data) => {
-        return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] >= "09" && sum(data).split(":")[1] < "30")) && "true"
+        if(data && data.split(":")[0] < "09"){
+            return "true"
+        }else if(data && data.split(":")[0] <= "09" && data.split(":")[1] < "30"){
+            return "true"
+        }
     }, [])
 
     if (isLoading) {
@@ -357,32 +363,36 @@ const AttendanceComponent = () => {
                         {/* table */}
                         <div className="mx-4 pt-4">
                             <div className="row align-items-center">
-                                <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
+                                <div className="col-12 col-md-5 col-xl-3 d-flex justify-content-between align-items-center">
                                     <h5 className="mb-0">{moment(startDate).format("DD MMM YYYY").toString().concat(" - ", moment(endDate).format("DD MMM YYYY"))}</h5>
                                 </div>
-                                <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
-                                <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
-                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                            <div className="form-group mb-0">
-                                                <select className="form-control mb-0" id="employee" name='user_id' value={user_id} onChange={userOnChange}>
-                                                    <option value="">All</option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                        )
-                                                    })}
-                                                </select>
+                                <div className="col-12 col-md-7 col-xl-9" id="two">
+                                    <div className="row justify-content-end">
+                                        <div className="col-sm-6 col-xl-4 mt-2">
+                                            {permission && permission.name.toLowerCase() === "admin" &&
+                                                <div className="search-full pr-0">
+                                                    <div className="form-group mb-0">
+                                                        <select className="form-control mb-0" id="employee" name='user_id' value={user_id} onChange={userOnChange}>
+                                                            <option value="">All</option>
+                                                            {userName.map((val) => {
+                                                                return (
+                                                                    val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                </div>}
+                                        </div>
+                                        <div className="col-sm-6 col-xl-4 my-2">
+                                            <div className="form-group mb-0 position-relative">
+                                                <div className="form-group mb-0 position-relative">
+                                                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
+                                                    <CalendarMonthIcon className="range_icon" />
+                                                </div>
                                             </div>
-                                        </div>}
-                                    <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
-                                        <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon" />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                             <TableContainer >
                                 <Table className="common-table-section expanted-table">
@@ -431,7 +441,7 @@ const AttendanceComponent = () => {
                                                                             return (
                                                                                 <React.Fragment key={elem._id}>
                                                                                     <TableRow>
-                                                                                        <TableCell scope="row" className={hoursCheck(val.child[id].time) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
+                                                                                        <TableCell scope="row" className={hoursCheck(sum(val.child[id].time)) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
                                                                                         <TableCell>
                                                                                             <div>
                                                                                                 {val.child[id].time.map((elem, id) => {
@@ -449,12 +459,15 @@ const AttendanceComponent = () => {
                                                                                         <TableCell scope="row">{sum(val.child[id].time)}</TableCell>
                                                                                         <TableCell scope="row">{calculatorBreakTime(val.child[id].time)}</TableCell>
                                                                                         <TableCell>
-                                                                                            {hoursCheck(val.child[id].time) ?
+                                                                                            {hoursCheck(sum(val.child[id].time)) ?
                                                                                                 <div className='action'>
                                                                                                     <AttendanceModal data={val.child[id].time.find((elem, ind) => {
                                                                                                         return ind === (val.child[id].time.length - 1);
                                                                                                     })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
-                                                                                                </div> :  <HorizontalRuleIcon />}
+                                                                                                </div> :  
+                                                                                                <div className="action">
+                                                                                                    <HorizontalRuleIcon />
+                                                                                                </div>}
                                                                                         </TableCell>
                                                                                     </TableRow>
                                                                                 </React.Fragment>

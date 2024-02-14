@@ -16,6 +16,7 @@ const initialistate = {
     leaveFilter: [],
     permission: "",
     permissionToggle: true,
+    leaveLoading:true,
     serverError: false,
     userName: [],
     reportData: [],
@@ -78,7 +79,7 @@ const RouteContext = ({ children }) => {
     }
     // leave data get
     const getLeave = async (start, end, id) => {
-        setLoading(true);
+        dispatch({ type: "START_LEAVE_LOADING"});
         try {
             const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}`);
             if (res.data.success) {
@@ -99,7 +100,7 @@ const RouteContext = ({ children }) => {
                 toast.error(error.response.data.message)
             }
         } finally {
-            setLoading(false)
+            dispatch({ type: "STOP_LEAVE_LOADING"});
         }
     }
 

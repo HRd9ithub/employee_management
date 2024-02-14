@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { customAxios } from '../../../../service/CreateApi';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -19,11 +19,13 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AccountFormComponent from './AccountFormComponent';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
+import { HiOutlineMinus } from 'react-icons/hi';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
     const [serverError, setServerError] = useState(false);
     const [invoiceDetail, setInvoiceDetail] = useState({});
+    const [productDetails, setproductDetails] = useState({});
     const [clientData, setClientData] = useState("");
     const [invoiceProvider, setinvoiceProvider] = useState("");
     const [bankDetail, setbankDetail] = useState("");
@@ -83,6 +85,7 @@ const InvoicePreviewComponent = () => {
                     setInvoiceDetail(...data);
                     setClientData(...data[0].invoiceClient);
                     setinvoiceProvider(...data[0].invoiceProvider);
+                    setproductDetails(...data[0].productDetails);
                 }
                 setpermission(permissions);
                 setisLoading(false);
@@ -185,17 +188,16 @@ const InvoicePreviewComponent = () => {
     ----------------------------*/
 
     const TOTALSGST = useMemo(() => {
-        return parseFloat(invoiceDetail.productDetails?.reduce((total, cur) => {
+        return productDetails.hasOwnProperty("tableBody") && parseFloat(productDetails?.tableBody.reduce((total, cur) => {
             return total + (invoiceDetail.gstType === "CGST & SGST" && parseFloat(cur.SGST))
         }, 0)).toFixed(2)
-    }, [invoiceDetail.productDetails])
+    }, [productDetails])
 
     const TOTALIGST = useMemo(() => {
-        return parseFloat(invoiceDetail.productDetails?.reduce((total, cur) => {
+        return productDetails.hasOwnProperty("tableBody") && parseFloat(productDetails?.tableBody?.reduce((total, cur) => {
             return total + (invoiceDetail.gstType === "IGST" && parseFloat(cur.IGST))
         }, 0)).toFixed(2)
-    }, [invoiceDetail.productDetails])
-
+    }, [productDetails]);
 
     if (isLoading) {
         return <Spinner />
@@ -294,13 +296,21 @@ const InvoicePreviewComponent = () => {
                                                                 <td className="invoice-title-summary"><span >Billed To:</span></td>
                                                                 <td><span className='invoice-value-summary'>{clientData.business_name}</span></td>
                                                             </tr>
-                                                            <tr className='d-block mt-3'>
-                                                                <td className="invoice-title-summary"><span >Phone:</span></td>
-                                                                <td><span className='invoice-value-summary'>{clientData.phone}</span></td>
-                                                            </tr>
+                                                            {clientData.phone &&
+                                                                <tr className='d-block mt-3'>
+                                                                    <td className="invoice-title-summary"><span >Phone:</span></td>
+                                                                    <td><span className='invoice-value-summary'>{clientData.phone}</span></td>
+                                                                </tr>}
+                                                            {clientData.email &&
+                                                                <tr className='d-block mt-3'>
+                                                                    <td className="invoice-title-summary"><span >Email:</span></td>
+                                                                    <td><span className='invoice-value-summary'>{clientData.email}</span></td>
+                                                                </tr>}
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Address:</span></td>
-                                                                <td><span className='invoice-value-summary'>{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</span></td>
+                                                                <td><span className='invoice-value-summary'>
+                                                                    {clientData.address}{clientData.city && ", " + clientData.city}{clientData.state && ", " + clientData.state}{clientData.country && ", " + clientData.country}{clientData.postcode && " " + clientData.postcode}
+                                                                </span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -351,20 +361,24 @@ const InvoicePreviewComponent = () => {
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div className="col-md-6 col-sm-5 mt-4">
-                                            <div className="billby-image ml-auto">
-                                                <img src="/Images/d9.png" alt="img" width="100%" height="auto" />
+                                        {invoiceDetail.businessLogo &&
+                                            <div className="col-md-6 col-sm-5 mt-4">
+                                                <div className="billby-image ml-auto">
+                                                    <img src={`${process.env.REACT_APP_IMAGE_API}/uploads/${invoiceDetail.businessLogo}`} alt="img" width="100%" height="auto" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6 mt-4">
                                             <div className="bill-by-to-section h-100">
                                                 <h3>Billed By</h3>
-                                                <h4>{invoiceProvider.first_name?.concat(" ", invoiceProvider.last_name)}</h4>
-                                                <p className="mb-0">+91 {invoiceProvider.phone}</p>
-                                                <p className="mb-0 text-truncate">{invoiceProvider.email}</p>
-                                                {invoiceProvider.address && <p className="mb-0">{invoiceProvider.address?.concat(" ", invoiceProvider.state).concat(",", invoiceProvider.city).concat("-", invoiceProvider.postcode)}</p>}
+                                                <h4>{invoiceProvider.business_name}</h4>
+                                                <p className="mb-0">{invoiceProvider.address}{invoiceProvider.city && ", " + invoiceProvider.city}{invoiceProvider.state && ", " + invoiceProvider.state}{invoiceProvider.country && ", " + invoiceProvider.country}{invoiceProvider.postcode && " " + invoiceProvider.postcode}</p>
+                                                {invoiceProvider.GSTIN && <p className="mb-0">GSTIN: {invoiceProvider.GSTIN}</p>}
+                                                {invoiceProvider.pan_number && <p className="mb-0">PAN: {invoiceProvider.pan_number}</p>}
+                                                {invoiceProvider.email && <p className="mb-0">Email: {invoiceProvider.email}</p>}
+                                                {invoiceProvider.phone && <p className="mb-0">Phone: +91 {invoiceProvider.phone}</p>}
                                             </div>
                                         </div>
                                         <div className="col-md-6 mt-4">
@@ -372,54 +386,45 @@ const InvoicePreviewComponent = () => {
                                                 <h3>Billed To</h3>
                                                 <h4>{clientData.business_name}</h4>
                                                 {clientData.client_industry && <p className="mb-0">{clientData.client_industry}</p>}
-                                                <p className="mb-0">+91 {clientData.phone}</p>
-                                                <p className="mb-0 text-truncate">{clientData.email}</p>
-                                                {clientData.address && <p className="mb-0">{clientData.address?.concat(" ", clientData.state).concat(",", clientData.city).concat("-", clientData.postcode)}</p>}
+                                                <p className="mb-0">{clientData.address}{clientData.city && ", " + clientData.city}{clientData.state && ", " + clientData.state}{clientData.country && ", " + clientData.country}{clientData.postcode && " " + clientData.postcode}</p>
                                                 {clientData.GSTIN && <p className="mb-0">GSTIN: {clientData.GSTIN}</p>}
                                                 {clientData.pan_number && <p className="mb-0">PAN: {clientData.pan_number}</p>}
+                                                {clientData.email && <p className="mb-0">Email: {clientData.email}</p>}
+                                                {clientData.phone && <p className="mb-0">Phone: +91 {clientData.phone}</p>}
                                             </div>
                                         </div>
                                     </div>
                                     {/* product details table */}
                                     <div className="product-table mt-4">
                                         <table className='table'>
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Item Name</th>
-                                                    {invoiceDetail.gstType && <th>GST</th>}
-                                                    <th>Rate</th>
-                                                    <th >Quantity</th>
-                                                    {invoiceDetail.gstType === "IGST" && <th>IGST</th>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <th>CGST</th>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <th>SGST</th>}
-                                                    <th>Amount({invoiceDetail.currency?.slice(6)})</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {invoiceDetail?.productDetails?.map((val, ind) => {
-                                                    return (
-                                                        <tr key={val._id}>
-                                                            <td>{ind + 1}</td>
-                                                            <td>{val.itemName}</td>
-                                                            {invoiceDetail.gstType && <td>{val.GST}</td>}
-                                                            <td>{val.rate}</td>
-                                                            <td>{val.quantity}</td>
-                                                            {invoiceDetail.gstType === "IGST" && <td>{val.IGST}</td>}
-                                                            {invoiceDetail.gstType === "CGST & SGST" && <td>{val.CGST}</td>}
-                                                            {invoiceDetail.gstType === "CGST & SGST" && <td>{val.SGST}</td>}
-                                                            <td>{convertNumberFormat(val.amount)}</td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                                <tr className='total-column'>
-                                                    <td colSpan={invoiceDetail.gstType ? 5 : 4}>Total</td>
-                                                    {invoiceDetail.gstType === "IGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALIGST)}</td>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
-                                                    {invoiceDetail.gstType === "CGST & SGST" && <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(TOTALSGST)}</td>}
-                                                    <td>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</td>
-                                                </tr>
-                                            </tbody>
+                                            {productDetails.hasOwnProperty("tableHead") &&
+                                                <thead>
+                                                    <tr>
+                                                        {productDetails.tableHead.map((val, ind) => {
+                                                            return val.toggle && <th key={ind}>{val.field}{val.name === "amount" && `(${invoiceDetail.currency?.slice(6)})`}</th>
+                                                        })}
+                                                    </tr>
+                                                </thead>}
+                                            {productDetails.hasOwnProperty("tableBody") &&
+                                                <tbody>
+                                                    {productDetails.tableBody.map((val, id) => {
+                                                        return (
+                                                            <tr key={id}>
+                                                                {productDetails.tableHead.map((column, ind) => {
+                                                                    return (
+                                                                        <React.Fragment key={ind}>
+                                                                            {column.toggle && (column.name === "amount" ?
+                                                                                <td>{convertNumberFormat(val[column.name])}</td>
+                                                                                : <td >{val[column.name] ? val[column.name] : <HiOutlineMinus />}
+                                                                                    {column.name === "itemName" && val.description && <div dangerouslySetInnerHTML={{__html: val.description}}></div>}
+                                                                                </td>)}
+                                                                        </React.Fragment>
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>}
                                         </table>
                                     </div>
                                     {/* bank details and addition details section */}
@@ -456,14 +461,58 @@ const InvoicePreviewComponent = () => {
                                                             </table>
                                                         </div>
                                                     </div>}
-                                                {invoiceDetail.signImage &&
-                                                    <div className="col-xl-4 col-lg-5 col-md-4 col-sm-6 ml-auto mt-4 signature-section">
-                                                        <div style={{ backgroundColor: "rgb(247 250 255)", borderRadius: '5px' }}>
-                                                            <img src={invoiceDetail.signImage} alt='signeture' width="100%" height="auto" />
-                                                        </div>
-                                                        <h5 className='text-center mt-3'>Authorised Signatory</h5>
-                                                    </div>
-                                                }
+                                                <div className="table-total-section p-3 col-xl-4 col-lg-5 col-md-4 col-sm-6 ml-auto mt-4">
+                                                    <table className="w-100">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <p className="text-left mb-0">Amount:</p>
+                                                                </td>
+                                                                <td>
+                                                                    <p className="text-right mb-0">{invoiceDetail?.currency?.slice(6)} {convertNumberFormat(parseFloat(invoiceDetail.totalSubAmount).toFixed(2))}</p>
+                                                                </td>
+                                                            </tr>
+                                                            {invoiceDetail.gstType === "CGST & SGST" &&
+                                                                <tr>
+                                                                    <td>
+                                                                        <p className="text-left mb-0">CGST:</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p className="text-right mb-0">{invoiceDetail.currency?.slice(6)} {TOTALSGST}</p>
+                                                                    </td>
+                                                                </tr>}
+                                                            {invoiceDetail.gstType === "CGST & SGST" &&
+                                                                <tr>
+                                                                    <td>
+                                                                        <p className="text-left mb-0">SGST:</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p className="text-right mb-0">{invoiceDetail.currency?.slice(6)} {TOTALSGST}</p>
+                                                                    </td>
+                                                                </tr>}
+                                                            {invoiceDetail.gstType === "IGST" &&
+                                                                <tr>
+                                                                    <td>
+                                                                        <p className="text-left mb-0">IGST:</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p className="text-right mb-0">{invoiceDetail.currency?.slice(6)} {TOTALIGST}</p>
+                                                                    </td>
+                                                                </tr>}
+                                                            <tr>
+                                                                <td colSpan="2"><hr /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>
+                                                                    <h4 className="text-left mb-0">Total:</h4>
+                                                                </th>
+                                                                <th>
+                                                                    <h4 className="text-right mb-0">{invoiceDetail.currency?.slice(6)} {convertNumberFormat(parseFloat(invoiceDetail.totalAmount).toFixed(2))}</h4>
+                                                                </th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                                 {(invoiceDetail.hasOwnProperty("terms") && invoiceDetail.terms.length !== 0) &&
                                                     <div className="col-md-12 mt-4">
                                                         <h5 className='extra-heading'>Terms & Conditions</h5>
@@ -480,7 +529,7 @@ const InvoicePreviewComponent = () => {
                                                     </div>}
 
                                                 {invoiceDetail.hasOwnProperty("attchmentFile") && invoiceDetail.attchmentFile.length !== 0 &&
-                                                    <div className="col-md-12 mt-4">
+                                                    <div className="col-xl-5 col-lg-7 col-md-8 mt-4">
                                                         <h5 className='extra-heading'>Attachment</h5>
                                                         <ol className='mb-0'>
                                                             {invoiceDetail.attchmentFile.map((val, ind) => {
@@ -490,6 +539,14 @@ const InvoicePreviewComponent = () => {
                                                             })}
                                                         </ol>
                                                     </div>}
+                                                {invoiceDetail.signImage &&
+                                                    <div className="col-xl-4 col-lg-5 col-md-4 col-sm-6 ml-auto mt-4 signature-section">
+                                                        <div style={{ backgroundColor: "rgb(247 250 255)", borderRadius: '5px' }}>
+                                                            <img src={invoiceDetail.signImage} alt='signeture' width="100%" height="auto" />
+                                                        </div>
+                                                        <h5 className='text-center mt-3'>Authorised Signatory</h5>
+                                                    </div>
+                                                }
                                                 {(invoiceDetail.hasOwnProperty("contact") && invoiceDetail.contact) &&
                                                     <div className="col-md-12 mt-4">
                                                         <hr />

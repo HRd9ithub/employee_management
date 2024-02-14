@@ -29,8 +29,8 @@ export const RouteReducer = (state, action) => {
                 leave: action.payload.data,
                 leaveFilter: action.payload.data,
                 permission: action.payload.permissions,
-                permissionToggle : false,
-                leaveSetting : action.payload.leaveSettings
+                permissionToggle: false,
+                leaveSetting: action.payload.leaveSettings
             }
             // eslint-disable-next-line
             break;
@@ -53,7 +53,23 @@ export const RouteReducer = (state, action) => {
             return {
                 ...state,
                 serverError: true,
-                permissionToggle : false
+                permissionToggle: false
+            }
+            // eslint-disable-next-line
+            break;
+        case "START_LEAVE_LOADING":
+            return {
+                ...state,
+                leaveLoading: true,
+                permissionToggle: true,
+            }
+            // eslint-disable-next-line
+            break;
+        case "STOP_LEAVE_LOADING":
+            return {
+                ...state,
+                leaveLoading: false,
+                permissionToggle: false,
             }
             // eslint-disable-next-line
             break;
