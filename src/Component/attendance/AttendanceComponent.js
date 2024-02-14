@@ -167,12 +167,14 @@ const AttendanceComponent = () => {
 
     // timer logic
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTime(moment(new Date()).format("hh:mm:ss A"));
-        }, 1000)
-
-        return () => clearInterval(intervalId);
-    }, []);
+        if(permission && permission?.name?.toLowerCase() !== "admin"){
+            const intervalId = setInterval(() => {
+                setTime(moment(new Date()).format("hh:mm:ss A"));
+            }, 1000)
+    
+            return () => clearInterval(intervalId);
+        }
+    }, [permission]);
 
     // pagination function
     const onChangePage = (e, page) => {
@@ -249,7 +251,11 @@ const AttendanceComponent = () => {
 
     // 9:30 hours check function
     const hoursCheck = useCallback((data) => {
-        return (data.find((val) => !val.hasOwnProperty("clock_out")) || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] < "09") || (sum(data).split(":").length !== 0 && sum(data).split(":")[0] >= "09" && sum(data).split(":")[1] < "30")) && "true"
+        if(data && data.split(":")[0] < "09"){
+            return "true"
+        }else if(data && data.split(":")[0] <= "09" && data.split(":")[1] < "30"){
+            return "true"
+        }
     }, [])
 
     if (isLoading) {
@@ -386,8 +392,6 @@ const AttendanceComponent = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
-                                    </div> */}
                                 </div>
                             </div>
                             <TableContainer >
@@ -437,7 +441,7 @@ const AttendanceComponent = () => {
                                                                             return (
                                                                                 <React.Fragment key={elem._id}>
                                                                                     <TableRow>
-                                                                                        <TableCell scope="row" className={hoursCheck(val.child[id].time) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
+                                                                                        <TableCell scope="row" className={hoursCheck(sum(val.child[id].time)) ? "text-red" : ""}>{moment(elem.timestamp).format("DD MMM YYYY")}</TableCell>
                                                                                         <TableCell>
                                                                                             <div>
                                                                                                 {val.child[id].time.map((elem, id) => {
@@ -455,12 +459,15 @@ const AttendanceComponent = () => {
                                                                                         <TableCell scope="row">{sum(val.child[id].time)}</TableCell>
                                                                                         <TableCell scope="row">{calculatorBreakTime(val.child[id].time)}</TableCell>
                                                                                         <TableCell>
-                                                                                            {hoursCheck(val.child[id].time) ?
+                                                                                            {hoursCheck(sum(val.child[id].time)) ?
                                                                                                 <div className='action'>
                                                                                                     <AttendanceModal data={val.child[id].time.find((elem, ind) => {
                                                                                                         return ind === (val.child[id].time.length - 1);
                                                                                                     })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
-                                                                                                </div> :  <HorizontalRuleIcon />}
+                                                                                                </div> :  
+                                                                                                <div className="action">
+                                                                                                    <HorizontalRuleIcon />
+                                                                                                </div>}
                                                                                         </TableCell>
                                                                                     </TableRow>
                                                                                 </React.Fragment>

@@ -5107,6 +5107,10 @@ select.form-control.currency-dropdown {
 .react-datepicker__day--highlighted.highlighted-birth-date::after {
   top: -1px !important;
 }
+.react-datepicker__day--weekend.highlighted-birth-date::after {
+  top: -1px !important;
+  left: -1px !important;
+}
 .highlighted-birth-date.react-datepicker__day--highlighted::before, .highlighted-birth-date.react-datepicker__day--today::before, .highlighted-birth-date.react-datepicker__day--highlighted {
   background-color: white !important;
 }
@@ -5114,6 +5118,9 @@ select.form-control.currency-dropdown {
 .leave-box-section{
   background-color: #eaeff0;
   border-radius: 5px;
+}
+.rename-header .table-responsive-md{
+  overflow-x: auto;
 }
 
 @media print {

@@ -29,10 +29,10 @@ const LoginInfo = ({ userId }) => {
     const [order, setOrder] = useState("desc")
     const [orderBy, setOrderBy] = useState("createdAt")
 
-    const getLoginInfo = async (start ,end) => {
+    const getLoginInfo = async (start, end) => {
         try {
             setLoader(true);
-            const response = await customAxios().post('/user/loginInfo', { id: userId ,startDate : start || startDate,endDate : end || endDate});
+            const response = await customAxios().post('/user/loginInfo', { id: userId, startDate: start || startDate, endDate: end || endDate });
 
             if (response.data.success) {
                 setDataFilter(response.data.data)
@@ -103,100 +103,97 @@ const LoginInfo = ({ userId }) => {
         setendtDate(end._d)
         getLoginInfo(start._d, end._d)
     }
-   
-    return (
-        <div>
 
+    return (
+        <>
             {/* table */}
-            <div>
-                <div className='col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto px-0'>
-                    <div className="form-group mb-0 position-relative">
-                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate ,ranges: ranges, maxDate: new Date()}} onCallback={handleCallback} ><input className="form-control" /></DateRangePicker>
-                        <CalendarMonthIcon className="range_icon"/>
-                    </div>
+            <div className='col-12 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto px-0'>
+                <div className="form-group mb-0 position-relative">
+                    <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control" /></DateRangePicker>
+                    <CalendarMonthIcon className="range_icon" />
                 </div>
-                <TableContainer >
-                    <Table className="common-table-section">
-                        <TableHead className="common-header">
-                            <TableRow>
-                                <TableCell>
-                                    Id
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
-                                        Date & Time
-                                    </TableSortLabel>
-                                </TableCell>
-                                {/* <TableCell>
+            </div>
+            <TableContainer >
+                <Table className="common-table-section">
+                    <TableHead className="common-header">
+                        <TableRow>
+                            <TableCell>
+                                Id
+                            </TableCell>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
+                                    Date & Time
+                                </TableSortLabel>
+                            </TableCell>
+                            {/* <TableCell>
                                     <TableSortLabel active={orderBy === "createdAt"} direction={orderBy === "createdAt" ? order : "asc"} onClick={() => handleRequestSort("createdAt")}>
                                         Time
                                     </TableSortLabel>
                                 </TableCell> */}
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "ip"} direction={orderBy === "ip" ? order : "asc"} onClick={() => handleRequestSort("ip")}>
-                                        IP
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "device"} direction={orderBy === "device" ? order : "asc"} onClick={() => handleRequestSort("device")}>
-                                        Device
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "device_name"} direction={orderBy === "device_name" ? order : "asc"} onClick={() => handleRequestSort("device_name")}>
-                                        Device Name
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "browser_name"} direction={orderBy === "browser_name" ? order : "asc"} onClick={() => handleRequestSort("browser_name")}>
-                                        Browser Name
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel active={orderBy === "city"} direction={orderBy === "city" ? order : "asc"} onClick={() => handleRequestSort("city")}>
-                                        City
-                                    </TableSortLabel>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "ip"} direction={orderBy === "ip" ? order : "asc"} onClick={() => handleRequestSort("ip")}>
+                                    IP
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "device"} direction={orderBy === "device" ? order : "asc"} onClick={() => handleRequestSort("device")}>
+                                    Device
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "device_name"} direction={orderBy === "device_name" ? order : "asc"} onClick={() => handleRequestSort("device_name")}>
+                                    Device Name
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "browser_name"} direction={orderBy === "browser_name" ? order : "asc"} onClick={() => handleRequestSort("browser_name")}>
+                                    Browser Name
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell>
+                                <TableSortLabel active={orderBy === "city"} direction={orderBy === "city" ? order : "asc"} onClick={() => handleRequestSort("city")}>
+                                    City
+                                </TableSortLabel>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                            return (
+                                <TableRow key={ind}>
+                                    <TableCell>{ind + 1}</TableCell>
+                                    <TableCell>{moment(val.createdAt).format("DD MMM YYYY hh:mm:ss A")}</TableCell>
+                                    {/* <TableCell>{moment(val.createdAt).format("hh:mm:ss A")}</TableCell> */}
+                                    <TableCell>{val.ip}</TableCell>
+                                    <TableCell>{val.device}</TableCell>
+                                    <TableCell>{val.device_name ? val.device_name : "-"}</TableCell>
+                                    <TableCell>{val.browser_name}</TableCell>
+                                    <TableCell>{val.city}</TableCell>
+                                </TableRow>
+                            )
+                        }) :
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">
+                                    No Records Found
                                 </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                return (
-                                    <TableRow key={ind}>
-                                        <TableCell>{ind + 1}</TableCell>
-                                        <TableCell>{moment(val.createdAt).format("DD MMM YYYY hh:mm:ss A")}</TableCell>
-                                        {/* <TableCell>{moment(val.createdAt).format("hh:mm:ss A")}</TableCell> */}
-                                        <TableCell>{val.ip}</TableCell>
-                                        <TableCell>{val.device}</TableCell>
-                                        <TableCell>{val.device_name ? val.device_name : "-"}</TableCell>
-                                        <TableCell>{val.browser_name}</TableCell>
-                                        <TableCell>{val.city}</TableCell>
-                                    </TableRow>
-                                )
-                            }) :
-                                <TableRow>
-                                    <TableCell colSpan={7} align="center">
-                                        No Records Found
-                                    </TableCell>
-                                </TableRow>
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
-                    component="div"
-                    onPageChange={onChangePage}
-                    onRowsPerPageChange={onChangeRowsPerPage}
-                    rowsPerPage={count}
-                    count={dataFilter.length}
-                    page={page}>
-                </TablePagination>
-            </div>
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
+                component="div"
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+                rowsPerPage={count}
+                count={dataFilter.length}
+                page={page}>
+            </TablePagination>
             <div className="submit-section d-flex justify-content-end py-3">
-                    <button className="btn btn-light" onClick={() => history("/employees")}>Back</button>
-                </div>
+                <button className="btn btn-light" onClick={() => history("/employees")}>Back</button>
+            </div>
             {loader && <Spinner />}
-        </div>
+        </>
     )
 }
 

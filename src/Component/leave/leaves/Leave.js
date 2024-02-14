@@ -24,7 +24,8 @@ const Leave = () => {
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
 
-    let { getLeave, user_id, setuser_id, leave, startDate, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave, user_id, setuser_id, leave, startDate,leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    console.log('permissionToggle :>> ', permissionToggle);
 
     // pagination state
     const [count, setCount] = useState(5)
@@ -204,7 +205,7 @@ const Leave = () => {
         // eslint-disable-next-line
     }, [leave]);
 
-    if (Loading || (subLoading && !show)) {
+    if ((Loading || leaveLoading) || (subLoading && !show)) {
         return <Spinner />;
     } else if (serverError) {
         return <Error500 />;

@@ -28,7 +28,6 @@ import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
 import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 import ClientComponent from '../accounting/client/ClientComponent';
-import LeaveSettingComponent from '../setting/leave_setting/LeaveSettingComponent';
 
 const AppRoute = ({setProgress}) => {
     return (
@@ -63,7 +62,6 @@ const AppRoute = ({setProgress}) => {
                 <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
                 <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/leave-setting' element={<ProtectedRoute authentication={true} ><LeaveSettingComponent /></ProtectedRoute>}></Route>
                 {/* attendance route */}
                 <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent/></ProtectedRoute>}></Route>
                 <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance/></ProtectedRoute>}></Route>
