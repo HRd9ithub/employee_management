@@ -10,14 +10,14 @@ import { useMemo } from 'react';
 import ErrorComponent from '../../common/ErrorComponent';
 
 const LeaveModal = (props) => {
-    let { data, getLeave, permission, startDate, endDate, user_id_drop } = props;
+    let { data, setStartDate, setendtDate, setuser_id, permission,userName} = props;
     const [show, setShow] = useState(false);
     const [isLoading, setisLoading] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
-    const [user, setUser] = useState([])
     const [page, setPage] = useState(false)
     const [id, setId] = useState('')
     const [error, setError] = useState([]);
+    const statusField = ["Approved", "Declined"]
 
     const [inputData, setInputData] = useState({
         user_id: "",
@@ -62,33 +62,8 @@ const LeaveModal = (props) => {
                 setisLoading(false)
             }
         }
-        // get user name
-        const get_username = async () => {
-            setisLoading(true)
-            try {
-                const res = await customAxios().post('/user/username');
-
-                if (res.data.success) {
-                    let data = res.data.data.filter((val) => val.role.toLowerCase() !== "admin")
-                    setUser(data);
-                }
-            } catch (error) {
-                if (!error.response) {
-                    toast.error(error.message);
-                } else {
-                    if (error.response.data.message) {
-                        toast.error(error.response.data.message)
-                    }
-                }
-            } finally {
-                setisLoading(false)
-            }
-        };
         if (page) {
             getLeaveType()
-        }
-        if ((permission && permission.name?.toLowerCase() === 'admin') && page) {
-            get_username()
         }
         // eslint-disable-next-line
     }, [page])
@@ -245,6 +220,9 @@ const LeaveModal = (props) => {
                 toast.success(data.data.message);
                 setShow(false);
                 setId("");
+                setStartDate(new Date(from_date));
+                setendtDate(leave_for === "Full" ? new Date(to_date) : new Date(from_date));
+                setuser_id(user_id);
                 setInputData({
                     user_id: "",
                     leave_type_id: "",
@@ -254,7 +232,7 @@ const LeaveModal = (props) => {
                     reason: "",
                     status: "Approved"
                 })
-                getLeave(startDate, endDate, user_id_drop);
+                // getLeave(startDate, endDate, user_id_drop);
             }
         }).catch((error) => {
             if (!error.response) {
@@ -299,9 +277,9 @@ const LeaveModal = (props) => {
                                                     <label htmlFor="user_id">Employee</label>
                                                     <select className="form-control " id="user_id" name='user_id' disabled={data} value={inputData.user_id} onChange={handleChange} onBlur={userValidation}>
                                                         <option value='0'>Select Employee </option>
-                                                        {user.map((val) => {
+                                                        {userName.map((val) => {
                                                             return (
-                                                                <option key={val._id} value={val._id}>{val.first_name.concat(' ', val.last_name)}</option>
+                                                                val.role.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                             )
                                                         })}
                                                     </select>
@@ -394,9 +372,9 @@ const LeaveModal = (props) => {
                                                     <select className="form-control " id="status" name='status' value={inputData.status} onChange={handleChange}>
                                                         {data && <option value="Pending"> Pending</option>}
                                                         {data && <option value='Read'>Read </option>}
-                                                        {data && (data.status === "Approved" || data.status === "Declined") && <option value='Approved'>Approved</option>}
-                                                        {data && (data.status === "Approved" || data.status === "Declined") && <option value='Declined'>Declined</option>}
-                                                        {!data && <>
+                                                        {statusField.includes(data?.status) && <option value='Approved'>Approved</option>}
+                                                        {statusField.includes(data?.status) && <option value='Declined'>Declined</option>}
+                                                        {!statusField.includes(data?.status) && <>
                                                             <option value='Approved'>Approve</option>
                                                             <option value='Declined'>Decline</option>
                                                         </>}

@@ -4,16 +4,15 @@ import { AppProvider } from '../context/RouteContext';
 import { timeAgo } from '../../helper/dateFormat';
 import { HiOutlineMinus } from 'react-icons/hi';
 import { customAxios } from '../../service/CreateApi';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Spinner from './Spinner';
 
 const Notification = () => {
 
-    const { notification, getLeaveNotification, setStartDate, setendtDate, setuser_id, getLeave } = useContext(AppProvider);
+    const { notification, getLeaveNotification, setStartDate, setendtDate, setuser_id } = useContext(AppProvider);
     // page redirect
     const history = useNavigate();
-    const { pathname } = useLocation();
     const [isLoading, setisLoading] = useState(false);
 
     // status change
@@ -63,11 +62,10 @@ const Notification = () => {
                         const res = await customAxios().patch(`/leave/${_id}`, { status: item.deleteAt ? status :"Read" })
                         if (res.data.success) {
                             setisLoading(false);
-                            if (pathname === "/leaves") {
-                                getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
-                            } else {
-                                history('/leaves')
-                            }
+                            history('/leaves')
+                            setStartDate(new Date(item.from_date))
+                            setendtDate(new Date(item.to_date))
+                            setuser_id(item.user_id);
                         }
                     } catch (error) {
                         setisLoading(false)
@@ -77,9 +75,7 @@ const Notification = () => {
                             toast.error(error.response.data.message)
                         }
                     };
-                    setendtDate(new Date(item.to_date))
-                    setStartDate(new Date(item.from_date))
-                    setuser_id(item.user_id)
+                  
                 }
             }
         } else {
@@ -91,14 +87,10 @@ const Notification = () => {
                 if (item.attendanceId) {
                     history(`/attendance/${item.attendanceId}`)
                 } else {
-                    if (pathname === "/leaves") {
-                        getLeave(new Date(item.from_date), new Date(item.to_date), item.user_id);
-                    } else {
-                        history('/leaves')
-                    }
-                    setendtDate(new Date(item.to_date))
+                    history('/leaves')
                     setStartDate(new Date(item.from_date))
-                    setuser_id(item.user_id);
+                    setendtDate(new Date(item.to_date))
+                    setuser_id(item.user_id)
                 }
             }
 

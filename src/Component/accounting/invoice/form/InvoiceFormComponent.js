@@ -534,7 +534,6 @@ const InvoiceFormComponent = ({ setProgress }) => {
         if (invoiceIdError || issueDateError || !invoiceId || !issue_date || data || clienError || extraFieldError || errorData || Object.keys(clientData).length === 0 || Object.keys(businessData).length === 0) {
             return false
         } else {
-            console.log('clientData :>> ', clientData);
             setisLoading(true);
             let formdata = new FormData();
             formdata.append('invoiceId', invoiceId);
@@ -924,7 +923,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                 <tr>
                                                     <td className='common-head-invoice field-input'><label htmlFor='due_date' className="mb-0">Due Date</label></td>
                                                     <td className='common-head-invoice position-relative' onClick={() => { dueDateRef.current.showPicker(); }}>
-                                                        <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} />
+                                                        <input type="date" className='form-control' name='due_date' ref={dueDateRef} value={heading.due_date || ""} onChange={headingChange} min={heading.issue_date} disabled={!heading.issue_date} />
                                                         <CalendarMonthIcon className='invoice-calendar-icon' />
                                                     </td>
                                                 </tr>

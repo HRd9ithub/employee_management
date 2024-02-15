@@ -16,7 +16,7 @@ const initialistate = {
     leaveFilter: [],
     permission: "",
     permissionToggle: true,
-    leaveLoading:true,
+    leaveLoading: true,
     serverError: false,
     userName: [],
     reportData: [],
@@ -51,10 +51,10 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-              }else if (error.response.data.message) {
+            } else if (error.response.data.message) {
                 toast.error(error.response.data.message);
-              }
-        }finally{
+            }
+        } finally {
             setLoading(false);
         }
     }
@@ -72,21 +72,21 @@ const RouteContext = ({ children }) => {
             setLoading(false)
             if (!error.response) {
                 toast.error(error.message);
-              }else if (error.response.data.message) {
+            } else if (error.response.data.message) {
                 toast.error(error.response.data.message);
-              }
+            }
         }
     }
     // leave data get
     const getLeave = async (start, end, id) => {
-        dispatch({ type: "START_LEAVE_LOADING"});
+        dispatch({ type: "START_LEAVE_LOADING" });
         try {
-            const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}`);
+            const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}&status=${localStorage.getItem("status")}`);
             if (res.data.success) {
+                localStorage.removeItem("status");
                 dispatch({ type: "GET_LEAVE", payload: res.data });
                 if (res.data.permissions && res.data.permissions.name.toLowerCase() === "admin") {
                     getLeaveNotification();
-                    get_username();
                 }
             }
         } catch (error) {
@@ -100,7 +100,7 @@ const RouteContext = ({ children }) => {
                 toast.error(error.response.data.message)
             }
         } finally {
-            dispatch({ type: "STOP_LEAVE_LOADING"});
+            dispatch({ type: "STOP_LEAVE_LOADING" });
         }
     }
 
@@ -120,7 +120,7 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            }else if (error.response.data.message) {
+            } else if (error.response.data.message) {
                 toast.error(error.response.data.message);
             }
         } finally {
@@ -141,7 +141,7 @@ const RouteContext = ({ children }) => {
         } catch (error) {
             if (!error.response) {
                 toast.error(error.message);
-            }else if (error.response.data.message) {
+            } else if (error.response.data.message) {
                 toast.error(error.response.data.message);
             }
         } finally {
