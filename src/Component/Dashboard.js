@@ -21,6 +21,7 @@ const Dashboard = () => {
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState(0);
      const [leaveRequest, setleaveRequest] = useState(0);
+     const [leaveRequestData, setleaveRequestData] = useState([]);
      const [presentToday, setpresentToday] = useState(0);
      const [absentTodayCount, setabsentTodayCount] = useState(0);
      const [halfLeaveToday, sethalfLeaveToday] = useState(0);
@@ -32,15 +33,15 @@ const Dashboard = () => {
      const [monthDayArray, setmonthDayArray] = useState([])
      const [birthDayToggle, setBirtDayToggle] = useState(true);
 
-     let { UserData } = useContext(AppProvider)
+     let { UserData, setStartDate, setendtDate, } = useContext(AppProvider)
 
      let navigate = useNavigate();
 
      // calcedar date change function
      const handleChange = date => {
-          if(moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")){
+          if (moment(startDate).format("DD-MM-YYYY") === moment(date).format("DD-MM-YYYY")) {
                setBirtDayToggle(!birthDayToggle)
-          }else{
+          } else {
                setBirtDayToggle(true)
           }
           datefilter(date);
@@ -55,7 +56,7 @@ const Dashboard = () => {
                     const res = await customAxios().get('/dashboard');
 
                     if (res.data.success) {
-                         let { totalEmployee, leaveRequest, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
+                         let { totalEmployee, leaveRequest,leaveRequestData, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
                          settotalEmployee(totalEmployee)
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
@@ -64,6 +65,7 @@ const Dashboard = () => {
                          setabsentTodayCount(absentTodayCount);
                          sethalfLeaveToday(halfLeaveToday);
                          setleaveRequest(leaveRequest);
+                         setleaveRequestData(leaveRequestData);
                          let birthDayFilter = birthDay.find((item) => {
                               return moment(item.date_of_birth).format("DD-MM") === moment(new Date()).format("DD-MM")
                          });
@@ -143,10 +145,39 @@ const Dashboard = () => {
           return isHighlighted(date) ? 'highlighted-birth-date' : null;
      };
 
+     // box onclick
+     const pageRedirect = () => {
+          navigate("/leaves");
+          // getLeave(new Date(), new Date());
+          setStartDate(new Date());
+          setendtDate(new Date());
+     }
+     
+     const leaveRequestClick = () => {
+          navigate("/leaves");
+          localStorage.setItem("status", "Pending");
+          if(leaveRequestData.length !== 0){
+               // Use reduce to find the maximum start and end dates
+               const { minStartDate, maxEndDate } = leaveRequestData.reduce((acc, cur) => {
+                   return {
+                        minStartDate: cur.from_date < acc.minStartDate ? cur.from_date : acc.minStartDate,
+                        maxEndDate: cur.to_date > acc.maxEndDate ? cur.to_date : acc.maxEndDate
+                   };
+               }, { minStartDate: leaveRequestData[0].from_date, maxEndDate: leaveRequestData[0].to_date });
+               
+               // Output the maximum start and end dates
+               setStartDate(new Date(minStartDate));
+               setendtDate(new Date(maxEndDate));
+          }else{
+               setStartDate(moment().clone().startOf('month'));
+               setendtDate(moment().clone().endOf('month'));
+          }
+     }
+
      return (
           <>
                <motion.div className="box" initial={{ opacity: 0, transform: "translateY(-20px)" }} animate={{ opacity: 1, transform: "translateY(0px)" }} transition={{ duration: 0.5 }}>
-                    {!isLoading &&                    <div className=''>
+                    {!isLoading && <div className=''>
                          <div className='container-fluid inner-pages py-3'>
                               {/* Summary part of dashboard */}
                               {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
@@ -160,7 +191,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -169,7 +200,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -178,7 +209,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -187,8 +218,8 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard">
-                                             <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link" style={{ cursor: "default" }}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={leaveRequestClick}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link" >
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Leave Request</h3>
@@ -207,7 +238,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -216,7 +247,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -225,7 +256,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/leaves")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
                                              <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -234,8 +265,8 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6">
-                                             <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link" style={{ cursor: "default" }}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={leaveRequestClick}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
                                                        <h3 className="mb-0">Leave Request</h3>
@@ -244,7 +275,7 @@ const Dashboard = () => {
                                              </NavLink>
                                         </div>
                                    </div>
-                                   </>
+                              </>
                               }
 
                               <div className='row'>

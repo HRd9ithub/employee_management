@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState, useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import Spinner from '../../common/Spinner'
@@ -21,12 +22,15 @@ import ranges from '../../../helper/calcendarOption'
 const Leave = () => {
     const [show, setShow] = useState(false);
     const [status, setstatus] = useState("");
+    const [staticStatus, setstaticStatus] = useState("");
+    const controller = new AbortController();
+
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
 
-    let { getLeave, user_id, setuser_id, leave, startDate,leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
-    console.log('permissionToggle :>> ', permissionToggle);
+    let { getLeave, user_id, setuser_id, leave,get_username, startDate, leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
 
+    const statusField = ["Approved", "Declined"]
     // pagination state
     const [count, setCount] = useState(5)
     const [page, setpage] = useState(0)
@@ -37,12 +41,20 @@ const Leave = () => {
 
     useEffect(() => {
         getLeave(startDate, endDate, user_id)
+        return () => {
+            controller.abort();
+        };
         // eslint-disable-next-line
-    }, [endDate,user_id])
+    }, [endDate, user_id])
+
+    useEffect(() => {
+        get_username();
+    },[])
 
     // status change modal SHOW
     const handlesshowModal = (status, id) => {
         setstatus(status);
+        setstaticStatus(status);
         setid(id);
         setShow(true);
     }
@@ -185,18 +197,6 @@ const Leave = () => {
     const actionToggle = useMemo(() => {
         if (permission) {
             if (permission.permissions.update === 1 || permission.permissions.delete === 1) {
-                // if (permission.name?.toLowerCase() === "admin") {
-                //     let data = leave.find((val) => {
-                //         return !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())
-                //     })
-                //     if (data || leave.length === 0) {
-                //         return true
-                //     } else {
-                //         return false
-                //     }
-                // } else {
-                //     return true
-                // }
                 return true
             } else {
                 return false
@@ -264,7 +264,7 @@ const Leave = () => {
                                             </form>
                                             <i className="fas fa-search"></i>
                                         </div>
-                                        <LeaveModal getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />
+                                        <LeaveModal setStartDate={setStartDate} setendtDate={setendtDate} setuser_id={setuser_id} permission={permission} userName={userName} />
                                     </div>
                                 </div>
                             </div>
@@ -296,19 +296,19 @@ const Leave = () => {
                         </div>
                         {/* table */}
                         <div className="mx-4">
-                        {((permission && permission.name?.toLowerCase() !== "admin") || user_id )&&
-                            <div className="row">
-                                {leaveSetting.map((val,ind) => {
-                                    return (
-                                        <div className="col-md-3" key={ind}>
-                                            <div className="p-3 d-flex justify-content-between align-content-center leave-box-section">
-                                                <h6 className="mb-0">{val.type}</h6>
-                                                <h6 className="mb-0">{val.remaining}/{val.totalLeave}</h6>
+                            {((permission && permission.name?.toLowerCase() !== "admin") || user_id) &&
+                                <div className="row">
+                                    {leaveSetting.map((val, ind) => {
+                                        return (
+                                            <div className="col-md-3" key={ind}>
+                                                <div className="p-3 d-flex justify-content-between align-content-center leave-box-section">
+                                                    <h6 className="mb-0">{val.type}</h6>
+                                                    <h6 className="mb-0">{val.remaining}/{val.totalLeave}</h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>}
+                                        )
+                                    })}
+                                </div>}
                             <TableContainer >
                                 <Table className="common-table-section">
                                     <TableHead className="common-header">
@@ -385,15 +385,15 @@ const Leave = () => {
                                                     <TableCell>{val.reason}</TableCell>
                                                     <TableCell>{moment(val.createdAt).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>
-                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
+                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date() && new Date(val.to_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
                                                     </TableCell>
                                                     {actionToggle &&
                                                         <TableCell>
                                                             <div className='action'>
                                                                 {/* eslint-disable-next-line no-mixed-operators */}
                                                                 {(permission && permission.permissions.update === 1 && (val.status !== 'Approved' && val.status !== "Declined") ||
-                                                                    !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date())) &&
-                                                                    <LeaveModal data={val} getLeave={getLeave} permission={permission} startDate={startDate} endDate={endDate} user_id_drop={user_id} />}
+                                                                    !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date() && new Date(val.to_date) < new Date())) &&
+                                                                    <LeaveModal setStartDate={setStartDate} setendtDate={setendtDate} setuser_id={setuser_id} data={val} permission={permission} userName={userName}/>}
                                                                 <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>
                                                             </div>
                                                         </TableCell>}
@@ -434,11 +434,15 @@ const Leave = () => {
                                     <form className="forms-sample">
                                         <div className="form-group">
                                             <label htmlFor="status" className='mt-3'>Status</label>
-                                            <select className="form-control " id="status" name='status' value={status} onChange={(e) => setstatus(e.target.value)} >
+                                            <select className="form-control " id="status" name='status' value={status} onChange={(e) => setstatus(e.target.value)}>
                                                 <option value="Pending"> Pending</option>
                                                 <option value="Read">Read</option>
-                                                <option value="Approved"> Approved</option>
-                                                <option value="Declined"> Declined</option>
+                                                {statusField.includes(staticStatus) && <option value="Approved"> Approved</option>}
+                                                {statusField.includes(staticStatus) && <option value="Declined"> Declined</option>}
+                                                {!statusField.includes(staticStatus) && <>
+                                                    <option value='Approved'>Approve</option>
+                                                    <option value='Declined'>Decline</option>
+                                                </>}
                                             </select>
                                         </div>
                                         <div className='d-flex justify-content-center modal-button'>
