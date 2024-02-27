@@ -2509,10 +2509,6 @@ svg {
   margin: 0 0 0 10px;
 }
 
-.box-dashboard {
-  margin: 0 7px;
-  flex: 1;
-}
 .box-dashboard a:hover {
   color: white;
 }

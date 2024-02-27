@@ -484,8 +484,8 @@ const WorkReportComponent = () => {
                                 </div>
                             }
                             <div className='d-flex justify-content-center modal-button m-3'>
-                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={acceptRequest} >Approved</button>
-                                <button className="btn btn-light" onClick={declinedRequest}>Declined</button>
+                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={acceptRequest} >Approve</button>
+                                <button className="btn btn-light" onClick={declinedRequest}>Decline</button>
                             </div>
                         </div>
                     </div>
