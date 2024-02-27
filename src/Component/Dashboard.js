@@ -72,8 +72,8 @@ const Dashboard = () => {
                          let monthDay = birthDay.map((item) => {
                               return moment(item.date_of_birth).format("DD-MM")
                          });
-                         setmonthDayArray(monthDay)
-                         if (birthDayFilter) {
+                         setmonthDayArray(monthDay);
+                         if (birthDayFilter && GetLocalStorage("user_id") === birthDayFilter?._id) {
                               let data = JSON.parse(localStorage.getItem("employeeBirthday"));
                               if (!data) {
                                    setanimateLoader(true);
