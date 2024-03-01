@@ -33,7 +33,7 @@ const Dashboard = () => {
      const [monthDayArray, setmonthDayArray] = useState([])
      const [birthDayToggle, setBirtDayToggle] = useState(true);
 
-     let { UserData, setStartDate, setendtDate, } = useContext(AppProvider)
+     let { UserData, setStartDate, setendtDate, setuser_id } = useContext(AppProvider)
 
      let navigate = useNavigate();
 
@@ -56,7 +56,7 @@ const Dashboard = () => {
                     const res = await customAxios().get('/dashboard');
 
                     if (res.data.success) {
-                         let { totalEmployee, leaveRequest,leaveRequestData, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
+                         let { totalEmployee, leaveRequest, leaveRequestData, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
                          settotalEmployee(totalEmployee)
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
@@ -144,31 +144,34 @@ const Dashboard = () => {
      const dayClassNames = (date) => {
           return isHighlighted(date) ? 'highlighted-birth-date' : null;
      };
-
+     
      // box onclick
-     const pageRedirect = () => {
+     const pageRedirect = (value) => {
+          setuser_id("");
+          localStorage.setItem("leave_for", value);
           navigate("/leaves");
           // getLeave(new Date(), new Date());
           setStartDate(new Date());
           setendtDate(new Date());
      }
-     
+
      const leaveRequestClick = () => {
+          setuser_id("");
           navigate("/leaves");
           localStorage.setItem("status", "Pending");
-          if(leaveRequestData.length !== 0){
+          if (leaveRequestData.length !== 0) {
                // Use reduce to find the maximum start and end dates
                const { minStartDate, maxEndDate } = leaveRequestData.reduce((acc, cur) => {
-                   return {
-                        minStartDate: cur.from_date < acc.minStartDate ? cur.from_date : acc.minStartDate,
-                        maxEndDate: cur.to_date > acc.maxEndDate ? cur.to_date : acc.maxEndDate
-                   };
+                    return {
+                         minStartDate: cur.from_date < acc.minStartDate ? cur.from_date : acc.minStartDate,
+                         maxEndDate: cur.to_date > acc.maxEndDate ? cur.to_date : acc.maxEndDate
+                    };
                }, { minStartDate: leaveRequestData[0].from_date, maxEndDate: leaveRequestData[0].to_date });
-               
+
                // Output the maximum start and end dates
                setStartDate(new Date(minStartDate));
                setendtDate(new Date(maxEndDate));
-          }else{
+          } else {
                setStartDate(moment().clone().startOf('month'));
                setendtDate(moment().clone().endOf('month'));
           }
@@ -191,7 +194,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -200,7 +203,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Full")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -209,7 +212,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Half")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -238,7 +241,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/employees")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -247,7 +250,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => pageRedirect("Full")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -256,7 +259,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={pageRedirect}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => pageRedirect("Half")}>
                                              <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
