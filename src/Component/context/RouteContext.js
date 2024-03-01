@@ -81,9 +81,10 @@ const RouteContext = ({ children }) => {
     const getLeave = async (start, end, id) => {
         dispatch({ type: "START_LEAVE_LOADING" });
         try {
-            const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}&status=${localStorage.getItem("status")}`);
+            const res = await customAxios().get(`/leave?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : user_id}&status=${localStorage.getItem("status")}&leave_for=${localStorage.getItem("leave_for")}`);
             if (res.data.success) {
                 localStorage.removeItem("status");
+                localStorage.removeItem("leave_for");
                 dispatch({ type: "GET_LEAVE", payload: res.data });
                 if (res.data.permissions && res.data.permissions.name.toLowerCase() === "admin") {
                     getLeaveNotification();
