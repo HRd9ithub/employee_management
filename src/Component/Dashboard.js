@@ -144,7 +144,7 @@ const Dashboard = () => {
      const dayClassNames = (date) => {
           return isHighlighted(date) ? 'highlighted-birth-date' : null;
      };
-     
+
      // box onclick
      const pageRedirect = (value) => {
           setuser_id("");
@@ -176,6 +176,19 @@ const Dashboard = () => {
                setendtDate(moment().clone().endOf('month'));
           }
      }
+
+     const handleArrowClick = () => {
+          // Your logic here
+          setBirthDayFilter([]);
+          setHoliday([])
+     };
+
+     useEffect(() => {
+          const navigation_previous = document.querySelector(".react-datepicker__navigation--previous");
+          const navigation_next = document.querySelector(".react-datepicker__navigation--next");
+          navigation_previous?.addEventListener("click", handleArrowClick);
+          navigation_next?.addEventListener("click", handleArrowClick);
+     })
 
      return (
           <>
@@ -298,7 +311,7 @@ const Dashboard = () => {
                                                        highlight.push(subDays(new Date(date), 0));
                                                   })
                                                   return (
-                                                       <DatePickers inline selected={startDate} onSelect={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
+                                                       <DatePickers inline selected={startDate} onSelect={handleChange} highlightDates={highlight} dayClassName={dayClassNames}/>
                                                   );
                                              })()}
                                         </div>
