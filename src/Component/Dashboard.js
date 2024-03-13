@@ -197,8 +197,8 @@ const Dashboard = () => {
                          <div className='container-fluid inner-pages py-3'>
                               {/* Summary part of dashboard */}
                               {UserData && UserData?.role && UserData.role.name.toLowerCase() === "admin" && <>
-                                   <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap hidden-dashboard-box">
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")}>
+                                   <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap hidden-dashboard-box" style={{gap: "20px"}}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 total-employee nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -207,7 +207,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -216,7 +216,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Full")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Full")} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Today nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -225,7 +225,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Half")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => pageRedirect("Half")} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 employee-active nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -234,7 +234,7 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={leaveRequestClick}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={leaveRequestClick} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 leave-request nav-link" >
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
