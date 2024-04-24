@@ -4081,6 +4081,14 @@ input[type="search"] {
   cursor: pointer;
 }
 
+.activity-list .new-notification{
+  background-color: #30a8ea36 !important;
+}
+
+.notification-list-card{
+  cursor: pointer;
+}
+
 /* ==================== Password component style ========================= */
 
 .employee-multiple-select .css-13cymwt-control,

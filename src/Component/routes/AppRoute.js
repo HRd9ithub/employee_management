@@ -28,6 +28,7 @@ import InvoiceComponent from '../accounting/invoice/InvoiceComponent';
 import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponent';
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 import ClientComponent from '../accounting/client/ClientComponent';
+import NotificationPage from '../NotificationPage';
 
 const AppRoute = ({setProgress}) => {
     return (
@@ -39,6 +40,7 @@ const AppRoute = ({setProgress}) => {
                 <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><ResetPassword /></ProtectedRoute>}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
+                <Route exact path='/notification' element={<ProtectedRoute authentication={true}><NotificationPage /></ProtectedRoute>}></Route>
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={GetLocalStorage("token") ? <EmployeeViewComponent /> : <Navigate to="/login" />}></Route>
                 {/* employee route */}
