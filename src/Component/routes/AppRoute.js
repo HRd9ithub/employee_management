@@ -40,6 +40,7 @@ const AppRoute = ({setProgress}) => {
                 <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><ResetPassword /></ProtectedRoute>}></Route>
                 {/* dashboard */}
                 <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
+                {/* notification route */}
                 <Route exact path='/notification' element={<ProtectedRoute authentication={true}><NotificationPage /></ProtectedRoute>}></Route>
                 {/* profile path */}
                 <Route exact path='/profile/:id' element={GetLocalStorage("token") ? <EmployeeViewComponent /> : <Navigate to="/login" />}></Route>
