@@ -2066,6 +2066,14 @@
         align-items: start !important;
         margin-bottom: 15px;
     }
+
+    /* chat bot */
+    .chat-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 15px;
+    }
+    .chat-bot-form form {flex-direction: column;}
 }
 
 @media (max-width:568px) {

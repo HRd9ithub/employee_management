@@ -48,26 +48,39 @@ const ChatBot = () => {
   return (
     <div className="container-fluid p-4">
       <div className="background-wrapper bg-white">
-        <div className="chat-container">
+        <div className="chat-container px-4">
           {messageList.map((mess, index) => (
-            <div
-              key={index}
-              className={`chat-bubble ${mess.isUser ? 'user-bubble' : 'bot-bubble'}`}
-            >
-              <div className="chat-message" dangerouslySetInnerHTML={{__html: marked.parse(mess.message)}} ></div>
+            <div className={`d-flex w-100 ${mess.isUser ? 'align-self-end' : 'align-self-start'}`}>
+              <div className="chat-icon">
+                {mess.isUser ? <i class="fa-solid fa-user"></i> : <i class="fa-solid fa-robot"></i>}
+              </div>
+              <div
+                key={index}
+                className={`chat-bubble ${mess.isUser ? 'user-bubble' : 'bot-bubble'}`}
+              >
+                <div className="chat-message" dangerouslySetInnerHTML={{__html: marked.parse(mess.message)}} ></div>
+              </div>
             </div>
           ))}
+          {isTyping && 
+            <div className="d-flex align-items-center">
+              <div className="chat-icon">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <p className='generating mb-0 ml-3'>Generating...</p>
+            </div>
+          }
           <div ref={endOfMessagesRef} /> {/* Dummy div for scrolling */}
         </div>
-        <div>
-          {isTyping && <span>Generating...</span>}
-          <form className='d-flex gap-3 justify-content-between py-3 px-2' onSubmit={handleSend}>
+        <div className='chat-bot-form px-4'>
+          <form className='d-flex gap-3 justify-content-between py-3' onSubmit={handleSend}>
             <input
               type="text"
-              className='form-control mb-0 mr-2 p-2'
+              className='form-control mb-0 p-2'
               name='message'
               value={message}
               onChange={handleInputChange}
+              placeholder='Ask Something...'
             />
             <button type='submit' className='btn btn-gradient-primary' disabled={isTyping}>Send</button>
           </form>

@@ -5129,61 +5129,79 @@ select.form-control.currency-dropdown {
 
 
 .chat-container {
-  height: 74vh;
-  background-color: #f5f5f5;
+  height: calc(100vh - 200px);
   overflow-y: auto;
   padding: 10px;
   display: flex;
   flex-direction: column;
+  background-image: url(/public/Images/chat-bot.png);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
+.chat-icon {
+  width: 45px;
+  height: 45px;
+  font-size: 18px;
+  color: #00336e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #00336e;
+}
+
+.chat-bot-form form {gap: 10px;}
+
+.generating {font-weight: 500; display: inline-block; animation: loading 1s linear infinite;}
+
+
 .chat-bubble {
-  max-width: 60%;
-  border-radius: 15px;
-  padding: 10px;
-  margin: 5px 0;
+  max-width: 72%;
+  border-radius: 0 20px 20px 20px;
+  padding: 12px 25px;
   position: relative;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  border: 2px solid #00336e;
+  outline-offset: 2px;
+  outline: 2px solid #009efb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+  background: #fff;
 }
 
 .user-bubble {
-  background-color: #dcf8c6;
-  align-self: flex-end;
+  border-radius: 20px 0 20px 20px;
 }
 
-.bot-bubble {
-  background-color: #ffffff;
+.align-self-start, .align-self-end {
+  gap: 20px;
+  margin: 20px 0;
+}
+.align-self-start {
   align-self: flex-start;
 }
-
-.user-bubble:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: -10px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid #dcf8c6;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-}
-
-.bot-bubble:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -10px;
-  width: 0;
-  height: 0;
-  border-right: 10px solid #ffffff;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
+.align-self-end {
+  align-self: flex-end;
+  justify-content: end;
+  flex-direction: row-reverse;
 }
 
 .chat-message {
   margin: 0;
   font-size: 14px;
   word-wrap: break-word;
+}
+.chat-message p:last-child {
+  margin: 0 !important;
+}
+
+.chat-bot-form {
+  border-top: 1px solid #dfdfdf;
+}
+.chat-bot-form .form-control, .chat-bot-form .btn {
+  border-radius: 150px !important;
+  padding: 15px 20px !important;
 }
 
 
@@ -5210,4 +5228,9 @@ select.form-control.currency-dropdown {
   .total-column td {
     background-color: rgb(247, 250, 255) !important;
   }
+}
+
+@keyframes loading {
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.3;}
 }
