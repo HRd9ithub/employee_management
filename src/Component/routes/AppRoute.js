@@ -29,6 +29,7 @@ import InvoiceFormComponent from '../accounting/invoice/form/InvoiceFormComponen
 import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewComponent';
 import ClientComponent from '../accounting/client/ClientComponent';
 import NotificationPage from '../NotificationPage';
+import ChatBot from '../chat_bot/index';
 
 const AppRoute = ({setProgress}) => {
     return (
@@ -80,7 +81,9 @@ const AppRoute = ({setProgress}) => {
                 {/* client route */}
                 <Route path="/client">
                     <Route index element={<ProtectedRoute authentication={true}><ClientComponent /></ProtectedRoute>} />
-                </Route>       
+                </Route>      
+                 {/*chat-bot  */}
+                 <Route path='/chat-bot' element={<ProtectedRoute authentication={true}><ChatBot /></ProtectedRoute>} />
                 {/*  route not match call this route */}
                 <Route path="*" element={<Error404 />} />
             </Routes>
