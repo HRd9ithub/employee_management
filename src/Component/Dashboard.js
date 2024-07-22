@@ -7,7 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { AppProvider } from './context/RouteContext';
-import { GetLocalStorage } from '../service/StoreLocalStorage';
+import { GetLocalStorage, SetLocalStorage } from '../service/StoreLocalStorage';
 import { subDays } from 'date-fns';
 import Spinner from './common/Spinner';
 import { dateFormat } from '../helper/dateFormat';
@@ -20,6 +20,7 @@ const Dashboard = () => {
      const [animateLoader, setanimateLoader] = useState(false)
      const [startDate, setstartDate] = useState("");
      const [totalEmployee, settotalEmployee] = useState(0);
+     const [inActiveEmployee, setInActiveEmployee] = useState(0);
      const [leaveRequest, setleaveRequest] = useState(0);
      const [leaveRequestData, setleaveRequestData] = useState([]);
      const [presentToday, setpresentToday] = useState(0);
@@ -56,10 +57,11 @@ const Dashboard = () => {
                     const res = await customAxios().get('/dashboard');
 
                     if (res.data.success) {
-                         let { totalEmployee, leaveRequest, leaveRequestData, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
+                         let { totalEmployee, leaveRequest, leaveRequestData, inActiveEmployee, presentToday, absentToday, holidayDay, birthDay, absentTodayCount, halfLeaveToday } = res.data
                          settotalEmployee(totalEmployee)
                          setpresentToday(presentToday)
                          settodayLeave(absentToday);
+                         setInActiveEmployee(inActiveEmployee);
                          setBirthDay(birthDay);
                          setHolidayfilter(holidayDay);
                          setabsentTodayCount(absentTodayCount);
@@ -207,7 +209,22 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => navigate("/employees")} style={{flex: "1"}}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => {
+                                             SetLocalStorage("status", "Inactive")
+                                             navigate("/employees");
+                                             }} style={{flex: "1"}}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 inactive-employee nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Inactive Employee</h3>
+                                                       <h3 className="mb-0">{inActiveEmployee}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard" onClick={() => {
+                                             SetLocalStorage("status", "Active")
+                                             navigate("/employees");
+                                             }} style={{flex: "1"}}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -254,7 +271,22 @@ const Dashboard = () => {
                                                   </div>
                                              </NavLink>
                                         </div>
-                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => navigate("/employees")}>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => {
+                                             SetLocalStorage("status", "Inactive")
+                                             navigate("/employees");
+                                        }}>
+                                             <NavLink className="common-box-dashboard position-relative h-100 inactive-employee nav-link">
+                                                  <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
+                                                  <div className="common-info-dashboard">
+                                                       <h3 className="mb-0">Inactive Employee</h3>
+                                                       <h3 className="mb-0">{inActiveEmployee}</h3>
+                                                  </div>
+                                             </NavLink>
+                                        </div>
+                                        <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-lg-3 col-md-6" onClick={() => {
+                                             SetLocalStorage("status", "Active")
+                                             navigate("/employees");
+                                             }}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
