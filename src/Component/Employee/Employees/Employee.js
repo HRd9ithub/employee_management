@@ -12,6 +12,7 @@ import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
 import { customAxios } from "../../../service/CreateApi";
+import { GetLocalStorage, RemoveLocalStorage } from "../../../service/StoreLocalStorage";
 
 const Employee = () => {
   const [records, setRecords] = useState([]);
@@ -94,12 +95,15 @@ const Employee = () => {
     setisLoading(true);
     setPermissionToggle(true);
 
-    customAxios().get('/user').then((res) => {
+    const status = GetLocalStorage("status")
+
+    customAxios().get(`/user?status=${status}`).then((res) => {
       if (res.data.success) {
         let { data, permissions } = res.data;
         setPermission(permissions);
         setRecords(data);
         setisLoading(false);
+        RemoveLocalStorage("status");
       }
     }).catch((error) => {
       setisLoading(false);

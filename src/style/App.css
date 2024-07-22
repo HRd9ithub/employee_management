@@ -2450,12 +2450,20 @@ svg {
 }
 
 .total-employee {
-
   background: linear-gradient(45deg, #ffd26a 0%, #e6b48e 100%);
 }
 
 .total-employee:hover {
   background: linear-gradient(45deg, #f7c34b 0%, #de935a 100%);
+  box-shadow: 1px 2px 3px grey;
+}
+.inactive-employee {
+
+  background: linear-gradient(45deg, #ed7477 0%, #ef0107 100%);
+}
+
+.inactive-employee:hover {
+  background: linear-gradient(45deg, #ef0107 0%, #ed7477 100%);
   box-shadow: 1px 2px 3px grey;
 }
 
