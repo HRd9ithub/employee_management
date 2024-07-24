@@ -844,13 +844,6 @@
     .business-info{
         width: 120px;
     }
-
-    .show-dashboard-box {
-        display: flex !important; 
-    }
-    .hidden-dashboard-box {
-        display: none !important;
-    }
     .common-box-dashboard {
         padding: 22px;
     }

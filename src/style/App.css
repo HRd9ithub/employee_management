@@ -2427,13 +2427,6 @@ svg {
 
 
 /* =========================================== Dashboard ================================================= */
-.show-dashboard-box {
-  display: none;
-}
-.hidden-dashboard-box {
-  display: block;
-}
-
 .common-box-dashboard {
   border-radius: 5px;
   color: #ffff;
@@ -2509,6 +2502,8 @@ svg {
   justify-content: space-between;
   align-items: center;
   margin: 0 5px;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 .common-box-dashboard .common-info-dashboard h3 {
   font-size: 18px !important;
