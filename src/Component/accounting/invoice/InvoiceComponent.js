@@ -13,8 +13,6 @@ import InvoiceStatusModal from "./form/InvoiceStatusModal";
 import toast from 'react-hot-toast';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Spinner from '../../common/Spinner';
 import Error403 from '../../error_pages/Error403';
 import Error500 from '../../error_pages/Error500';
@@ -24,6 +22,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import convertNumberFormat from "../../../service/NumberFormat";
 import { HiOutlineMinus } from "react-icons/hi";
+import usePagination from '../../../hooks/usePagination';
 
 const InvoiceComponent = () => {
   const [clientData, setClientData] = useState([]);
@@ -41,8 +40,7 @@ const InvoiceComponent = () => {
   const [tab, setTab] = useState('invoices');
 
   // pagination state
-  const [count, setCount] = useState(5)
-  const [page, setpage] = useState(0)
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
 
   // sort state
   const [order, setOrder] = useState("asc")
@@ -170,15 +168,6 @@ const InvoiceComponent = () => {
   /*--------------------
      pagination and sort table
   ----------------------*/
-
-  // pagination function
-  const onChangePage = (e, page) => {
-    setpage(page)
-  }
-
-  const onChangeRowsPerPage = (e) => {
-    setCount(e.target.value)
-  }
 
   // sort function
   const handleRequestSort = (name) => {
@@ -483,7 +472,7 @@ const InvoiceComponent = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                       return (
                         <React.Fragment key={ind}>
                           <TableRow>
@@ -567,9 +556,9 @@ const InvoiceComponent = () => {
               </TableContainer>
               <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                 component="div"
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                rowsPerPage={count}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPage={rowsPerPage}
                 count={recordsFilter.length}
                 page={page}>
 

@@ -13,6 +13,7 @@ import Error500 from '../../error_pages/Error500';
 import { useMemo } from "react";
 import { customAxios } from "../../../service/CreateApi";
 import { GetLocalStorage, RemoveLocalStorage } from "../../../service/StoreLocalStorage";
+import usePagination from "../../../hooks/usePagination";
 
 const Employee = () => {
   const [records, setRecords] = useState([]);
@@ -23,8 +24,8 @@ const Employee = () => {
   const [searchItem, setsearchItem] = useState("");
 
   // pagination state
-  const [count, setCount] = useState(100)
-  const [page, setpage] = useState(0)
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(100);
+
 
   // sort state
   const [order, setOrder] = useState("asc")
@@ -140,15 +141,6 @@ const Employee = () => {
     })
   }, [records, searchItem]);
 
-  // pagination function
-  const onChangePage = (e, page) => {
-    setpage(page)
-  }
-
-  const onChangeRowsPerPage = (e) => {
-    setCount(e.target.value)
-  }
-
   // sort function
   const handleRequestSort = (name) => {
     const isAsc = (orderBy === name && order === "asc");
@@ -259,7 +251,7 @@ const Employee = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                       return (
                         <TableRow key={ind}>
                           <TableCell>{val.employee_id}</TableCell>
@@ -313,9 +305,9 @@ const Employee = () => {
               </TableContainer>
               <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                 component="div"
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                rowsPerPage={count}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPage={rowsPerPage}
                 count={recordsFilter.length}
                 page={page}>
               </TablePagination>
