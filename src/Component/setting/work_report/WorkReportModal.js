@@ -21,6 +21,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     const [show, setShow] = useState(false);
     const [id, setId] = useState('')
     const [isLoading, setisLoading] = useState(false)
+    const [addExtraDetailToggle, setAddExtraDetailToggle] = useState(false)
 
     // store database value
     const [project, setProject] = useState([])
@@ -36,6 +37,11 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
         description: "",
         hours: "0"
     }])
+    const [extraWorkData, setExtraWorkData] = useState({
+        projectId: "",
+        description: "",
+        hours: "0"
+    })
 
     // error state
     const [userError, setUserError] = useState("");
@@ -43,6 +49,9 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     const [projectError, setprojectError] = useState([]);
     const [descriptionError, setdescriptionError] = useState([]);
     const [hoursError, sethoursError] = useState([]);
+    const [extraProjectError, setExtraProjectError] = useState("");
+    const [extraDescriptionError, setExtraDescriptionError] = useState("");
+    const [extraHoursError, setExtraHoursError] = useState("");
     const [error, setError] = useState([]);
     const [title, setTitle] = useState("");
 
@@ -52,6 +61,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     const handleShow = () => {
         if (data) {
             const { _id, userId, date, totalHours, work } = data;
+
             setId(_id);
 
             setWork({
@@ -60,6 +70,10 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                 totalHours
             });
             setworkData(work);
+            if (data.extraWork) {
+                setAddExtraDetailToggle(true);
+                setExtraWorkData({ ...data.extraWork, projectId: data.extraWork?.projectId || "" })
+            }
         }
         if (isRequest) {
             setTitle(data ? "Edit Request" : "Add Request")
@@ -86,6 +100,14 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
             description: "",
             hours: "0"
         }])
+        setExtraWorkData({
+            projectId: "",
+            description: "",
+            hours: "0"
+        });
+        setExtraDescriptionError("");
+        setExtraHoursError("");
+        setExtraProjectError("");
     }
 
     // modal open starting call api
@@ -136,25 +158,34 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
 
         permission && permission.name?.toLowerCase() === 'admin' && userIdValidation();
         workDateValidation();
+        if(addExtraDetailToggle){
+            extraDescriptionValidation();
+            extraHourValidation();
+            extraProjectValidation();
+        }
 
         if (userError || projectError.length !== 0 || descriptionError.length !== 0 || hoursError.length !== 0 || dateError || (permission && permission.name?.toLowerCase() === 'admin' && !userId) || !date || totalHours === "0" || data) {
+            return false;
+        } else if (addExtraDetailToggle && (!extraWorkData.projectId || !extraWorkData.hours || !extraWorkData.description || extraHoursError || extraProjectError || extraDescriptionError)) {
             return false;
         } else {
             let url = "";
             if (!isRequest) {
                 if (id) {
-                    url = customAxios().patch(`/report/${id}`, { userId, date, totalHours, work: workData })
+                    url = customAxios().patch(`/report/${id}`, { userId, date, totalHours, work: workData, extraWork: addExtraDetailToggle ? extraWorkData : null })
                 } else {
-                    url = customAxios().post('/report/', { userId, date, totalHours, work: workData })
+                    url = customAxios().post('/report/', { userId, date, totalHours, work: workData, extraWork: addExtraDetailToggle ? extraWorkData : null })
                 }
             } else {
-                url = customAxios().post("/report_request", { userId, date, totalHours, work: workData, title, wortReportId: id })
+                url = customAxios().post("/report_request", { userId, date, totalHours, work: workData, title, wortReportId: id, extraWork: addExtraDetailToggle ? extraWorkData : null })
             }
             setisLoading(true);
             url.then(data => {
                 if (data.data.success) {
-                    toast.success(data.data.message)
-                    getReport(userId);
+                    toast.success(data.data.message);
+                    if(!isRequest){
+                        getReport(userId, new Date(date), new Date(date));
+                    }
                     setuser_id(userId)
                     setShow(false)
                     setisLoading(false);
@@ -167,7 +198,13 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                         projectId: "",
                         description: "",
                         hours: "0"
-                    }])
+                    }]);
+                    setAddExtraDetailToggle(false);
+                    setExtraWorkData({
+                        projectId: "",
+                        description: "",
+                        hours: "0"
+                    })
                 }
             }).catch((error) => {
                 setisLoading(false);
@@ -270,6 +307,34 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
             sethoursError(temp)
         }
     }
+    // project id
+    const extraProjectValidation = () => {
+        if (!extraWorkData.projectId) {
+            setExtraProjectError("Project is a required field.");
+        } else {
+            setExtraProjectError("");
+        }
+    }
+
+    // description
+    const extraDescriptionValidation = (ind, newContent) => {
+        if (!extraWorkData.description || extraWorkData.description === "<p><br></p>") {
+            setExtraDescriptionError("Description is a required field.");
+        } else {
+            setExtraDescriptionError("");
+        }
+    }
+
+    // hours
+    const extraHourValidation = (ind) => {
+        if (!extraWorkData.hours) {
+            setExtraHoursError("Hours is a required field.");
+        } else if (extraWorkData.hours.toString() > 24 || extraWorkData.hours.toString() < 0) {
+            setExtraHoursError("Hours range from 0 to 24 hours.");
+        } else {
+            setExtraHoursError("");
+        }
+    }
 
     // * add row of form
     const addDuplicate = () => {
@@ -320,6 +385,23 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
             placeholder: 'write your content ....'
         }
     }, []);
+
+    const handleExtraWorkDataChange = (event) => {
+        const { name, value } = event.target;
+        setExtraWorkData({ ...extraWorkData, [name]: value });
+    }
+
+    const handleDeleteExtraDetail = () => {
+        setAddExtraDetailToggle(false);
+        setExtraWorkData({
+            projectId: "",
+            description: "",
+            hours: "0"
+        })
+        setExtraDescriptionError("");
+        setExtraHoursError("");
+        setExtraProjectError("");
+    }
 
     return (
         <>
@@ -424,7 +506,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                                                 config={config}
                                                                 value={item.description}
                                                                 tabIndex={1} // tabIndex of textarea
-                                                                onChange={newContent => handleContentChange(newContent, ind)} // preferred to use only this option to update the content for performance reasons
+                                                                onChange={newContent => handleContentChange(newContent, ind)}
                                                                 onBlur={(newContent) => descriptionValidation(ind)}
                                                             />
                                                             {descriptionError.map((val) => {
@@ -437,8 +519,10 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                         )
                                     })}
                                     {/* ==================== add field button ================= */}
-                                    <div className="work-report-form">
+                                    <div className="work-report-form d-flex justify-content-between align-items-center">
                                         <NavLink onClick={addDuplicate} className="active"><i className="fa-solid fa-circle-plus"></i> Add More</NavLink>
+                                        {!addExtraDetailToggle &&
+                                            <NavLink onClick={() => setAddExtraDetailToggle(true)} className="active"><i className="fa-solid fa-circle-plus"></i> Add Extra Work Detail</NavLink>}
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
@@ -448,6 +532,53 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                             </div>
                                         </div>
                                     </div>
+                                    {addExtraDetailToggle && <>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid" }}>Extra Work Detail</label>
+                                            <div data-action="delete" className='delete' style={{ cursor: "pointer" }}>
+                                                <i className="fa-solid fa-trash-can " onClick={handleDeleteExtraDetail}></i>
+                                            </div>
+                                        </div>
+                                        <div className='education-wrapper mb-3'>
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    {/* ====================   project select field  ============*/}
+                                                    <div className="form-group">
+                                                        <label htmlFor="extraProject" className='mt-3'>Projects</label>
+                                                        <select className="form-control " id="extraProject" name='projectId' value={extraWorkData.projectId} onChange={handleExtraWorkDataChange} onBlur={extraProjectValidation}>
+                                                            <option value=''>Select Project</option>
+                                                            {project.map((val) => {
+                                                                return <option key={val._id} value={val._id} >{val.name}</option>
+                                                            })}
+                                                        </select>
+                                                        {extraProjectError && <small id="project-field" className="form-text error">{extraProjectError}</small>}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    {/* ====================   hours field  ============*/}
+                                                    <div className="form-group">
+                                                        <label htmlFor="extraHours" className='mt-3'>Extra Hours</label>
+                                                        <input type="number" className="form-control" min={0} max={24} id="extraHours" inputMode='numeric' placeholder="Enter Extra Working Hours" name='hours' autoComplete='off' value={extraWorkData.hours} onChange={handleExtraWorkDataChange} onBlur={extraHourValidation} />
+                                                        {extraHourValidation && <small id="project-field" className="form-text error">{extraHourValidation}</small>}
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    {/* ====================   description field  ============*/}
+                                                    <div className="form-group">
+                                                        <label htmlFor="extraDescription" className='mt-3' >Description</label>
+                                                        <JoditEditor
+                                                            config={config}
+                                                            value={extraWorkData.description}
+                                                            tabIndex={1}
+                                                            onChange={newContent => setExtraWorkData({ ...extraWorkData, description: newContent })}
+                                                            onBlur={extraDescriptionValidation}
+                                                        />
+                                                        {extraDescriptionError && <small id="project-field" className="form-text error">{extraDescriptionError}</small>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>}
                                     {error.length !== 0 &&
                                         <div className="row">
                                             <div className="col-md-12">

@@ -42,7 +42,7 @@ const Sidebar = () => {
         let result = [];
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
-        const setting = ['User Role', 'Work Report', 'Password']
+        const setting = ['User Role', 'Work Report', 'Project Wise Work Report', 'Password']
         const accounting = ['Invoices', "Clients"]
 
         data.forEach((item) => {
