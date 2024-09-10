@@ -889,7 +889,7 @@ span.eye-icon {
 }
 
 .sidebar {
-  width: 225px;
+  width: 240px;
   z-index: 10000;
 }
 
@@ -928,7 +928,7 @@ span.eye-icon {
   background: #ffffff;
   position: absolute;
   left: 71px;
-  width: 175px;
+  width: 225px;
   z-index: 7;
 }
 
@@ -1060,7 +1060,7 @@ span.eye-icon {
 }
 
 .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title {
-  width: 175px;
+  width: 225px;
   color: #fff;
   background-color: #0a4a92;
   box-shadow: 1px 2px 3px lightgrey;

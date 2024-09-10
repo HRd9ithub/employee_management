@@ -70,7 +70,7 @@ const NotificationPage = () => {
                         getAllNotification();
                         localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                         localStorage.setItem("data", JSON.stringify(item))
-                        navigate('/work-report')
+                        navigate('/work-report/employee')
                     }
                 } catch (error) {
                     setisLoading(false)
@@ -124,7 +124,7 @@ const NotificationPage = () => {
             if (date) {
                 localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                 localStorage.setItem("data", JSON.stringify(item))
-                navigate('/work-report')
+                navigate('/work-report/employee')
             } else {
                 if (item.attendanceId) {
                     navigate(`/attendance/${item.attendanceId}`)
