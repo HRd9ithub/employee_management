@@ -23,8 +23,8 @@ const ProjectWorkReportComponent = () => {
   const [dataFilter, setDataFilter] = useState([]);
   const [permission, setPermission] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [startDate, setStartDate] = useState(moment(startMonthDate));
-  const [endDate, setEndDate] = useState(moment(date_today));
+  const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
+  const [endDate, setEndDate] = useState(moment(date_today).subtract(1, "day"));
   const [projectId, setProjectId] = useState("");
   const [show, setShow] = useState(false);
   const [serverError, setServerError] = useState(false);
