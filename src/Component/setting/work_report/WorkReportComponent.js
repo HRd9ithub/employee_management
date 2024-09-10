@@ -19,6 +19,7 @@ import DowlonadReport from "./dowlonadReport";
 import { AppProvider } from "../../context/RouteContext";
 import ranges from "../../../helper/calcendarOption";
 import ErrorComponent from "../../common/ErrorComponent";
+import usePagination from "../../../hooks/usePagination";
 
 const WorkReportComponent = () => {
     const date_today = new Date();
@@ -44,8 +45,7 @@ const WorkReportComponent = () => {
     let { get_username, userName,getLeaveNotification } = useContext(AppProvider);
 
     // pagination state
-    const [count, setCount] = useState(50)
-    const [page, setpage] = useState(0)
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(50);
 
     // sort state
     const [order, setOrder] = useState("asc")
@@ -100,15 +100,6 @@ const WorkReportComponent = () => {
         }
         // eslint-disable-next-line
     }, [localStorageToggle, localStorage.getItem("filter")]);
-
-    // pagination function
-    const onChangePage = (e, page) => {
-        setpage(page)
-    }
-
-    const onChangeRowsPerPage = (e) => {
-        setCount(e.target.value)
-    }
 
     // sort function
     const handleRequestSort = (name) => {
@@ -362,7 +353,7 @@ const WorkReportComponent = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                    {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                                         return (
                                             val.name ?
                                                 <TableRow key={ind} >
@@ -399,9 +390,9 @@ const WorkReportComponent = () => {
                         </TableContainer>
                         <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                             component="div"
-                            onPageChange={onChangePage}
-                            onRowsPerPageChange={onChangeRowsPerPage}
-                            rowsPerPage={count}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            rowsPerPage={rowsPerPage}
                             count={dataFilter.length}
                             page={page}>
                         </TablePagination>

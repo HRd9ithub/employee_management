@@ -18,6 +18,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Swal from 'sweetalert2'
 import ranges from '../../../helper/calcendarOption'
+import usePagination from '../../../hooks/usePagination'
 
 const Leave = () => {
     const [show, setShow] = useState(false);
@@ -29,11 +30,9 @@ const Leave = () => {
     const [subLoading, setsubLoading] = useState(false);
 
     let { getLeave, user_id, setuser_id, leave,get_username, startDate, leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(10);
 
     const statusField = ["Approved", "Declined"]
-    // pagination state
-    const [count, setCount] = useState(5)
-    const [page, setpage] = useState(0)
 
     // sort state
     const [order, setOrder] = useState("desc")
@@ -121,16 +120,6 @@ const Leave = () => {
             }
         })
     };
-
-    // pagination function
-    const onChangePage = (e, page) => {
-        setpage(page)
-    }
-
-    const onChangeRowsPerPage = (e) => {
-        setCount(e.target.value)
-    }
-
 
     // sort function
     const handleRequestSort = (name) => {
@@ -366,10 +355,10 @@ const Leave = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {leave.length !== 0 ? sortRowInformation(leave, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                        {leave.length !== 0 ? sortRowInformation(leave, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
-                                                    <TableCell>{ind + 1}</TableCell>
+                                                    <TableCell>{rowsPerPage * page + ind + 1}</TableCell>
                                                     {(permission && permission.name?.toLowerCase() === "admin") &&
                                                         <TableCell>
                                                             <div className='pr-3'>
@@ -411,9 +400,9 @@ const Leave = () => {
                             </TableContainer>
                             <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                                 component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                rowsPerPage={rowsPerPage}
                                 count={leave.length}
                                 page={page}>
                             </TablePagination>
