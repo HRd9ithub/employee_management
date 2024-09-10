@@ -108,6 +108,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
         setExtraDescriptionError("");
         setExtraHoursError("");
         setExtraProjectError("");
+        setAddExtraDetailToggle(false);
     }
 
     // modal open starting call api

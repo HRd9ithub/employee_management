@@ -19,7 +19,7 @@ const ReportPreview = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate("/work-report");
+            navigate("/work-report/employee");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -55,7 +55,7 @@ const ReportPreview = () => {
                                 <div>
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                        <li><NavLink to="/work-report" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
+                                        <li><NavLink to="/work-report/employee" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
                                         <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Preview</NavLink></li>
                                     </ul>
                                 </div>
@@ -64,7 +64,7 @@ const ReportPreview = () => {
                                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mr-2' onClick={downloadReport}>
                                     <i className="fa-solid fa-download"></i>&nbsp; Download
                                 </button >
-                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report")} >
+                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report/employee")} >
                                     <i className="fa-solid fa-arrow-left"></i>&nbsp; Back
                                 </button >
                             </div>

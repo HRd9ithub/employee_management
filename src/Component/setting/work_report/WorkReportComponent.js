@@ -411,7 +411,8 @@ const WorkReportComponent = () => {
                                 {dataFilter.length !== 0 &&
                                 <TableFooter>
                                     <TableRow>
-                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={3} align="left">Total Extra Hours:</TableCell>
+                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={2} align="left">Total Extra Hours:</TableCell>
+                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell> }
                                         <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={3} align="left">{totalExtraHours}</TableCell>
                                     </TableRow>
                                 </TableFooter>}

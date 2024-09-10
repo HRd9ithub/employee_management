@@ -28,7 +28,7 @@ const Notification = () => {
                         getLeaveNotification();
                         localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                         localStorage.setItem("data", JSON.stringify(item))
-                        history('/work-report')
+                        history('/work-report/employee')
                     }
                 } catch (error) {
                     setisLoading(false)
@@ -82,7 +82,7 @@ const Notification = () => {
             if (date) {
                 localStorage.setItem("filter", JSON.stringify({ date, id: item.userId }));
                 localStorage.setItem("data", JSON.stringify(item))
-                history('/work-report')
+                history('/work-report/employee')
             } else {
                 if (item.attendanceId) {
                     history(`/attendance/${item.attendanceId}`)

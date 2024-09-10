@@ -30,6 +30,7 @@ import InvoicePreviewComponent from '../accounting/invoice/form/InvoicePreviewCo
 import ClientComponent from '../accounting/client/ClientComponent';
 import NotificationPage from '../NotificationPage';
 import ChatBot from '../chat_bot/index';
+import ProjectWorkReportComponent from '../setting/project_wise_work_report';
 
 const AppRoute = ({setProgress}) => {
     return (
@@ -63,7 +64,8 @@ const AppRoute = ({setProgress}) => {
                 <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
                 {/* setting route */}
                 <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
-                <Route exact path='/work-report' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/work-report/employee' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
+                <Route exact path='/work-report/project' element={<ProtectedRoute authentication={true} ><ProjectWorkReportComponent /></ProtectedRoute>}></Route>
                 <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
                 <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
                 {/* attendance route */}
