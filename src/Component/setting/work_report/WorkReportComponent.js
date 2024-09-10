@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -6,7 +6,7 @@ import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from "../../common/Spinner";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from "moment";
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
@@ -14,15 +14,15 @@ import WorkReportModal from "./WorkReportModal";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Modal from "react-bootstrap/Modal";
 import { customAxios } from "../../../service/CreateApi";
-// import RequestModal from "./RequestModal";
 import DowlonadReport from "./dowlonadReport";
 import { AppProvider } from "../../context/RouteContext";
 import ranges from "../../../helper/calcendarOption";
 import ErrorComponent from "../../common/ErrorComponent";
+import usePagination from "../../../hooks/usePagination";
 
 const WorkReportComponent = () => {
     const date_today = new Date();
-    const matchDate = [moment(date_today).format("YYYY-MM-DD"),moment(date_today).subtract(1, "d").format("YYYY-MM-DD")]
+    const matchDate = [moment(date_today).format("YYYY-MM-DD"), moment(date_today).subtract(1, "d").format("YYYY-MM-DD")]
     // eslint-disable-next-line
     const [data, setData] = useState([]);
     const [dataFilter, setDataFilter] = useState([]);
@@ -35,17 +35,16 @@ const WorkReportComponent = () => {
     const [show, setShow] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [serverError, setServerError] = useState(false);
-    const [description, setdescription] = useState([]);
+    const [description, setdescription] = useState({});
     const [permissionToggle, setPermissionToggle] = useState(true);
     const [localStorageToggle, setLocalStorageToggle] = useState(false);
     const [newRecord, setNewRecord] = useState("");
     const [error, setError] = useState([]);
 
-    let { get_username, userName,getLeaveNotification } = useContext(AppProvider);
+    let { get_username, userName, getLeaveNotification } = useContext(AppProvider);
 
     // pagination state
-    const [count, setCount] = useState(50)
-    const [page, setpage] = useState(0)
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(50);
 
     // sort state
     const [order, setOrder] = useState("asc")
@@ -53,6 +52,8 @@ const WorkReportComponent = () => {
 
     // get report data
     const getReport = async (id, start, end) => {
+        start && setStartDate(start);
+        end && setendtDate(end);
         setisLoading(true);
         setPermissionToggle(true);
         setServerError(false);
@@ -101,15 +102,6 @@ const WorkReportComponent = () => {
         // eslint-disable-next-line
     }, [localStorageToggle, localStorage.getItem("filter")]);
 
-    // pagination function
-    const onChangePage = (e, page) => {
-        setpage(page)
-    }
-
-    const onChangeRowsPerPage = (e) => {
-        setCount(e.target.value)
-    }
-
     // sort function
     const handleRequestSort = (name) => {
         const isAsc = (orderBy === name && order === "asc");
@@ -124,6 +116,14 @@ const WorkReportComponent = () => {
                 return -1
             }
             if (b.user?.first_name?.concat(" ", b.user?.last_name) > a.user?.first_name?.concat(" ", a.user?.last_name)) {
+                return 1
+            }
+            return 0
+        } else if (orderBy === "extraWork") {
+            if (b[orderBy]?.hours < a[orderBy]?.hours) {
+                return -1
+            }
+            if (b[orderBy]?.hours > a[orderBy]?.hours) {
                 return 1
             }
             return 0
@@ -171,7 +171,7 @@ const WorkReportComponent = () => {
     // modal show 
     const handleShow = (val) => {
         setShow(true)
-        setdescription(val.work)
+        setdescription(val)
     }
     // modal Hide 
     const handleClose = () => {
@@ -185,14 +185,14 @@ const WorkReportComponent = () => {
     // approved request
     const acceptRequest = async (e) => {
         e && e.preventDefault();
-        const { userId, date, totalHours, work, wortReportId, _id } = newRecord;
+        const { userId, date, totalHours, work, wortReportId, _id, extraWork } = newRecord;
 
         let url = "";
 
         if (wortReportId) {
-            url = customAxios().patch(`/report/${wortReportId}`, { userId, date, totalHours, work, _id })
+            url = customAxios().patch(`/report/${wortReportId}`, { userId, date, totalHours, work, _id, extraWork })
         } else {
-            url = customAxios().post('/report', { userId, date, totalHours, work, _id })
+            url = customAxios().post('/report', { userId, date, totalHours, work, _id, extraWork })
         }
 
         setisSubLoading(true);
@@ -222,11 +222,11 @@ const WorkReportComponent = () => {
     }
 
     // declined request
-    const declinedRequest = async() => {
+    const declinedRequest = async () => {
         try {
             const { userId, _id } = newRecord;
             setisSubLoading(true);
-            const res = await customAxios().put(`/report_request/${_id}`,{ status: "Declined" })
+            const res = await customAxios().put(`/report_request/${_id}`, { status: "Declined" })
             if (res.data.success) {
                 toast.success(res.data.message);
                 getLeaveNotification();
@@ -246,6 +246,12 @@ const WorkReportComponent = () => {
             }
         }
     }
+
+    const totalExtraHours = useMemo(() => {
+        return sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).reduce((acc, cur) => {
+            return (cur.extraWork ? Number(cur.extraWork.hours) : 0) + Number(acc)
+        }, 0)
+    }, [dataFilter, order, orderBy, rowsPerPage, page])
 
     if (isLoading) {
         return <Spinner />;
@@ -295,8 +301,8 @@ const WorkReportComponent = () => {
                                             className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
                                             <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
                                         </button>}
-                                    {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} setuser_id={setuser_id}/>}
-                                    <WorkReportModal permission={permission && permission} getReport={getReport} setuser_id={setuser_id}/>
+                                    {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} setuser_id={setuser_id} />}
+                                    <WorkReportModal permission={permission && permission} getReport={getReport} setuser_id={setuser_id} />
                                     {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                                 </div>
                             </div>
@@ -352,6 +358,11 @@ const WorkReportComponent = () => {
                                                 Total Hours
                                             </TableSortLabel>
                                         </TableCell>
+                                        <TableCell>
+                                            <TableSortLabel active={orderBy === "extraWork"} direction={orderBy === "extraWork" ? order : "asc"} onClick={() => handleRequestSort("extraWork")}>
+                                                Extra Hours
+                                            </TableSortLabel>
+                                        </TableCell>
                                         <TableCell align="center">
                                             Description
                                         </TableCell>
@@ -362,32 +373,34 @@ const WorkReportComponent = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {dataFilter.length !== 0 ? sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
-                                        return (
-                                            val.name ?
+                                    {dataFilter.length !== 0 ?
+                                        sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
+                                            return (
                                                 <TableRow key={ind} >
-                                                    <TableCell colSpan={7} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for}){permission && permission.name.toLowerCase() === "admin" && val.user && " - " + val.user?.first_name.concat(" ", val.user.last_name)}</TableCell>
+                                                    {val.name ?
+                                                        <TableCell colSpan={7} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for}){permission && permission.name.toLowerCase() === "admin" && val.user && " - " + val.user?.first_name.concat(" ", val.user.last_name)}</TableCell>
+                                                        :
+                                                        <>
+                                                            <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
+                                                            {permission && permission.name.toLowerCase() === "admin" &&
+                                                                <TableCell>
+                                                                    <div className='pr-3'>
+                                                                        {val.user ? <NavLink to={"/employees/view/" + val.userId} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
+                                                                    </div>
+                                                                </TableCell>
+                                                            }
+                                                            <TableCell>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
+                                                            <TableCell>{val.extraWork ? val.extraWork?.hours : <HiOutlineMinus />}</TableCell>
+                                                            <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
+                                                            <TableCell align="center">
+                                                                <div className="action">
+                                                                    <WorkReportModal permission={permission && permission} getReport={getReport} data={val} isRequest={!((permission && permission.name.toLowerCase() === "admin") || matchDate.includes(moment(val.date).format("YYYY-MM-DD")))} setuser_id={setuser_id} />
+                                                                </div>
+                                                            </TableCell>
+                                                        </>}
                                                 </TableRow>
-                                                :
-                                                <TableRow key={ind}>
-                                                    <TableCell>{moment(val.date).format("DD MMM YYYY")}</TableCell>
-                                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                                        <TableCell>
-                                                            <div className='pr-3'>
-                                                                {val.user ? <NavLink to={"/employees/view/" + val.userId} className={`${val.user.status === "Inactive" ? 'user-status-inactive' : 'name_col'}`}>{val.user?.first_name.concat(" ", val.user.last_name)}</NavLink> : <HiOutlineMinus />}
-                                                            </div>
-                                                        </TableCell>
-                                                    }
-                                                    <TableCell>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
-                                                    <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
-                                                    <TableCell align="center">
-                                                        <div className="action">
-                                                            <WorkReportModal permission={permission && permission} getReport={getReport} data={val} isRequest={!((permission && permission.name.toLowerCase() === "admin") || matchDate.includes(moment(val.date).format("YYYY-MM-DD")))} setuser_id={setuser_id}/>
-                                                        </div>
-                                                    </TableCell>
-                                                </TableRow>
-                                        )
-                                    }) :
+                                            )
+                                        }) :
                                         <TableRow>
                                             <TableCell colSpan={7} align="center">
                                                 No Records Found
@@ -395,13 +408,21 @@ const WorkReportComponent = () => {
                                         </TableRow>
                                     }
                                 </TableBody>
+                                {dataFilter.length !== 0 &&
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={2} align="left">Total Extra Hours:</TableCell>
+                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell> }
+                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={3} align="left">{totalExtraHours}</TableCell>
+                                    </TableRow>
+                                </TableFooter>}
                             </Table>
                         </TableContainer>
                         <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                             component="div"
-                            onPageChange={onChangePage}
-                            onRowsPerPageChange={onChangeRowsPerPage}
-                            rowsPerPage={count}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            rowsPerPage={rowsPerPage}
                             count={dataFilter.length}
                             page={page}>
                         </TablePagination>
@@ -429,8 +450,8 @@ const WorkReportComponent = () => {
                 <Modal.Body>
                     <div className=" grid-margin stretch-card inner-pages mb-lg-0">
                         <div className="card">
-                            {description?.map((currElem, ind) => {
-                                return <div className="card-body table_section" key={currElem._id}>
+                            {description?.work?.map((currElem, ind) => {
+                                return <div className="card-body table_section pb-0" key={currElem._id}>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
                                         <h5 className="mb-0">{currElem.hours}h</h5>
@@ -439,6 +460,16 @@ const WorkReportComponent = () => {
                                     <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                 </div>
                             })}
+                            {description.extraWork &&
+                                <div style={{ padding: "1rem 2.5rem" }}>
+                                    <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        {description.extraWorkData && <h4 className="mb-0">1. {description.extraWorkData?.name}</h4>}
+                                        <h5 className="mb-0">{description?.extraWork?.hours}h</h5>
+                                    </div>
+                                    <hr />
+                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: description?.extraWork?.description }}></div>
+                                </div>}
                         </div>
                     </div>
                 </Modal.Body>
@@ -466,7 +497,7 @@ const WorkReportComponent = () => {
                         <div className="card">
                             {newRecord && newRecord.work.map((val) => {
                                 return (
-                                    <div className="card-body table_section" key={val._id}>
+                                    <div className="card-body table_section pb-0" key={val._id}>
                                         <div className="d-flex justify-content-between align-items-center">
                                             <h4 className="mb-0">{val?.project?.name}</h4>
                                             <h5 className="mb-0">{val.hours}h</h5>
@@ -476,6 +507,16 @@ const WorkReportComponent = () => {
                                     </div>
                                 )
                             })}
+                            {newRecord && newRecord.extraWork &&
+                                <div style={{ padding: "1rem 2.5rem" }}>
+                                    <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        {newRecord.extraWorkData && <h4 className="mb-0">1. {newRecord.extraWorkData?.name}</h4>}
+                                        <h5 className="mb-0">{newRecord?.extraWork?.hours}h</h5>
+                                    </div>
+                                    <hr />
+                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: newRecord?.extraWork?.description }}></div>
+                                </div>}
                             {error.length !== 0 &&
                                 <div className="row mx-0 mt-2 mb-0">
                                     <div className="col-md-12">
@@ -490,7 +531,7 @@ const WorkReportComponent = () => {
                         </div>
                     </div>
                 </Modal.Body>
-                {isSubLoading && <Spinner/>}
+                {isSubLoading && <Spinner />}
             </Modal>
         </motion.div >)
 };

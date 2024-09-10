@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { useEffect } from "react";
 import { customAxios } from "../../../service/CreateApi";
 import Swal from "sweetalert2";
+import usePagination from "../../../hooks/usePagination";
 
 const UserRole = () => {
   const [isLoading, setisLoading] = useState(false);
@@ -21,8 +22,7 @@ const UserRole = () => {
   const [permissionToggle, setPermissionToggle] = useState(true);
 
   // pagination state
-  const [count, setCount] = useState(5)
-  const [page, setpage] = useState(0)
+  const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
 
   // sort state
   const [order, setOrder] = useState("asc")
@@ -102,17 +102,6 @@ const UserRole = () => {
   const recordsFilter = useMemo(() => {
     return records.filter((item) => item.name.toLowerCase().includes(searchItem.toLowerCase()));
   }, [records, searchItem]);
-
-
-  // pagination function
-  const onChangePage = (e, page) => {
-    setpage(page)
-  }
-
-  const onChangeRowsPerPage = (e) => {
-    setCount(e.target.value)
-  }
-
 
   // sort function
   const handleRequestSort = (name) => {
@@ -215,10 +204,10 @@ const UserRole = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                    {recordsFilter.length !== 0 ? sortRowInformation(recordsFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                       return (
                         <TableRow key={ind}>
-                          <TableCell>{ind + 1}</TableCell>
+                          <TableCell>{rowsPerPage * page + ind + 1}</TableCell>
                           <TableCell>{val.name}</TableCell>
                           {permission && (permission.permissions.update === 1 || permission.permissions.delete === 1) &&
                             <TableCell>
@@ -241,9 +230,9 @@ const UserRole = () => {
               </TableContainer>
               <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                 component="div"
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                rowsPerPage={count}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPage={rowsPerPage}
                 count={recordsFilter.length}
                 page={page}>
               </TablePagination>

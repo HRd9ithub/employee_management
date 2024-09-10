@@ -42,7 +42,7 @@ const Sidebar = () => {
         let result = [];
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
-        const setting = ['User Role', 'Work Report', 'Password']
+        const setting = ['User Role', 'Employee Wise Work Report', 'Project Wise Work Report', 'Password']
         const accounting = ['Invoices', "Clients"]
 
         data.forEach((item) => {
@@ -155,10 +155,11 @@ const Sidebar = () => {
     if (menu.route !== "#") {
       return pathname === menu.route
     } else {
-      const result = menu.child.find((cur) => {
-        return pathname.includes(cur.route)
-      })
-      return result ? true : false;
+      if(pathname === "/work-report/preview"){
+        return menu.child.some((cur) => "/work-report/employee".includes(cur.route));
+      }else{
+        return menu.child.some((cur) => pathname.startsWith(cur.route));
+      }
     }
   }, [pathname])
 
@@ -208,7 +209,9 @@ const Sidebar = () => {
                       {elem.child.map((item) => {
                         return (
                           <div key={item._id}>
-                            <li className="nav-item" > <NavLink className="nav-link navlink-inner" to={item.route}>{item.name}</NavLink></li>
+                            <li className="nav-item" > 
+                              <NavLink className={`nav-link navlink-inner ${pathname === "/work-report/preview" && item.route === "/work-report/employee" ? "active" : ""}`} to={item.route}>{item.name}</NavLink>
+                            </li>
                           </div>
                         )
                       })}

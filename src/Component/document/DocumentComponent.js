@@ -11,6 +11,7 @@ import Error403 from "../error_pages/Error403"
 import Error500 from '../error_pages/Error500';
 import fileDownload from 'js-file-download';
 import { customAxios } from '../../service/CreateApi';
+import usePagination from '../../hooks/usePagination';
 
 const DocumentComponent = () => {
     const [permission, setpermission] = useState("");
@@ -22,8 +23,7 @@ const DocumentComponent = () => {
     const [permissionToggle, setPermissionToggle] = useState(true);
 
     // pagination state
-    const [count, setCount] = useState(5)
-    const [page, setpage] = useState(0)
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
 
     // sort state
     const [order, setOrder] = useState("asc")
@@ -96,16 +96,6 @@ const DocumentComponent = () => {
                 item.description.toLowerCase().includes(searchItem.toLowerCase())
         })
     }, [documentData, searchItem]);
-
-    // pagination function
-    const onChangePage = (e, page) => {
-        setpage(page)
-    }
-
-    const onChangeRowsPerPage = (e) => {
-        setCount(e.target.value)
-    }
-
 
     // sort function
     const handleRequestSort = (name) => {
@@ -225,7 +215,7 @@ const DocumentComponent = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                        {documentDataFilter.length !== 0 ? sortRowInformation(documentDataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                                             return (
                                                 <TableRow key={ind}>
                                                     <TableCell>
@@ -261,9 +251,9 @@ const DocumentComponent = () => {
                             </TableContainer>
                             <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                                 component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                rowsPerPage={rowsPerPage}
                                 count={documentDataFilter.length}
                                 page={page}>
                             </TablePagination>

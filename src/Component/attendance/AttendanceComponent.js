@@ -18,6 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Error403 from '../error_pages/Error403';
 import { AppProvider } from '../context/RouteContext';
+import usePagination from '../../hooks/usePagination';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -38,8 +39,7 @@ const AttendanceComponent = () => {
     const [user_id, setuser_id] = useState("");
 
     // pagination state
-    const [count, setCount] = useState(5)
-    const [page, setpage] = useState(0)
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
 
     // sort state
     const [order, setOrder] = useState("asc")
@@ -175,16 +175,6 @@ const AttendanceComponent = () => {
             return () => clearInterval(intervalId);
         }
     }, [permission]);
-
-    // pagination function
-    const onChangePage = (e, page) => {
-        setpage(page)
-    }
-
-    const onChangeRowsPerPage = (e) => {
-        setCount(e.target.value)
-    }
-
 
     // sort function
     const handleRequestSort = (name) => {
@@ -407,7 +397,7 @@ const AttendanceComponent = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {records.length !== 0 ? sortRowInformation(records, getComparator(order, orderBy)).slice(count * page, count * page + count).map((val, ind) => {
+                                        {records.length !== 0 ? sortRowInformation(records, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).map((val, ind) => {
                                             return (
                                                 <React.Fragment key={ind}>
                                                     <TableRow>
@@ -493,9 +483,9 @@ const AttendanceComponent = () => {
                             </TableContainer>
                             <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
                                 component="div"
-                                onPageChange={onChangePage}
-                                onRowsPerPageChange={onChangeRowsPerPage}
-                                rowsPerPage={count}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                rowsPerPage={rowsPerPage}
                                 count={records.length}
                                 page={page}>
                             </TablePagination>

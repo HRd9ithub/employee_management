@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import Spinner from '../../common/Spinner';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
+import { HiOutlineMinus } from 'react-icons/hi';
 
 
 const ReportPreview = () => {
@@ -18,14 +19,14 @@ const ReportPreview = () => {
 
     useEffect(() => {
         if (!id) {
-            navigate("/work-report");
+            navigate("/work-report/employee");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const downloadReport = async () => {
         setisLoading(true)
-        axios.get(`${process.env.REACT_APP_API_KEY}/report/report-dowloand?id=${id}`, {
+        axios.get(`${process.env.REACT_APP_API_KEY}/report/report-download?id=${id}`, {
             responseType: 'blob',
         }).then((res) => {
             fileDownload(res.data, "report.pdf");
@@ -54,7 +55,7 @@ const ReportPreview = () => {
                                 <div>
                                     <ul id="breadcrumb" className="mb-0">
                                         <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                        <li><NavLink to="/work-report" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
+                                        <li><NavLink to="/work-report/employee" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Work Report</NavLink></li>
                                         <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp;Preview</NavLink></li>
                                     </ul>
                                 </div>
@@ -63,7 +64,7 @@ const ReportPreview = () => {
                                 <button className='btn btn-gradient-primary btn-rounded btn-fw text-center mr-2' onClick={downloadReport}>
                                     <i className="fa-solid fa-download"></i>&nbsp; Download
                                 </button >
-                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report")} >
+                                <button className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={() => navigate("/work-report/employee")} >
                                     <i className="fa-solid fa-arrow-left"></i>&nbsp; Back
                                 </button >
                             </div>
@@ -76,6 +77,10 @@ const ReportPreview = () => {
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">
                                 <h6 className="mb-0">Hours</h6>
                                 <h6 className="mb-0">{summary.totalHours}</h6>
+                            </div>
+                            <div className="summary-report p-3 d-flex justify-content-between align-content-center">
+                                <h6 className="mb-0">Extra Hours</h6>
+                                <h6 className="mb-0">{summary.extraHours}</h6>
                             </div>
                             <div className="summary-report p-3 d-flex justify-content-between align-content-center">
                                 <h6 className="mb-0">Holiday</h6>
@@ -103,6 +108,9 @@ const ReportPreview = () => {
                                                 Total Hours
                                             </TableCell>
                                             <TableCell>
+                                                Extra Hours
+                                            </TableCell>
+                                            <TableCell>
                                                 Description
                                             </TableCell>
                                         </TableRow>
@@ -110,12 +118,14 @@ const ReportPreview = () => {
                                     <TableBody>
                                         {reportData.length !== 0 ?
                                             reportData.map((val, ind) => {
+                                                console.log('val: ', val)
                                                 return (
                                                     <TableRow key={ind} >
                                                         {!val.userId && val.name !== "Leave" && <TableCell colSpan={4} align="center" className="Holiday_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
                                                         {!val.userId && val.name === "Leave" && <TableCell colSpan={4} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for})</TableCell>}
                                                         {val.userId && <TableCell style={{ width: "15%" }}>{moment(val.date).format("DD MMM YYYY")}</TableCell>}
                                                         {val.userId && <TableCell style={{ width: "15%" }}>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>}
+                                                        {val.userId && <TableCell style={{ width: "15%" }}>{val.extraWork && Object.keys(val.extraWork).length !== 0 ? val.extraWork.hours : <HiOutlineMinus />}</TableCell>}
                                                         {val.userId && <TableCell>
                                                             {val.work?.map((currElem, ind) => {
                                                                 return <div className="card-body table_section" key={currElem._id}>
@@ -123,6 +133,13 @@ const ReportPreview = () => {
                                                                     <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                                                 </div>
                                                             })}
+                                                            {val.extraWork && Object.keys(val.extraWork).length !== 0 &&
+                                                                <div className="card-body table_section border-top">
+                                                                    <p style={{ fontWeight: "bold" }} className='mb-0 text-info'>Extra Work Detail: </p>
+                                                                    <p style={{ fontWeight: "bold" }} className='mb-0'>{1}. {val.extraWork?.project?.name}</p>
+                                                                    <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: val.extraWork.description }}></div>
+                                                                </div>
+                                                            }
                                                         </TableCell>}
                                                     </TableRow>
                                                 )
