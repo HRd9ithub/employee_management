@@ -91,7 +91,7 @@ const EductionForm = (props) => {
                 return val.id !== ind
             }), { name: "Year is a required field.", id: ind }]);
  
-        } else if (!eduction[ind].year.toString().match(numberFormat) || eduction[ind].year > new Date().getFullYear()) {
+        } else if (!eduction[ind].year.toString().match(numberFormat)) {
             setyear_error([...year_error.filter((val) => {
                 return val.id !== ind
             }), { name: "Year must be a number.", id: ind }])
