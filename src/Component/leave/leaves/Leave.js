@@ -30,7 +30,7 @@ const Leave = () => {
     const [subLoading, setsubLoading] = useState(false);
 
     let { getLeave, user_id, setuser_id, leave,get_username, startDate, leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
-    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(10);
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(25);
 
     const statusField = ["Approved", "Declined"]
 
