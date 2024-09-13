@@ -20,7 +20,7 @@ const LeaveType = () => {
     const [permissionToggle, setPermissionToggle] = useState(true);
 
     // pagination state
-    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(25);
 
     // sort state
     const [order, setOrder] = useState("asc")
