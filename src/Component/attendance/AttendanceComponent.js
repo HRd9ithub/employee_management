@@ -39,7 +39,7 @@ const AttendanceComponent = () => {
     const [user_id, setuser_id] = useState("");
 
     // pagination state
-    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(5);
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(25);
 
     // sort state
     const [order, setOrder] = useState("asc")
