@@ -97,10 +97,12 @@ h6,
   font-size: 13px;
   text-transform: lowercase;
 }
+
 .error.text-trensform-unset {
   text-transform: unset;
 }
-.error::first-letter{
+
+.error::first-letter {
   text-transform: capitalize !important;
 }
 
@@ -511,6 +513,7 @@ span.eye-icon {
   margin-bottom: 10px !important;
   border-bottom: 1px solid #dfdfdf;
 }
+
 .row-std.remove-margin-bottom {
   margin-bottom: 0 !important;
 }
@@ -562,6 +565,7 @@ span.eye-icon {
 .card-body {
   padding: 0.25rem 1.25rem;
 }
+
 .card .card-body.set-padding {
   padding: 1rem 1.5rem !important;
 }
@@ -1127,7 +1131,7 @@ span.eye-icon {
   border-radius: 5px;
 }
 
-.input-group-prepend + .form-control {
+.input-group-prepend+.form-control {
   border: unset !important;
   padding: 0 !important;
 }
@@ -1236,15 +1240,18 @@ span.eye-icon {
   box-shadow: 2px 1px 17px #7a7a7a52;
   cursor: pointer;
 }
+
 .profile-image.no-animate {
   cursor: default;
 }
+
 .profile-image img {
   width: 100%;
   height: 100%;
   margin: 0px auto;
   filter: saturate(120%);
 }
+
 .profile-image::after {
   content: "\f304";
   position: absolute;
@@ -1263,12 +1270,15 @@ span.eye-icon {
   pointer-events: none;
   transition: all 0.3s ease;
 }
+
 .profile-image.no-animate::after {
   display: none;
 }
+
 .profile-image:hover::after {
   transform: scale(1, 1);
 }
+
 .profile-image .MuiAvatar-circular {
   display: flex;
   justify-content: center;
@@ -1281,10 +1291,12 @@ span.eye-icon {
 .tab-view .modal-header {
   background-color: white !important;
 }
+
 .tab-view .tab-panel-button {
   position: relative;
   color: black !important;
 }
+
 .tab-view .tab-panel-button::after {
   content: "";
   position: absolute;
@@ -1298,19 +1310,24 @@ span.eye-icon {
   z-index: 100;
   transition: all 0.3s ease-out;
 }
+
 .tab-view .tab-panel-button.Mui-selected::after {
   transform: scale(1, 1);
 }
+
 .tab-view .tab-panel-button.Mui-selected {
   color: #00336e !important;
 }
+
 .tab-view .MuiTabs-indicator {
   width: 0 !important;
   background-color: transparent !important;
 }
+
 .tab-view .MuiTabs-flexContainer {
   overflow-x: auto;
 }
+
 .tab-view .MuiTabs-flexContainer::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
@@ -1866,7 +1883,7 @@ select.status-select {
   padding: 3rem 2.5rem !important;
   border: 1px solid lightgray;
   background-color: #add8e638;
-  border-radius: 7px; 
+  border-radius: 7px;
 }
 
 .tab_profile {
@@ -2450,6 +2467,7 @@ svg {
   background: linear-gradient(45deg, #f7c34b 0%, #de935a 100%);
   box-shadow: 1px 2px 3px grey;
 }
+
 .inactive-employee {
 
   background: linear-gradient(45deg, #ed7477 0%, #ef0107 100%);
@@ -2479,6 +2497,7 @@ svg {
   background: linear-gradient(45deg, #74addb, #0383eb 100%);
   box-shadow: 1px 2px 3px grey;
 }
+
 .leave-request {
   background: linear-gradient(45deg, #34c2d0b5 0%, #aedce0 100%);
 }
@@ -2505,9 +2524,11 @@ svg {
   flex-wrap: wrap;
   gap: 5px;
 }
+
 .common-box-dashboard .common-info-dashboard h3 {
   font-size: 18px !important;
 }
+
 .common-box-dashboard .common-info-dashboard h3:last-child {
   margin: 0 0 0 10px;
 }
@@ -3063,6 +3084,7 @@ input[type=password]::-ms-clear {
 .action i.fa-solid.fa-trash-can {
   background-color: red;
 }
+
 .action i.fa-solid.fa-arrow-up-right-from-square {
   background-color: orange;
 }
@@ -3070,13 +3092,16 @@ input[type=password]::-ms-clear {
 .action i:hover {
   color: rgb(7, 75, 154) !important;
   background-color: #f2f2f2 !important;
-} 
+}
+
 .action i.fa-solid.fa-pen-to-square:hover {
   color: green !important;
 }
+
 .action i.fa-solid.fa-trash-can:hover {
   color: red !important;
 }
+
 .action i.fa-solid.fa-arrow-up-right-from-square:hover {
   color: orange !important;
 }
@@ -3120,7 +3145,10 @@ input[type=password]::-ms-clear {
   box-shadow: 0px 5px 12px 0 rgba(0, 0, 0, .3);
 }
 
-.calendar-icon, .calendar-icon-holiday, .calendar-icon-work, .invoice-calendar-icon {
+.calendar-icon,
+.calendar-icon-holiday,
+.calendar-icon-work,
+.invoice-calendar-icon {
   position: absolute;
   font-size: 18px !important;
   color: #084e9c;
@@ -3158,7 +3186,11 @@ input[type="date"]:read-only+.invoice-calendar-icon {
   background-color: #e8ecef;
   cursor: not-allowed;
 }
-input:disabled + .invoice-calendar-icon, input:disabled + .calendar-icon-holiday, input:disabled + .calendar-icon, input:disabled + .calendar-icon-work {
+
+input:disabled+.invoice-calendar-icon,
+input:disabled+.calendar-icon-holiday,
+input:disabled+.calendar-icon,
+input:disabled+.calendar-icon-work {
   background-color: #e9ecef;
   pointer-events: none;
 }
@@ -3197,7 +3229,8 @@ input[type="date"]::-webkit-clear-button {
 .react-datepicker__day--highlighted,
 .react-datepicker__month-text--highlighted,
 .react-datepicker__quarter-text--highlighted,
-.react-datepicker__year-text--highlighted, .react-datepicker__day--weekend {
+.react-datepicker__year-text--highlighted,
+.react-datepicker__day--weekend {
   border-radius: 5px !important;
   background-color: red !important;
   color: #fff;
@@ -3827,7 +3860,8 @@ span.eye-icon .css-i4bv87-MuiSvgIcon-root {
 }
 
 /* user staus inactive dot style */
-.user-status-inactive, .user-status-inactive:hover {
+.user-status-inactive,
+.user-status-inactive:hover {
   color: red !important;
   text-decoration: none;
 }
@@ -3904,9 +3938,12 @@ img {
   text-decoration: none;
   color: unset;
 }
-.notification-list .notification-item.new-notification, .notification-list .notification-item.new-notification:hover {
+
+.notification-list .notification-item.new-notification,
+.notification-list .notification-item.new-notification:hover {
   background-color: #30a8ea36;
 }
+
 .notification-list .notification-item.new-notification p {
   color: black !important;
 }
@@ -4084,11 +4121,11 @@ input[type="search"] {
   cursor: pointer;
 }
 
-.activity-list .new-notification{
+.activity-list .new-notification {
   background-color: #30a8ea36 !important;
 }
 
-.notification-list-card{
+.notification-list-card {
   cursor: pointer;
 }
 
@@ -4105,6 +4142,7 @@ input[type="search"] {
   -o-border-radius: 0px !important;
   min-height: unset !important;
 }
+
 .employee-multiple-select .css-1jqq78o-placeholder {
   margin-left: 6px;
   margin-right: 6px;
@@ -4114,7 +4152,8 @@ input[type="search"] {
   border-color: #0a4a92 !important;
 }
 
-.employee-multiple-select .css-1xc3v61-indicatorContainer, .employee-multiple-select .css-15lsz6c-indicatorContainer {
+.employee-multiple-select .css-1xc3v61-indicatorContainer,
+.employee-multiple-select .css-15lsz6c-indicatorContainer {
   padding: 2px 8px !important;
 }
 
@@ -4450,7 +4489,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   margin: 10px 0;
 }
 
-.add-new-logo{
+.add-new-logo {
   display: inline-flex;
   outline: none;
   width: auto;
@@ -4471,7 +4510,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   appearance: none !important;
 }
 
-.business-logo-remove{
+.business-logo-remove {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -4486,7 +4525,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-.business-logo-box{
+.business-logo-box {
   border: 1px dashed #004b8f;
   width: 150px;
   height: 150px;
@@ -4495,7 +4534,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   align-items: center;
   justify-content: center;
 }
-.edit-logo{
+
+.edit-logo {
   color: #004b8f;
   cursor: pointer;
   margin-bottom: 0;
@@ -4560,7 +4600,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   width: 180px;
 }
 
-.business-info span{
+.business-info span {
   display: block;
   font-weight: 400;
   line-height: 1.5;
@@ -4670,12 +4710,12 @@ span.client-static-title {
   padding: 5px;
 }
 
-table.common-table-section tbody tr td.client-address{
+table.common-table-section tbody tr td.client-address {
   white-space: wrap !important;
 }
 
 /* ------------------ rename table modal------------------- */
-.rename-table-head{
+.rename-table-head {
   display: block;
   font-weight: 400;
   line-height: 1.5;
@@ -4692,7 +4732,7 @@ table.common-table-section tbody tr td.client-address{
   border-radius: 36px !important;
 }
 
-.invoice-desciption-button{
+.invoice-desciption-button {
   font-weight: 400;
   line-height: 1.5;
   margin: 0px;
@@ -4839,7 +4879,7 @@ table.common-table-section tbody tr td.client-address{
 }
 
 .invoice-error-box {
-  margin-bottom : 15px;
+  margin-bottom: 15px;
   border: 1px solid rgb(235, 73, 60);
   color: rgb(235, 73, 60);
   border-radius: 5px;
@@ -4849,9 +4889,11 @@ table.common-table-section tbody tr td.client-address{
   -o-border-radius: 5px;
   background-color: rgba(235, 73, 60, 0.06);
 }
+
 .invoice-error-box li {
   text-transform: lowercase;
 }
+
 .invoice-error-box li::first-letter {
   text-transform: uppercase !important;
 }
@@ -5089,6 +5131,7 @@ select.form-control.currency-dropdown {
 .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
   color: #004b8f !important;
 }
+
 .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
   background-color: #004b8f !important;
 }
@@ -5096,6 +5139,7 @@ select.form-control.currency-dropdown {
 .highlighted-birth-date {
   position: relative;
 }
+
 .highlighted-birth-date::after {
   content: "";
   position: absolute;
@@ -5111,22 +5155,28 @@ select.form-control.currency-dropdown {
   background-position: center;
   background-size: cover;
 }
+
 .react-datepicker__day--highlighted.highlighted-birth-date::after {
   top: -1px !important;
 }
+
 .react-datepicker__day--weekend.highlighted-birth-date::after {
   top: -1px !important;
   left: -1px !important;
 }
-.highlighted-birth-date.react-datepicker__day--highlighted::before, .highlighted-birth-date.react-datepicker__day--today::before, .highlighted-birth-date.react-datepicker__day--highlighted {
+
+.highlighted-birth-date.react-datepicker__day--highlighted::before,
+.highlighted-birth-date.react-datepicker__day--today::before,
+.highlighted-birth-date.react-datepicker__day--highlighted {
   background-color: white !important;
 }
 
-.leave-box-section{
+.leave-box-section {
   background-color: #eaeff0;
   border-radius: 5px;
 }
-.rename-header .table-responsive-md{
+
+.rename-header .table-responsive-md {
   overflow-x: auto;
 }
 
@@ -5155,9 +5205,15 @@ select.form-control.currency-dropdown {
   border: 2px solid #00336e;
 }
 
-.chat-bot-form form {gap: 10px;}
+.chat-bot-form form {
+  gap: 10px;
+}
 
-.generating {font-weight: 500; display: inline-block; animation: loading 1s linear infinite;}
+.generating {
+  font-weight: 500;
+  display: inline-block;
+  animation: loading 1s linear infinite;
+}
 
 
 .chat-bubble {
@@ -5177,13 +5233,16 @@ select.form-control.currency-dropdown {
   border-radius: 20px 0 20px 20px;
 }
 
-.align-self-start, .align-self-end {
+.align-self-start,
+.align-self-end {
   gap: 20px;
   margin: 20px 0;
 }
+
 .align-self-start {
   align-self: flex-start;
 }
+
 .align-self-end {
   align-self: flex-end;
   justify-content: end;
@@ -5195,6 +5254,7 @@ select.form-control.currency-dropdown {
   font-size: 14px;
   word-wrap: break-word;
 }
+
 .chat-message p:last-child {
   margin: 0 !important;
 }
@@ -5202,38 +5262,85 @@ select.form-control.currency-dropdown {
 .chat-bot-form {
   border-top: 1px solid #dfdfdf;
 }
-.chat-bot-form .form-control, .chat-bot-form .btn {
+
+.chat-bot-form .form-control,
+.chat-bot-form .btn {
   border-radius: 150px !important;
   padding: 15px 20px !important;
 }
 
+.report-view {
+  display: flex !important;
+  justify-content: center;
+}
+
+.report-view i {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  font-size: 13px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 11px #cccccc;
+  color: white !important;
+  background-color: rgb(7, 75, 154);
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+}
+
+.report-view i:hover {
+  color: rgb(7, 75, 154) !important;
+  background-color: #f2f2f2 !important;
+}
+
 
 @media print {
-  .template-section .row:nth-child(3), .extra-section .row {
+
+  .template-section .row:nth-child(3),
+  .extra-section .row {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .template-section .row:nth-child(3) > div, .extra-section .bank-details {
+
+  .template-section .row:nth-child(3)>div,
+  .extra-section .bank-details {
     width: 50%;
   }
+
   .extra-section .signature-section {
     max-width: 350px !important;
     margin-top: -30px !important;
   }
+
   .bill-by-to-section {
     min-height: 160px !important;
   }
+
   .product-table thead tr th {
     background-color: #0a4a92 !important;
     color: #fff !important;
   }
+
   .total-column td {
     background-color: rgb(247, 250, 255) !important;
   }
 }
 
 @keyframes loading {
-  0%, 100% {opacity: 1;}
-  50% {opacity: 0.3;}
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
 }
