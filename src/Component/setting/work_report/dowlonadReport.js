@@ -99,76 +99,77 @@ const DowlonadReport = () => {
                 className='btn btn-gradient-primary btn-rounded btn-fw text-center' onClick={handleShowModal}>
                 <i className="fa-solid fa-download"></i>&nbsp; Download
             </button >
-            
+
             {/* // add and edit request */}
-            <Modal
-                show={show}
-                animation={true}
-                size="md"
-                aria-labelledby="example-modal-sizes-title-sm"
-                className="department-modal work-report-view-modal"
-                centered
-            >
-                <Modal.Header className="small-modal">
-                    <Modal.Title>
-                        Preview Report
-                    </Modal.Title>
-                    <p className="close-modal" onClick={handleHideModal}>
-                        <i className="fa-solid fa-xmark"></i>
-                    </p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
-                        <div className="card">
-                            <div className="card-body">
-                                <form className="forms-sample" onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label htmlFor="user" className='mt-3'>Employee</label>
-                                                <select className="form-control " id="user" name='userId' onChange={handleChange} value={initialistate.userId} onBlur={handleuservalidation} >
-                                                    <option value=''>Select Employee </option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                                {userError && <small id="employee-field" className="form-text error">{userError}</small>}
+            {show &&
+                <Modal
+                    show={show}
+                    animation={true}
+                    size="md"
+                    aria-labelledby="example-modal-sizes-title-sm"
+                    className="department-modal work-report-view-modal"
+                    centered
+                >
+                    <Modal.Header className="small-modal">
+                        <Modal.Title>
+                            Preview Report
+                        </Modal.Title>
+                        <p className="close-modal" onClick={handleHideModal}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </p>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                            <div className="card">
+                                <div className="card-body">
+                                    <form className="forms-sample" onSubmit={handleSubmit}>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="user" className='mt-3'>Employee</label>
+                                                    <select className="form-control " id="user" name='userId' onChange={handleChange} value={initialistate.userId} onBlur={handleuservalidation} >
+                                                        <option value=''>Select Employee </option>
+                                                        {userName.map((val) => {
+                                                            return (
+                                                                val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    {userError && <small id="employee-field" className="form-text error">{userError}</small>}
+                                                </div>
                                             </div>
-                                        </div>
-                                        {/* ====================   select  Date ============*/}
-                                        <div className="col-md-6">
-                                            <div className="form-group position-relative">
-                                                <label htmlFor="MONTH" className='mt-3'>Month</label>
-                                                <div onClick={() => { monthRef.current.showPicker(); }}>
-                                                    <input type="month"
-                                                        className="form-control"
-                                                        autoComplete='off'
-                                                        ref={monthRef}
-                                                        name='month'
-                                                        value={initialistate.month}
-                                                        onChange={handleChange}
-                                                        max={moment(new Date()).format("YYYY-MM")}
-                                                        onBlur={handleMonth}
-                                                    />
-                                                    <CalendarMonthIcon className='calendar-icon-work' />
-                                                    {dateError && <small id="date-field" className="form-text error">{dateError}</small>}
+                                            {/* ====================   select  Date ============*/}
+                                            <div className="col-md-6">
+                                                <div className="form-group position-relative">
+                                                    <label htmlFor="MONTH" className='mt-3'>Month</label>
+                                                    <div onClick={() => { monthRef.current.showPicker(); }}>
+                                                        <input type="month"
+                                                            className="form-control"
+                                                            autoComplete='off'
+                                                            ref={monthRef}
+                                                            name='month'
+                                                            value={initialistate.month}
+                                                            onChange={handleChange}
+                                                            max={moment(new Date()).format("YYYY-MM")}
+                                                            onBlur={handleMonth}
+                                                        />
+                                                        <CalendarMonthIcon className='calendar-icon-work' />
+                                                        {dateError && <small id="date-field" className="form-text error">{dateError}</small>}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='d-flex justify-content-center modal-button'>
-                                        <button type="submit" className="btn btn-gradient-primary mr-2" >Preview</button>
-                                        <button className="btn btn-light" onClick={handleHideModal}>Cancel</button>
-                                    </div>
-                                </form>
+                                        <div className='d-flex justify-content-center modal-button'>
+                                            <button type="submit" className="btn btn-gradient-primary mr-2" >Preview</button>
+                                            <button className="btn btn-light" onClick={handleHideModal}>Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Modal.Body>
-                {Loading && <Spinner />}
-            </Modal>
+                    </Modal.Body>
+                    {Loading && <Spinner />}
+                </Modal>}
         </div>
     )
 }

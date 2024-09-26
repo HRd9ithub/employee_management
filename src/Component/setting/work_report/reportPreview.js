@@ -118,14 +118,13 @@ const ReportPreview = () => {
                                     <TableBody>
                                         {reportData.length !== 0 ?
                                             reportData.map((val, ind) => {
-                                                console.log('val: ', val)
                                                 return (
                                                     <TableRow key={ind} >
                                                         {!val.userId && val.name !== "Leave" && <TableCell colSpan={4} align="center" className="Holiday_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}</TableCell>}
                                                         {!val.userId && val.name === "Leave" && <TableCell colSpan={4} align="center" className="Leave_column">{moment(val.date).format("DD MMM YYYY").concat(" - ", val.name)}({val.leave_for})</TableCell>}
                                                         {val.userId && <TableCell style={{ width: "15%" }}>{moment(val.date).format("DD MMM YYYY")}</TableCell>}
                                                         {val.userId && <TableCell style={{ width: "15%" }}>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>}
-                                                        {val.userId && <TableCell style={{ width: "15%" }}>{val.extraWork && Object.keys(val.extraWork).length !== 0 ? val.extraWork.hours : <HiOutlineMinus />}</TableCell>}
+                                                        {val.userId && <TableCell style={{ width: "15%" }}>{val.extraTotalHours ? val.extraTotalHours : <HiOutlineMinus />}</TableCell>}
                                                         {val.userId && <TableCell>
                                                             {val.work?.map((currElem, ind) => {
                                                                 return <div className="card-body table_section" key={currElem._id}>
@@ -133,13 +132,13 @@ const ReportPreview = () => {
                                                                     <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                                                 </div>
                                                             })}
-                                                            {val.extraWork && Object.keys(val.extraWork).length !== 0 &&
-                                                                <div className="card-body table_section border-top">
-                                                                    <p style={{ fontWeight: "bold" }} className='mb-0 text-info'>Extra Work Detail: </p>
-                                                                    <p style={{ fontWeight: "bold" }} className='mb-0'>{1}. {val.extraWork?.project?.name}</p>
-                                                                    <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: val.extraWork.description }}></div>
+                                                            {val.extraWork?.map((currElem, ind) => {
+                                                                return <div className="card-body table_section" key={currElem._id}>
+                                                                    {ind === 0 && <p style={{ fontWeight: "bold" }} className='mb-0 text-info'>Extra Work Detail: </p>}
+                                                                    <p style={{ fontWeight: "bold" }} className='mb-0'>{ind + 1}. {currElem.project?.name}</p>
+                                                                    <div className='w-100 text-wrap report-description-preview' dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                                                 </div>
-                                                            }
+                                                            })}
                                                         </TableCell>}
                                                     </TableRow>
                                                 )
