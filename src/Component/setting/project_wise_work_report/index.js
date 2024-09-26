@@ -18,7 +18,6 @@ import usePagination from "../../../hooks/usePagination";
 
 const ProjectWorkReportComponent = () => {
   const date_today = new Date();
-  const startMonthDate = moment().startOf('month').format('YYYY-MM-DD');
 
   const [dataFilter, setDataFilter] = useState([]);
   const [permission, setPermission] = useState("");
@@ -116,8 +115,6 @@ const ProjectWorkReportComponent = () => {
   const descendingComparator = (a, b, orderBy) => {
     if (orderBy === "name") {
       return (b.user?.first_name?.concat(" ", b.user?.last_name) < a.user?.first_name?.concat(" ", a.user?.last_name)) ? -1 : 1;
-    } else if (orderBy === "extraWork") {
-      return (b[orderBy]?.hours < a[orderBy]?.hours) ? -1 : 1;
     } else {
       return (b[orderBy] < a[orderBy]) ? -1 : 1;
     }
@@ -269,7 +266,7 @@ const ProjectWorkReportComponent = () => {
                         Employee
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                       <TableSortLabel
                         active={orderBy === "totalHours"}
                         direction={orderBy === "totalHours" ? order : "asc"}
@@ -278,11 +275,11 @@ const ProjectWorkReportComponent = () => {
                         Total Hours
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                       <TableSortLabel
-                        active={orderBy === "extraWork"}
-                        direction={orderBy === "extraWork" ? order : "asc"}
-                        onClick={() => handleRequestSort("extraWork")}
+                        active={orderBy === "extraTotalHours"}
+                        direction={orderBy === "extraTotalHours" ? order : "asc"}
+                        onClick={() => handleRequestSort("extraTotalHours")}
                       >
                         Extra Hours
                       </TableSortLabel>
@@ -311,10 +308,10 @@ const ProjectWorkReportComponent = () => {
                             {val.leave_for && <span className="text-red"> ({val.leave_for})</span>}
                           </TableCell>
                           <TableCell>
-                            {val.extraWork?.hours ? val.extraWork?.hours : <HiOutlineMinus />}
+                            {val.extraTotalHours ? val.extraTotalHours : <HiOutlineMinus />}
                           </TableCell>
-                          <TableCell align="center">
-                            <NavLink to="" onClick={() => handleShow(val)}>View</NavLink>
+                          <TableCell align="center report-view">
+                            <i className="fa-solid fa-eye" onClick={() => handleShow(val)}></i>
                           </TableCell>
                         </TableRow>
                       ))
@@ -340,50 +337,51 @@ const ProjectWorkReportComponent = () => {
       </div>
 
       {/* View description modal */}
-      <Modal
-        show={show}
-        animation={true}
-        size="md"
-        aria-labelledby="example-modal-sizes-title-sm"
-        className="department-modal work-report-view-modal"
-        centered
-      >
-        <Modal.Header className="small-modal">
-          <Modal.Title>View Description</Modal.Title>
-          <p className="close-modal" onClick={handleClose}>
-            <i className="fa-solid fa-xmark"></i>
-          </p>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="grid-margin stretch-card inner-pages mb-lg-0">
-            <div className="card">
-              {description?.work?.map((currElem, ind) => (
-                <div className="card-body table_section pb-0" key={currElem._id}>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
-                    <h5 className="mb-0">{currElem.hours}h</h5>
+      {show &&
+        <Modal
+          show={show}
+          animation={true}
+          size="md"
+          aria-labelledby="example-modal-sizes-title-sm"
+          className="department-modal work-report-view-modal"
+          centered
+        >
+          <Modal.Header className="small-modal">
+            <Modal.Title>View Description</Modal.Title>
+            <p className="close-modal" onClick={handleClose}>
+              <i className="fa-solid fa-xmark"></i>
+            </p>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="grid-margin stretch-card inner-pages mb-lg-0">
+              <div className="card">
+                {description?.work?.map((currElem, ind) => (
+                  <div className="card-body table_section pb-0" key={currElem._id}>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
+                      <h5 className="mb-0">{currElem.hours}h</h5>
+                    </div>
+                    <hr />
+                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                   </div>
-                  <hr />
-                  <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
-                </div>
-              ))}
-              {(description.extraWork && Object.keys(description.extraWork).length !== 0) && (
-                <div style={{ padding: "1rem 2.5rem" }}>
-                  <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>
-                    Extra Work Detail
-                  </label>
-                  <div className="d-flex justify-content-between align-items-center">
-                    {description.extraWork?.project && <h4 className="mb-0">1. {description.extraWork?.project?.name}</h4>}
-                    <h5 className="mb-0">{description?.extraWork?.hours}h</h5>
+                ))}
+                {description?.extraWork?.map((currElem, ind) => (
+                  <div className="card-body table_section pb-0" key={currElem._id}>
+                    {ind === 0 && <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>
+                      Extra Work Detail
+                    </label>}
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
+                      <h5 className="mb-0">{currElem.hours}h</h5>
+                    </div>
+                    <hr />
+                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                   </div>
-                  <hr />
-                  <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: description?.extraWork?.description }}></div>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+          </Modal.Body>
+        </Modal>}
     </motion.div>
   );
 };

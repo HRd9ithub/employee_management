@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useContext, useMemo } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
@@ -185,14 +186,23 @@ const WorkReportComponent = () => {
     // approved request
     const acceptRequest = async (e) => {
         e && e.preventDefault();
-        const { userId, date, totalHours, work, wortReportId, _id, extraWork } = newRecord;
+        const { userId, date, totalHours, work, wortReportId, _id, extraWork, extraTotalHours } = newRecord;
 
         let url = "";
+        const payload = {
+            userId: userId,
+            date: date,
+            totalHours: totalHours,
+            work: work,
+            extraWork: extraWork,
+            extraTotalHours: extraTotalHours,
+            _id
+        };
 
         if (wortReportId) {
-            url = customAxios().patch(`/report/${wortReportId}`, { userId, date, totalHours, work, _id, extraWork })
+            url = customAxios().patch(`/report/${wortReportId}`, payload)
         } else {
-            url = customAxios().post('/report', { userId, date, totalHours, work, _id, extraWork })
+            url = customAxios().post('/report', payload)
         }
 
         setisSubLoading(true);
@@ -249,7 +259,7 @@ const WorkReportComponent = () => {
 
     const totalExtraHours = useMemo(() => {
         return sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).reduce((acc, cur) => {
-            return (cur.extraWork ? Number(cur.extraWork.hours) : 0) + Number(acc)
+            return (cur.extraTotalHours ? cur.extraTotalHours : 0) + acc
         }, 0)
     }, [dataFilter, order, orderBy, rowsPerPage, page])
 
@@ -390,7 +400,7 @@ const WorkReportComponent = () => {
                                                                 </TableCell>
                                                             }
                                                             <TableCell>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
-                                                            <TableCell>{val.extraWork ? val.extraWork?.hours : <HiOutlineMinus />}</TableCell>
+                                                            <TableCell>{val.extraTotalHours ? val.extraTotalHours : <HiOutlineMinus />}</TableCell>
                                                             <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
                                                             <TableCell align="center">
                                                                 <div className="action">
@@ -409,13 +419,13 @@ const WorkReportComponent = () => {
                                     }
                                 </TableBody>
                                 {dataFilter.length !== 0 &&
-                                <TableFooter>
-                                    <TableRow>
-                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={2} align="left">Total Extra Hours:</TableCell>
-                                        {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell> }
-                                        <TableCell component={"th"} style={{fontSize: "unset"}} colSpan={3} align="left">{totalExtraHours}</TableCell>
-                                    </TableRow>
-                                </TableFooter>}
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={2} align="left">Total Extra Hours:</TableCell>
+                                            {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell>}
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{totalExtraHours}</TableCell>
+                                        </TableRow>
+                                    </TableFooter>}
                             </Table>
                         </TableContainer>
                         <TablePagination rowsPerPageOptions={[5, 10, 15, 25, 50, 100]}
@@ -431,108 +441,114 @@ const WorkReportComponent = () => {
             </div>
 
             {/* view description modal */}
-            <Modal
-                show={show}
-                animation={true}
-                size="md"
-                aria-labelledby="example-modal-sizes-title-sm"
-                className="department-modal work-report-view-modal"
-                centered
-            >
-                <Modal.Header className="small-modal">
-                    <Modal.Title>
-                        View Description
-                    </Modal.Title>
-                    <p className="close-modal" onClick={handleClose}>
-                        <i className="fa-solid fa-xmark"></i>
-                    </p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
-                        <div className="card">
-                            {description?.work?.map((currElem, ind) => {
-                                return <div className="card-body table_section pb-0" key={currElem._id}>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
-                                        <h5 className="mb-0">{currElem.hours}h</h5>
-                                    </div>
-                                    <hr />
-                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
-                                </div>
-                            })}
-                            {description.extraWork &&
-                                <div style={{ padding: "1rem 2.5rem" }}>
-                                    <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        {description.extraWorkData && <h4 className="mb-0">1. {description.extraWorkData?.name}</h4>}
-                                        <h5 className="mb-0">{description?.extraWork?.hours}h</h5>
-                                    </div>
-                                    <hr />
-                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: description?.extraWork?.description }}></div>
-                                </div>}
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal>
-
-            {/* request data */}
-            <Modal
-                show={showModal}
-                animation={true}
-                size="md"
-                aria-labelledby="example-modal-sizes-title-sm"
-                className="department-modal work-report-view-modal"
-                centered
-            >
-                <Modal.Header className="small-modal">
-                    <Modal.Title>
-                        {newRecord.title} - {moment(newRecord.date).format("DD MMM YYYY")}
-                    </Modal.Title>
-                    <p className="close-modal" onClick={handleClose}>
-                        <i className="fa-solid fa-xmark"></i>
-                    </p>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
-                        <div className="card">
-                            {newRecord && newRecord.work.map((val) => {
-                                return (
-                                    <div className="card-body table_section pb-0" key={val._id}>
+            {show &&
+                <Modal
+                    show={show}
+                    animation={true}
+                    size="md"
+                    aria-labelledby="example-modal-sizes-title-sm"
+                    className="department-modal work-report-view-modal"
+                    centered
+                >
+                    <Modal.Header className="small-modal">
+                        <Modal.Title>
+                            View Description
+                        </Modal.Title>
+                        <p className="close-modal" onClick={handleClose}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </p>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                            <div className="card">
+                                {description?.work?.map((currElem, ind) => {
+                                    return <div className="card-body table_section pb-0" key={currElem._id}>
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <h4 className="mb-0">{val?.project?.name}</h4>
-                                            <h5 className="mb-0">{val.hours}h</h5>
+                                            <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
+                                            <h5 className="mb-0">{currElem.hours}h</h5>
                                         </div>
                                         <hr />
-                                        <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: val.description }}></div>
+                                        <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                     </div>
-                                )
-                            })}
-                            {newRecord && newRecord.extraWork &&
-                                <div style={{ padding: "1rem 2.5rem" }}>
-                                    <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        {newRecord.extraWorkData && <h4 className="mb-0">1. {newRecord.extraWorkData?.name}</h4>}
-                                        <h5 className="mb-0">{newRecord?.extraWork?.hours}h</h5>
+                                })}
+                                {description?.extraWork?.map((currElem, ind) => {
+                                    return <div className="card-body table_section pb-0" key={currElem._id}>
+                                        {ind === 0 && <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>}
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <h4 className="mb-0">{ind + 1}. {currElem.project?.name}</h4>
+                                            <h5 className="mb-0">{currElem.hours}h</h5>
+                                        </div>
+                                        <hr />
+                                        <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: currElem.description }}></div>
                                     </div>
-                                    <hr />
-                                    <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: newRecord?.extraWork?.description }}></div>
-                                </div>}
-                            {error.length !== 0 &&
-                                <div className="row mx-0 mt-2 mb-0">
-                                    <div className="col-md-12">
-                                        <ErrorComponent errors={error} />
-                                    </div>
-                                </div>
-                            }
-                            <div className='d-flex justify-content-center modal-button m-3'>
-                                <button type="submit" className="btn btn-gradient-primary mr-2" onClick={acceptRequest} >Approve</button>
-                                <button className="btn btn-light" onClick={declinedRequest}>Decline</button>
+                                })}
                             </div>
                         </div>
-                    </div>
-                </Modal.Body>
-                {isSubLoading && <Spinner />}
-            </Modal>
+                    </Modal.Body>
+                </Modal>}
+
+            {/* request data */}
+            {showModal &&
+                <Modal
+                    show={showModal}
+                    animation={true}
+                    size="md"
+                    aria-labelledby="example-modal-sizes-title-sm"
+                    className="department-modal work-report-view-modal"
+                    centered
+                >
+                    <Modal.Header className="small-modal">
+                        <Modal.Title>
+                            {newRecord.title} - {moment(newRecord.date).format("DD MMM YYYY")}
+                        </Modal.Title>
+                        <p className="close-modal" onClick={handleClose}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </p>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                            <div className="card">
+                                {newRecord && newRecord.work.map((val) => {
+                                    return (
+                                        <div className="card-body table_section pb-0" key={val._id}>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <h4 className="mb-0">{val?.project?.name}</h4>
+                                                <h5 className="mb-0">{val.hours}h</h5>
+                                            </div>
+                                            <hr />
+                                            <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: val.description }}></div>
+                                        </div>
+                                    )
+                                })}
+                                {newRecord && newRecord.extraWork.map((val, ind) => {
+                                    return (
+                                        <div className="card-body table_section pb-0" key={val._id}>
+                                            {ind === 0 && <label style={{ color: "#0a4a92", fontWeight: 500, fontSize: "15px", borderBottom: "2px solid", marginBottom: "1rem" }}>Extra Work Detail</label>}
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <h4 className="mb-0">{val?.project?.name}</h4>
+                                                <h5 className="mb-0">{val.hours}h</h5>
+                                            </div>
+                                            <hr />
+                                            <div className="report-description-preview" dangerouslySetInnerHTML={{ __html: val.description }}></div>
+                                        </div>
+                                    )
+                                })}
+                                {error.length !== 0 &&
+                                    <div className="row mx-0 mt-2 mb-0">
+                                        <div className="col-md-12">
+                                            <ErrorComponent errors={error} />
+                                        </div>
+                                    </div>
+                                }
+                                <div className='d-flex justify-content-center modal-button m-3'>
+                                    <button type="submit" className="btn btn-gradient-primary mr-2" onClick={acceptRequest} >Approve</button>
+                                    <button className="btn btn-light" onClick={declinedRequest}>Decline</button>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    {isSubLoading && <Spinner />}
+                </Modal>}
         </motion.div >)
 };
 
