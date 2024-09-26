@@ -303,11 +303,11 @@ const ProjectWorkReportComponent = () => {
                                 : <HiOutlineMinus />}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell align="center">
                             {val.totalHours}
                             {val.leave_for && <span className="text-red"> ({val.leave_for})</span>}
                           </TableCell>
-                          <TableCell>
+                          <TableCell align="center">
                             {val.extraTotalHours ? val.extraTotalHours : <HiOutlineMinus />}
                           </TableCell>
                           <TableCell align="center report-view">

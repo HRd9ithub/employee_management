@@ -120,14 +120,6 @@ const WorkReportComponent = () => {
                 return 1
             }
             return 0
-        } else if (orderBy === "extraWork") {
-            if (b[orderBy]?.hours < a[orderBy]?.hours) {
-                return -1
-            }
-            if (b[orderBy]?.hours > a[orderBy]?.hours) {
-                return 1
-            }
-            return 0
         } else {
             if (b[orderBy] < a[orderBy]) {
                 return -1
@@ -369,7 +361,7 @@ const WorkReportComponent = () => {
                                             </TableSortLabel>
                                         </TableCell>
                                         <TableCell>
-                                            <TableSortLabel active={orderBy === "extraWork"} direction={orderBy === "extraWork" ? order : "asc"} onClick={() => handleRequestSort("extraWork")}>
+                                            <TableSortLabel active={orderBy === "extraTotalHours"} direction={orderBy === "extraTotalHours" ? order : "asc"} onClick={() => handleRequestSort("extraTotalHours")}>
                                                 Extra Hours
                                             </TableSortLabel>
                                         </TableCell>
