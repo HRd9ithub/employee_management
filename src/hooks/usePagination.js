@@ -18,6 +18,7 @@ const usePagination = (initialRowsPerPage = 100, initialPage = 0) => {
     rowsPerPage,
     handleChangePage,
     handleChangeRowsPerPage,
+    setPage
   };
 };
 
