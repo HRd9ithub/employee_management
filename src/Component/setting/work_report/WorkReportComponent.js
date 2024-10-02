@@ -41,11 +41,12 @@ const WorkReportComponent = () => {
     const [localStorageToggle, setLocalStorageToggle] = useState(false);
     const [newRecord, setNewRecord] = useState("");
     const [error, setError] = useState([]);
+    const [extraHoursRowToggle, setextraHoursRowToggle] = useState(false);
 
     let { get_username, userName, getLeaveNotification } = useContext(AppProvider);
 
     // pagination state
-    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(50);
+    const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, setPage } = usePagination(50);
 
     // sort state
     const [order, setOrder] = useState("asc")
@@ -53,6 +54,7 @@ const WorkReportComponent = () => {
 
     // get report data
     const getReport = async (id, start, end) => {
+        id ? setextraHoursRowToggle(true) : setextraHoursRowToggle(false);
         start && setStartDate(start);
         end && setendtDate(end);
         setisLoading(true);
@@ -60,6 +62,7 @@ const WorkReportComponent = () => {
         setServerError(false);
         customAxios().get(`/report?startDate=${moment(start || startDate).format("YYYY-MM-DD")}&endDate=${moment(end || endDate).format("YYYY-MM-DD")}&id=${id ? id : ""} `).then((result) => {
             if (result.data.success) {
+                setPage(0);
                 setpermission(result.data.permissions);
                 setData(result.data.data);
                 setDataFilter(result.data.data);
@@ -249,11 +252,28 @@ const WorkReportComponent = () => {
         }
     }
 
-    const totalExtraHours = useMemo(() => {
-        return sortRowInformation(dataFilter, getComparator(order, orderBy)).slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage).reduce((acc, cur) => {
-            return (cur.extraTotalHours ? cur.extraTotalHours : 0) + acc
-        }, 0)
-    }, [dataFilter, order, orderBy, rowsPerPage, page])
+    const totalExtraHours = useMemo(() =>
+        sortRowInformation(dataFilter, getComparator(order, orderBy))
+            .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
+            .reduce((acc, cur) => acc + (cur.extraTotalHours || 0), 0),
+        [dataFilter, order, orderBy, rowsPerPage, page]
+    );
+
+    const pendingTotalHours = useMemo(() => {
+        if (dataFilter.length && permission && (permission.name.toLowerCase() !== "admin" || extraHoursRowToggle)) {
+            return sortRowInformation(dataFilter, getComparator(order, orderBy))
+                .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
+                .reduce((acc, cur) => {
+                    if (!dataFilter.some(d => d.date === cur.date && d.name)) {
+                        const requiredHours = cur.leave_for ? 4.5 : 8.5;
+                        acc += Math.max(0, requiredHours - parseFloat(Number(cur.totalHours).toFixed(2)));
+                    }
+                    return acc;
+                }, 0);
+        }
+        return 0;
+    }, [dataFilter, order, orderBy, rowsPerPage, page, permission, extraHoursRowToggle]);
+
 
     if (isLoading) {
         return <Spinner />;
@@ -391,7 +411,7 @@ const WorkReportComponent = () => {
                                                                     </div>
                                                                 </TableCell>
                                                             }
-                                                            <TableCell>{val.totalHours}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
+                                                            <TableCell>{parseFloat(Number(val.totalHours).toFixed(2))}{val.leave_for && <span className="text-red"> ({val.leave_for})</span>}</TableCell>
                                                             <TableCell>{val.extraTotalHours ? val.extraTotalHours : <HiOutlineMinus />}</TableCell>
                                                             <TableCell align="center"><NavLink to="" onClick={() => handleShow(val)}>View</NavLink></TableCell>
                                                             <TableCell align="center">
@@ -410,12 +430,12 @@ const WorkReportComponent = () => {
                                         </TableRow>
                                     }
                                 </TableBody>
-                                {dataFilter.length !== 0 &&
+                                {dataFilter.length !== 0 && permission && (permission.name.toLowerCase() !== "admin" || extraHoursRowToggle) &&
                                     <TableFooter>
                                         <TableRow>
                                             <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={2} align="left">Total Extra Hours:</TableCell>
                                             {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell>}
-                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{totalExtraHours}</TableCell>
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{totalExtraHours - pendingTotalHours}</TableCell>
                                         </TableRow>
                                     </TableFooter>}
                             </Table>
