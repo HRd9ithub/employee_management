@@ -43,7 +43,7 @@ const WorkReportComponent = () => {
     const [error, setError] = useState([]);
     const [extraHoursRowToggle, setextraHoursRowToggle] = useState(false);
 
-    let { get_username, userName, getLeaveNotification } = useContext(AppProvider);
+    let { get_username, userName, getLeaveNotification, UserData } = useContext(AppProvider);
 
     // pagination state
     const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, setPage } = usePagination(50);
@@ -85,7 +85,7 @@ const WorkReportComponent = () => {
     };
 
     useEffect(() => {
-        if (!localStorageToggle || localStorage.getItem("filter")) {
+        if ((!localStorageToggle || localStorage.getItem("filter")) && UserData) {
             const filter = JSON.parse(localStorage.getItem("filter"));
             const newdata = JSON.parse(localStorage.getItem("data"));
             get_username();
@@ -100,11 +100,13 @@ const WorkReportComponent = () => {
                 }
                 setLocalStorageToggle(true)
             } else {
-                getReport();
+                const start = UserData?.role?.name?.toLowerCase() !== "admin" ? moment().clone().startOf('month') : moment(date_today).subtract(1, "day")
+                const end = UserData?.role?.name?.toLowerCase() !== "admin" ? moment(date_today).subtract(0, "day") : moment(date_today).subtract(1, "day")
+                getReport("", start, end);
             }
         }
         // eslint-disable-next-line
-    }, [localStorageToggle, localStorage.getItem("filter")]);
+    }, [localStorageToggle, localStorage.getItem("filter"), UserData]);
 
     // sort function
     const handleRequestSort = (name) => {
