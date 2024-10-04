@@ -48,7 +48,7 @@ const AddPasswordForm = (props) => {
                 note
             });
             if (data.hasOwnProperty("access")) {
-                let result = access.map((elem) => {
+                let result = access.filter((u) => u._id !== data.createdBy).map((elem) => {
                     return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
                 })
                 setAccessEmployee(result);
@@ -91,12 +91,12 @@ const AddPasswordForm = (props) => {
     const employeeData = useMemo(() => {
         let result = [];
         userName.forEach((val) => {
-            if (val.role.toLowerCase() !== "admin") {
+            if (val.role.toLowerCase() !== "admin" && val._id !== GetLocalStorage("user_id") && val._id !== data?.createdBy) {
                 result.push({ value: val._id, label: val.name })
             }
         })
         return result
-    }, [userName])
+    }, [userName, data])
 
     // form onchange function
     const handleChange = (event) => {
