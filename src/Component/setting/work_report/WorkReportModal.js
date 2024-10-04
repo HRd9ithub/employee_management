@@ -265,8 +265,8 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     }
 
     // description
-    const descriptionValidation = (ind) => {
-        const descriptionErrors = validateDescription(workData[ind].description, ind);
+    const descriptionValidation = (ind, newContent) => {
+        const descriptionErrors = validateDescription(newContent, ind);
 
         let descriptionErr = descriptionError.filter((val) => {
             return val.id !== ind
@@ -307,7 +307,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
 
     // description
     const extraDescriptionValidation = (ind, newContent) => {
-        const descriptionErrors = validateDescription(extraWorkData[ind].description, ind);
+        const descriptionErrors = validateDescription(newContent, ind);
 
         let descriptionErr = extraDescriptionError.filter((val) => {
             return val.id !== ind
@@ -593,9 +593,11 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                                                     <JoditEditor
                                                                         config={config}
                                                                         value={item.description}
-                                                                        tabIndex={1} // tabIndex of textarea
-                                                                        onChange={newContent => handleContentChange(newContent, ind)}
-                                                                        onBlur={(newContent) => descriptionValidation(ind)}
+                                                                        // onChange={newContent => handleContentChange(newContent, ind)}
+                                                                        onBlur={(newContent) => {
+                                                                            handleContentChange(newContent, ind);
+                                                                            descriptionValidation(ind, newContent)
+                                                                        }}
                                                                     />
                                                                     {descriptionError.map((val) => {
                                                                         return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
@@ -683,9 +685,10 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                                                 <JoditEditor
                                                                     config={config}
                                                                     value={item.description}
-                                                                    tabIndex={1}
-                                                                    onChange={(newContent) => handleExtraContentChange(newContent, ind)}
-                                                                    onBlur={() => extraDescriptionValidation(ind)}
+                                                                    onBlur={(newContent) => {
+                                                                        handleExtraContentChange(newContent, ind);
+                                                                        extraDescriptionValidation(ind, newContent)
+                                                                    }}
                                                                 />
                                                                 {extraDescriptionError.map((val) => (
                                                                     val.id === ind && <small id={`extraDescription-field-${ind}`} className="form-text error" key={val.id}>{val.name}</small>

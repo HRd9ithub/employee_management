@@ -12,6 +12,7 @@ import { Dropdown } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 
 const PasswordComponent = () => {
 
@@ -173,21 +174,21 @@ const PasswordComponent = () => {
               <div className="row justify-content-start align-items-center m-0 pb-3">
                 {records.map((item) => {
                   return (
-                    <div className="col-md-4 mt-3" key={item._id} > {/** onClick={showModal} */}
+                    <div className="col-md-4 mt-3" key={item._id} >
                       <div className="password-info-box">
                         <div className="d-flex justify-content-between position-relative w-100">
                           <h5>{item.title}</h5>
                           <Dropdown>
                             <Dropdown.Toggle id="password-action">
-                                <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
+                              <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="password-action--dropdown">
                               <Dropdown.Item onClick={() => showModal(item)} ><i className="fa-solid fa-eye"></i><label>View</label></Dropdown.Item>
-                              {permission && permission.permissions.update === 1 && <>
+                              {permission && permission.permissions.update === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
                                 <Dropdown.Divider />
                                 <AddPasswordForm data={item} getPasswordRecord={getPasswordRecord} />
                               </>}
-                              {permission && permission.permissions.delete === 1 && <>
+                              {permission && permission.permissions.delete === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
                                 <Dropdown.Divider />
                                 <Dropdown.Item onClick={() => handleDelete(item._id)}><i className="fa-solid fa-trash-can"></i><label>Delete</label></Dropdown.Item>
                               </>}
@@ -196,6 +197,11 @@ const PasswordComponent = () => {
                         </div>
                         <hr className='mt-1 mb-2' />
                         <p>{item.url}</p>
+                        {item.created &&
+                          <div className="text-muted mt-2">
+                            <small>Created By: </small>
+                            <small>{item.created?.first_name.concat(" ", item.created?.last_name)}</small>
+                          </div>}
                       </div>
                     </div>
                   )
@@ -212,68 +218,70 @@ const PasswordComponent = () => {
       </motion.div>
 
       {/* modal  */}
-      <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal password-modal' centered>
-        <Modal.Header className='small-modal'>
-          <Modal.Title>Preview</Modal.Title>
-          <p className='close-modal' onClick={hideModal}><i className="fa-solid fa-xmark"></i></p>
-        </Modal.Header>
-        <Modal.Body>
-          <div className=" grid-margin stretch-card inner-pages mb-lg-0" >
-            <div className='card'>
-              <div className="card-body pb-4">
-                <h3>{view.title}</h3>
-                <div className='password-auth-info'>
-                  <div className="row">
-                    <div className="col-md-6 mt-1">
-                      <label >User Name</label>
-                      <div className='position-relative auth-box'>
-                        <p>{view.user_name}</p>
-                        {!userNameCopy ?
-                          <i className="fa-solid fa-copy" onClick={() => textCopy("userName", view.user_name)}></i> :
-                          <i className="fa-solid fa-check"></i>}
+      {show &&
+        <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal password-modal' centered>
+          <Modal.Header className='small-modal'>
+            <Modal.Title>Preview</Modal.Title>
+            <p className='close-modal' onClick={hideModal}><i className="fa-solid fa-xmark"></i></p>
+          </Modal.Header>
+          <Modal.Body>
+            <div className=" grid-margin stretch-card inner-pages mb-lg-0" >
+              <div className='card'>
+                <div className="card-body pb-4">
+                  <h3>{view.title}</h3>
+                  <div className='password-auth-info'>
+                    <div className="row">
+                      <div className="col-md-6 mt-1">
+                        <label >User Name</label>
+                        <div className='position-relative auth-box'>
+                          <p>{view.user_name}</p>
+                          {!userNameCopy ?
+                            <i className="fa-solid fa-copy" onClick={() => textCopy("userName", view.user_name)}></i> :
+                            <i className="fa-solid fa-check"></i>}
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-md-6 mt-1">
-                      <label >Password</label>
-                      <div className='position-relative auth-box'>
-                        <input type={eyeToggle ? 'text' : "password"} value={view.password} readOnly />
-                        {!passwordCopy ?
-                          <i className="fa-solid fa-copy" onClick={() => textCopy("password", view.password)}></i> :
-                          <i className="fa-solid fa-check"></i>}
-                        {eyeToggle ? <span className='eye-icon-password' onClick={passwordToggle}><VisibilityIcon /></span> :
-                          <span className='eye-icon-password' onClick={passwordToggle}><VisibilityOffIcon /></span>}
+                      <div className="col-md-6 mt-1">
+                        <label >Password</label>
+                        <div className='position-relative auth-box'>
+                          <input type={eyeToggle ? 'text' : "password"} value={view.password} readOnly />
+                          {!passwordCopy ?
+                            <i className="fa-solid fa-copy" onClick={() => textCopy("password", view.password)}></i> :
+                            <i className="fa-solid fa-check"></i>}
+                          {eyeToggle ? <span className='eye-icon-password' onClick={passwordToggle}><VisibilityIcon /></span> :
+                            <span className='eye-icon-password' onClick={passwordToggle}><VisibilityOffIcon /></span>}
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-md-12 mt-2">
-                      <label >URL</label>
-                      <div className='position-relative auth-box'>
-                        <p>{view.url}</p>
-                        {!urlCopy ? <i className="fa-solid fa-copy" onClick={() => textCopy("url", view.url)}></i> :
-                          <i className="fa-solid fa-check"></i>}
+                      <div className="col-md-12 mt-2">
+                        <label >URL</label>
+                        <div className='position-relative auth-box'>
+                          <p>{view.url}</p>
+                          {!urlCopy ? <i className="fa-solid fa-copy" onClick={() => textCopy("url", view.url)}></i> :
+                            <i className="fa-solid fa-check"></i>}
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-md-12 mt-2">
-                      <label >Note</label>
-                      <div className='position-relative auth-box'>
-                        <p>{view.note}</p>
+                      <div className="col-md-12 mt-2">
+                        <label >Note</label>
+                        <div className='position-relative auth-box'>
+                          <p>{view.note}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  {permission && (permission?.name.toLowerCase() === "admin" || view.createdBy === GetLocalStorage("user_id")) && view.hasOwnProperty("access") && view.access.length !== 0 &&
+                    <div className="access-employee-list mt-4">
+                      <h3>Access Employee List:</h3>
+                      <div className="row mt-3">
+                        {view.hasOwnProperty("access") && view.access.map((item, index) => (
+                          <div className="col-md-4 col-sm-6" key={item._id}><span className='pr-2'>{index + 1}.</span> <label className='mb-0'>{item?.first_name.concat(" ", item.last_name)}</label></div>
+                        ))}
+                      </div>
+                    </div>}
                 </div>
-                {permission && permission?.name.toLowerCase() === "admin" && view.hasOwnProperty("access") && view.access.length !== 0 &&
-                  <div className="access-employee-list mt-4">
-                    <h3>Access Employee List:</h3>
-                    <div className="row mt-3">
-                      {view.hasOwnProperty("access") && view.access.map((item, index) => (
-                        <div className="col-md-4 col-sm-6" key={item._id}><span className='pr-2'>{index + 1}.</span> <label className='mb-0'>{item?.first_name.concat(" ", item.last_name)}</label></div>
-                      ))}
-                    </div>
-                  </div>}
               </div>
             </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+          </Modal.Body>
+        </Modal>
+      }
     </>
   )
 }
