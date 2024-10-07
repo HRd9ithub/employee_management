@@ -266,7 +266,7 @@ const WorkReportComponent = () => {
             return sortRowInformation(dataFilter, getComparator(order, orderBy))
                 .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
                 .reduce((acc, cur) => {
-                    if (!dataFilter.some(d => d.date === cur.date && d.name)) {
+                    if (!dataFilter.some(d => d.date === cur.date && d.name) && Number(cur.totalHours)) {
                         const requiredHours = cur.leave_for ? 4.5 : 8.5;
                         acc += Math.max(0, requiredHours - parseFloat(Number(cur.totalHours).toFixed(2)));
                     }
@@ -437,7 +437,7 @@ const WorkReportComponent = () => {
                                         <TableRow>
                                             <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={2} align="left">Total Extra Hours:</TableCell>
                                             {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell>}
-                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{totalExtraHours - pendingTotalHours}</TableCell>
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{parseFloat(Number(totalExtraHours - pendingTotalHours).toFixed(2))}</TableCell>
                                         </TableRow>
                                     </TableFooter>}
                             </Table>
