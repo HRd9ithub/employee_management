@@ -10,12 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
-const AttendanceModal = ({ data, permission, attendance_regulations_data, timestamp }) => {
+const AttendanceModal = ({ data = [], permission, attendance_regulations_data, timestamp }) => {
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
         clockOut: "",
-        explanation: ""
+        explanation: "",
+        id: ""
     });
     const [isLoading, setisLoading] = useState(false);
 
@@ -33,6 +34,15 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
     // modal show function
     const handleShow = () => {
         setShow(true);
+        console.log(data.at(-1))
+        if (data.length !== 0) {
+            const latestData = data[data.length - 1];
+            setInitialState({
+                id: latestData._id || "",
+                clockIn: latestData.clock_in ? moment(latestData.clock_in, "hh:mm:ss A").format("HH:mm:ss") : "",
+                clockOut: latestData.clock_out ? moment(latestData.clock_out, "hh:mm:ss A").format("HH:mm:ss") : "",
+            })
+        }
     }
 
     // modal close function
@@ -42,7 +52,8 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
         setInitialState({
             clockIn: "",
             clockOut: "",
-            explanation: ""
+            explanation: "",
+            id: ""
         });
         setClockInError("");
         setClockOutError("");
@@ -54,7 +65,16 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
     const handleOnChange = (event) => {
         const { name, value } = event.target;
 
-        setInitialState({ ...initialState, [name]: value });
+        if (name === "id") {
+            const latestData = data.find((d) => d._id === value);
+            setInitialState({
+                id: latestData._id || "",
+                clockIn: latestData.clock_in ? moment(latestData.clock_in, "hh:mm:ss A").format("HH:mm:ss") : "",
+                clockOut: latestData.clock_out ? moment(latestData.clock_out, "hh:mm:ss A").format("HH:mm:ss") : "",
+            })
+        } else {
+            setInitialState({ ...initialState, [name]: value });
+        }
     }
 
     // clock in field validation
@@ -90,8 +110,7 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
         setError([]);
 
         // destructuring Object
-        const { clockIn, clockOut, explanation } = initialState;
-        const { _id } = data;
+        const { clockIn, clockOut, explanation, id } = initialState;
 
         explanationValidation();
         clockInValidation();
@@ -103,9 +122,9 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
 
         setisLoading(true);
         customAxios().post('/attendance/regulation', {
-            clockIn: clockIn && moment(clockIn, "hh:mm").format("hh:mm A"),
-            clockOut: clockOut && moment(clockOut, "hh:mm").format("hh:mm A"),
-            explanation, timestamp, id: _id
+            clockIn: clockIn && moment(clockIn, "hh:mm:ss").format("hh:mm:ss A"),
+            clockOut: clockOut && moment(clockOut, "hh:mm:ss").format("hh:mm:ss A"),
+            explanation, timestamp, id: id
         }).then(data => {
             if (data.data.success) {
                 toast.success(data.data.message)
@@ -113,7 +132,8 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
                 setInitialState({
                     clockIn: "",
                     clockOut: "",
-                    explanation: ""
+                    explanation: "",
+                    id: ""
                 });
                 setClockInError("");
                 setClockOutError("");
@@ -158,19 +178,28 @@ const AttendanceModal = ({ data, permission, attendance_regulations_data, timest
                                 <form className="forms-sample">
                                     <div className="row">
                                         <div className="col-md-12 pr-md-2 pl-md-2">
-                                            <label className="mb-2">Attendance Adjustment</label>
                                             <div className="row">
+                                                <div className="col-12 pr-md-2">
+                                                    <div className="form-group">
+                                                        <label >Attendance Adjustment</label>
+                                                        <select name='id' className='form-control form-select' value={initialState.id} onChange={handleOnChange}>
+                                                            {data?.map((t) => (
+                                                                <option key={t._id} value={t._id}>{t.clock_in} &#9866; {t.clock_out}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div className="col-md-6 pr-md-2">
                                                     <div className="form-group">
                                                         <label htmlFor="clockIn">Clock In</label>
-                                                        <input type="time" className="form-control" name='clockIn' value={initialState.clockIn} onChange={handleOnChange} onBlur={clockInValidation} ref={clockInRef} onClick={() => clockInRef.current.showPicker()} />
+                                                        <input type="time" className="form-control" name='clockIn' step="2" value={initialState.clockIn} onChange={handleOnChange} onBlur={clockInValidation} ref={clockInRef} onClick={() => clockInRef.current.showPicker()} />
                                                         {clockInError && <small id="clockIn" className="form-text error">{clockInError}</small>}
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6 pl-md-2">
                                                     <div className="form-group">
                                                         <label htmlFor="clockOut">Clock Out</label>
-                                                        <input type="time" className="form-control" name='clockOut' value={initialState.clockOut} onChange={handleOnChange} onBlur={clockOutValidation} ref={clockOutRef} onClick={() => clockOutRef.current.showPicker()} />
+                                                        <input type="time" className="form-control" name='clockOut' step="2" value={initialState.clockOut} onChange={handleOnChange} onBlur={clockOutValidation} ref={clockOutRef} onClick={() => clockOutRef.current.showPicker()} />
                                                         {clockOutError && <small id="clockOut" className="form-text error">{clockOutError}</small>}
                                                     </div>
                                                 </div>
