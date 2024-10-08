@@ -19,6 +19,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Error403 from '../error_pages/Error403';
 import { AppProvider } from '../context/RouteContext';
 import usePagination from '../../hooks/usePagination';
+import Clock from './Clock';
 
 const AttendanceComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -30,7 +31,6 @@ const AttendanceComponent = () => {
     const [id, setId] = useState("");
     const [currentData, setcurrentData] = useState("");
     const [currentDataAll, setcurrentDataAll] = useState([]);
-    const [time, setTime] = useState("");
     const [overTime, setOverTime] = useState(0);
     const [breakTime, setbreakTime] = useState(0);
     const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
@@ -48,7 +48,7 @@ const AttendanceComponent = () => {
     let { get_username, userName } = useContext(AppProvider);
 
     //get attendance
-    const getAttendance = async (id,start, end) => {
+    const getAttendance = async (id, start, end) => {
         try {
             setisLoading(true);
             setPermissionToggle(true);
@@ -118,8 +118,8 @@ const AttendanceComponent = () => {
 
     useEffect(() => {
         getAttendance();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[startDate,endDate,user_id])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startDate, endDate, user_id])
 
     useEffect(() => {
         get_username();
@@ -164,17 +164,6 @@ const AttendanceComponent = () => {
             }
         })
     }
-
-    // timer logic
-    useEffect(() => {
-        if(permission && permission?.name?.toLowerCase() !== "admin"){
-            const intervalId = setInterval(() => {
-                setTime(moment(new Date()).format("hh:mm:ss A"));
-            }, 1000)
-    
-            return () => clearInterval(intervalId);
-        }
-    }, [permission]);
 
     // sort function
     const handleRequestSort = (name) => {
@@ -224,7 +213,7 @@ const AttendanceComponent = () => {
         setStartDate(start._d)
         setendtDate(end._d);
     }
-    
+
     // user onchange
     const userOnChange = (event) => {
         setuser_id(event.target.value)
@@ -241,9 +230,9 @@ const AttendanceComponent = () => {
 
     // 9:30 hours check function
     const hoursCheck = useCallback((data) => {
-        if(data && data.split(":")[0] < "09"){
+        if (data && data.split(":")[0] < "09") {
             return "true"
-        }else if(data && data.split(":")[0] <= "09" && data.split(":")[1] < "30"){
+        } else if (data && data.split(":")[0] <= "09" && data.split(":")[1] < "30") {
             return "true"
         }
     }, [])
@@ -298,14 +287,7 @@ const AttendanceComponent = () => {
                                                             </h4>
                                                         </div>
                                                     </div>
-                                                    <div className="mt-3 text-center">
-                                                        <div className="clock d-flex justify-content-center align-items-center">
-                                                            <h2 className="mb-0 text-center">{time}</h2>
-                                                        </div>
-                                                        <div className="mt-3">
-                                                            <button type="submit" className="btn btn-gradient-primary" onClick={handleClick}>{toggle ? "Punch Out" : "Punch In"}</button>
-                                                        </div>
-                                                    </div>
+                                                    {permission && permission?.name?.toLowerCase() !== "admin" && <Clock handleClick={handleClick} toggle={toggle} />}
                                                     <div className="row">
                                                         <div className="col-lg-6 col-md-12 col-sm-6 mt-3">
                                                             <div className="bordered p-3">
@@ -451,10 +433,8 @@ const AttendanceComponent = () => {
                                                                                         <TableCell>
                                                                                             {hoursCheck(sum(val.child[id].time)) ?
                                                                                                 <div className='action'>
-                                                                                                    <AttendanceModal data={val.child[id].time.find((elem, ind) => {
-                                                                                                        return ind === (val.child[id].time.length - 1);
-                                                                                                    })} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
-                                                                                                </div> :  
+                                                                                                    <AttendanceModal data={val.child[id].time} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
+                                                                                                </div> :
                                                                                                 <div className="action">
                                                                                                     <HorizontalRuleIcon />
                                                                                                 </div>}
