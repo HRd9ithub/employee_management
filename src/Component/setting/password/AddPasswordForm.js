@@ -29,7 +29,6 @@ const AddPasswordForm = (props) => {
     const [urlError, setUrlError] = useState("");
     const [userNameError, setuserNameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
-    const [noteError, setnoteError] = useState("");
     const [error, setError] = useState([]);
 
     // Global state
@@ -45,7 +44,7 @@ const AddPasswordForm = (props) => {
                 user_name,
                 url,
                 id: _id,
-                note
+                note: note ? note : ""
             });
             if (data.hasOwnProperty("access")) {
                 let result = access.filter((u) => u._id !== data.createdBy).map((elem) => {
@@ -75,7 +74,6 @@ const AddPasswordForm = (props) => {
         setUrlError("");
         setuserNameError("");
         setPasswordError("");
-        setnoteError("");
         setError([]);
     }
 
@@ -140,15 +138,6 @@ const AddPasswordForm = (props) => {
         }
     }
 
-    // note 
-    const noteValidation = () => {
-        if (!password.note.trim()) {
-            setnoteError("Note is a required field.")
-        } else {
-            setnoteError("");
-        }
-    }
-
     // ? ========================== Form submit funcation ===========================
 
     const handleSubmit = (event) => {
@@ -158,9 +147,8 @@ const AddPasswordForm = (props) => {
         urlValidation();
         usernameValidation();
         passwordValidation();
-        noteValidation();
 
-        if (!password.title || !password.url || !password.note || !password.user_name || !password.password || titleError || urlError || userNameError || passwordError || noteError) {
+        if (!password.title || !password.url || !password.user_name || !password.password || titleError || urlError || userNameError || passwordError) {
             return false;
         }
 
@@ -177,7 +165,7 @@ const AddPasswordForm = (props) => {
                 user_name: password.user_name,
                 password: password.password,
                 access_employee: user,
-                note: password.note
+                note: password.note.trim()
             })
         } else {
             url = customAxios().post('/password', {
@@ -186,7 +174,7 @@ const AddPasswordForm = (props) => {
                 user_name: password.user_name,
                 password: password.password,
                 access_employee: user,
-                note: password.note
+                note: password.note.trim()
             })
         }
         setIsLoading(true);
@@ -207,7 +195,6 @@ const AddPasswordForm = (props) => {
                 setTitleError("");
                 setUrlError("");
                 setuserNameError("");
-                setnoteError("");
                 setPasswordError("");
                 setError([]);
                 setIsLoading(false);
@@ -288,8 +275,7 @@ const AddPasswordForm = (props) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="note" className='mt-3'>Note</label>
-                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} onBlur={noteValidation} />
-                                                {noteError && <small id="note" className="form-text error">{noteError}</small>}
+                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} />
                                             </div>
                                         </div>
                                         {error.length !== 0 &&
