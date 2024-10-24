@@ -29,7 +29,7 @@ const Leave = () => {
     const [id, setid] = useState("");
     const [subLoading, setsubLoading] = useState(false);
 
-    let { getLeave, user_id, setuser_id, leave,get_username, startDate, leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
+    let { getLeave, user_id, setuser_id, leave, get_username, startDate, leaveLoading, leaveSetting, permissionToggle, setStartDate, endDate, setendtDate, Loading, permission, serverError, userName, HandleFilter } = useContext(AppProvider);
     const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(25);
 
     const statusField = ["Approved", "Declined"]
@@ -48,7 +48,7 @@ const Leave = () => {
 
     useEffect(() => {
         get_username();
-    },[])
+    }, [])
 
     // status change modal SHOW
     const handlesshowModal = (status, id) => {
@@ -185,7 +185,7 @@ const Leave = () => {
     // eslint-disable-next-line
     const actionToggle = useMemo(() => {
         if (permission) {
-            if (permission.permissions.update === 1 || permission.permissions.delete === 1) {
+            if ((permission.permissions.update === 1 || permission.permissions.delete === 1) && (leave.some((l) => l.status === "Pending" || l.status === "Read") || permission.name?.toLowerCase() === "admin")) {
                 return true
             } else {
                 return false
@@ -374,16 +374,15 @@ const Leave = () => {
                                                     <TableCell>{val.reason}</TableCell>
                                                     <TableCell>{moment(val.createdAt).format("DD MMM YYYY")}</TableCell>
                                                     <TableCell>
-                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date() && new Date(val.to_date) < new Date()) || (permission && permission.name?.toLowerCase() !== "admin")} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
+                                                        <button className={`${val.status === "Declined" ? "btn-gradient-danger" : val.status === "Approved" ? "btn-gradient-success" : val.status === "Pending" ? "btn-gradient-secondary" : "btn-gradient-info"} btn status-label`} disabled={permission?.name?.toLowerCase() !== "admin"} onClick={() => handlesshowModal(val.status, val._id)}>{val.status}</button>
                                                     </TableCell>
                                                     {actionToggle &&
                                                         <TableCell>
                                                             <div className='action'>
-                                                                {/* eslint-disable-next-line no-mixed-operators */}
-                                                                {(permission && permission.permissions.update === 1 && (val.status !== 'Approved' && val.status !== "Declined") ||
-                                                                    !((val.status !== 'Pending' && val.status !== 'Read') && new Date(val.from_date) < new Date() && new Date(val.to_date) < new Date())) &&
-                                                                    <LeaveModal setStartDate={setStartDate} setendtDate={setendtDate} setuser_id={setuser_id} data={val} permission={permission} userName={userName}/>}
-                                                                <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>
+                                                                {permission?.permissions?.update === 1 && (permission?.name?.toLowerCase() === "admin" || (val.status !== "Approved" && val.status !== "Declined")) &&
+                                                                    <LeaveModal setStartDate={setStartDate} setendtDate={setendtDate} setuser_id={setuser_id} data={val} permission={permission} userName={userName} />}
+                                                                {permission?.permissions?.delete === 1 && (permission?.name?.toLowerCase() === "admin" || (val.status !== "Approved" && val.status !== "Declined")) &&
+                                                                    <i className="fa-solid fa-trash-can" onClick={() => handleDelete(val._id)}></i>}
                                                             </div>
                                                         </TableCell>}
                                                 </TableRow>
