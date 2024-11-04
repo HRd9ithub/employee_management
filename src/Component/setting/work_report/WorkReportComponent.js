@@ -301,46 +301,23 @@ const WorkReportComponent = () => {
                             </div>
                             <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
                                 <div className="d-flex justify-content-end align-items-center w-100" style={{ gap: '15px' }}>
-                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                        <div className="search-full w-25 pr-0 hide-at-small-screen">
-                                            <div className="form-group mb-0">
-                                                <select className="form-control mb-0" id="employee" name='data' value={user_id} onChange={userChange} >
-                                                    <option value="">Select employee</option>
-                                                    {userName.map((val) => {
-                                                        return (
-                                                            val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </div>
-                                        </div>}
-                                    <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
-                                        <div className="form-group mb-0 position-relative">
-                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback} ><input className="form-control mb-0" /></DateRangePicker>
-                                            <CalendarMonthIcon className="range_icon" />
-                                        </div>
-                                    </div>
-                                    {permission && permission.name.toLowerCase() === "admin" &&
-                                        <button
-                                            className='btn btn-gradient-primary btn-rounded btn-fw text-center hide-at-small-screen' onClick={generateReport} >
-                                            <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
-                                        </button>}
+                                    <NavLink to="/work-report/request-view" className="btn btn-gradient-primary btn-rounded btn-fw text-center">View Request</NavLink>
                                     {permission && permission.name.toLowerCase() !== "admin" && <WorkReportModal permission={permission && permission} getReport={getReport} isRequest={true} setuser_id={setuser_id} />}
                                     <WorkReportModal permission={permission && permission} getReport={getReport} setuser_id={setuser_id} />
                                     {permission && permission.name.toLowerCase() === "admin" && <DowlonadReport />}
                                 </div>
                             </div>
                         </div>
-                        <div className='container-fluid show-at-small-screen'>
+                        <div className='container-fluid'>
                             <div className='row'>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 pr-lg-0'>
                                         <div className="form-group mb-0">
                                             <select className="form-control mt-3" id="employee" name='data' value={user_id} onChange={userChange} >
                                                 <option value="">All</option>
                                                 {userName.map((val) => {
                                                     return (
-                                                        <option key={val._id} value={val._id}>{val.name}</option>
+                                                        val?.role?.toLowerCase() !== "admin" && <option key={val._id} value={val._id}>{val.name}</option>
                                                     )
                                                 })}
                                             </select>
@@ -353,7 +330,7 @@ const WorkReportComponent = () => {
                                     </div>
                                 </div>
                                 {permission && permission.name.toLowerCase() === "admin" &&
-                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4'>
+                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 px-lg-0'>
                                         <button
                                             className='btn btn-gradient-primary btn-rounded btn-fw text-center mt-3' onClick={generateReport} >
                                             <i className="fa-solid fa-plus" ></i>&nbsp;Generate Report
