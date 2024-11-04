@@ -31,64 +31,66 @@ import ClientComponent from '../accounting/client/ClientComponent';
 import NotificationPage from '../NotificationPage';
 import ChatBot from '../chat_bot/index';
 import ProjectWorkReportComponent from '../setting/project_wise_work_report';
+import RequestView from '../setting/work_report/RequestView';
 
-const AppRoute = ({setProgress}) => {
+const AppRoute = ({ setProgress }) => {
     return (
-            <Routes>
-                {/* login route */}
-                <Route exact path='/login' element={<ProtectedRoute authentication={false}><Login /></ProtectedRoute>}></Route>
-                <Route exact path='/otp' element={<ProtectedRoute authentication={false}><OtpVerification /></ProtectedRoute>}></Route>
-                <Route exact path='/forgot-password' element={<ProtectedRoute authentication={false}><ForgotPassword /></ProtectedRoute>}></Route>
-                <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><ResetPassword /></ProtectedRoute>}></Route>
-                {/* dashboard */}
-                <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
-                {/* notification route */}
-                <Route exact path='/notification' element={<ProtectedRoute authentication={true}><NotificationPage /></ProtectedRoute>}></Route>
-                {/* profile path */}
-                <Route exact path='/profile/:id' element={GetLocalStorage("token") ? <EmployeeViewComponent /> : <Navigate to="/login" />}></Route>
-                {/* employee route */}
-                <Route path="/employees">
-                    <Route index element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>} />
-                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
-                    <Route path="view/:id" element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>} />
-                </Route>
-                <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
-                <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
-                {/* leave route */}
-                <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><HolidayComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
-                <Route exact path='/leaves' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
-                {/* document component */}
-                <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
-                {/* activity component */}
-                <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
-                {/* setting route */}
-                <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
-                <Route exact path='/work-report/employee' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/work-report/project' element={<ProtectedRoute authentication={true} ><ProjectWorkReportComponent /></ProtectedRoute>}></Route>
-                <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
-                <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
-                {/* attendance route */}
-                <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent/></ProtectedRoute>}></Route>
-                <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance/></ProtectedRoute>}></Route>
-                {/* invoice route */}
-                <Route path="/invoice">
-                    <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
-                    <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
-                    <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
-                    <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>} /> 
-                    {/* <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} />  */}
-                    <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} /> 
-                </Route>       
-                {/* client route */}
-                <Route path="/client">
-                    <Route index element={<ProtectedRoute authentication={true}><ClientComponent /></ProtectedRoute>} />
-                </Route>      
-                 {/*chat-bot  */}
-                 <Route path='/chat-bot' element={<ProtectedRoute authentication={true}><ChatBot /></ProtectedRoute>} />
-                {/*  route not match call this route */}
-                <Route path="*" element={<Error404 />} />
-            </Routes>
+        <Routes>
+            {/* login route */}
+            <Route exact path='/login' element={<ProtectedRoute authentication={false}><Login /></ProtectedRoute>}></Route>
+            <Route exact path='/otp' element={<ProtectedRoute authentication={false}><OtpVerification /></ProtectedRoute>}></Route>
+            <Route exact path='/forgot-password' element={<ProtectedRoute authentication={false}><ForgotPassword /></ProtectedRoute>}></Route>
+            <Route exact path='/reset-password' element={<ProtectedRoute authentication={false}><ResetPassword /></ProtectedRoute>}></Route>
+            {/* dashboard */}
+            <Route exact path='/' element={<ProtectedRoute authentication={true}><Dashboard /></ProtectedRoute>}></Route>
+            {/* notification route */}
+            <Route exact path='/notification' element={<ProtectedRoute authentication={true}><NotificationPage /></ProtectedRoute>}></Route>
+            {/* profile path */}
+            <Route exact path='/profile/:id' element={GetLocalStorage("token") ? <EmployeeViewComponent /> : <Navigate to="/login" />}></Route>
+            {/* employee route */}
+            <Route path="/employees">
+                <Route index element={<ProtectedRoute authentication={true}><Employee /></ProtectedRoute>} />
+                <Route path='edit/:id' element={<ProtectedRoute authentication={true}><EmployeeEditForm /></ProtectedRoute>}></Route>
+                <Route path="view/:id" element={<ProtectedRoute authentication={true}><EmployeeViewComponent /></ProtectedRoute>} />
+            </Route>
+            <Route exact path='/project' element={<ProtectedRoute authentication={true}><Project /></ProtectedRoute>}></Route>
+            <Route exact path='/designation' element={<ProtectedRoute authentication={true}><Designation /></ProtectedRoute>}></Route>
+            {/* leave route */}
+            <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><HolidayComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
+            <Route exact path='/leaves' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
+            {/* document component */}
+            <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
+            {/* activity component */}
+            <Route exact path='/activity' element={<ProtectedRoute authentication={true} ><ActivityComponent /></ProtectedRoute>}></Route>
+            {/* setting route */}
+            <Route exact path='/user-role' element={<ProtectedRoute authentication={true}><UserRole /></ProtectedRoute>}></Route>
+            <Route exact path='/work-report/employee' element={<ProtectedRoute authentication={true} ><WorkReportComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/work-report/request-view' element={<ProtectedRoute authentication={true} ><RequestView /></ProtectedRoute>}></Route>
+            <Route exact path='/work-report/project' element={<ProtectedRoute authentication={true} ><ProjectWorkReportComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
+            <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
+            {/* attendance route */}
+            <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance /></ProtectedRoute>}></Route>
+            {/* invoice route */}
+            <Route path="/invoice">
+                <Route index element={<ProtectedRoute authentication={true}><InvoiceComponent /></ProtectedRoute>} />
+                <Route path='edit/:id' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
+                <Route path='duplicate/:duplicateId' element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>}></Route>
+                <Route path="create" element={<ProtectedRoute authentication={true}><InvoiceFormComponent setProgress={setProgress} /></ProtectedRoute>} />
+                {/* <Route path="payment/:id" element={<ProtectedRoute authentication={true}><AccountFormComponent /></ProtectedRoute>} />  */}
+                <Route path="preview/:id" element={<ProtectedRoute authentication={true}><InvoicePreviewComponent /></ProtectedRoute>} />
+            </Route>
+            {/* client route */}
+            <Route path="/client">
+                <Route index element={<ProtectedRoute authentication={true}><ClientComponent /></ProtectedRoute>} />
+            </Route>
+            {/*chat-bot  */}
+            <Route path='/chat-bot' element={<ProtectedRoute authentication={true}><ChatBot /></ProtectedRoute>} />
+            {/*  route not match call this route */}
+            <Route path="*" element={<Error404 />} />
+        </Routes>
     );
 }
 
