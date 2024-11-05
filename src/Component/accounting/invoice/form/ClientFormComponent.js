@@ -62,7 +62,8 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                 profile_image: process.env.REACT_APP_IMAGE_API + "/" + data.profile_image,
                 GSTIN: data.GSTIN ? data.GSTIN : "",
                 pan_number: data.pan_number ? data.pan_number : "",
-            })
+            });
+            setImage(data.profile_image);
         }
         setModalShow(true);
     }
@@ -236,7 +237,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
 
         let { business_name, client_industry, email, phone, country, state, city, address, postcode, GSTIN, pan_number } = client;
 
-        if (!business_name || !address ) {
+        if (!business_name || !address) {
             return false;
         } else if (businessNameError || emailError || phoneError || countryError || stateError || cityError || postcodeError || addressError || GSTINError) {
             return false;
