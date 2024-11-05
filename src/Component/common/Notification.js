@@ -137,7 +137,7 @@ const Notification = () => {
                                             <div>
                                                 <div className="notification-image">
                                                     {item.user.profile_image &&
-                                                        <img src={item.user.profile_image} alt="img" />}
+                                                        <img src={`${item.user.profile_image && process.env.REACT_APP_IMAGE_API}/${item.user.profile_image}`} alt="img" />}
                                                 </div>
                                             </div>
                                             <div className="notification-details w-100">
