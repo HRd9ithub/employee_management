@@ -1,9 +1,10 @@
-import React, { useReducer, createContext, useState, useRef } from 'react'
+import React, { useReducer, createContext, useState, useRef, useEffect } from 'react'
 import { RouteReducer } from './RouteReducer';
 import { toast } from 'react-hot-toast';
 import { GetLocalStorage, SetLocalStorage } from '../../service/StoreLocalStorage';
 import { customAxios } from '../../service/CreateApi';
 import moment from 'moment';
+import { useLocation } from 'react-router-dom';
 
 // create context
 let AppProvider = createContext();
@@ -34,6 +35,7 @@ const RouteContext = ({ children }) => {
     // sidebar toggle
     const [sidebarToggle, setSidebarToggle] = useState(false)
     let sidebarRef = useRef(null);
+    const location = useLocation();
 
     // use reducer
     const [state, dispatch] = useReducer(RouteReducer, initialistate)
@@ -154,6 +156,14 @@ const RouteContext = ({ children }) => {
         let data = name;
         dispatch({ type: "SERACH_FILTER", payload: data })
     }
+
+    useEffect(() => {
+        if (location.pathname !== "/leaves") {
+            setStartDate(moment().clone().startOf('month'));
+            setendtDate(moment().clone().endOf('month'));
+            setuser_id("");
+        }
+    }, [location.pathname]);
 
     return (
         <AppProvider.Provider value={{ ...state, user_id, setuser_id, startDate, setStartDate, endDate, setendtDate, HandleFilter, get_username, getReportPreview, logoToggle, id, getLeave, setlogoToggle, setSidebarToggle, sidebarRef, sidebarToggle, getUserData, getLeaveNotification, setLoading, Loading }}>

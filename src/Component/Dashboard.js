@@ -152,9 +152,22 @@ const Dashboard = () => {
           setuser_id("");
           localStorage.setItem("leave_for", value);
           navigate("/leaves");
+          const firstDate = (value === "Full" && absentTodayCount !== 0) || (value === "Half" && halfLeaveToday !== 0)
+          const lastDate = (value === "Full" && absentTodayCount !== 0) || (value === "Half" && halfLeaveToday !== 0)
+
+          const filterLeaveData = todayLeave.filter((val) => value === "Full" ? !val.leave_for : val.leave_for);
           // getLeave(new Date(), new Date());
-          setStartDate(new Date());
-          setendtDate(new Date());
+          const { minDate, maxDate } = filterLeaveData.reduce(
+               (acc, obj) => {
+                    return {
+                         minDate: acc.minDate < obj.from_date ? acc.minDate : obj.from_date,
+                         maxDate: acc.maxDate > obj.to_date ? acc.maxDate : obj.to_date
+                    };
+               },
+               { minDate: firstDate ? filterLeaveData[0].from_date : new Date(), maxDate: lastDate ? filterLeaveData[0].to_date : new Date() }
+          );
+          setStartDate(new Date(minDate));
+          setendtDate(new Date(maxDate));
      }
 
      const leaveRequestClick = () => {
@@ -224,7 +237,7 @@ const Dashboard = () => {
                                         <div className="mb-4 mt-lg-0 mt-xl-0 mt-2 position-relative box-dashboard col-xl-3 col-md-4 col-sm-6" onClick={() => {
                                              SetLocalStorage("status", "Active")
                                              navigate("/employees");
-                                             }}>
+                                        }}>
                                              <NavLink className="common-box-dashboard position-relative h-100 Present nav-link">
                                                   <img src={require("../assets/images/dashboard/circle.png")} className="card-img-absolute" alt="circle" />
                                                   <div className="common-info-dashboard">
@@ -281,7 +294,7 @@ const Dashboard = () => {
                                                        highlight.push(subDays(new Date(date), 0));
                                                   })
                                                   return (
-                                                       <DatePickers inline selected={startDate} onSelect={handleChange} highlightDates={highlight} dayClassName={dayClassNames}/>
+                                                       <DatePickers inline selected={startDate} onSelect={handleChange} highlightDates={highlight} dayClassName={dayClassNames} />
                                                   );
                                              })()}
                                         </div>
