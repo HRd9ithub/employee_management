@@ -18,7 +18,7 @@ const Notification = () => {
     // status change
     const notificationStatusChange = async (item) => {
         const { date, _id, status } = item;
-        if (status === "Pending" || (item.deleteAt &&  item.isNotificationStatus)) {
+        if (status === "Pending" || (item.deleteAt && item.isNotificationStatus)) {
             if (date) {
                 try {
                     setisLoading(true);
@@ -59,7 +59,7 @@ const Notification = () => {
                 } else {
                     try {
                         setisLoading(true);
-                        const res = await customAxios().patch(`/leave/${_id}`, { status: item.deleteAt ? status :"Read" })
+                        const res = await customAxios().patch(`/leave/${_id}`, { status: item.deleteAt ? status : "Read" })
                         if (res.data.success) {
                             setisLoading(false);
                             history('/leaves')
@@ -75,7 +75,7 @@ const Notification = () => {
                             toast.error(error.response.data.message)
                         }
                     };
-                  
+
                 }
             }
         } else {
@@ -106,7 +106,7 @@ const Notification = () => {
             if (res.data.success) {
                 getLeaveNotification();
                 setisLoading(false)
-            }  
+            }
         } catch (error) {
             setisLoading(false)
             if (!error.response) {
@@ -137,7 +137,7 @@ const Notification = () => {
                                             <div>
                                                 <div className="notification-image">
                                                     {item.user.profile_image &&
-                                                        <img src={`${item.user.profile_image && process.env.REACT_APP_IMAGE_API}/${item.user.profile_image}`} alt="img" />}
+                                                        <img src={item.user.profile_image} alt="img" />}
                                                 </div>
                                             </div>
                                             <div className="notification-details w-100">
