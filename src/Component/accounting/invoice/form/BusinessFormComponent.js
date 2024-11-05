@@ -57,6 +57,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                 GSTIN: data.GSTIN ? data.GSTIN : "",
                 pan_number: data.pan_number ? data.pan_number : "",
             })
+            setImage(data.profile_image);
         }
         setModalShow(true);
     }
@@ -150,7 +151,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
             } else {
                 setphoneError("");
             }
-        }else {
+        } else {
             setphoneError("");
         }
     }
