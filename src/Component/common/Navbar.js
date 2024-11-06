@@ -12,17 +12,17 @@ import Notification from './Notification';
 const Navbar = () => {
   // initialistate 
   const [sidebar, setsidebar] = useState(false);
+  const [notificationApiToggle, setNotificationApiToggle] = useState(false);
   // page redirect
   let history = useNavigate();
   // Global state
   let { handleLogout, loading } = Globalcomponent();
-  let { UserData,  getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle, Loading } = useContext(AppProvider);
+  let { UserData, getLeaveNotification, getUserData, setSidebarToggle, sidebarToggle, sidebarRef, setlogoToggle, Loading } = useContext(AppProvider);
 
   // mobile screen toggle sidebar 
   const toggleOffcanvas = () => {
     setSidebarToggle(!sidebarToggle)
   }
- 
   // sidebar toggle in localstorage
   useEffect(() => {
     const data = localStorage.getItem("sidebarToggle")
@@ -47,8 +47,9 @@ const Navbar = () => {
 
   // get leave notification
   useEffect(() => {
-    if (GetLocalStorage("token") && UserData && UserData?.role?.name.toLowerCase() === "admin") {
+    if (GetLocalStorage("token") && UserData && UserData?.role?.name.toLowerCase() === "admin" && !notificationApiToggle) {
       getLeaveNotification();
+      setNotificationApiToggle(true);
     }
     // eslint-disable-next-line
   }, [UserData])
