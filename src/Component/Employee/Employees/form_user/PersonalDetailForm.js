@@ -7,14 +7,14 @@ import { useContext } from "react";
 import { AppProvider } from "../../../context/RouteContext.js";
 import { useRef } from 'react';
 import Spinner from "../../../common/Spinner.js";
-import {  useMatch, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import { GetLocalStorage } from "../../../../service/StoreLocalStorage.js";
 import moment from "moment";
 import { customAxios } from "../../../../service/CreateApi.js";
 import { alphabetFormat, emailFormat, numberFormat } from "../../../common/RegaulrExp.js";
 import ErrorComponent from "../../../common/ErrorComponent.js";
 
-function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value }) {
+function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value, permission }) {
 
     const [employee, setEmployee] = useState({
         first_name: "",
@@ -63,7 +63,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const [marritialError, setmeritialerror] = useState("");
 
 
-    let { getUserData ,get_username,loading,userName} = useContext(AppProvider);
+    let { getUserData, get_username, loading, userName } = useContext(AppProvider);
 
     let history = useNavigate();
     // get path name
@@ -103,14 +103,14 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             } catch (error) {
                 if (!error.response) {
                     toast.error(error.message)
-                }else {
+                } else {
                     if (error.response.data.message) {
                         toast.error(error.response.data.message)
                     }
                 }
             } finally { setisLoading(false) }
         };
-     
+
         if (!value) {
             get_username();
             get_role();
@@ -131,11 +131,13 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
     const InputEvent = (event) => {
         let { name, value } = event.target;
 
-        const staticName = ["postcode","phone"]
+        const staticName = ["postcode", "phone"]
 
-        if(staticName.includes(name)){
+        if (staticName.includes(name)) {
             value = value.replace(/[^0-9]/g, "");
         }
+
+        if (name === "email" && !permission) return;
 
         setEmployee({ ...employee, [name]: value });
     };
@@ -145,7 +147,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
         const today = new Date().getFullYear();
         const birthDate = new Date(date).getFullYear();
         setEmployee({ ...employee, age: today - birthDate, date_of_birth: date });
-    }; 
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -165,7 +167,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
         genderValidation();
         bloodgroupValidation();
         marritalvalidation();
-        
+
         if (match) {
             designationValidation();
             roleValidation();
@@ -173,9 +175,9 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
             reportValidation()
         }
         setError([]);
-        
-        if (value === "Personal"){
-            if ( !first_name || !last_name || !email || !phone || !country || !maried_status || !state || !blood_group || !date_of_birth || !address || !city || !postcode || !gender) {
+
+        if (value === "Personal") {
+            if (!first_name || !last_name || !email || !phone || !country || !maried_status || !state || !blood_group || !date_of_birth || !address || !city || !postcode || !gender) {
                 return false
             }
             if (countryError || marritialError || stateError || bloodgroupError || dateofbirthError || addressError || cityError || postcodeError || genderError || firstNameError || lastNameError || emailError || phoneError) {
@@ -283,28 +285,7 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
         } else if (!emailFormat.test(employee.email)) {
             setemailError("Email must be a valid email.");
         } else {
-            if (userDetail.email === employee.email) {
-                setemailError("")
-            } else {
-                setisLoading(true)
-                customAxios().post('/user/email', { email: employee.email }).then((response) => {
-                    if (response.data.success) {
-                        setemailError("")
-                    }
-                }).catch((error) => {
-                    if (!error.response) {
-                        toast.error(error.message);
-                    } else {
-                        if (error.response.data.message) {
-                            toast.error(error.response.data.message)
-                        } else {
-                            setemailError(error.response.data.error);
-                        }
-                    }
-                }).finally(() => {
-                    setisLoading(false)
-                })
-            }
+            setemailError("");
         }
     }
 
@@ -475,105 +456,105 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
 
 
                 <div className="row">
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputfname">First Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onBlur={firstNameValidation} />
-                                {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
-                            </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputfname">First Name</label>
+                            <input type="text" className="form-control text-capitalize" id="exampleInputfname" placeholder="Enter First name" name="first_name" value={employee.first_name || ""} onChange={InputEvent} onBlur={firstNameValidation} />
+                            {firstNameError && <small id="emailHelp" className="form-text error">{firstNameError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputlname">Last Name</label>
-                                <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onBlur={lastNameValidation} />
-                                {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputlname">Last Name</label>
+                            <input type="text" className="form-control text-capitalize" id="exampleInputlname" placeholder="Enter last name" name="last_name" value={employee.last_name || ""} onChange={InputEvent} onBlur={lastNameValidation} />
+                            {lastNameError && <small id="emailHelp" className="form-text error">{lastNameError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputEmail1">Email Address</label>
-                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value={employee.email || ""} onChange={InputEvent} onBlur={checkEmail} />
-                                {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputEmail1">Email Address</label>
+                            <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value={employee.email || ""} onChange={InputEvent} onBlur={checkEmail} disabled={!permission} />
+                            {emailError && <small id="emailHelp" className="form-text error">{emailError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputphone">Mobile No.</label>
-                                <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onBlur={phoneValidation} inputMode="numeric" />
-                                {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputphone">Mobile No.</label>
+                            <input type="tel" className="form-control" id="exampleInputphone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" value={employee.phone || ""} onChange={InputEvent} onBlur={phoneValidation} inputMode="numeric" />
+                            {phoneError && <small id="emailHelp" className="form-text error">{phoneError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputAddress">Address</label>
-                                <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onBlur={addressValidation} />
-                                {addressError && <small id="emailHelp" className="form-text error">{addressError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputAddress">Address</label>
+                            <input type="text" className="form-control" id="exampleInputAddress" placeholder="Enter address" name="address" value={employee.address || ""} onChange={InputEvent} onBlur={addressValidation} />
+                            {addressError && <small id="emailHelp" className="form-text error">{addressError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputcity">Country</label>
-                                <select className="form-control" name="country" value={employee.country} onChange={InputEvent} onBlur={countryValidation}>
-                                    <option value="country">Select country</option>
-                                    {country.map((elem, ind) => {
-                                        return (
-                                            <option key={ind} value={elem}>
-                                                {elem}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                                {countryError && <small id="emailHelp" className="form-text error">{countryError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputcity">Country</label>
+                            <select className="form-control" name="country" value={employee.country} onChange={InputEvent} onBlur={countryValidation}>
+                                <option value="country">Select country</option>
+                                {country.map((elem, ind) => {
+                                    return (
+                                        <option key={ind} value={elem}>
+                                            {elem}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                            {countryError && <small id="emailHelp" className="form-text error">{countryError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputState">State</label>
-                                <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onBlur={stateValidation} />
-                                {stateError && <small id="emailHelp" className="form-text error">{stateError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputState">State</label>
+                            <input type="text" className="form-control" id="exampleInputState" placeholder="Enter state" name="state" value={employee.state || ""} onChange={InputEvent} onBlur={stateValidation} />
+                            {stateError && <small id="emailHelp" className="form-text error">{stateError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputcity">City</label>
-                                <input
-                                    type="text"
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputcity">City</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="exampleInputcity"
+                                placeholder="Enter city"
+                                name="city"
+                                value={employee.city || ""}
+                                onChange={InputEvent}
+                                onBlur={cityValidate}
+                            />
+                            {cityError && <small id="emailHelp" className="form-text error">{cityError}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputPostcode">Postcode</label>
+                            <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onBlur={postcodeValidation} />
+                            {postcodeError && <small id="emailHelp" className="form-text error">{postcodeError}</small>}
+                        </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group position-relative">
+                            <label htmlFor="exampleInputDate">Date Of Birth</label>
+                            <div onClick={() => { birthDateRef.current.showPicker(); }}>
+                                <input type="date"
                                     className="form-control"
-                                    id="exampleInputcity"
-                                    placeholder="Enter city"
-                                    name="city"
-                                    value={employee.city || ""}
-                                    onChange={InputEvent}
-                                    onBlur={cityValidate}
+                                    value={employee.date_of_birth ? moment(employee.date_of_birth).format("YYYY-MM-DD") : ""}
+                                    ref={birthDateRef}
+                                    onChange={(e) => { handleagechange(e.target.value); }}
+                                    autoComplete='off'
+                                    onBlur={handleDateOfBorthValidation}
+                                    max={moment(new Date()).format("YYYY-MM-DD")}
                                 />
-                                {cityError && <small id="emailHelp" className="form-text error">{cityError}</small>}
+                                <CalendarMonthIcon className='calendar-icon' />
                             </div>
+                            {dateofbirthError && <small id="emailHelp" className="form-text error">{dateofbirthError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputPostcode">Postcode</label>
-                                <input type="text" className="form-control" id="exampleInputPostcodee" placeholder="Enter Postcode" name="postcode" value={employee.postcode || ""} maxLength={6} onChange={InputEvent} onBlur={postcodeValidation} />
-                                {postcodeError && <small id="emailHelp" className="form-text error">{postcodeError}</small>}
-                            </div>
-                        </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group position-relative">
-                                <label htmlFor="exampleInputDate">Date Of Birth</label>
-                                <div onClick={() => { birthDateRef.current.showPicker(); }}>
-                                    <input type="date"
-                                        className="form-control"
-                                        value={employee.date_of_birth ? moment(employee.date_of_birth).format("YYYY-MM-DD") : ""}
-                                        ref={birthDateRef}
-                                        onChange={(e) => { handleagechange(e.target.value); }}
-                                        autoComplete='off'
-                                        onBlur={handleDateOfBorthValidation}
-                                        max={moment(new Date()).format("YYYY-MM-DD")}
-                                    />
-                                    <CalendarMonthIcon className='calendar-icon' />
-                                </div>
-                                {dateofbirthError && <small id="emailHelp" className="form-text error">{dateofbirthError}</small>}
-                            </div>
-                        </div>
+                    </div>
                     {match &&
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <div className="form-group position-relative">
@@ -592,41 +573,41 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                                 {joningDateError && <small id="emailHelp" className="form-text error">{joningDateError}</small>}
                             </div>
                         </div>}
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputgender">Gender</label>
-                                <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={InputEvent} onBlur={genderValidation}>
-                                    <option value="Select Gender">Select Gender</option>
-                                    <option value="Male"> Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                                {genderError && <small id="emailHelp" className="form-text error">{genderError}</small>}
-                            </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputgender">Gender</label>
+                            <select className="form-control" id="exampleInputgender" name="gender" value={employee.gender || ""} onChange={InputEvent} onBlur={genderValidation}>
+                                <option value="Select Gender">Select Gender</option>
+                                <option value="Male"> Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            {genderError && <small id="emailHelp" className="form-text error">{genderError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputAge">Age</label>
-                                <input type="number" className="form-control" id="exampleInputAge" placeholder="Enter Age" name="age" value={employee.age || "0"} disabled />
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputAge">Age</label>
+                            <input type="number" className="form-control" id="exampleInputAge" placeholder="Enter Age" name="age" value={employee.age || "0"} disabled />
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputBlood">Blood Group</label>
-                                <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onBlur={bloodgroupValidation} />
-                                {bloodgroupError && <small id="emailHelp" className="form-text error">{bloodgroupError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputBlood">Blood Group</label>
+                            <input type="text" className="form-control" id="exampleInputBlood" placeholder="Enter Blood Group" name="blood_group" value={employee.blood_group || ""} onChange={InputEvent} onBlur={bloodgroupValidation} />
+                            {bloodgroupError && <small id="emailHelp" className="form-text error">{bloodgroupError}</small>}
                         </div>
-                        <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
-                            <div className="form-group">
-                                <label htmlFor="exampleInputMARIIT">Marital Status</label>
-                                <select className="form-control" id="exampleInputMARIIT" name="maried_status" value={employee.maried_status || ""} onChange={InputEvent} onBlur={marritalvalidation}>
-                                    <option value="0">Select Marital Status</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Unmarried">Unmarried</option>
-                                </select>
-                                {marritialError && <small id="emailHelp" className="form-text error">{marritialError}</small>}
-                            </div>
+                    </div>
+                    <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
+                        <div className="form-group">
+                            <label htmlFor="exampleInputMARIIT">Marital Status</label>
+                            <select className="form-control" id="exampleInputMARIIT" name="maried_status" value={employee.maried_status || ""} onChange={InputEvent} onBlur={marritalvalidation}>
+                                <option value="0">Select Marital Status</option>
+                                <option value="Married">Married</option>
+                                <option value="Unmarried">Unmarried</option>
+                            </select>
+                            {marritialError && <small id="emailHelp" className="form-text error">{marritialError}</small>}
                         </div>
+                    </div>
                     {match && <>
                         <div className="col-md-4 col-xl-3 pr-md-2 pl-md-2">
                             <Form.Group>
@@ -706,10 +687,10 @@ function PersonalDetailForm({ userDetail, getEmployeeDetail, handleClose, value 
                         </div>
                     </>}
                 </div>
-                {error.length !== 0 && 
+                {error.length !== 0 &&
                     <div className="row">
                         <div className="col-12 pl-md-2 pr-md-2">
-                           <ErrorComponent errors={error}/>
+                            <ErrorComponent errors={error} />
                         </div>
                     </div>}
                 <div className="row">

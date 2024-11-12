@@ -92,7 +92,7 @@ const EmployeeEditForm = () => {
 
   return (
     <>
-      <div className="container-fluid p-4"> 
+      <div className="container-fluid p-4">
         <div className="background-wrapper bg-white">
           <div className='row justify-content-start align-items-center row-std remove-margin-bottom m-0 px-4'>
             <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center p-0">
@@ -144,7 +144,7 @@ const EmployeeEditForm = () => {
 
               <div className="card-body">
                 {value === "Personal" ?
-                  <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} />
+                  <PersonalDetailForm userDetail={userDetail} getEmployeeDetail={getEmployeeDetail} permission={permission?.name?.toLowerCase() === "admin"} />
                   : value === "Account" ?
                     <AccountForm
                       userDetail={userDetail}
@@ -165,13 +165,13 @@ const EmployeeEditForm = () => {
                         : value === "login" ?
                           <LoginInfo userId={userId} />
                           :
-                          value === "leave-setting" ? 
-                           <LeaveSettingComponent userId={userId} />
-                          :
-                          <EmergencyForm
-                            userDetail={userDetail}
-                            getEmployeeDetail={getEmployeeDetail}
-                            userId={userId} />
+                          value === "leave-setting" ?
+                            <LeaveSettingComponent userId={userId} />
+                            :
+                            <EmergencyForm
+                              userDetail={userDetail}
+                              getEmployeeDetail={getEmployeeDetail}
+                              userId={userId} />
                 }
               </div>
             </div>
