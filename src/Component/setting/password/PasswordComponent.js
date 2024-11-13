@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from "framer-motion";
 import AddPasswordForm from './AddPasswordForm';
@@ -26,6 +26,7 @@ const PasswordComponent = () => {
   const [records, setRecords] = useState([]);
   const [view, setView] = useState("");
   const [permissionToggle, setPermissionToggle] = useState(true);
+  const [searchItem, setsearchItem] = useState("");
 
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
@@ -113,6 +114,16 @@ const PasswordComponent = () => {
     })
   };
 
+  const recordsFilter = useMemo(() => {
+    return records.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.url.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item?.created?.first_name?.concat(" ", item?.created?.last_name)?.toLowerCase()?.includes(searchItem.toLowerCase())
+      )
+    });
+  }, [records, searchItem]);
+
   // outside click 
   useEffect(() => {
     const toggleSidebars = (e) => {
@@ -167,12 +178,22 @@ const PasswordComponent = () => {
                 </div>
               </div>
               <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
+                <div className="search-full">
+                  <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
+                  <i className="fas fa-search"></i>
+                </div>
+                <div className="search-box mr-3">
+                  <form name="search-inner">
+                    <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
+                  </form>
+                  <i className="fas fa-search"></i>
+                </div>
                 {permission && permission.permissions.create === 1 && <AddPasswordForm getPasswordRecord={getPasswordRecord} />}
               </div>
             </div>
-            {records.length !== 0 ?
+            {recordsFilter.length !== 0 ?
               <div className="row justify-content-start align-items-center m-0 pb-3">
-                {records.map((item) => {
+                {recordsFilter.map((item) => {
                   return (
                     <div className="col-md-4 mt-3" key={item._id} >
                       <div className="password-info-box">
