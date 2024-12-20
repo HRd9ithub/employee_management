@@ -32,6 +32,7 @@ import NotificationPage from '../NotificationPage';
 import ChatBot from '../chat_bot/index';
 import ProjectWorkReportComponent from '../setting/project_wise_work_report';
 import RequestView from '../setting/work_report/RequestView';
+import NoteComponent from '../setting/notes';
 
 const AppRoute = ({ setProgress }) => {
     return (
@@ -70,6 +71,7 @@ const AppRoute = ({ setProgress }) => {
             <Route exact path='/work-report/project' element={<ProtectedRoute authentication={true} ><ProjectWorkReportComponent /></ProtectedRoute>}></Route>
             <Route exact path='/work-report/preview' element={<ProtectedRoute authentication={true} ><ReportPreview /></ProtectedRoute>}></Route>
             <Route exact path='/password' element={<ProtectedRoute authentication={true} ><PasswordComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/notes' element={<ProtectedRoute authentication={true} ><NoteComponent /></ProtectedRoute>}></Route>
             {/* attendance route */}
             <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent /></ProtectedRoute>}></Route>
             <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance /></ProtectedRoute>}></Route>

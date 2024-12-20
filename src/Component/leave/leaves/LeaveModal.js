@@ -8,16 +8,21 @@ import Spinner from '../../common/Spinner';
 import { customAxios } from '../../../service/CreateApi';
 import { useMemo } from 'react';
 import ErrorComponent from '../../common/ErrorComponent';
+import { SpellCheck } from '../../ai/SpellCheck';
+import { promptSend, reWritePrompt } from '../../../helper/prompt';
 
 const LeaveModal = (props) => {
-    let { data, setStartDate, setendtDate, setuser_id, permission,userName} = props;
+    let { data, setStartDate, setendtDate, setuser_id, permission, userName } = props;
     const [show, setShow] = useState(false);
     const [isLoading, setisLoading] = useState(false)
     const [leaveTypeDetail, setleaveTypeDetail] = useState([])
     const [page, setPage] = useState(false)
     const [id, setId] = useState('')
     const [error, setError] = useState([]);
-    const statusField = ["Approved", "Declined"]
+    const statusField = ["Approved", "Declined"];
+    const [prompt, setPrompt] = useState("");
+
+    const { loading, aiResponse } = SpellCheck();
 
     const [inputData, setInputData] = useState({
         user_id: "",
@@ -107,7 +112,8 @@ const LeaveModal = (props) => {
         settoDateError("");
         setreasonError("");
         setError([])
-        setPage(false)
+        setPage(false);
+        setPrompt("");
     }
 
     /*--------------------
@@ -250,6 +256,34 @@ const LeaveModal = (props) => {
         })
     }
 
+    const handleAIReWrite = () => {
+        aiResponse(reWritePrompt(inputData.reason)).then((correctedText) => {
+            setInputData({ ...inputData, reason: correctedText })
+        }).catch((error) => {
+            toast.error(error.message);
+        })
+    }
+
+    const handleAIGenerate = () => {
+        if (!prompt) {
+            toast.error("Prompt is required.");
+            return;
+        }
+        setisLoading(true)
+        aiResponse(promptSend(prompt)).then((correctedText) => {
+            setInputData({ ...inputData, reason: correctedText });
+            setPrompt("");
+            setreasonError("");
+        }).catch((error) => {
+            toast.error(error.message);
+        }).finally(() => {
+            setisLoading(false)
+        })
+    }
+
+    const handlePromptChange = (e) => {
+        setPrompt(e.target.value);
+    }
     return (
         <>
             {data ? <i className="fa-solid fa-pen-to-square" onClick={handleShow} ></i>
@@ -361,8 +395,15 @@ const LeaveModal = (props) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="reason">Leave Reason</label>
-                                                <Form.Control as="textarea" rows={4} name='reason' id='reason' onChange={handleChange} value={inputData.reason} onBlur={reasonValidate} />
-                                                {reasonError && <small id="reason" className="form-text error">{reasonError}</small>}
+                                                <div className='position-relative'>
+                                                    <Form.Control as="textarea" rows={6} name='reason' id='reason' onChange={handleChange} value={inputData.reason} onBlur={reasonValidate} />
+                                                    {inputData.reason.length > 3 && <button className='ai-button' type='button' onClick={handleAIReWrite} title='Improve it' disabled={loading}><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
+                                                </div>
+                                                {reasonError && <small id="reason" className="form-text error mb-1">{reasonError}</small>}
+                                                <div className='position-relative'>
+                                                    <Form.Control type='text' name='prompt' id='reason' placeholder='Write prompt' onChange={handlePromptChange} value={prompt} />
+                                                    <button type='button' className='prompt-send' disabled={isLoading} onClick={handleAIGenerate}><i class="fa-solid fa-paper-plane"></i></button>
+                                                </div>
                                             </div>
                                         </div>
                                         {(permission && permission.name && permission.name?.toLowerCase() === 'admin') &&

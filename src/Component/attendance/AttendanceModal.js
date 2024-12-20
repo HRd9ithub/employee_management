@@ -5,10 +5,12 @@ import moment from 'moment';
 import toast from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ErrorComponent from '../common/ErrorComponent';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import { SpellCheck } from '../ai/SpellCheck';
+import { reWritePrompt } from '../../helper/prompt';
 
 const AttendanceModal = ({ data = [], permission, attendance_regulations_data, timestamp }) => {
     const [show, setShow] = useState(false);
@@ -19,6 +21,7 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
         id: ""
     });
     const [isLoading, setisLoading] = useState(false);
+    const { loading, aiResponse } = SpellCheck();
 
     // error state
     const [clockInError, setClockInError] = useState("");
@@ -152,6 +155,14 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
         }).finally(() => setisLoading(false))
     }
 
+    const handleAIReWrite = () => {
+        aiResponse(reWritePrompt(initialState.explanation)).then((correctedText) => {
+            setInitialState({ ...initialState, explanation: correctedText })
+        }).catch((error) => {
+            toast.error(error.message);
+        })
+    }
+
     return (
         <>
             {((permission && permission.name.toLowerCase() !== "admin") || (permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data)) ?
@@ -208,7 +219,10 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="explanation">Explanation</label>
-                                                <textarea id='explanation' rows={4} cols={10} className="form-control" name="explanation" value={initialState.explanation} onChange={handleOnChange} onBlur={explanationValidation} />
+                                                <div className='position-relative'>
+                                                    <Form.Control as="textarea" id='explanation' rows={4} cols={10} className="form-control" name="explanation" value={initialState.explanation} onChange={handleOnChange} onBlur={explanationValidation} />
+                                                    {initialState?.explanation?.length > 3 && <button className='ai-button' type='button' onClick={handleAIReWrite} title='Improve it' disabled={loading}><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
+                                                </div>
                                                 {explanationError && <small id="explanation" className="form-text error">{explanationError}</small>}
                                             </div>
                                         </div>

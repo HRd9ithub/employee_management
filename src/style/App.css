@@ -29,6 +29,10 @@ body {
   font-family: 'Roboto', sans-serif !important;
 }
 
+pre {
+  font-family: 'Roboto', sans-serif !important;
+}
+
 h1,
 h2,
 h3,
@@ -1319,6 +1323,32 @@ span.eye-icon {
   color: #00336e !important;
 }
 
+.MuiButtonBase-root.MuiTabScrollButton-root.MuiTabScrollButton-horizontal.MuiTabs-scrollButtons.Mui-disabled {
+  opacity: unset;
+  cursor: not-allowed;
+  pointer-events: unset;
+}
+
+.MuiButtonBase-root.MuiTabScrollButton-root.MuiTabScrollButton-horizontal.MuiTabs-scrollButtons {
+  cursor: pointer;
+  width: 29px;
+  height: 30px;
+  margin: 0 8px;
+  font-size: 13px;
+  border-radius: 50%;
+  box-shadow: 1px 1px 5px #cccccc;
+  /* color: white !important; */
+  /* background-color: rgb(7, 75, 154); */
+  transition: all 0.3s ease;
+  right: 4px;
+  background: #ffff;
+}
+
+.profile-tab-header {
+  align-items: center;
+}
+
+/* 
 .tab-view .MuiTabs-indicator {
   width: 0 !important;
   background-color: transparent !important;
@@ -1331,7 +1361,7 @@ span.eye-icon {
 .tab-view .MuiTabs-flexContainer::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
-}
+} */
 
 .name_col {
   text-decoration: none !important;
@@ -1455,8 +1485,8 @@ span.eye-icon {
   display: flex;
   align-items: center;
   background: #0a4a92;
-  color: white !important;
-  padding: 0rem 1rem;
+  /* color: white !important; */
+  padding: 0rem 0.5rem;
 }
 
 .small-modal {
@@ -4157,28 +4187,35 @@ input[type="search"] {
   padding: 2px 8px !important;
 }
 
-.password-modal .modal-content {
+.password-modal .modal-content,
+.note-modal .modal-content,
+.note-modal .modal-content .card-body,
+.password-modal .modal-content .card-body {
   overflow: unset !important;
+}
+
+.note-modal .card .card-body {
+  padding: 1rem 1.5rem !important;
 }
 
 .password-modal .modal-dialog {
   max-width: 800px !important;
 }
 
-.password-modal .modal-content .card-body {
-  overflow: unset !important;
-}
-
 #password-action {
-  background: transparent !important;
   color: #000 !important;
   border: none !important;
   padding: 0 !important;
+  background-color: rgba(95, 99, 104, 0.157) !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 
 .password-info-box {
   border-radius: 4px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); */
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
   padding: 16px 12px;
 }
 
@@ -5343,4 +5380,60 @@ select.form-control.currency-dropdown {
   50% {
     opacity: 0.3;
   }
+}
+
+.ai-button,
+.ai-button:hover,
+.ai-button:focus,
+.ai-button:active {
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, .3);
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  z-index: 31;
+}
+
+.editor-ai,
+.editor-ai:hover,
+.editor-ai:focus,
+.editor-ai:active {
+  bottom: 30px;
+}
+
+.prompt-send {
+  position: absolute;
+  right: 14px;
+  top: 2px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  transform: rotate(45deg);
+  color: #0a4a92;
+}
+
+.btn-light:focus {
+  border-color: #074c9a;
+}
+
+.btn-light:active {
+  border-color: #074c9a;
+  background-color: #f3fafe;
+}
+
+.password-info-box pre {
+  white-space: break-spaces;
+  /* Allow wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
 }
