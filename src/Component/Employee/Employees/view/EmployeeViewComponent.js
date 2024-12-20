@@ -183,141 +183,180 @@ const EmployeeViewComponent = () => {
                                         </div>
                                     </div>
                                     <div className="col-xl-8 pl-0 pl-xl-3 pr-0">
-                                        <div className="">
-                                            {/* **** tab display **** */}
-                                            <div className=" grid-margin stretch-card inner-pages mb-lg-0 tab-view">
-                                                <div className="card modal-content profile_tabs">
-                                                    {/* ............................Header one.......................... */}
-                                                    <div className="modal-header employee-form">
-                                                        <Tabs value={value} onChange={changeTab} aria-label="secondary tabs example">
-                                                            <Tab value="Personal" label="Personal Info." className="tab-panel-button" />
-                                                            <Tab value="Account" label="Account Info." className="tab-panel-button" />
-                                                            <Tab value="Education" label="Education Info." className="tab-panel-button" />
-                                                            <Tab value="Document" label="Document Info." className="tab-panel-button" />
-                                                            <Tab value="Company" label="Company Info." className="tab-panel-button" />
-                                                            <Tab value="Emergency" label="Emergency Contact Info." className="tab-panel-button" />
+                                        <div className=" grid-margin stretch-card inner-pages mb-lg-0 tab-view">
+                                            <div className="card modal-content profile_tabs">
+                                                <div className="modal-header employee-form">
+                                                    <Tabs
+                                                        value={value}
+                                                        onChange={changeTab}
+                                                        variant="scrollable"
+                                                        scrollButtons
+                                                        allowScrollButtonsMobile
+                                                        aria-label="scrollable force tabs example"
+                                                        className='profile-tab-header'
+                                                    >
+                                                        <Tab value="Personal" label="Personal Info." className="tab-panel-button" />
+                                                        <Tab value="Account" label="Account Info." className="tab-panel-button" />
+                                                        <Tab value="Education" label="Education Info." className="tab-panel-button" />
+                                                        <Tab value="Document" label="Document Info." className="tab-panel-button" />
+                                                        <Tab value="Company" label="Company Info." className="tab-panel-button" />
+                                                        <Tab value="Emergency" label="Emergency Contact Info." className="tab-panel-button" />
+                                                        {match &&
+                                                            <Tab value="password" label="Change Password" className="tab-panel-button" />}
+                                                    </Tabs>
+                                                </div>
+                                                <div className="modal-header-none">
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
+                                                            {value === "password" ? "Change Password" : value + " Details"} <i className="fa-solid fa-chevron-down"></i>
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Info.</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleChanges("Account")}>Account Info.</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleChanges("Education")}>Education Info.</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleChanges("Document")}>Document Info.</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleChanges("Company")}>Company Info.</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Info.</Dropdown.Item>
                                                             {match &&
-                                                                <Tab value="password" label="Change Password" className="tab-panel-button" />}
-                                                        </Tabs>
-                                                    </div>
-
-                                                    {/* ............................Header two.......................... */}
-                                                    <div className="modal-header-none">
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle className="btn btn-secondary" id="profile-dropdown">
-                                                                {value === "password" ? "Change Password" : value + " Details"} <i className="fa-solid fa-chevron-down"></i>
-                                                            </Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                <Dropdown.Item onClick={() => handleChanges("Personal")}>Personal Info.</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleChanges("Account")}>Account Info.</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleChanges("Education")}>Education Info.</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleChanges("Document")}>Document Info.</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleChanges("Company")}>Company Info.</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => handleChanges("Emergency")}>Emergency Contact Info.</Dropdown.Item>
-                                                                {match &&
-                                                                    <Dropdown.Item onClick={() => handleChanges("password")}>Change Password</Dropdown.Item>}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </div>
-
-                                                    <div className="profile-info">
-                                                        {/* ************** personal detail display ********************* */}
-                                                        {value === "Personal" ?
-                                                            <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                                                                <div id="emp_profile" className="pro-overview tab-pane fade active show">
-                                                                    <div className="row">
-                                                                        <div className="col-12 d-flex px-md-0 m-auto">
-                                                                            <div className="flex-fill">
-                                                                                <div className="">
-                                                                                    <h3 className="card-title">Personal Information
-                                                                                        {match && <NavLink onClick={() => handleShow("Personal")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
-                                                                                    </h3>
-                                                                                    <ul className="personal-info">
-                                                                                        <li>
-                                                                                            <div className="title">Name:</div>
-                                                                                            <div className="text">{data.first_name && data.first_name.concat(" ", data.last_name)}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Phone:</div>
-                                                                                            <div className="text"><a href={`tel:${data.phone}`}>{data.phone}</a></div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Email:</div>
-                                                                                            <div className="text">{data.email}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Address:</div>
-                                                                                            <div className="text">{data.address ? data.address.concat(", ", data.city).concat(" - ", data.postcode) : <AiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Gender:</div>
-                                                                                            <div className="text">{data.gender ? data.gender : <AiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Marital status</div>
-                                                                                            <div className="text">{data.maried_status ? data.maried_status : <HiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Country</div>
-                                                                                            <div className="text">{data.country ? data.country : <HiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">State</div>
-                                                                                            <div className="text">{data.state ? data.state : <HiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Birthday</div>
-                                                                                            {data.date_of_birth ? <div className="text">{dateFormat(data.date_of_birth)}</div>
-                                                                                                : <div className='text'><HiOutlineMinus /></div>}
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Age</div>
-                                                                                            <div className="text">{data.age ? data.age : <HiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <div className="title">Blood Group</div>
-                                                                                            <div className="text">{data.blood_group ? data.blood_group : <HiOutlineMinus />}</div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
+                                                                <Dropdown.Item onClick={() => handleChanges("password")}>Change Password</Dropdown.Item>}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </div>
+                                                <div className="profile-info">
+                                                    {/* ************** personal detail display ********************* */}
+                                                    {value === "Personal" ?
+                                                        <div className="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                                            <div id="emp_profile" className="pro-overview tab-pane fade active show">
+                                                                <div className="row">
+                                                                    <div className="col-12 d-flex px-md-0 m-auto">
+                                                                        <div className="flex-fill">
+                                                                            <div className="">
+                                                                                <h3 className="card-title">Personal Information
+                                                                                    {match && <NavLink onClick={() => handleShow("Personal")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                </h3>
+                                                                                <ul className="personal-info">
+                                                                                    <li>
+                                                                                        <div className="title">Name:</div>
+                                                                                        <div className="text">{data.first_name && data.first_name.concat(" ", data.last_name)}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Phone:</div>
+                                                                                        <div className="text"><a href={`tel:${data.phone}`}>{data.phone}</a></div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Email:</div>
+                                                                                        <div className="text">{data.email}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Address:</div>
+                                                                                        <div className="text">{data.address ? data.address.concat(", ", data.city).concat(" - ", data.postcode) : <AiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Gender:</div>
+                                                                                        <div className="text">{data.gender ? data.gender : <AiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Marital status</div>
+                                                                                        <div className="text">{data.maried_status ? data.maried_status : <HiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Country</div>
+                                                                                        <div className="text">{data.country ? data.country : <HiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">State</div>
+                                                                                        <div className="text">{data.state ? data.state : <HiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Birthday</div>
+                                                                                        {data.date_of_birth ? <div className="text">{dateFormat(data.date_of_birth)}</div>
+                                                                                            : <div className='text'><HiOutlineMinus /></div>}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Age</div>
+                                                                                        <div className="text">{data.age ? data.age : <HiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <div className="title">Blood Group</div>
+                                                                                        <div className="text">{data.blood_group ? data.blood_group : <HiOutlineMinus />}</div>
+                                                                                    </li>
+                                                                                </ul>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            // *************************** Account detail display ******************* //
-                                                            : value === "Account" ?
-                                                                <div className="tab-pane fade show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                                        </div>
+                                                        // *************************** Account detail display ******************* //
+                                                        : value === "Account" ?
+                                                            <div className="tab-pane fade show" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                                                <div className="row">
+                                                                    <div className="col-12 d-flex px-md-0 m-auto">
+                                                                        <div className="flex-fill">
+                                                                            <div className="">
+                                                                                <h3 className="card-title">Account Information
+                                                                                    {match && <NavLink onClick={() => handleShow("Account")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                </h3>
+                                                                                {data.account_detail.length !== 0 ?
+                                                                                    <ul className="personal-info">
+                                                                                        <li>
+                                                                                            <div className="title">Name</div>
+                                                                                            <div className="text">{data.account_detail.length !== 0 ? data.account_detail[0].name : <AiOutlineMinus />}</div>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="title">Bank name</div>
+                                                                                            <div className="text">{data.account_detail[0].bank_name}</div>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="title">Branch name</div>
+                                                                                            <div className="text">{data.account_detail[0].branch_name}</div>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="title">Account Number</div>
+                                                                                            <div className="text">{data.account_detail[0].account_number}</div>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <div className="title">IFSC Code</div>
+                                                                                            <div className="text">{data.account_detail[0].ifsc_code}</div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                    :
+                                                                                    <h4 className='no-data'>No Data Found</h4>
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            // *************************** Education detail display ******************* //
+                                                            : value === "Education" ?
+                                                                <div className="tab-pane fade show" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
                                                                     <div className="row">
                                                                         <div className="col-12 d-flex px-md-0 m-auto">
                                                                             <div className="flex-fill">
                                                                                 <div className="">
-                                                                                    <h3 className="card-title">Account Information
-                                                                                        {match && <NavLink onClick={() => handleShow("Account")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                    <h3 className="card-title">Education Informations
+                                                                                        {match && <NavLink onClick={() => handleShow("Education")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                                     </h3>
-                                                                                    {data.account_detail.length !== 0 ?
-                                                                                        <ul className="personal-info">
-                                                                                            <li>
-                                                                                                <div className="title">Name</div>
-                                                                                                <div className="text">{data.account_detail.length !== 0 ? data.account_detail[0].name : <AiOutlineMinus />}</div>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <div className="title">Bank name</div>
-                                                                                                <div className="text">{data.account_detail[0].bank_name}</div>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <div className="title">Branch name</div>
-                                                                                                <div className="text">{data.account_detail[0].branch_name}</div>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <div className="title">Account Number</div>
-                                                                                                <div className="text">{data.account_detail[0].account_number}</div>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <div className="title">IFSC Code</div>
-                                                                                                <div className="text">{data.account_detail[0].ifsc_code}</div>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                    {data.education && data.education.length > 0 ?
+                                                                                        <div className="experience-box">
+                                                                                            <ul className="experience-list pl-0">
+                                                                                                {data.education.map((val) => {
+                                                                                                    return (
+                                                                                                        <li key={val._id}>
+                                                                                                            <div className="experience-content">
+                                                                                                                <p className="name mb-0 font-weight-bold" style={{ fontSize: "16px" }}>{val.university_name}</p>
+                                                                                                                <div className="timeline-content ml-4">
+                                                                                                                    <div>{val.degree}</div>
+                                                                                                                    <span className="time">{val.percentage}</span>
+                                                                                                                    <span className="time">{val.year}</span>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </li>
+                                                                                                    )
+                                                                                                })}
+                                                                                            </ul>
+                                                                                        </div>
                                                                                         :
                                                                                         <h4 className='no-data'>No Data Found</h4>
                                                                                     }
@@ -325,202 +364,164 @@ const EmployeeViewComponent = () => {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                // *************************** Education detail display ******************* //
-                                                                : value === "Education" ?
-                                                                    <div className="tab-pane fade show" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
-                                                                        <div className="row">
-                                                                            <div className="col-12 d-flex px-md-0 m-auto">
-                                                                                <div className="flex-fill">
-                                                                                    <div className="">
-                                                                                        <h3 className="card-title">Education Informations
-                                                                                            {match && <NavLink onClick={() => handleShow("Education")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
-                                                                                        </h3>
-                                                                                        {data.education && data.education.length > 0 ?
-                                                                                            <div className="experience-box">
-                                                                                                <ul className="experience-list pl-0">
-                                                                                                    {data.education.map((val) => {
-                                                                                                        return (
-                                                                                                            <li key={val._id}>
-                                                                                                                <div className="experience-content">
-                                                                                                                    <p className="name mb-0 font-weight-bold" style={{ fontSize: "16px" }}>{val.university_name}</p>
-                                                                                                                    <div className="timeline-content ml-4">
-                                                                                                                        <div>{val.degree}</div>
-                                                                                                                        <span className="time">{val.percentage}</span>
-                                                                                                                        <span className="time">{val.year}</span>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </li>
-                                                                                                        )
-                                                                                                    })}
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                            :
-                                                                                            <h4 className='no-data'>No Data Found</h4>
-                                                                                        }
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div> :
-                                                                    // *************************** company detail display ******************* //
-                                                                    value === "Company" ?
-                                                                        <div className="tab-pane fade show" id="pills-company" role="tabpanel" aria-labelledby="pills-company-tab">
-                                                                            <div id="emp_profile" className="pro-overview tab-pane fade active show">
-                                                                                <div className="row">
-                                                                                    <div className="col-12 d-flex px-md-0 m-auto">
-                                                                                        <div className="flex-fill">
-                                                                                            <div className="">
-                                                                                                <h3 className="card-title">Company Information
-                                                                                                </h3>
-                                                                                                <ul className="personal-info">
-                                                                                                    <li>
-                                                                                                        <div className="title">Employee Id</div>
-                                                                                                        <div className="text">{data.employee_id}</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div className="title">Designation</div>
-                                                                                                        <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div className="title">User Role</div>
-                                                                                                        <div className="text">{data?.role ? data.role.name : <AiOutlineMinus />}</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div className="title">Joining Date</div>
-                                                                                                        {data.joining_date ?
-                                                                                                            <div className="text"> {dateFormat(data.joining_date)}</div> :
-                                                                                                            <div className='text'><AiOutlineMinus /></div>
-                                                                                                        }
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
+                                                                </div> :
+                                                                // *************************** company detail display ******************* //
+                                                                value === "Company" ?
+                                                                    <div className="tab-pane fade show" id="pills-company" role="tabpanel" aria-labelledby="pills-company-tab">
+                                                                        <div id="emp_profile" className="pro-overview tab-pane fade active show">
+                                                                            <div className="row">
+                                                                                <div className="col-12 d-flex px-md-0 m-auto">
+                                                                                    <div className="flex-fill">
+                                                                                        <div className="">
+                                                                                            <h3 className="card-title">Company Information
+                                                                                            </h3>
+                                                                                            <ul className="personal-info">
+                                                                                                <li>
+                                                                                                    <div className="title">Employee Id</div>
+                                                                                                    <div className="text">{data.employee_id}</div>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <div className="title">Designation</div>
+                                                                                                    <div className="text">{data?.designation ? data.designation.name : <AiOutlineMinus />}</div>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <div className="title">User Role</div>
+                                                                                                    <div className="text">{data?.role ? data.role.name : <AiOutlineMinus />}</div>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <div className="title">Joining Date</div>
+                                                                                                    {data.joining_date ?
+                                                                                                        <div className="text"> {dateFormat(data.joining_date)}</div> :
+                                                                                                        <div className='text'><AiOutlineMinus /></div>
+                                                                                                    }
+                                                                                                </li>
+                                                                                            </ul>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        // *********************document detail *********************//
-                                                                        : value === "Document" ?
-                                                                            <div className="tab-pane fade show" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
+                                                                    </div>
+                                                                    // *********************document detail *********************//
+                                                                    : value === "Document" ?
+                                                                        <div className="tab-pane fade show" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
+                                                                            <div className="row">
+                                                                                <div className="col-12 d-flex px-md-0 m-auto">
+                                                                                    <div className="flex-fill">
+                                                                                        <div className="">
+                                                                                            <h3 className="card-title">Document Information
+                                                                                                {match && <NavLink onClick={() => handleShow("Document")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                            </h3>
+                                                                                            {data.user_document.length > 0 ?
+                                                                                                <div className='d-flex'>
+                                                                                                    {data.user_document[0].photo &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1 '
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0]?.photo?.split(".")?.pop() !== 'doc' && data.user_document[0].photo?.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}` : data.user_document[0].joining_letter?.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'> Photo</p>
+                                                                                                        </NavLink>}
+                                                                                                    {data.user_document[0].aadhar_card &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].aadhar_card}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1 '
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0].aadhar_card.split(".").pop() !== 'doc' && data.user_document[0].aadhar_card.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].aadhar_card}` : data.user_document[0].aadhar_card.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'>Aadhar Card</p>
+                                                                                                        </NavLink>}
+                                                                                                    {data.user_document[0].pan_card &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].pan_card}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1 '
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0].pan_card.split(".").pop() !== 'doc' && data.user_document[0].pan_card.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].pan_card}` : data.user_document[0].pan_card.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'> Pan Card</p>
+                                                                                                        </NavLink>}
+                                                                                                    {data.user_document[0].offer_letter &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1'
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0].offer_letter.split(".").pop() !== 'doc' && data.user_document[0].offer_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}` : data.user_document[0].offer_letter.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'> Offer letter</p>
+                                                                                                        </NavLink>}
+                                                                                                    {data.user_document[0].resume &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1 '
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0].resume.split(".").pop() !== 'doc' && data.user_document[0].resume.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}` : data.user_document[0].resume.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'> Resume</p>
+                                                                                                        </NavLink>}
+                                                                                                    {data.user_document[0].other &&
+                                                                                                        <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}`} target='_blank' className="mr-3 text-decoration-none">
+                                                                                                            <img
+                                                                                                                className='mt-1 '
+                                                                                                                style={{ width: '70px', height: '70px' }}
+                                                                                                                src={(data.user_document[0].other.split(".").pop() !== 'doc' && data.user_document[0].other.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}` : data.user_document[0].other.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
+                                                                                                                alt="file"
+                                                                                                            />
+                                                                                                            <p className='document-title'> Other</p>
+                                                                                                        </NavLink>}
+                                                                                                </div> :
+                                                                                                <h4 className='no-data'>No Data Found</h4>
+                                                                                            }
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> : value === "password" ? <ChangePassword />
+                                                                            // *************************** emergancy detail display ******************* //
+                                                                            : <div className="tab-pane fade show" id="pills-emergency" role="tabpanel" aria-labelledby="pills-emergency-tab">
                                                                                 <div className="row">
                                                                                     <div className="col-12 d-flex px-md-0 m-auto">
                                                                                         <div className="flex-fill">
                                                                                             <div className="">
-                                                                                                <h3 className="card-title">Document Information
-                                                                                                    {match && <NavLink onClick={() => handleShow("Document")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
+                                                                                                <h3 className="card-title">Emergency Contact
+                                                                                                    {match && <NavLink onClick={() => handleShow("Emergency Contact")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
                                                                                                 </h3>
-                                                                                                {data.user_document.length > 0 ?
-                                                                                                    <div className='d-flex'>
-                                                                                                        {data.user_document[0].photo &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1 '
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0]?.photo?.split(".")?.pop() !== 'doc' && data.user_document[0].photo?.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].photo}` : data.user_document[0].joining_letter?.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'> Photo</p>
-                                                                                                            </NavLink>}
-                                                                                                        {data.user_document[0].aadhar_card &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].aadhar_card}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1 '
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0].aadhar_card.split(".").pop() !== 'doc' && data.user_document[0].aadhar_card.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].aadhar_card}` : data.user_document[0].aadhar_card.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'>Aadhar Card</p>
-                                                                                                            </NavLink>}
-                                                                                                        {data.user_document[0].pan_card &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].pan_card}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1 '
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0].pan_card.split(".").pop() !== 'doc' && data.user_document[0].pan_card.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].pan_card}` : data.user_document[0].pan_card.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'> Pan Card</p>
-                                                                                                            </NavLink>}
-                                                                                                        {data.user_document[0].offer_letter &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1'
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0].offer_letter.split(".").pop() !== 'doc' && data.user_document[0].offer_letter.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].offer_letter}` : data.user_document[0].offer_letter.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'> Offer letter</p>
-                                                                                                            </NavLink>}
-                                                                                                        {data.user_document[0].resume &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1 '
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0].resume.split(".").pop() !== 'doc' && data.user_document[0].resume.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].resume}` : data.user_document[0].resume.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'> Resume</p>
-                                                                                                            </NavLink>}
-                                                                                                        {data.user_document[0].other &&
-                                                                                                            <NavLink to={`${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}`} target='_blank' className="mr-3 text-decoration-none">
-                                                                                                                <img
-                                                                                                                    className='mt-1 '
-                                                                                                                    style={{ width: '70px', height: '70px' }}
-                                                                                                                    src={(data.user_document[0].other.split(".").pop() !== 'doc' && data.user_document[0].other.split(".").pop() !== "pdf") ? `${process.env.REACT_APP_IMAGE_API}/uploads/${data.user_document[0].other}` : data.user_document[0].other.split(".").pop() === 'doc' ? '/Images/doc.png' : '/Images/pdf.png'}
-                                                                                                                    alt="file"
-                                                                                                                />
-                                                                                                                <p className='document-title'> Other</p>
-                                                                                                            </NavLink>}
-                                                                                                    </div> :
+                                                                                                {data.emergency_contact.length > 0 ?
+                                                                                                    <ul className="personal-info">
+                                                                                                        <li>
+                                                                                                            <div className="title">Name</div>
+                                                                                                            <div className="text">{data?.emergency_contact[0].name}</div>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <div className="title">Relationship</div>
+                                                                                                            <div className="text">{data.emergency_contact[0].relationship ? data.emergency_contact[0].relationship : <HiOutlineMinus />}</div>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <div className="title">Email </div>
+                                                                                                            <div className="text">{data?.emergency_contact[0].email}</div>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <div className="title">Address </div>
+                                                                                                            <div className="text">{data?.emergency_contact[0].address}</div>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <div className="title">Phone </div>
+                                                                                                            <div className="text">{data?.emergency_contact[0].phone}</div>
+                                                                                                        </li>
+                                                                                                    </ul> :
                                                                                                     <h4 className='no-data'>No Data Found</h4>
                                                                                                 }
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div> : value === "password" ? <ChangePassword />
-                                                                                // *************************** emergancy detail display ******************* //
-                                                                                : <div className="tab-pane fade show" id="pills-emergency" role="tabpanel" aria-labelledby="pills-emergency-tab">
-                                                                                    <div className="row">
-                                                                                        <div className="col-12 d-flex px-md-0 m-auto">
-                                                                                            <div className="flex-fill">
-                                                                                                <div className="">
-                                                                                                    <h3 className="card-title">Emergency Contact
-                                                                                                        {match && <NavLink onClick={() => handleShow("Emergency Contact")} className="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i className="fa fa-pencil"></i></NavLink>}
-                                                                                                    </h3>
-                                                                                                    {data.emergency_contact.length > 0 ?
-                                                                                                        <ul className="personal-info">
-                                                                                                            <li>
-                                                                                                                <div className="title">Name</div>
-                                                                                                                <div className="text">{data?.emergency_contact[0].name}</div>
-                                                                                                            </li>
-                                                                                                            <li>
-                                                                                                                <div className="title">Relationship</div>
-                                                                                                                <div className="text">{data.emergency_contact[0].relationship ? data.emergency_contact[0].relationship : <HiOutlineMinus />}</div>
-                                                                                                            </li>
-                                                                                                            <li>
-                                                                                                                <div className="title">Email </div>
-                                                                                                                <div className="text">{data?.emergency_contact[0].email}</div>
-                                                                                                            </li>
-                                                                                                            <li>
-                                                                                                                <div className="title">Address </div>
-                                                                                                                <div className="text">{data?.emergency_contact[0].address}</div>
-                                                                                                            </li>
-                                                                                                            <li>
-                                                                                                                <div className="title">Phone </div>
-                                                                                                                <div className="text">{data?.emergency_contact[0].phone}</div>
-                                                                                                            </li>
-                                                                                                        </ul> :
-                                                                                                        <h4 className='no-data'>No Data Found</h4>
-                                                                                                    }
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                        }
-                                                    </div>
+                                                                            </div>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -529,7 +530,8 @@ const EmployeeViewComponent = () => {
                             </div>
                         </div>
                     </div>
-                </div> : <Error403 />}
+                </div > : <Error403 />
+            }
             <EmployeeModal show={show} handleClose={handleClose} value={Value} data={data} getuser={getUserData} />
         </>
     )

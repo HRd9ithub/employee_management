@@ -4,15 +4,15 @@ import Select from 'react-select';
 import { AppProvider } from '../../context/RouteContext';
 import Spinner from '../../common/Spinner';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
-import { customAxios } from '../../../service/CreateApi';
+import { customAxios1 } from '../../../service/CreateApi';
 import { toast } from 'react-hot-toast';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Form } from 'react-bootstrap';
 import ErrorComponent from '../../common/ErrorComponent';
+import { SpellCheck } from '../../ai/SpellCheck';
+import { reWritePrompt } from '../../../helper/prompt';
 
 const AddPasswordForm = (props) => {
     let { data, getPasswordRecord } = props;
-
-    // initialistate 
     const [show, setShow] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [password, setPassword] = useState({
@@ -20,24 +20,30 @@ const AddPasswordForm = (props) => {
         url: "",
         user_name: "",
         password: "",
-        note: ""
+        note: "",
+        file: ""
     })
     const [accessEmployee, setAccessEmployee] = useState(null);
+    const [file, setFile] = useState({
+        name: "",
+        URL: ""
+    })
 
-    // errror state
+    // error state
     const [titleError, setTitleError] = useState("");
     const [urlError, setUrlError] = useState("");
-    const [userNameError, setuserNameError] = useState("");
+    const [userNameError, setUserNameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [error, setError] = useState([]);
 
     // Global state
     let { get_username, userName, Loading } = useContext(AppProvider);
+    const { loading, aiResponse } = SpellCheck();
 
     // *show modal
     const showModal = () => {
         if (data) {
-            let { title, url, user_name, password, access, _id, note } = data;
+            let { title, url, user_name, password, access, _id, note, file: fileData } = data;
             setPassword({
                 title,
                 password,
@@ -51,6 +57,12 @@ const AddPasswordForm = (props) => {
                     return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
                 })
                 setAccessEmployee(result);
+            }
+            if (fileData?.name) {
+                setFile({
+                    name: fileData.name,
+                    URL: `${process.env.REACT_APP_IMAGE_API}/uploads/password/${fileData.pathName}`
+                })
             }
         }
         setShow(true);
@@ -67,12 +79,17 @@ const AddPasswordForm = (props) => {
             user_name: "",
             password: "",
             id: "",
-            note: ""
+            note: "",
+            file: ""
+        });
+        setFile({
+            name: "",
+            URL: ""
         });
         setAccessEmployee(null);
         setTitleError("");
         setUrlError("");
-        setuserNameError("");
+        setUserNameError("");
         setPasswordError("");
         setError([]);
     }
@@ -101,6 +118,22 @@ const AddPasswordForm = (props) => {
         let { value, name } = event.target;
 
         setPassword({ ...password, [name]: value });
+    }
+
+
+    function createImageObjectURL(file) {
+        return URL.createObjectURL(file);
+    }
+
+    // onchange function
+    const handleChangeFile = (e) => {
+        if (e.target.files.length !== 0) {
+            const fileData = e.target.files[0];
+            const imageURL = createImageObjectURL(fileData);
+            setFile({ ...file, name: fileData.name, URL: imageURL });
+            setPassword({ ...password, file: fileData })
+        }
+
     }
 
     // ? ===================== Validation Part for form ==================== 
@@ -132,13 +165,13 @@ const AddPasswordForm = (props) => {
     // username 
     const usernameValidation = () => {
         if (!password.user_name.trim()) {
-            setuserNameError("User name is a required field.")
+            setUserNameError("User name is a required field.")
         } else {
-            setuserNameError("");
+            setUserNameError("");
         }
     }
 
-    // ? ========================== Form submit funcation ===========================
+    // ? ========================== Form submit ===========================
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -157,46 +190,27 @@ const AddPasswordForm = (props) => {
         })
 
         setError("");
+        var formdata = new FormData();
+        formdata.append('title', password.title);
+        formdata.append('url', password.url);
+        formdata.append('user_name', password.user_name);
+        formdata.append('password', password.password);
+        formdata.append('access_employee', user);
+        formdata.append('note', password.note.trim());
+        formdata.append('file', password.file);
+
         let url = "";
         if (data) {
-            url = customAxios().put(`/password/${password.id}`, {
-                title: password.title,
-                url: password.url,
-                user_name: password.user_name,
-                password: password.password,
-                access_employee: user,
-                note: password.note.trim()
-            })
+            url = customAxios1().put(`/password/${password.id}`, formdata)
         } else {
-            url = customAxios().post('/password', {
-                title: password.title,
-                url: password.url,
-                user_name: password.user_name,
-                password: password.password,
-                access_employee: user,
-                note: password.note.trim()
-            })
+            url = customAxios1().post('/password', formdata)
         }
         setIsLoading(true);
         url.then(data => {
             if (data.data.success) {
                 toast.success(data.data.message);
                 getPasswordRecord();
-                setShow(false);
-                setPassword({
-                    title: "",
-                    url: "",
-                    user_name: "",
-                    password: "",
-                    id: "",
-                    note: ""
-                });
-                setAccessEmployee(null);
-                setTitleError("");
-                setUrlError("");
-                setuserNameError("");
-                setPasswordError("");
-                setError([]);
+                hideModal();
                 setIsLoading(false);
             }
         }).catch((error) => {
@@ -213,6 +227,13 @@ const AddPasswordForm = (props) => {
         })
     }
 
+    const handleAIReWrite = () => {
+        aiResponse(reWritePrompt(password.note)).then((correctedText) => {
+            setPassword({ ...password, note: correctedText })
+        }).catch((error) => {
+            toast.error(error.message);
+        })
+    }
 
     return (
         <>
@@ -275,7 +296,23 @@ const AddPasswordForm = (props) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="note" className='mt-3'>Note</label>
-                                                <textarea type="text" autoComplete='off' rows={4} cols={10} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} />
+                                                <div className='position-relative'>
+                                                    <Form.Control as="textarea" rows={6} className="form-control" id="note" name='note' value={password.note} onChange={handleChange} />
+                                                    {password?.note?.length > 3 && <button className='ai-button' type='button' onClick={handleAIReWrite} title='Improve it' disabled={loading} style={{ zIndex: 0 }} ><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className='form-group'>
+                                                <label>File</label>
+                                                <div className='d-flex justify-content-between' style={{ gap: "10px" }} >
+                                                    <div className="custom-file" style={{ zIndex: 0 }}>
+                                                        <Form.Control type="file" className="form-control visibility-hidden" id="document" name='file' onChange={handleChangeFile} />
+                                                        <label className="custom-file-label" htmlFor="document">{file.name ? file.name : "Upload file"}</label>
+                                                    </div>
+                                                    {file.URL && <a className='btn-light btn' href={file.URL} target='_VIEW'>Preview</a>}
+                                                </div>
+                                                {/* {imageError && <small id="emailHelp" className="form-text error">{imageError}</small>} */}
                                             </div>
                                         </div>
                                         {error.length !== 0 &&

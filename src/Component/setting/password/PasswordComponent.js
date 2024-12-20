@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { GetLocalStorage } from '../../../service/StoreLocalStorage';
+import { saveAs } from "file-saver";
 
 const PasswordComponent = () => {
 
@@ -26,7 +27,7 @@ const PasswordComponent = () => {
   const [records, setRecords] = useState([]);
   const [view, setView] = useState("");
   const [permissionToggle, setPermissionToggle] = useState(true);
-  const [searchItem, setsearchItem] = useState("");
+  const [searchItem, setSearchItem] = useState("");
 
   // toggle state
   const [eyeToggle, setEyeToggle] = useState(false);
@@ -150,6 +151,13 @@ const PasswordComponent = () => {
     }
   }, []);
 
+  const handleDownload = () => {
+    const filePath = `${process.env.REACT_APP_IMAGE_API}/uploads/password/${view.file.pathName}`;
+    const fileName = view.file.name;
+
+    saveAs(filePath, fileName);
+  };
+
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
@@ -179,12 +187,12 @@ const PasswordComponent = () => {
               </div>
               <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
                 <div className="search-full">
-                  <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setsearchItem(event.target.value)} />
+                  <input type="search" className="input-search-full" autoComplete='off' value={searchItem} name="txt" placeholder="Search" onChange={(event) => setSearchItem(event.target.value)} />
                   <i className="fas fa-search"></i>
                 </div>
                 <div className="search-box mr-3">
                   <form name="search-inner">
-                    <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setsearchItem(event.target.value)} />
+                    <input type="search" className="input-search" autoComplete='off' value={searchItem} name="txt" onChange={(event) => setSearchItem(event.target.value)} />
                   </form>
                   <i className="fas fa-search"></i>
                 </div>
@@ -197,8 +205,8 @@ const PasswordComponent = () => {
                   return (
                     <div className="col-md-4 mt-3" key={item._id} >
                       <div className="password-info-box">
-                        <div className="d-flex justify-content-between position-relative w-100">
-                          <h5>{item.title}</h5>
+                        <div className="d-flex align-items-center justify-content-between position-relative w-100 mb-1">
+                          <h5 className='mb-0'>{item.title}</h5>
                           <Dropdown>
                             <Dropdown.Toggle id="password-action">
                               <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
@@ -284,7 +292,15 @@ const PasswordComponent = () => {
                         <div className="col-md-12 mt-2">
                           <label >Note</label>
                           <div className='position-relative auth-box'>
-                            <p>{view.note}</p>
+                            <pre className='mb-0 p-2' style={{ background: "transparent", whiteSpace: "break-spaces" }} >{view.note}</pre>
+                          </div>
+                        </div> : null}
+                      {view.file ?
+                        <div className="col-md-12 mt-2">
+                          <label >File</label>
+                          <div className='position-relative auth-box'>
+                            <p>{view.file?.name}</p>
+                            <NavLink to="" onClick={handleDownload}><i className="fa-solid fa-cloud-arrow-down"></i></NavLink>
                           </div>
                         </div> : null}
                     </div>
@@ -292,7 +308,7 @@ const PasswordComponent = () => {
                   {permission && (permission?.name.toLowerCase() === "admin" || view.createdBy === GetLocalStorage("user_id")) && view.hasOwnProperty("access") && view.access.length !== 0 &&
                     <div className="access-employee-list mt-4">
                       <h3>Access Employee List:</h3>
-                      <div className="row mt-3">
+                      <div className="row mt-3" style={{ rowGap: "10px" }} >
                         {view.hasOwnProperty("access") && view.access.map((item, index) => (
                           <div className="col-md-4 col-sm-6" key={item._id}><span className='pr-2'>{index + 1}.</span> <label className='mb-0'>{item?.first_name.concat(" ", item.last_name)}</label></div>
                         ))}
