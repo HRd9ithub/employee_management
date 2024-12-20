@@ -15,6 +15,8 @@ import { AppProvider } from '../../context/RouteContext';
 import JoditEditor from 'jodit-react';
 import ErrorComponent from '../../common/ErrorComponent';
 import { Tooltip } from '@mui/material';
+import { SpellCheck } from '../../ai/SpellCheck';
+import { reWriteWithHTMLPrompt } from '../../../helper/prompt';
 
 function WorkReportModal({ data, permission, getReport, isRequest, setuser_id }) {
     let workDateRef = useRef(null);
@@ -50,6 +52,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     const [title, setTitle] = useState("");
 
     let { get_username, userName, Loading } = useContext(AppProvider);
+    const { loading, aiResponse } = SpellCheck();
 
     const resetForm = () => {
         setId('');
@@ -488,7 +491,36 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
             }
         }
     };
+    const editorsRef = useRef([]); // Refs for all editors
 
+
+    const getSelectedText = (index) => {
+        const editorInstance = editorsRef.current[index];
+        console.log('editorInstance: ', editorInstance)
+        if (editorInstance) {
+            const selectedText = editorInstance.selection
+                ? editorInstance.selection.sel.toString()
+                : "";
+            return selectedText
+        }
+    };
+
+    const handleAIReWrite = (text, index) => {
+        // const selectedText = getSelectedText(index);
+        // console.log('selectedText: ', selectedText)
+        aiResponse(reWriteWithHTMLPrompt(text)).then((correctedText) => {
+            console.log('correctedText: ', correctedText)
+            // setInitialState({ ...initialState, explanation: correctedText })
+            setworkData((d) => d.map((v, i) => {
+                if (i === index) {
+                    return { ...v, description: correctedText }
+                }
+                return v
+            }))
+        }).catch((error) => {
+            toast.error(error.message);
+        })
+    }
     return (
         <>
             {data ? isRequest ?
@@ -590,15 +622,20 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
                                                                 {/* ====================   description field  ============*/}
                                                                 <div className="form-group">
                                                                     <label htmlFor="description" className='mt-3' >Description</label>
-                                                                    <JoditEditor
-                                                                        config={config}
-                                                                        value={item.description}
-                                                                        // onChange={newContent => handleContentChange(newContent, ind)}
-                                                                        onBlur={(newContent) => {
-                                                                            handleContentChange(newContent, ind);
-                                                                            descriptionValidation(ind, newContent)
-                                                                        }}
-                                                                    />
+                                                                    <div className="position-relative">
+                                                                        <JoditEditor
+                                                                            config={config}
+                                                                            value={item.description}
+                                                                            // onChange={newContent => handleContentChange(newContent, ind)}
+                                                                            onBlur={(newContent) => {
+                                                                                handleContentChange(newContent, ind);
+                                                                                descriptionValidation(ind, newContent)
+                                                                                getSelectedText(ind)
+                                                                            }}
+                                                                            ref={(el) => (editorsRef.current[ind] = el)}
+                                                                        />
+                                                                        {item?.description?.length > 3 && <button className='ai-button editor-ai' type='button' onClick={() => handleAIReWrite(item.description, ind)} title='Improve it' disabled={loading}><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
+                                                                    </div>
                                                                     {descriptionError.map((val) => {
                                                                         return val.id === ind && <small id="description-field" className="form-text error" key={val.id}>{val.name}</small>
                                                                     })}

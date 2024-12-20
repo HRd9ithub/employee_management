@@ -612,13 +612,13 @@
 }
 
 @media (max-width: 1280px) {
-    .modal-header-none {
+    /* .modal-header-none {
         display: block;
     }
 
     .employee-form {
         display: none;
-    }
+    } */
 
     /* profile menu dropdown ------------ ======= jd design ======== ------------------*/
     .modal-header-none .dropdown-menu {
@@ -641,6 +641,7 @@
         border-bottom: 1px solid lightgrey !important;
         background-color: lightblue !important;
     }
+
     .profile-image {
         width: 200px;
         height: 200px;
@@ -837,19 +838,22 @@
         text-overflow: ellipsis;
     }
 
-    .business-info-value.address{
+    .business-info-value.address {
         white-space: unset;
     }
 
-    .business-info{
+    .business-info {
         width: 120px;
     }
+
     .common-box-dashboard {
         padding: 22px;
     }
+
     .common-box-dashboard .common-info-dashboard {
         margin: unset;
     }
+
     .common-box-dashboard .common-info-dashboard h3:last-child {
         margin: unset;
     }
@@ -1040,6 +1044,14 @@
 }
 
 @media (max-width: 991px) {
+    .modal-header-none {
+        display: block;
+    }
+
+    .employee-form {
+        display: none;
+    }
+
     .personal-info li {
         width: 100%;
     }
@@ -1400,7 +1412,9 @@
 }
 
 @media (max-width:767px) {
-    h3, h4 {
+
+    h3,
+    h4 {
         font-size: 16px;
     }
 
@@ -1516,23 +1530,28 @@
         margin-top: 20px;
     }
 
-    .business-info{
+    .business-info {
         width: 180px;
     }
 
     .business-detail {
         height: unset;
     }
+
     .template-head-section {
         flex-direction: column-reverse;
     }
+
     .template-logo {
         width: 140px;
     }
-    .bill-by-to-section h3, .extra-heading {
+
+    .bill-by-to-section h3,
+    .extra-heading {
         font-size: 20px !important;
         margin-bottom: 7px !important;
     }
+
     .calendar-icon-holiday {
         top: 43px;
         right: 26px;
@@ -1587,7 +1606,8 @@
 
     /* employee */
 
-    .card .card-body, .template-section {
+    .card .card-body,
+    .template-section {
         padding: 1rem 2rem !important;
     }
 
@@ -1765,6 +1785,7 @@
 }
 
 @media (max-width:640px) {
+
     /* employee */
     .gHZEHz {
         font-size: 14px !important;
@@ -1774,7 +1795,8 @@
         font-size: 14px !important;
     }
 
-    .card .card-body, .template-section {
+    .card .card-body,
+    .template-section {
         padding: 1rem 2rem !important;
     }
 
@@ -2039,6 +2061,7 @@
     .activity-date-range {
         width: 100% !important;
     }
+
     .table-total-section {
         width: 100% !important;
         margin-top: 15px;
@@ -2047,14 +2070,17 @@
     .template-section .row:nth-child(2) {
         flex-direction: column-reverse;
     }
+
     .template-section .billby-image {
         margin: 0 !important;
         width: 100px;
         height: 100px;
     }
+
     .invoice-head-section {
         flex-direction: column-reverse;
     }
+
     .invoice-head-section .flex-column.align-items-end {
         align-items: start !important;
         margin-bottom: 15px;
@@ -2066,7 +2092,10 @@
         height: 30px;
         font-size: 15px;
     }
-    .chat-bot-form form {flex-direction: column;}
+
+    .chat-bot-form form {
+        flex-direction: column;
+    }
 }
 
 @media (max-width:568px) {
@@ -2127,7 +2156,8 @@
         height: 36px;
     }
 
-    .card .card-body, .template-section {
+    .card .card-body,
+    .template-section {
         padding: 1rem 1.5rem !important;
     }
 
@@ -2526,10 +2556,12 @@
         top: 35px;
         right: 6px;
     }
+
     .calendar-icon-holiday {
         top: 45px;
         right: 26px;
     }
+
     .calendar-icon-work {
         top: 45px;
         right: 6px;
@@ -2543,7 +2575,8 @@
         width: 99%;
     }
 
-    .invoice-calendar-icon, .remove-field-icon {
+    .invoice-calendar-icon,
+    .remove-field-icon {
         top: 18px;
         right: 6px;
     }
@@ -2888,14 +2921,17 @@
         flex-direction: column;
         gap: 10px;
     }
-    .modal-button .btn, .submit-section .btn{
+
+    .modal-button .btn,
+    .submit-section .btn {
         width: 100% !important;
         margin: 0 !important;
     }
 
-    .currency-dropdown{
-        width:  100% !important;
+    .currency-dropdown {
+        width: 100% !important;
     }
+
     .profile-info {
         padding: 0rem 1.4rem !important;
     }
@@ -2904,14 +2940,15 @@
         top: 40px;
         right: 26px;
     }
+
     .calendar-icon-work {
         top: 40px;
         right: 6px;
     }
 }
 
-@media (max-width :420px){
-    .business-name{
+@media (max-width :420px) {
+    .business-name {
         flex-direction: column;
     }
 }
@@ -2967,7 +3004,8 @@
         padding: 0.3rem;
     }
 
-    .card .card-body, .template-section {
+    .card .card-body,
+    .template-section {
         padding: 1rem !important;
     }
 
@@ -3191,16 +3229,20 @@
         flex-direction: column;
         margin-bottom: 5px !important;
     }
+
     .invoice-details-table tr td {
         padding: 0 !important;
     }
-    .gst-tax .form-check-label{
+
+    .gst-tax .form-check-label {
         margin-left: 1.2rem !important;
     }
+
     .calendar-icon-holiday {
         top: 30px;
         right: 26px;
     }
+
     .calendar-icon-work {
         top: 30px;
         right: 6px;
@@ -3542,6 +3584,7 @@
     .animate-celebration-content p {
         width: 95%;
     }
+
     .profile-image {
         width: 160px;
         height: 160px;
@@ -3855,10 +3898,13 @@
     .notification-content .notification-details .ellipsis {
         max-width: 150px !important;
     }
-    .invoice-calendar-icon, .remove-field-icon {
+
+    .invoice-calendar-icon,
+    .remove-field-icon {
         top: 14px;
         right: 6px;
     }
+
     .calendar-icon {
         top: 31px;
         right: 6px;
