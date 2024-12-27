@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from "framer-motion";
-import { NavLink } from 'react-router-dom';
-import AddUpdateNoteModal from './AddUpdateNoteModal';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Spinner from '../../common/Spinner';
 import Error500 from '../../error_pages/Error500';
 import Error403 from '../../error_pages/Error403';
@@ -19,6 +18,8 @@ const NoteComponent = () => {
   const [records, setRecords] = useState([]);
   const [permissionToggle, setPermissionToggle] = useState(true);
   const [searchItem, setSearchItem] = useState("");
+
+  const navigate = useNavigate();
 
   // get note function 
   const getNoteRecord = async () => {
@@ -94,6 +95,9 @@ const NoteComponent = () => {
       }
     })
   };
+  const handleRedirect = (path) => {
+    navigate(path);
+  }
 
   if (serverError && !isLoading) {
     return <Error500 />;
@@ -130,14 +134,14 @@ const NoteComponent = () => {
                   </form>
                   <i className="fas fa-search"></i>
                 </div>
-                {permission && permission.permissions.create === 1 && <AddUpdateNoteModal getNoteRecord={getNoteRecord} />}
+                {permission && permission.permissions.create === 1 && <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => handleRedirect("/notes/create")}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>}
               </div>
             </div>
             {recordsFilter.length !== 0 ?
-              <div className="row justify-content-start align-items-center m-0 pb-3">
+              <div className="row justify-content-start align-items-start m-0 pb-3">
                 {recordsFilter.map((item) => {
                   return (
-                    <div className="col-md-4 mt-3" key={item._id} >
+                    <div className="col-md-4 mt-3" key={item._id}>
                       <div className="password-info-box">
                         <div className="d-flex align-items-center justify-content-between position-relative w-100 mb-1">
                           <h5 className='mb-0'>{item.title}</h5>
@@ -149,7 +153,7 @@ const NoteComponent = () => {
                               <ViewNoteModal noteData={item} permission={permission} />
                               {permission && permission.permissions.update === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
                                 <Dropdown.Divider />
-                                <AddUpdateNoteModal noteData={item} getNoteRecord={getNoteRecord} />
+                                <Dropdown.Item className="dropdown-item" onClick={() => handleRedirect(`/notes/edit/${item._id}`)}><i className="fa-solid fa-pen-to-square"></i><label>Edit</label></Dropdown.Item>
                               </>}
                               {permission && permission.permissions.delete === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
                                 <Dropdown.Divider />
@@ -159,7 +163,9 @@ const NoteComponent = () => {
                           </Dropdown>
                         </div>
                         <hr className='mt-1 mb-2' />
-                        <pre className='mb-0 px-0 py-2' style={{ background: "transparent" }} >{item.note.slice(0, 145)}</pre>
+                        <div className="note-content">
+                          <p className='mb-0 px-0 py-2' style={{ background: "transparent", whiteSpace: 'break-spaces' }}>{item.note?.length > 100 ? item.note.slice(0, 100) + "..." : item.note}</p>
+                        </div>
                         {item.created &&
                           <div className="text-muted mt-2">
                             <small>Created By: </small>
@@ -170,13 +176,15 @@ const NoteComponent = () => {
                     </div>
                   )
                 })}
-              </div> :
+              </div>
+              :
               <div className="row m-0 pb-3">
                 <div className="col-12 text-center pt-3">
                   <h3 style={{ color: "rgb(163, 170, 177)" }}>No Records Found</h3>
                 </div>
               </div>
             }
+
           </div>
         </div>
       </motion.div>
