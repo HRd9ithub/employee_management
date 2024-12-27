@@ -5427,13 +5427,6 @@ select.form-control.currency-dropdown {
   background-color: #f3fafe;
 }
 
-.password-info-box pre {
-  white-space: break-spaces;
-  /* Allow wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  /* Limit to 3 lines */
-  -webkit-box-orient: vertical;
+.note-content{
+  height: 135px;
 }

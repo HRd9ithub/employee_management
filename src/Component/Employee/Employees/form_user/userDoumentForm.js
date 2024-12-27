@@ -51,22 +51,22 @@ const UserDoumentForm = (props) => {
         let photo_temp = {};
 
         if (userDetail.user_document.length > 0) {
-            if (userDetail.user_document[0].resume !== null) {
+            if (userDetail.user_document[0].resume !== null && userDetail.user_document[0].resume) {
                 resume_temp = { name: userDetail.user_document[0].resume, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].resume}` }
             }
-            if (userDetail.user_document[0].offer_letter !== null) {
+            if (userDetail.user_document[0].offer_letter !== null && userDetail.user_document[0].offer_letter) {
                 offer_letter_temp = { name: userDetail.user_document[0].offer_letter, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].offer_letter}` }
             }
-            if (userDetail.user_document[0].pan_card !== null) {
+            if (userDetail.user_document[0].pan_card !== null && userDetail.user_document[0].pan_card) {
                 pan_card_temp = { name: userDetail.user_document[0].pan_card, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].pan_card}` }
             }
-            if (userDetail.user_document[0].other !== null) {
+            if (userDetail.user_document[0].other !== null && userDetail.user_document[0].other) {
                 other_temp = { name: userDetail.user_document[0].other, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].other}` }
             }
-            if (userDetail.user_document[0].aadhar_card !== null) {
+            if (userDetail.user_document[0].aadhar_card !== null && userDetail.user_document[0].aadhar_card) {
                 aadhar_card_temp = { name: userDetail.user_document[0].aadhar_card, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].aadhar_card}` }
             }
-            if (userDetail.user_document[0].photo !== null) {
+            if (userDetail.user_document[0].photo !== null && userDetail.user_document[0].photo) {
                 photo_temp = { name: userDetail.user_document[0].photo, url: `${process.env.REACT_APP_IMAGE_API}/uploads/${userDetail.user_document[0].photo}` }
             }
         }
