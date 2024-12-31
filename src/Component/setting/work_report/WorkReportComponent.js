@@ -43,7 +43,7 @@ const WorkReportComponent = () => {
     const [error, setError] = useState([]);
     const [extraHoursRowToggle, setextraHoursRowToggle] = useState(false);
 
-    let { get_username, userName, getLeaveNotification, UserData } = useContext(AppProvider);
+    let { get_username, userName, getLeaveNotification } = useContext(AppProvider);
 
     // pagination state
     const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, setPage } = usePagination(50);
@@ -85,7 +85,7 @@ const WorkReportComponent = () => {
     };
 
     useEffect(() => {
-        if ((!localStorageToggle || localStorage.getItem("filter")) && UserData) {
+        if (!localStorageToggle || localStorage.getItem("filter")) {
             const filter = JSON.parse(localStorage.getItem("filter"));
             const newdata = JSON.parse(localStorage.getItem("data"));
             get_username();
@@ -100,13 +100,13 @@ const WorkReportComponent = () => {
                 }
                 setLocalStorageToggle(true)
             } else {
-                const start = UserData?.role?.name?.toLowerCase() !== "admin" ? moment().clone().startOf('month') : moment(date_today).subtract(1, "day")
-                const end = UserData?.role?.name?.toLowerCase() !== "admin" ? moment(date_today).subtract(0, "day") : moment(date_today).subtract(1, "day")
+                const start = moment().clone().startOf('month')
+                const end = moment(date_today).subtract(0, "day")
                 getReport("", start, end);
             }
         }
         // eslint-disable-next-line
-    }, [localStorageToggle, localStorage.getItem("filter"), UserData]);
+    }, [localStorageToggle, localStorage.getItem("filter")]);
 
     // sort function
     const handleRequestSort = (name) => {
@@ -276,6 +276,21 @@ const WorkReportComponent = () => {
         return 0;
     }, [dataFilter, order, orderBy, rowsPerPage, page, permission, extraHoursRowToggle]);
 
+    const totalHoursCount = useMemo(() => {
+        if (dataFilter.length && permission && (permission.name.toLowerCase() !== "admin" || extraHoursRowToggle)) {
+            return sortRowInformation(dataFilter, getComparator(order, orderBy))
+                .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
+                .reduce((acc, cur) => {
+                    if (!dataFilter.some(d => d.date === cur.date && d.name) && Number(cur.totalHours)) {
+                        // /const requiredHours = cur.leave_for ? 4.5 : 8.5;
+                        acc += Math.max(0, parseFloat(Number(cur.totalHours).toFixed(2)));
+                    }
+                    return acc;
+                }, 0);
+        }
+        return 0;
+    }, [dataFilter, order, orderBy, rowsPerPage, page, permission, extraHoursRowToggle]);
+
 
     if (isLoading) {
         return <Spinner />;
@@ -412,8 +427,9 @@ const WorkReportComponent = () => {
                                 {dataFilter.length !== 0 && permission && (permission.name.toLowerCase() !== "admin" || extraHoursRowToggle) &&
                                     <TableFooter>
                                         <TableRow>
-                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={2} align="left">Total Extra Hours:</TableCell>
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={1} align="left">Total Extra Hours:</TableCell>
                                             {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell>}
+                                            <TableCell component={"th"} style={{ fontSize: "unset" }} align="left">{parseFloat(Number(totalHoursCount).toFixed(2))}</TableCell>
                                             <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={3} align="left">{parseFloat(Number(totalExtraHours - pendingTotalHours).toFixed(2))}</TableCell>
                                         </TableRow>
                                     </TableFooter>}

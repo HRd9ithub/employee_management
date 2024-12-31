@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -6,7 +6,7 @@ import { HiOutlineMinus } from "react-icons/hi";
 import Spinner from "../../common/Spinner";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import moment from "moment";
 import Error403 from "../../error_pages/Error403";
 import Error500 from '../../error_pages/Error500';
@@ -22,8 +22,8 @@ const ProjectWorkReportComponent = () => {
   const [dataFilter, setDataFilter] = useState([]);
   const [permission, setPermission] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [startDate, setStartDate] = useState(moment(date_today).subtract(1, "day"));
-  const [endDate, setEndDate] = useState(moment(date_today).subtract(1, "day"));
+  const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
+  const [endDate, setEndDate] = useState(moment(date_today).subtract(0, "day"));
   const [projectId, setProjectId] = useState("");
   const [show, setShow] = useState(false);
   const [serverError, setServerError] = useState(false);
@@ -159,6 +159,29 @@ const ProjectWorkReportComponent = () => {
     setShow(false);
     setDescription({});
   };
+
+
+  const totalHoursCount = useMemo(() => {
+    if (dataFilter.length && permission && permission?.permissions?.list === 1) {
+      return sortRowInformation(dataFilter, getComparator(order, orderBy))
+        .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
+        .reduce((acc, cur) => {
+          if (!dataFilter.some(d => d.date === cur.date && d.name) && Number(cur.totalHours)) {
+            // /const requiredHours = cur.leave_for ? 4.5 : 8.5;
+            acc += Math.max(0, parseFloat(Number(cur.totalHours).toFixed(2)));
+          }
+          return acc;
+        }, 0);
+    }
+    return 0;
+  }, [dataFilter, order, orderBy, rowsPerPage, page, permission]);
+
+  const totalExtraHours = useMemo(() =>
+    sortRowInformation(dataFilter, getComparator(order, orderBy))
+      .slice(rowsPerPage * page, rowsPerPage * page + rowsPerPage)
+      .reduce((acc, cur) => acc + (cur.extraTotalHours || 0), 0),
+    [dataFilter, order, orderBy, rowsPerPage, page]
+  );
 
   if (isLoading) return <Spinner />;
   if (serverError) return <Error500 />;
@@ -321,6 +344,16 @@ const ProjectWorkReportComponent = () => {
                     </TableRow>
                   }
                 </TableBody>
+                {dataFilter.length !== 0 &&
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell component={"th"} style={{ fontSize: "unset" }} colSpan={1} align="left">Total :</TableCell>
+                      {permission && permission.name.toLowerCase() === "admin" && <TableCell></TableCell>}
+                      <TableCell component={"th"} style={{ fontSize: "unset" }} align="center">{parseFloat(Number(totalHoursCount).toFixed(2))}</TableCell>
+                      <TableCell component={"th"} style={{ fontSize: "unset" }} align="center">{parseFloat(Number(totalExtraHours).toFixed(2))}</TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableFooter>}
               </Table>
             </TableContainer>
             <TablePagination
