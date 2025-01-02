@@ -34,6 +34,9 @@ import ProjectWorkReportComponent from '../setting/project_wise_work_report';
 import RequestView from '../setting/work_report/RequestView';
 import NoteComponent from '../setting/notes';
 import AddUpdateNoteForm from '../setting/notes/AddUpdateNoteForm';
+import RulesComponent from '../setting/rules';
+import AddUpdateForm from '../setting/rules/AddUpdateForm';
+import LeaveReport from '../reports/leave';
 
 const AppRoute = ({ setProgress }) => {
     return (
@@ -61,6 +64,7 @@ const AppRoute = ({ setProgress }) => {
             <Route exact path='/holiday' element={<ProtectedRoute authentication={true} ><HolidayComponent /></ProtectedRoute>}></Route>
             <Route exact path='/leave-type' element={<ProtectedRoute authentication={true} ><LeaveType /></ProtectedRoute>}></Route>
             <Route exact path='/leaves' element={<ProtectedRoute authentication={true} ><Leave /></ProtectedRoute>}></Route>
+            <Route exact path='/leave-report' element={<ProtectedRoute authentication={true} ><LeaveReport /></ProtectedRoute>}></Route>
             {/* document component */}
             <Route exact path='/documents' element={<ProtectedRoute authentication={true} ><DocumentComponent /></ProtectedRoute>}></Route>
             {/* activity component */}
@@ -76,6 +80,11 @@ const AppRoute = ({ setProgress }) => {
                 <Route index element={<ProtectedRoute authentication={true} ><NoteComponent /></ProtectedRoute>}></Route>
                 <Route exact path='create' element={<ProtectedRoute authentication={true} ><AddUpdateNoteForm /></ProtectedRoute>}></Route>
                 <Route exact path='edit/:id' element={<ProtectedRoute authentication={true} ><AddUpdateNoteForm /></ProtectedRoute>}></Route>
+            </Route>
+            <Route path='/rules'>
+                <Route index element={<ProtectedRoute authentication={true} ><RulesComponent /></ProtectedRoute>}></Route>
+                <Route exact path='create' element={<ProtectedRoute authentication={true} ><AddUpdateForm /></ProtectedRoute>}></Route>
+                <Route exact path='edit/:id' element={<ProtectedRoute authentication={true} ><AddUpdateForm /></ProtectedRoute>}></Route>
             </Route>
 
             {/* attendance route */}
