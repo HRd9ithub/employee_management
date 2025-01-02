@@ -263,7 +263,7 @@ const Employee = () => {
                           <TableCell>{val.email}</TableCell>
                           <TableCell>{val.phone}</TableCell>
                           <TableCell align="center">
-                            {val.monthsDiff >= 3 ? (val.leave && val.leave?.length !== 0) ? val.leave.map((elem,id) => {
+                            {(val.leave && val.leave?.length !== 0) ? val.leave.map((elem, id) => {
                               return (
                                 <div key={id}>
                                   <span>{elem.shortName}</span>
@@ -271,7 +271,7 @@ const Employee = () => {
                                   <span>{elem.remaining}/{elem.totalLeave}</span>
                                 </div>
                               )
-                            }) : <HiOutlineMinus />: <HiOutlineMinus />}
+                            }) : <HiOutlineMinus />}
                           </TableCell>
                           <TableCell>
                             <Switch

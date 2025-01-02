@@ -42,7 +42,8 @@ const Sidebar = () => {
         let result = [];
         const employee = ['Employees', 'Project', 'Designation']
         const leave = ['Holiday', 'Leave Type', 'Leaves']
-        const setting = ['User Role', 'Employee Wise Work Report', 'Project Wise Work Report', 'Password', "notes"]
+        const setting = ['User Role', 'Password', "Notes", "Rules"]
+        const reports = ['Employee Wise Work Report', 'Project Wise Work Report', "Leave Report"]
         const accounting = ['Invoices', "Clients"]
 
         data.forEach((item) => {
@@ -64,6 +65,17 @@ const Sidebar = () => {
             !abc && result.push({ name: "leave", child: [], icon: item.icon, route: "#" })
             result = result.map((val) => {
               if (val.name === "leave") {
+                return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
+              }
+              return val
+            })
+          } else if (reports.includes(item.name)) {
+            let abc = result.find((val) => {
+              return val.name === "reports"
+            })
+            !abc && result.push({ name: "reports", child: [], icon: item.icon, route: "#" })
+            result = result.map((val) => {
+              if (val.name === "reports") {
                 return { ...val, child: val.child.concat({ _id: item._id, name: item.name, route: item.path }) }
               }
               return val

@@ -496,7 +496,6 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
 
     const getSelectedText = (index) => {
         const editorInstance = editorsRef.current[index];
-        console.log('editorInstance: ', editorInstance)
         if (editorInstance) {
             const selectedText = editorInstance.selection
                 ? editorInstance.selection.sel.toString()
@@ -506,11 +505,7 @@ function WorkReportModal({ data, permission, getReport, isRequest, setuser_id })
     };
 
     const handleAIReWrite = (text, index) => {
-        // const selectedText = getSelectedText(index);
-        // console.log('selectedText: ', selectedText)
         aiResponse(reWriteWithHTMLPrompt(text)).then((correctedText) => {
-            console.log('correctedText: ', correctedText)
-            // setInitialState({ ...initialState, explanation: correctedText })
             setworkData((d) => d.map((v, i) => {
                 if (i === index) {
                     return { ...v, description: correctedText }
