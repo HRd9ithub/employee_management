@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -11,7 +12,9 @@ import moment from 'moment';
 import HolidayModal from './HolidayModal';
 import Swal from 'sweetalert2';
 import usePagination from '../../../hooks/usePagination';
-
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ranges from "../../../helper/calcendarOption";
 
 const HolidayComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -20,6 +23,8 @@ const HolidayComponent = () => {
     const [permission, setpermission] = useState("");
     const [serverError, setServerError] = useState(false);
     const [permissionToggle, setPermissionToggle] = useState(true);
+    const [startDate, setStartDate] = useState(moment().clone().startOf('year'));
+    const [endDate, setEndDate] = useState(moment().clone().endOf('year'));
 
     // pagination state
     const { page, rowsPerPage, handleChangePage, handleChangeRowsPerPage } = usePagination(25);
@@ -28,13 +33,13 @@ const HolidayComponent = () => {
     const [order, setOrder] = useState("asc")
     const [orderBy, setOrderBy] = useState("id")
 
-    //get Holi
+    //get Holiday detail
     const get_holiday_detail = async () => {
         try {
             setisLoading(true);
             setPermissionToggle(true);
             setServerError(false);
-            const res = await customAxios().get('/holiday/');
+            const res = await customAxios().get(`/holiday/?startDate=${moment(startDate).format('YYYY-MM-DD')}&endDate=${moment(endDate).format('YYYY-MM-DD')}`);
             if (res.data.success) {
                 setRecords(res.data.data)
                 setpermission(res.data.permissions)
@@ -43,7 +48,7 @@ const HolidayComponent = () => {
             if (!error.response) {
                 setServerError(true)
                 toast.error(error.message)
-            }else {
+            } else {
                 if (error.response.status === 500) {
                     setServerError(true)
                 }
@@ -59,8 +64,7 @@ const HolidayComponent = () => {
 
     useEffect(() => {
         get_holiday_detail()
-        // eslint-disable-next-line
-    }, [])
+    }, [startDate, endDate]);
 
     // delete function
     const handleDelete = (id) => {
@@ -139,6 +143,11 @@ const HolidayComponent = () => {
         return rowArray.map((el) => el[0])
     }
 
+    const handleCallback = (start, end, label) => {
+        setStartDate(start._d)
+        setEndDate(end._d);
+    }
+
     if (isLoading) {
         return <Spinner />;
     } else if (serverError) {
@@ -157,7 +166,7 @@ const HolidayComponent = () => {
             >
                 <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white pb-4">
-                        <div className=''>
+                        <div>
                             <div className='row justify-content-end align-items-center row-std m-0'>
                                 <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
                                     <div>
@@ -179,6 +188,16 @@ const HolidayComponent = () => {
                                         <i className="fas fa-search"></i>
                                     </div>
                                     <HolidayModal get_holiday_detail={get_holiday_detail} permission={permission} />
+                                </div>
+                            </div>
+                            <div className='container-fluid'>
+                                <div className='row'>
+                                    <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
+                                        <div className="form-group mb-0 position-relative">
+                                            <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges }} onCallback={handleCallback} ><input className="form-control mt-3" /></DateRangePicker>
+                                            <CalendarMonthIcon className="range_icon" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

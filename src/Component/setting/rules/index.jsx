@@ -7,11 +7,10 @@ import Error403 from '../../error_pages/Error403';
 import { customAxios } from '../../../service/CreateApi';
 import toast from 'react-hot-toast';
 import { Dropdown } from 'react-bootstrap';
-import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 import Swal from 'sweetalert2';
-import ViewNoteModal from './ViewNoteModal';
+import ViewRuleModal from './ViewRuleModal';
 
-const NoteComponent = () => {
+const RulesComponent = () => {
   const [serverError, setServerError] = useState(false);
   const [permission, setPermission] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -21,12 +20,12 @@ const NoteComponent = () => {
 
   const navigate = useNavigate();
 
-  // get note function 
-  const getNoteRecord = async () => {
+  // get rule function 
+  const getRulesRecord = async () => {
     setServerError(false);
     setIsLoading(true);
     setPermissionToggle(true);
-    customAxios().get('/note').then((res) => {
+    customAxios().get('/rule').then((res) => {
       if (res.data.success) {
         let { permissions, data } = res.data;
         setPermission(permissions);
@@ -50,14 +49,13 @@ const NoteComponent = () => {
   }
 
   useEffect(() => {
-    getNoteRecord();
+    getRulesRecord();
   }, []);
 
   const recordsFilter = useMemo(() => {
     return records.filter((item) => {
       return (
-        item.title.toLowerCase().includes(searchItem.toLowerCase()) ||
-        item?.created?.first_name?.concat(" ", item?.created?.last_name)?.toLowerCase()?.includes(searchItem.toLowerCase())
+        item.title.toLowerCase().includes(searchItem.toLowerCase())
       )
     });
   }, [records, searchItem]);
@@ -65,7 +63,7 @@ const NoteComponent = () => {
   // delete function
   const handleDelete = (id) => {
     Swal.fire({
-      title: "Delete Note",
+      title: "Delete Rule",
       text: "Are you sure you want to delete?",
       icon: "warning",
       showCancelButton: true,
@@ -77,7 +75,7 @@ const NoteComponent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         setIsLoading(true);
-        const res = await customAxios().delete(`/note/${id}`);
+        const res = await customAxios().delete(`/rule/${id}`);
         if (res.data.success) {
           setRecords((pre) => pre.filter((d) => d._id !== id));
           toast.success(res.data.message);
@@ -95,6 +93,7 @@ const NoteComponent = () => {
       }
     })
   };
+
   const handleRedirect = (path) => {
     navigate(path);
   }
@@ -126,7 +125,7 @@ const NoteComponent = () => {
                 <div>
                   <ul id="breadcrumb" className="mb-0">
                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Notes</NavLink></li>
+                    <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Rules</NavLink></li>
                   </ul>
                 </div>
               </div>
@@ -141,7 +140,7 @@ const NoteComponent = () => {
                   </form>
                   <i className="fas fa-search"></i>
                 </div>
-                {permission && permission.permissions.create === 1 && <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => handleRedirect("/notes/create")}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>}
+                {permission && permission.permissions.create === 1 && <button className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => handleRedirect("/rules/create")}  ><i className="fa-solid fa-plus"></i>&nbsp;Add</button>}
               </div>
             </div>
             {recordsFilter.length !== 0 ?
@@ -157,12 +156,12 @@ const NoteComponent = () => {
                               <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="password-action--dropdown">
-                              <ViewNoteModal noteData={item} permission={permission} />
-                              {permission && permission.permissions.update === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
+                              <ViewRuleModal ruleData={item} />
+                              {permission && permission.permissions.update === 1 && <>
                                 <Dropdown.Divider />
-                                <Dropdown.Item className="dropdown-item" onClick={() => handleRedirect(`/notes/edit/${item._id}`)}><i className="fa-solid fa-pen-to-square"></i><label>Edit</label></Dropdown.Item>
+                                <Dropdown.Item className="dropdown-item" onClick={() => handleRedirect(`/rules/edit/${item._id}`)}><i className="fa-solid fa-pen-to-square"></i><label>Edit</label></Dropdown.Item>
                               </>}
-                              {permission && permission.permissions.delete === 1 && (permission?.name.toLowerCase() === "admin" || item.createdBy === GetLocalStorage("user_id")) && <>
+                              {permission && permission.permissions.delete === 1 && <>
                                 <Dropdown.Divider />
                                 <Dropdown.Item onClick={() => handleDelete(item._id)}><i className="fa-solid fa-trash-can"></i><label>Delete</label></Dropdown.Item>
                               </>}
@@ -171,15 +170,8 @@ const NoteComponent = () => {
                         </div>
                         <hr className='mt-1 mb-2' />
                         <div className="note-content">
-                          {item.note &&
-                            <div className='mb-0 px-0 py-2' style={{ background: "transparent" }} dangerouslySetInnerHTML={{ __html: sanitizeText(item.note) }}></div>}
-                        </div>
-                        {item.created &&
-                          <div className="text-muted mt-2">
-                            <small>Created By: </small>
-                            <small>{item.created?.first_name.concat(" ", item.created?.last_name)}</small>
-                          </div>
-                        }
+                          {item.rules &&
+                            <div className='mb-0 px-0 py-2' style={{ background: "transparent" }} dangerouslySetInnerHTML={{ __html: sanitizeText(item.rules) }}></div>}                        </div>
                       </div>
                     </div>
                   )
@@ -201,4 +193,4 @@ const NoteComponent = () => {
   )
 }
 
-export default NoteComponent
+export default RulesComponent

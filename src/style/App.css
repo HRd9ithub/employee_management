@@ -936,7 +936,7 @@ span.eye-icon {
   background: #ffffff;
   position: absolute;
   left: 71px;
-  width: 225px;
+  width: 246px;
   z-index: 7;
 }
 
@@ -1068,7 +1068,7 @@ span.eye-icon {
 }
 
 .sidebar-icon-only .sidebar .nav .nav-item.hover-open .nav-link .menu-title {
-  width: 225px;
+  width: 246px;
   color: #fff;
   background-color: #0a4a92;
   box-shadow: 1px 2px 3px lightgrey;
@@ -4227,6 +4227,10 @@ input[type="search"] {
   white-space: nowrap;
 }
 
+.password-info-box .note-content p {
+  white-space: unset !important;
+}
+
 .password-auth-info .auth-box {
   margin-bottom: 0 !important;
   padding: 8px 8px;
@@ -5427,6 +5431,6 @@ select.form-control.currency-dropdown {
   background-color: #f3fafe;
 }
 
-.note-content{
+.note-content {
   height: 135px;
 }
