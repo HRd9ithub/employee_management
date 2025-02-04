@@ -187,8 +187,6 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
         if (business.postcode) {
             if (!business.postcode.toString().match(numberFormat)) {
                 setpostcodeError("Postcode must be a number.");
-            } else if (business.postcode.toString().length !== 6) {
-                setpostcodeError("Your postcode must be 6 characters.");
             } else {
                 setpostcodeError("");
             }
@@ -220,9 +218,9 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
         setError([]);
         businessNameValidation();
         addressValidation();
-        stateValidation();
-        cityValidate();
-        postcodeValidation();
+        // stateValidation();
+        // cityValidate();
+        // postcodeValidation();
         phoneValidation();
         GSTINValidation();
         emailValidation();
@@ -334,13 +332,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                                                 {businessNameError && <small id="business_name" className="form-text error">{businessNameError}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-12 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="address">Address</label>
-                                                <input type="text" className="form-control" id="address" placeholder="Enter address" name="address" value={business.address} onChange={handleChange} onBlur={addressValidation} />
-                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
-                                            </div>
-                                        </div>
+
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <h4 className="mb-3">Tax Information <small className="text-gray">(optional)</small></h4>
                                         </div>
@@ -359,6 +351,17 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                                         </div>
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <h4 className="mb-3">Address <small className="text-gray">(optional)</small></h4>
+                                        </div>
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="country">Country</label>
+                                                <select className="form-control" id='country' name="country" value={business.country} onChange={handleChange}>
+                                                    <option value="">Select country</option>
+                                                    {country.map((elem, ind) => {
+                                                        return <option key={ind} value={elem}>{elem}</option>
+                                                    })}
+                                                </select>
+                                            </div>
                                         </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
@@ -381,15 +384,12 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                                                 {postcodeError && <small id="postcode" className="form-text error">{postcodeError}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="country">Country</label>
-                                                <select className="form-control" id='country' name="country" value={business.country} onChange={handleChange}>
-                                                    <option value="">Select country</option>
-                                                    {country.map((elem, ind) => {
-                                                        return <option key={ind} value={elem}>{elem}</option>
-                                                    })}
-                                                </select>
+                                                <label htmlFor="address">Address</label>
+                                                <input type="text" className="form-control" id="address" placeholder="Enter address" name="address" value={business.address} onChange={handleChange} onBlur={addressValidation} />
+                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-12 pr-md-2 pl-md-2">

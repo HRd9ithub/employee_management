@@ -523,7 +523,7 @@ const WorkReportComponent = () => {
                                                                 <TableCell className={handleClass(val)}>
                                                                     {parseFloat(Number(val.totalHours).toFixed(2))}{val.leave_for && (permission && permission.name.toLowerCase() === "admin" ?
                                                                         <NavLink to={"/leave-report"} className="user-status-inactive" onClickCapture={() => handleStorageLeave(val)}>({val?.leave_for})</NavLink> :
-                                                                        (val?.leave_for)
+                                                                        <span className="Leave_column">({val?.leave_for})</span>
                                                                     )}
                                                                 </TableCell>
                                                                 <TableCell className={handleClass(val)}>{val.extraTotalHours ? val.extraTotalHours : 0}</TableCell>
