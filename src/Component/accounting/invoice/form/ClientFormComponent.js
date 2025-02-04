@@ -195,8 +195,6 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         if (client.postcode) {
             if (!client.postcode.toString().match(numberFormat)) {
                 setpostcodeError("Postcode must be a number.");
-            } else if (client.postcode.toString().length !== 6) {
-                setpostcodeError("Your postcode must be 6 characters.");
             } else {
                 setpostcodeError("");
             }
@@ -229,11 +227,11 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
         businessNameValidation();
         emailValidation();
         phoneValidation();
-        stateValidation();
-        cityValidate();
-        postcodeValidation();
+        // stateValidation();
+        // cityValidate();
+        // postcodeValidation();
         addressValidation();
-        GSTINValidation();
+        // GSTINValidation();
 
         let { business_name, client_industry, email, phone, country, state, city, address, postcode, GSTIN, pan_number } = client;
 
@@ -354,13 +352,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                                 <input type="text" className="form-control text-capitalize" id="client_industry" placeholder="Enter Client Industry" name="client_industry" value={client.client_industry} onChange={handleChange} autoComplete='off' maxLength={25} />
                                             </div>
                                         </div>
-                                        <div className="col-md-12 pr-md-2 pl-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="address">Address</label>
-                                                <input type="text" className="form-control" id="address" placeholder="Enter address" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
-                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
-                                            </div>
-                                        </div>
+
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <h4 className="mb-3">Tax Information <small className="text-gray">(optional)</small></h4>
                                         </div>
@@ -380,7 +372,17 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <h4 className="mb-3">Address <small className="text-gray">(optional)</small></h4>
                                         </div>
-
+                                        <div className="col-md-6 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="country">Country</label>
+                                                <select className="form-control" id='country' name="country" value={client.country} onChange={handleChange}>
+                                                    <option value="">Select country</option>
+                                                    {country.map((elem, ind) => {
+                                                        return <option key={ind} value={elem}>{elem}</option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="state">State</label>
@@ -402,15 +404,12 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                                 {postcodeError && <small id="postcode" className="form-text error">{postcodeError}</small>}
                                             </div>
                                         </div>
-                                        <div className="col-md-6 pr-md-2 pl-md-2">
+
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
-                                                <label htmlFor="country">Country</label>
-                                                <select className="form-control" id='country' name="country" value={client.country} onChange={handleChange}>
-                                                    <option value="">Select country</option>
-                                                    {country.map((elem, ind) => {
-                                                        return <option key={ind} value={elem}>{elem}</option>
-                                                    })}
-                                                </select>
+                                                <label htmlFor="address">Address</label>
+                                                <input type="text" className="form-control" id="address" placeholder="Enter address" name="address" value={client.address} onChange={handleChange} onBlur={addressValidation} />
+                                                {addressError && <small id="address" className="form-text error">{addressError}</small>}
                                             </div>
                                         </div>
                                         <div className="col-md-12 pr-md-2 pl-md-2">
