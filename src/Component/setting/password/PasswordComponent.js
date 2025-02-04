@@ -295,7 +295,7 @@ const PasswordComponent = () => {
                             <pre className='mb-0 p-2' style={{ background: "transparent", whiteSpace: "break-spaces" }} >{view.note}</pre>
                           </div>
                         </div> : null}
-                      {view.file ?
+                      {view.file && view.file?.name ?
                         <div className="col-md-12 mt-2">
                           <label >File</label>
                           <div className='position-relative auth-box'>

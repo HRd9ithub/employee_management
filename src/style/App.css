@@ -5433,4 +5433,5 @@ select.form-control.currency-dropdown {
 
 .note-content {
   height: 135px;
+  overflow: hidden;
 }
