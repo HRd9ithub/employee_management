@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Globalcomponent } from '../auth_context/GlobalComponent';
 import Spinner from '../common/Spinner';
@@ -21,6 +21,9 @@ const Login = () => {
 
   const { onSubmit, loading, Error } = Globalcomponent();
 
+  useEffect(() => {
+    console.log("Login Page loaded.")
+  }, [])
 
   //onchange function
   const HandleChange = (event) => {
@@ -114,7 +117,7 @@ const Login = () => {
                     </div>
                     <input type={eyeToggle ? "text" : "password"} className="form-control" aria-label="Text input with radio button" placeholder='Password' name="password" value={data.password} onChange={HandleChange} autoComplete='off' onBlur={passwordValidation} />
                     {eyeToggle ? <span className='eye-icon' onClick={passwordToggle}><VisibilityIcon /></span> :
-                            <span className='eye-icon' onClick={passwordToggle}><VisibilityOffIcon /></span>}
+                      <span className='eye-icon' onClick={passwordToggle}><VisibilityOffIcon /></span>}
                   </div>
                   {passwordError && <small className="form-text error text-left mt-2">{passwordError}</small>}
                 </div>
@@ -123,7 +126,7 @@ const Login = () => {
                 </div>
                 {Error.length !== 0 &&
                   <div className="col-12">
-                     <ErrorComponent errors={Error} />
+                    <ErrorComponent errors={Error} />
                   </div>
                 }
                 <div className="col-12 login-button">
