@@ -400,7 +400,7 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
                                         <div className="col-md-6 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="postcode">Postcode</label>
-                                                <input type="text" className="form-control" id="postcode" placeholder="Enter Postcode" name="postcode" value={client.postcode} maxLength={6} onChange={handleChange} onBlur={postcodeValidation} />
+                                                <input type="text" className="form-control" id="postcode" placeholder="Enter Postcode" name="postcode" value={client.postcode} onChange={handleChange} />
                                                 {postcodeError && <small id="postcode" className="form-text error">{postcodeError}</small>}
                                             </div>
                                         </div>
