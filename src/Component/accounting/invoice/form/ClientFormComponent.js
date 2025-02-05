@@ -5,7 +5,7 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { toast } from 'react-hot-toast';
 import { customAxios1 } from "../../../../service/CreateApi";
-import { alphabetFormat, emailFormat, gstinRegex, numberFormat } from '../../../common/RegaulrExp';
+import { alphabetFormat, alphSpaceFormat, emailFormat, gstinRegex, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
 import { useMatch } from 'react-router-dom';
 import ErrorComponent from '../../../common/ErrorComponent';
@@ -180,8 +180,8 @@ const ClientFormComponent = ({ data, getClientDetail }) => {
     // city validation
     const cityValidate = () => {
         if (client.city) {
-            if (!client.city.match(alphabetFormat)) {
-                setcityError("City must be alphabetic.");
+            if (!client.city.match(alphSpaceFormat)) {
+                setcityError("City must be alphabetic and space.");
             } else {
                 setcityError("")
             }
