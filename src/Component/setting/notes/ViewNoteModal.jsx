@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Dropdown, Modal } from 'react-bootstrap'
-import { GetLocalStorage } from '../../../service/StoreLocalStorage';
 
 const ViewNoteModal = ({ noteData, permission }) => {
   const [modalShow, setModalShow] = useState(false);
@@ -30,15 +29,6 @@ const ViewNoteModal = ({ noteData, permission }) => {
                 <div>
                   <div className='mb-0 py-2 px-0' style={{ background: "transparent" }} dangerouslySetInnerHTML={{ __html: noteData.note }}></div>
                 </div>
-                {permission && (permission?.name.toLowerCase() === "admin" || noteData.createdBy === GetLocalStorage("user_id")) && noteData.hasOwnProperty("access") && noteData.access.length !== 0 &&
-                  <div className="access-employee-list mt-4">
-                    <h3>Access Employee List:</h3>
-                    <div className="row mt-3" style={{ rowGap: "10px" }} >
-                      {noteData.hasOwnProperty("access") && noteData.access.map((item, index) => (
-                        <div className="col-md-4 col-sm-6" key={item._id}><span className='pr-2'>{index + 1}.</span> <label className='mb-0'>{item?.first_name.concat(" ", item.last_name)}</label></div>
-                      ))}
-                    </div>
-                  </div>}
               </div>
             </div>
           </div>
