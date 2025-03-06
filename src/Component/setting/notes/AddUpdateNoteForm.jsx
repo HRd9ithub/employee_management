@@ -1,9 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import Select from 'react-select';
-import { AppProvider } from '../../context/RouteContext';
-import { GetLocalStorage } from '../../../service/StoreLocalStorage';
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Spinner from '../../common/Spinner';
 import { customAxios } from '../../../service/CreateApi';
 import toast from 'react-hot-toast';
@@ -13,9 +10,9 @@ import { SpellCheck } from '../../ai/SpellCheck';
 import Error500 from '../../error_pages/Error500';
 import Error403 from '../../error_pages/Error403';
 import JoditEditor from 'jodit-react';
+
 const AddUpdateNoteForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [accessEmployee, setAccessEmployee] = useState(null);
   const [note, setNote] = useState({
     title: "",
     content: ""
@@ -26,8 +23,8 @@ const AddUpdateNoteForm = () => {
   const [serverError, setServerError] = useState(false);
   const [permission, setPermission] = useState("");
   const [permissionToggle, setPermissionToggle] = useState(true);
+  const [noteContentToggle, setNoteContentToggle] = useState(false);
 
-  let { get_username, userName, Loading } = useContext(AppProvider);
   const { loading, aiResponse } = SpellCheck();
 
   const navigate = useNavigate();
@@ -40,7 +37,6 @@ const AddUpdateNoteForm = () => {
       title: "",
       content: ""
     });
-    setAccessEmployee(null);
     setTitleError("");
     setContentError("");
     setError([]);
@@ -53,7 +49,7 @@ const AddUpdateNoteForm = () => {
     customAxios().get(`/note/${id}`).then((res) => {
       if (res.data.success) {
         const { permissions, data } = res.data;
-        const { title, access, _id, note, createdBy } = data;
+        const { title, _id, note, createdBy } = data;
 
         setNote({
           title,
@@ -61,12 +57,6 @@ const AddUpdateNoteForm = () => {
           content: note ? note : "",
           createdBy
         });
-        if (data.hasOwnProperty("access")) {
-          const result = access.filter((u) => u._id !== data.createdBy).map((elem) => {
-            return { value: elem._id, label: elem.first_name.concat(" ", elem.last_name) }
-          })
-          setAccessEmployee(result);
-        }
         setPermission(permissions);
         setIsLoading(false)
       }
@@ -86,21 +76,7 @@ const AddUpdateNoteForm = () => {
     }).finally(() => setPermissionToggle(false));
   }
 
-  useEffect(() => {
-    get_username();
-  }, []);
-
   useEffect(() => id && fetchNote(), [id])
-
-  const employeeData = useMemo(() => {
-    let result = [];
-    userName.forEach((val) => {
-      if (val.role.toLowerCase() !== "admin" && val._id !== GetLocalStorage("user_id") && val._id !== note?.createdBy) {
-        result.push({ value: val._id, label: val.name })
-      }
-    })
-    return result
-  }, [userName])
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -115,11 +91,19 @@ const AddUpdateNoteForm = () => {
       setTitleError("");
     }
   }
-  const contentValidation = () => {
-    if (!note.content.trim() || !note.content.replaceAll("<p><br></p>", "")) {
-      setContentError("Note is a required field.")
+  const contentValidation = (noteContent) => {
+    if (noteContent) {
+      if (!noteContent.trim() || !noteContent.replaceAll("<p><br></p>", "")) {
+        setContentError("Note is a required field.")
+      } else {
+        setContentError("");
+      }
     } else {
-      setContentError("");
+      if (!note.content.trim() || !note.content.replaceAll("<p><br></p>", "")) {
+        setContentError("Note is a required field.")
+      } else {
+        setContentError("");
+      }
     }
   }
 
@@ -138,14 +122,9 @@ const AddUpdateNoteForm = () => {
       return false;
     }
 
-    const access_employee = accessEmployee?.map((val) => {
-      return val.value
-    })
-
     const payload = {
       title: note.title,
-      note: note.content,
-      access_employee
+      note: note.content
     }
 
     let url = "";
@@ -188,7 +167,40 @@ const AddUpdateNoteForm = () => {
   const config = useMemo(() => {
     return {
       readonly: false,
-      placeholder: 'write your content ....'
+      placeholder: 'write your content ....',
+      uploader: {
+        url: process.env.REACT_APP_API_KEY + '/upload',
+        format: 'json',
+        method: 'POST',
+        prepare: (formData) => {
+          return formData;
+        },
+        error: (e) => {
+          return e.message;
+        },
+        isSuccess: function (resp) {
+          return !resp?.error;
+        },
+        getMsg: function (resp) {
+          return resp.message;
+        },
+        process: (response) => {
+          if (response.success) { // Check if the upload was successful on the server
+            return {
+              url: response.data.url, // URL of the uploaded image (from server response)
+            };
+          } else {
+            throw new Error(response.message || 'Image upload failed'); // Handle errors
+          }
+        },
+        defaultHandlerSuccess: function (data, resp) {
+          if (data.url && data.url.length) {
+            const joditRef = this?.selection || this?.jodit?.selection
+            joditRef?.insertImage(data.url, null, 250);
+          }
+        },
+      },
+      removeButtons: ['about', 'file', 'paint', 'fullsize',]
     }
   }, []);
 
@@ -222,23 +234,11 @@ const AddUpdateNoteForm = () => {
               <div className="card-body">
                 <form className="forms-sample" onSubmit={handleFormSubmit}>
                   <div className="row">
-                    <div className="col-md-6 pr-md-2 pl-md-2">
+                    <div className="col-md-12 pr-md-2 pl-md-2">
                       <div className="form-group">
                         <label htmlFor="title" className='mt-2'>Title</label>
                         <input type="text" autoComplete='off' className="form-control" id="title" placeholder="Title" name='title' value={note.title} onChange={handleFormChange} onBlur={titleValidation} />
                         {titleError && <small id="title" className="form-text error">{titleError}</small>}
-                      </div>
-                    </div>
-                    <div className="col-md-6 pr-md-2 pl-md-2">
-                      <div className="form-group">
-                        <label htmlFor="title" className='mt-2'>Employee</label>
-                        <Select className='employee-multiple-select'
-                          options={employeeData}
-                          isMulti
-                          placeholder="select employee"
-                          value={accessEmployee}
-                          onChange={setAccessEmployee}
-                        />
                       </div>
                     </div>
                     <div className="col-md-12 pr-md-2 pl-md-2">
@@ -248,11 +248,14 @@ const AddUpdateNoteForm = () => {
                           <JoditEditor
                             config={config}
                             value={note.content}
-                            onChange={newContent => handleContentChange(newContent)}
-                            onBlur={contentValidation}
+                            onChange={newContent => setNoteContentToggle(newContent.replace("<p><br></p>", "").length > 5)}
+                            onBlur={newContent => {
+                              handleContentChange(newContent);
+                              contentValidation(newContent);
+                            }}
                             ref={editorsRef}
                           />
-                          {note?.content?.length > 3 && <button className='ai-button editor-ai' type='button' onClick={() => handleAIReWrite(note.content)} title='Improve it' disabled={loading}><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
+                          {noteContentToggle && <button className='ai-button editor-ai' type='button' onClick={() => handleAIReWrite(note.content)} title='Improve it' disabled={loading}><i className="fa-solid fa-wand-magic-sparkles"></i></button>}
                         </div>
                         {ContentError && <small id="title" className="form-text error">{ContentError}</small>}
                       </div>
@@ -274,7 +277,7 @@ const AddUpdateNoteForm = () => {
           </div>
         </div>
       </div>
-      {(Loading || isLoading) && <Spinner />}
+      {(isLoading) && <Spinner />}
     </>
   )
 }

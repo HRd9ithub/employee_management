@@ -14,22 +14,22 @@ const ItemComponent = (props) => {
     }, []);
 
     const colSpanToggle = useMemo(() => {
-           const data = newcolumns.filter((val) => {
+        const data = newcolumns.filter((val) => {
             return val.toggle;
-           })
-           return data.length
-    },[newcolumns])
+        })
+        return data.length > 6 ? 5 : data.length
+    }, [newcolumns])
 
 
     return (
         <>
             <div className='row'>
                 <div className='col-md-12 pe-5'>
-                    <Table responsive="md" gap="10" style={{ background: "rgb(247, 250, 255)" }}>
+                    <Table responsive gap="10" style={{ background: "rgb(247, 250, 255)" }} className='custom-table custom-scroll'>
                         <thead className='head-item'>
                             <tr>
                                 {newcolumns.map((val, id) => {
-                                    return val.toggle && <th key={id}>{val.field}{val.name === "amount" &&`(${currency.value?.slice(6)})`}</th>
+                                    return val.toggle && <th style={{ width: val.width || "200px" }} key={id}>{val.field}{val.name === "amount" && `(${currency.value?.slice(6)})`}</th>
                                 })}
                                 <th></th>
                             </tr>
@@ -41,7 +41,7 @@ const ItemComponent = (props) => {
                                         <tr className="table-border">
                                             {newcolumns.map((column, id) => {
                                                 return (
-                                                    column.toggle &&<td key={id}>
+                                                    column.toggle && <td key={id}>
                                                         {column.name === "itemName" ?
                                                             <div style={{ height: "38px" }}>
                                                                 <input className='form-control' placeholder='item name' name="itemName" type="text" value={itemData.itemName || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
@@ -63,65 +63,66 @@ const ItemComponent = (props) => {
                                                                     val.id === ind && <span className='error' key={val.id}>{val.item}</span>
                                                                 ))}
                                                             </div> :
-                                                            column.name === "GST" ? <input className='form-control' type="number" value={itemData.GST || ""} name='GST' onChange={(e) => handleItemchange(e, ind)} /> :
-                                                                column.name === "rate" ?
-                                                                    <div style={{ height: "38px" }}>
-                                                                        <input className='form-control' type="number" min="0" name="rate" value={itemData.rate || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
-                                                                            if (!itemData.rate.trim()) {
-                                                                                let list = rateError.filter((val) => {
-                                                                                    return val.id === ind
-                                                                                })
-                                                                                if (list.length === 0) {
-                                                                                    setrateError([...rateError, { rate: "Rate is a required field.", id: ind }])
-                                                                                }
-                                                                            } else {
-                                                                                let temp = rateError.filter((elem) => {
-                                                                                    return elem.id !== ind
-                                                                                })
-                                                                                setrateError(temp)
-                                                                            }
-                                                                        }} />
-                                                                        {rateError.map((val) => (
-                                                                            val.id === ind && <span className='error' key={val.id}>{val.rate}</span>
-                                                                        ))}
-                                                                    </div> : column.name === "quantity" ?
+                                                            column.name === "HSN/SAC" ? <input className='form-control' type="number" value={itemData["HSN/SAC"] || ""} name='HSN/SAC' onChange={(e) => handleItemchange(e, ind)} /> :
+                                                                column.name === "GST" ? <input className='form-control' type="number" value={itemData.GST || ""} name='GST' onChange={(e) => handleItemchange(e, ind)} /> :
+                                                                    column.name === "rate" ?
                                                                         <div style={{ height: "38px" }}>
-                                                                            <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity || ''} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
-                                                                                if (!itemData.quantity) {
-                                                                                    let list = quantiyError.filter((val) => {
+                                                                            <input className='form-control' type="number" min="0" name="rate" value={itemData.rate || ""} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                                                if (!itemData.rate.trim()) {
+                                                                                    let list = rateError.filter((val) => {
                                                                                         return val.id === ind
                                                                                     })
                                                                                     if (list.length === 0) {
-                                                                                        setquantiyError([...quantiyError, { Quantity: "Quantity is a required field", id: ind }])
+                                                                                        setrateError([...rateError, { rate: "Rate is a required field.", id: ind }])
                                                                                     }
                                                                                 } else {
-                                                                                    let temp = quantiyError.filter((elem) => {
+                                                                                    let temp = rateError.filter((elem) => {
                                                                                         return elem.id !== ind
                                                                                     })
-                                                                                    setquantiyError(temp)
+                                                                                    setrateError(temp)
                                                                                 }
                                                                             }} />
-                                                                            {quantiyError.map((val) => (
-                                                                                val.id === ind && <span className='error' key={val.id}>{val.Quantity}</span>
+                                                                            {rateError.map((val) => (
+                                                                                val.id === ind && <span className='error' key={val.id}>{val.rate}</span>
                                                                             ))}
-                                                                        </div> : column.name === "CGST" ?
-                                                                            <input className='form-control' type="text" value={itemData.CGST || ''} readOnly />
-                                                                            : column.name === "SGST" ?
-                                                                                <input className='form-control' type="text" value={itemData.SGST || ''} readOnly />
-                                                                                : column.name === "IGST" ?
-                                                                                    <input className='form-control' type="text" value={itemData.IGST || ''} readOnly /> :
-                                                                                    column.name === "amount" ?
-                                                                                        <input className='form-control' type="text" value={convertNumberFormat(itemData.amount) || ''} readOnly /> :
-                                                                                    column.name === "total" ?
-                                                                                        <input className='form-control' type="text" value={convertNumberFormat(itemData.total) || ''} readOnly /> :
-                                                                                        <input
-                                                                                            className='form-control'
-                                                                                            type="text"
-                                                                                            value={itemData[column.name] || ''}
-                                                                                            name={column.name}
-                                                                                            placeholder={column.field}
-                                                                                            onChange={(e) => handleItemchange(e, ind)}
-                                                                                        />
+                                                                        </div> : column.name === "quantity" ?
+                                                                            <div style={{ height: "38px" }}>
+                                                                                <input className='form-control' type="number" min="0" name="quantity" value={itemData.quantity || ''} onChange={(e) => handleItemchange(e, ind)} onBlur={(e) => {
+                                                                                    if (!itemData.quantity) {
+                                                                                        let list = quantiyError.filter((val) => {
+                                                                                            return val.id === ind
+                                                                                        })
+                                                                                        if (list.length === 0) {
+                                                                                            setquantiyError([...quantiyError, { Quantity: "Quantity is a required field", id: ind }])
+                                                                                        }
+                                                                                    } else {
+                                                                                        let temp = quantiyError.filter((elem) => {
+                                                                                            return elem.id !== ind
+                                                                                        })
+                                                                                        setquantiyError(temp)
+                                                                                    }
+                                                                                }} />
+                                                                                {quantiyError.map((val) => (
+                                                                                    val.id === ind && <span className='error' key={val.id}>{val.Quantity}</span>
+                                                                                ))}
+                                                                            </div> : column.name === "CGST" ?
+                                                                                <input className='form-control' type="text" value={itemData.CGST || ''} readOnly />
+                                                                                : column.name === "SGST" ?
+                                                                                    <input className='form-control' type="text" value={itemData.SGST || ''} readOnly />
+                                                                                    : column.name === "IGST" ?
+                                                                                        <input className='form-control' type="text" value={itemData.IGST || ''} readOnly /> :
+                                                                                        column.name === "amount" ?
+                                                                                            <input className='form-control' type="text" value={convertNumberFormat(itemData.amount) || ''} readOnly /> :
+                                                                                            column.name === "total" ?
+                                                                                                <input className='form-control' type="text" value={convertNumberFormat(itemData.total) || ''} readOnly /> :
+                                                                                                <input
+                                                                                                    className='form-control'
+                                                                                                    type="text"
+                                                                                                    value={itemData[column.name] || ''}
+                                                                                                    name={column.name}
+                                                                                                    placeholder={column.field}
+                                                                                                    onChange={(e) => handleItemchange(e, ind)}
+                                                                                                />
                                                         }
                                                     </td>
                                                 )

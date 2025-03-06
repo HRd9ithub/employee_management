@@ -9,7 +9,7 @@ const RenameComponent = ({ staticHead, newcolumns, setnewcolumns, settableData, 
     const [row, setRow] = useState(1);
 
     // fixed header
-    const fixedHeader = ["itemName", "GST", "rate", "quantity", "amount", "CGST", "SGST", "IGST", "total"];
+    const fixedHeader = ["itemName", "HSN/SAC", "GST", "rate", "quantity", "amount", "CGST", "SGST", "IGST", "total"];
 
     useEffect(() => {
         setData(staticHead)

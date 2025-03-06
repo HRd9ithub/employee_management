@@ -4587,6 +4587,24 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background-color: #f6faff;
   padding: 16px;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-bottom: 16px;
+}
+
+.custom-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.custom-table th,
+.custom-table td {
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Show "..." if content overflows */
 }
 
 .bill-logo img {
@@ -4625,7 +4643,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   margin: 22px 1px 5px 1px;
   background-color: #fff;
   border-radius: 7px;
-  height: 310px;
+  min-height: 310px;
+  height: 100%;
 }
 
 .business-detail.client-error {
@@ -5340,8 +5359,31 @@ select.form-control.currency-dropdown {
   background-color: #f2f2f2 !important;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  margin: 15px 0;
+}
+
+.grid-section {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 18px 22px;
+  border-radius: 5px;
+  background-color: #0a4a92;
+  color: white;
+}
+
 
 @media print {
+  .grid-container {
+    grid-template-columns: 1fr 1fr !important;
+    /* Force two columns on print */
+  }
+
 
   .template-section .row:nth-child(3),
   .extra-section .row {
@@ -5360,8 +5402,16 @@ select.form-control.currency-dropdown {
     margin-top: -30px !important;
   }
 
+  .invoice-bill-detail .col-md-6 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 16px;
+  }
+
   .bill-by-to-section {
-    min-height: 160px !important;
+    min-height: 200px;
+    height: 100%;
   }
 
   .product-table thead tr th {

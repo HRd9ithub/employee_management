@@ -10,7 +10,7 @@ import moment from 'moment';
 import { useReactToPrint } from 'react-to-print';
 import Swal from 'sweetalert2';
 import Error403 from '../../../error_pages/Error403';
-import { Card, Dropdown } from 'react-bootstrap';
+import { Card, Dropdown, Modal } from 'react-bootstrap';
 import convertNumberFormat from '../../../../service/NumberFormat';
 import Accordion from 'react-bootstrap/Accordion';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -20,6 +20,7 @@ import AccountFormComponent from './AccountFormComponent';
 import axios from 'axios';
 import fileDownload from 'js-file-download';
 import { HiOutlineMinus } from 'react-icons/hi';
+import { FormControlLabel, FormGroup, Switch } from '@mui/material';
 
 const InvoicePreviewComponent = () => {
     const [isLoading, setisLoading] = useState(false);
@@ -29,28 +30,36 @@ const InvoicePreviewComponent = () => {
     const [clientData, setClientData] = useState("");
     const [invoiceProvider, setinvoiceProvider] = useState("");
     const [bankDetail, setbankDetail] = useState("");
+    const [selectedAccountID, setSelectedAccountId] = useState("");
+    const [bankAllDetail, setBankAllDetail] = useState([]);
     const [permission, setpermission] = useState("");
     const [permissionToggle, setPermissionToggle] = useState(true);
+    const [firstCall, setFirstCall] = useState(false);
+    const [show, setShow] = useState(false);
 
     const Navigate = useNavigate();
     const componentRef = useRef();
 
     const { id } = useParams();
+    const [isChecked, setIsChecked] = useState(false);
+    const [selectedAccount, setSelectedAccount] = useState("");
 
-    /*  -------------------------------
-        get data in database for account
-    ----------------------------------- */
+    const handleToggle = (event, aId) => {
+        setIsChecked(event.target.checked);
+        handleToggleBankDetails(event.target.checked, aId);
+    };
 
-    const getSingleAccountDetail = async () => {
+    const handleToggleBankDetails = (checked, aId, updated) => {
         setServerError(false)
         setisLoading(true);
-
-        customAxios().get(`invoice/account/${id}`).then((res) => {
+        customAxios().post(`invoice/toggle-bank`, {
+            invoice_id: id,
+            account_id: checked ? aId : ""
+        }).then((res) => {
             if (res.data.success) {
-                const { data } = res.data;
-                if (data) {
-                    setbankDetail(data);
-                }
+                getInvoiceDetail();
+                setSelectedAccountId(aId);
+                !updated && toast.success(res.data.message)
                 setisLoading(false);
             }
         }).catch((error) => {
@@ -86,10 +95,15 @@ const InvoicePreviewComponent = () => {
                     setClientData(...data[0].invoiceClient);
                     setinvoiceProvider(...data[0].invoiceProvider);
                     setproductDetails(...data[0].productDetails);
+                    setbankDetail(...data[0].bankDetails);
+                    if (!firstCall) {
+                        setSelectedAccountId(data[0].invoice_accounts_id);
+                    }
+                    setIsChecked(data[0].invoice_accounts_id ? true : false);
+                    setFirstCall(true)
                 }
                 setpermission(permissions);
                 setisLoading(false);
-
             }
         }).catch((error) => {
             setisLoading(false);
@@ -107,10 +121,30 @@ const InvoicePreviewComponent = () => {
         }).finally(() => setPermissionToggle(false))
     }
 
+    const getAccountDetail = async () => {
+        setisLoading(true);
+
+        customAxios().get(`invoice/account`).then((res) => {
+            if (res.data.success) {
+                const { data } = res.data;
+                setBankAllDetail(data);
+                setisLoading(false);
+            }
+        }).catch((error) => {
+            setisLoading(false);
+            if (!error.response) {
+                toast.error(error.message);
+            } else {
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        });
+    }
+
     useEffect(() => {
         getInvoiceDetail();
-        getSingleAccountDetail();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        getAccountDetail();
     }, [])
 
     /*--------------------
@@ -158,7 +192,8 @@ const InvoicePreviewComponent = () => {
         axios.get(`${process.env.REACT_APP_API_KEY}/invoice/invoice-download?id=${id}`, {
             responseType: 'blob',
         }).then((res) => {
-            fileDownload(res.data, "invoice.pdf");
+            const fileName = `invoice-${invoiceDetail.invoiceId}.pdf`
+            fileDownload(res.data, fileName);
             toast.success("Download successfully.")
             setisLoading(false)
         }).catch((error) => {
@@ -179,9 +214,26 @@ const InvoicePreviewComponent = () => {
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: clientData.first_name + "-invoice.pdf"
+        documentTitle: `invoice-${invoiceDetail.invoiceId}.pdf`
     })
 
+    /** ==================== 
+        Select Another bank account modal function
+    ======================= */
+
+    const handleShowModal = () => {
+        setSelectedAccount(selectedAccountID);
+        setShow(true);
+    }
+
+    const handleCloseModal = () => {
+        setShow(false);
+    }
+
+    const handleSelectBankChange = () => {
+        handleToggleBankDetails(true, selectedAccount, "updated");
+        handleCloseModal();
+    }
 
     /*---------------------------
         table total calacution
@@ -369,29 +421,27 @@ const InvoicePreviewComponent = () => {
                                             </div>
                                         }
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6 mt-4">
-                                            <div className="bill-by-to-section h-100">
-                                                <h3>Billed By</h3>
-                                                <h4>{invoiceProvider.business_name}</h4>
-                                                <p className="mb-0">{invoiceProvider.address}{invoiceProvider.city && ", " + invoiceProvider.city}{invoiceProvider.state && ", " + invoiceProvider.state}{invoiceProvider.country && ", " + invoiceProvider.country}{invoiceProvider.postcode && " " + invoiceProvider.postcode}</p>
-                                                {invoiceProvider.GSTIN && <p className="mb-0">GSTIN: {invoiceProvider.GSTIN}</p>}
-                                                {invoiceProvider.pan_number && <p className="mb-0">PAN: {invoiceProvider.pan_number}</p>}
-                                                {invoiceProvider.email && <p className="mb-0">Email: {invoiceProvider.email}</p>}
-                                                {invoiceProvider.phone && <p className="mb-0">Phone: +91 {invoiceProvider.phone}</p>}
-                                            </div>
+                                    <div className="grid-container">
+                                        <div className="grid-section">
+                                            <h3>Billed By</h3>
+                                            <h4>{invoiceProvider.business_name}</h4>
+                                            <p className="mb-0">{invoiceProvider.address}{invoiceProvider.city && ", " + invoiceProvider.city}{invoiceProvider.state && ", " + invoiceProvider.state}{invoiceProvider.country && ", " + invoiceProvider.country}{invoiceProvider.postcode && " " + invoiceProvider.postcode}</p>
+                                            {invoiceProvider.GSTIN && <p className="mb-0">GSTIN: {invoiceProvider.GSTIN}</p>}
+                                            {invoiceProvider.pan_number && <p className="mb-0">PAN: {invoiceProvider.pan_number}</p>}
+                                            {invoiceProvider.email && <p className="mb-0">Email: {invoiceProvider.email}</p>}
+                                            {invoiceProvider.phone && <p className="mb-0">Phone: +91 {invoiceProvider.phone}</p>}
+                                            {invoiceProvider.custom_field ? JSON.parse(invoiceProvider.custom_field)?.length > 0 && JSON.parse(invoiceProvider.custom_field).map((field, index) => (<p key={index} className="mb-0">{field.name}: {field.value}</p>)) : ""}
                                         </div>
-                                        <div className="col-md-6 mt-4">
-                                            <div className="bill-by-to-section h-100">
-                                                <h3>Billed To</h3>
-                                                <h4>{clientData.business_name}</h4>
-                                                {clientData.client_industry && <p className="mb-0">{clientData.client_industry}</p>}
-                                                <p className="mb-0">{clientData.address}{clientData.city && ", " + clientData.city}{clientData.state && ", " + clientData.state}{clientData.country && ", " + clientData.country}{clientData.postcode && " " + clientData.postcode}</p>
-                                                {clientData.GSTIN && <p className="mb-0">GSTIN: {clientData.GSTIN}</p>}
-                                                {clientData.pan_number && <p className="mb-0">PAN: {clientData.pan_number}</p>}
-                                                {clientData.email && <p className="mb-0">Email: {clientData.email}</p>}
-                                                {clientData.phone && <p className="mb-0">Phone: +91 {clientData.phone}</p>}
-                                            </div>
+                                        <div className="grid-section">
+                                            <h3>Billed To</h3>
+                                            <h4>{clientData.business_name}</h4>
+                                            {clientData.client_industry && <p className="mb-0">{clientData.client_industry}</p>}
+                                            <p className="mb-0">{clientData.address}{clientData.city && ", " + clientData.city}{clientData.state && ", " + clientData.state}{clientData.country && ", " + clientData.country}{clientData.postcode && " " + clientData.postcode}</p>
+                                            {clientData.GSTIN && <p className="mb-0">GSTIN: {clientData.GSTIN}</p>}
+                                            {clientData.pan_number && <p className="mb-0">PAN: {clientData.pan_number}</p>}
+                                            {clientData.email && <p className="mb-0">Email: {clientData.email}</p>}
+                                            {clientData.phone && <p className="mb-0">Phone: +91 {clientData.phone}</p>}
+                                            {clientData.custom_field ? JSON.parse(clientData.custom_field)?.length > 0 && JSON.parse(clientData.custom_field).map((field, index) => (<p key={index} className="mb-0">{field.name}: {field.value}</p>)) : ""}
                                         </div>
                                     </div>
                                     {/* product details table */}
@@ -406,7 +456,7 @@ const InvoicePreviewComponent = () => {
                                                     </tr>
                                                 </thead>}
                                             {productDetails.hasOwnProperty("tableBody") &&
-                                                <tbody>
+                                                <tbody className='body-div'>
                                                     {productDetails.tableBody.map((val, id) => {
                                                         return (
                                                             <tr key={id}>
@@ -416,7 +466,7 @@ const InvoicePreviewComponent = () => {
                                                                             {column.toggle && (column.name === "amount" ?
                                                                                 <td>{convertNumberFormat(val[column.name])}</td>
                                                                                 : <td >{val[column.name] ? val[column.name] : <HiOutlineMinus />}
-                                                                                    {column.name === "itemName" && val.description && <div dangerouslySetInnerHTML={{__html: val.description}}></div>}
+                                                                                    {column.name === "itemName" && val.description && <div dangerouslySetInnerHTML={{ __html: val.description }}></div>}
                                                                                 </td>)}
                                                                         </React.Fragment>
                                                                     )
@@ -557,7 +607,7 @@ const InvoicePreviewComponent = () => {
                                 </div>
                             </div>
                             {/* bank detail accrodion */}
-                            <Accordion>
+                            <Accordion defaultActiveKey="1" >
                                 <Card>
                                     <Accordion.Toggle className='card-header invoice-summary' eventKey='1'>
                                         <h5 className="mb-0 btn">
@@ -569,41 +619,53 @@ const InvoicePreviewComponent = () => {
                                     <Accordion.Collapse eventKey='1'>
                                         <Card.Body className='summary-card-body'>
                                             <div className="row">
-                                                {bankDetail &&
-                                                    <>
+                                                {bankAllDetail.length > 0 && bankAllDetail.filter((b) => b._id === selectedAccountID).map((ba) => (
+                                                    <React.Fragment key={ba._id}>
                                                         <div className="col-lg-3 col-md-4 col-sm-6">
                                                             <div className="form-group">
                                                                 <label htmlFor="2" className='mt-2'>Account Number</label>
-                                                                <p className="mb-0">{bankDetail.account_number}</p>
+                                                                <p className="mb-0">{ba.account_number}</p>
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-3 col-md-4 col-sm-6">
                                                             <div className="form-group">
                                                                 <label htmlFor="2" className='mt-2'>IFSC Code</label>
-                                                                <p className="mb-0">{bankDetail.ifsc_code}</p>
+                                                                <p className="mb-0">{ba.ifsc_code}</p>
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-3 col-md-4 col-sm-6">
                                                             <div className="form-group">
                                                                 <label htmlFor="2" className='mt-2'>Bank Name</label>
-                                                                <p className="mb-0">{bankDetail.bank}</p>
+                                                                <p className="mb-0">{ba.bank}</p>
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-3 col-md-4 col-sm-6">
                                                             <div className="form-group">
                                                                 <label htmlFor="2" className='mt-2'>Branch Name</label>
-                                                                <p className="mb-0">{bankDetail.branch_name}</p>
+                                                                <p className="mb-0">{ba.branch_name}</p>
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-3 col-md-4 col-sm-6">
                                                             <div className="form-group">
                                                                 <label htmlFor="2" className='mt-2'>Name</label>
-                                                                <p className="mb-0">{bankDetail.name}</p>
+                                                                <p className="mb-0">{ba.name}</p>
                                                             </div>
                                                         </div>
-                                                    </>}
-                                                <div className={!bankDetail ? "col-12 text-center" : "col-12"}>
-                                                    <AccountFormComponent bankDetail={bankDetail} getSingleAccountDetail={getSingleAccountDetail} />
+                                                        <div className="col-md-12">
+                                                            <FormGroup>
+                                                                <FormControlLabel control={<Switch
+                                                                    checked={isChecked}
+                                                                    onChange={(e) => handleToggle(e, ba._id)}
+                                                                    inputProps={{ 'aria-label': 'controlled' }}
+                                                                />} label="Show/Hide Bank Details Template" />
+                                                            </FormGroup>
+                                                        </div>
+                                                    </React.Fragment>
+                                                ))}
+                                                <div className={"col-12 text-center"}>
+                                                    {bankAllDetail.length > 0 &&
+                                                        <button type="button" className="btn btn-outline-primary btn-fw text-center button-full-width" onClick={handleShowModal}>Select Another Bank Account</button>}
+                                                    <AccountFormComponent selectedAccountID={selectedAccountID} bankDetail={bankDetail} handleToggleBankDetails={handleToggleBankDetails} getAccountDetail={getAccountDetail} bankAllDetail={bankAllDetail} />
                                                 </div>
                                             </div>
                                         </Card.Body>
@@ -614,6 +676,59 @@ const InvoicePreviewComponent = () => {
                     </div>
                 </div>
             </motion.div>
+            <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" centered>
+                <Modal.Header className='small-modal'>
+                    <Modal.Title>Select a Bank Account</Modal.Title>
+                    <p className='close-modal' onClick={handleCloseModal}><i className="fa-solid fa-xmark"></i></p>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className=" grid-margin stretch-card inner-pages mb-lg-0">
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="mb-3">Bank Accounts </h5>
+                                {bankAllDetail.map((account) => (
+                                    <div
+                                        key={account.id}
+                                        className={`border border-2 rounded p-3 mb-3 ${selectedAccount === account.id ? "border-primary" : ""
+                                            }`}
+                                        onClick={() => setSelectedAccount(account.id)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div className="d-flex gap-2 align-items-center">
+                                            <div>
+                                                <input
+                                                    type="radio"
+                                                    name="bankAccount"
+                                                    checked={selectedAccount === account.id}
+                                                    className="mr-2"
+                                                />
+                                            </div>
+                                            <div>
+                                                <h6 className="mb-0 font-weight-bold">{account.bank}</h6>
+                                                <p className="mb-1 text-muted">{account.name}</p>
+                                                <small className="text-muted">
+                                                    <strong>Acc. No:</strong> {account.account_number}
+                                                </small>
+                                                {account.ifsc_code && (
+                                                    <p className="text-muted mb-0">
+                                                        <strong>IFSC:</strong> {account.ifsc_code}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="col-12 px-0">
+                                    <div className="submit-section d-flex justify-content-between pb-3">
+                                        <button className="btn btn-light" onClick={handleCloseModal} >Cancel</button>
+                                        <button className=" btn btn-gradient-primary" type='button' onClick={handleSelectBankChange}>Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

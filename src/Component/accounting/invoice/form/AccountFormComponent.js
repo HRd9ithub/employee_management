@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { customAxios } from '../../../../service/CreateApi';
 import { alphSpaceFormat, alphaNumFormat, numberFormat } from "../../../common/RegaulrExp";
@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 import Spinner from '../../../common/Spinner';
 import ErrorComponent from '../../../common/ErrorComponent';
 
-const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
+const AccountFormComponent = ({ bankDetail, handleToggleBankDetails, getAccountDetail, bankAllDetail = [], selectedAccountID }) => {
   const [account, setAccount] = useState({
     bank_name: '',
     account_number: '',
@@ -15,7 +15,6 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
     name: '',
     branch_name: ''
   });
-  const [bankAllDetail, setbankAllDetail] = useState([]);
   const [bankId, setBankId] = useState("");
   const [bank_name_error, setBank_name_error] = useState('')
   const [account_number_error, setaccount_number_error] = useState('')
@@ -60,33 +59,6 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
     setbranch_name_error('');
     setname_error('')
   }
-
-  const getAccountDetail = async () => {
-    setisLoading(true);
-
-    customAxios().get(`invoice/account`).then((res) => {
-      if (res.data.success) {
-        const { data } = res.data;
-        setbankAllDetail(data);
-        setisLoading(false);
-      }
-    }).catch((error) => {
-      setisLoading(false);
-      if (!error.response) {
-        toast.error(error.message);
-      } else {
-        if (error.response.data.message) {
-          toast.error(error.response.data.message)
-        }
-      }
-    });
-  }
-
-  useEffect(() => {
-    if (show) {
-      getAccountDetail();
-    }
-  }, [show])
 
   /*  -------------------------------
       form function
@@ -222,7 +194,10 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
     }
     url.then((result) => {
       if (result.data.success) {
-        getSingleAccountDetail();
+        handleToggleBankDetails(true, result.data.data._id, "updated");
+        if (!bankId) {
+          getAccountDetail();
+        }
         setShow(false);
         toast.success(result.data.message);
         setAccount({
@@ -259,10 +234,10 @@ const AccountFormComponent = ({ bankDetail, getSingleAccountDetail }) => {
 
   return (
     <>
-      {bankDetail ?
+      {selectedAccountID && bankAllDetail.length > 0 ?
         <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={handleShow} >
-          <i className="fa-solid fa-gear"></i>&nbsp;Edit Bank Details
-        </button> :
+          <i className="fa-solid fa-gear"></i>&nbsp;Add/Edit Bank Details
+        </button> : (bankAllDetail.length < 1 || !selectedAccountID) &&
         <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center button-full-width" onClick={handleShow} >
           <i className="fa-solid fa-gear"></i>&nbsp;Add Bank Details
         </button>}

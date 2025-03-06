@@ -157,7 +157,8 @@ const AddUpdateForm = () => {
   const config = useMemo(() => {
     return {
       readonly: false,
-      placeholder: 'write your content ....'
+      placeholder: 'write your content ....',
+      removeButtons: ['about', 'file', 'paint', 'fullsize',]
     }
   }, []);
 
