@@ -173,7 +173,6 @@ const AddUpdateNoteForm = () => {
         format: 'json',
         method: 'POST',
         prepare: (formData) => {
-          console.log('formData: ', formData)
           return formData;
         },
         error: (e) => {
@@ -186,7 +185,6 @@ const AddUpdateNoteForm = () => {
           return resp.message;
         },
         process: (response) => {
-          console.log('response: ', response)
           if (response.success) { // Check if the upload was successful on the server
             return {
               url: response.data.url, // URL of the uploaded image (from server response)

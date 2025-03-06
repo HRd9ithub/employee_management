@@ -37,7 +37,6 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
     // modal show function
     const handleShow = () => {
         setShow(true);
-        console.log(data.at(-1))
         if (data.length !== 0) {
             const latestData = data[data.length - 1];
             setInitialState({

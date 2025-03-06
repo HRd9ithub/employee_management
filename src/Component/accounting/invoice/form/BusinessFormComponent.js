@@ -8,6 +8,7 @@ import { customAxios1 } from "../../../../service/CreateApi";
 import { alphabetFormat, alphSpaceFormat, emailFormat, gstinRegex, numberFormat } from '../../../common/RegaulrExp';
 import { country } from '../../../../static/country';
 import ErrorComponent from '../../../common/ErrorComponent';
+import CustomField from './CustomField';
 
 const BusinessFormComponent = ({ data, getBusinessDetail }) => {
     const imageRef = useRef();
@@ -28,6 +29,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
     });
     const [isLoading, setisLoading] = useState(false);
     const [image, setImage] = useState("");
+    const [customFieldData, setCustomFieldData] = useState([]);
 
     const [businessNameError, setbusinessNameError] = useState('');
     const [GSTINError, setGSTINError] = useState('');
@@ -37,7 +39,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
     const [cityError, setcityError] = useState('');
     const [postcodeError, setpostcodeError] = useState('');
     const [addressError, setaddressError] = useState('');
-
+    const [customValueError, setCustomValueError] = useState({});
     const [error, setError] = useState([]);
 
     // *-------------------- modal show and hide ----------------------------
@@ -57,6 +59,9 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                 GSTIN: data.GSTIN ? data.GSTIN : "",
                 pan_number: data.pan_number ? data.pan_number : "",
             })
+            if (data.custom_field) {
+                setCustomFieldData(JSON.parse(data.custom_field))
+            }
             setImage(data.profile_image);
         }
         setModalShow(true);
@@ -90,6 +95,8 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
         setpostcodeError("");
         setaddressError("");
         setError([]);
+        setCustomValueError({});
+        setCustomFieldData([]);
     }
 
     // -------------  form function -------------------------
@@ -182,19 +189,6 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
         }
     }
 
-    // postcode validation
-    const postcodeValidation = () => {
-        if (business.postcode) {
-            if (!business.postcode.toString().match(numberFormat)) {
-                setpostcodeError("Postcode must be a number.");
-            } else {
-                setpostcodeError("");
-            }
-        } else {
-            setpostcodeError("");
-        }
-    }
-
     // GSTIN validation
     const GSTINValidation = () => {
         if (business.GSTIN) {
@@ -227,7 +221,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
 
         let { business_name, email, phone, country, state, city, address, postcode, GSTIN, pan_number } = business;
 
-        if (!business_name || !address) {
+        if (!business_name || !address || Object.keys(customValueError).length !== 0) {
             return false;
         } else if (businessNameError || emailError || phoneError || stateError || cityError || postcodeError || addressError || GSTINError) {
             return false;
@@ -244,6 +238,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
             formdata.append('postcode', postcode);
             formdata.append('address', address);
             formdata.append('GSTIN', GSTIN);
+            formdata.append('custom_field', JSON.stringify(customFieldData));
             formdata.append('pan_number', pan_number);
             let url = "";
             if (data) {
@@ -270,6 +265,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                         profile_image: ""
                     });
                     setImage("");
+                    setCustomFieldData([]);
                     getBusinessDetail(result.data.id);
                 }
             }).catch((error) => {
@@ -287,6 +283,30 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
             })
         }
     }
+
+    const handleDeleteCustomField = (id) => {
+        setCustomFieldData(customFieldData.filter((_, i) => i !== id));
+        let tempError = { ...customValueError };
+        if (tempError[id]) {
+            delete tempError[id];
+        }
+        setCustomValueError(tempError);
+    }
+    const handleChangeCustomField = (e, id) => {
+        setCustomFieldData(customFieldData.map((_, i) => i === id ? { ..._, value: e.target.value } : _));
+    }
+
+    const customFieldValueValidation = (index) => {
+        let tempError = { ...customValueError };
+
+        if (!customFieldData[index].value?.trim()) {
+            tempError[index] = "Field value is required";
+        } else {
+            delete tempError[index];
+        }
+
+        setCustomValueError(tempError);
+    };
 
     return (
         <>
@@ -328,7 +348,7 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                                         <div className="col-md-12 pr-md-2 pl-md-2">
                                             <div className="form-group">
                                                 <label htmlFor="business_name">Business Name</label>
-                                                <input type="text" className="form-control text-capitalize" id="business_name" placeholder="Enter Business Name" name="business_name" value={business.business_name} onChange={handleChange} maxLength={25} onBlur={businessNameValidation} />
+                                                <input type="text" className="form-control text-capitalize" id="business_name" placeholder="Enter Business Name" name="business_name" value={business.business_name} onChange={handleChange} onBlur={businessNameValidation} />
                                                 {businessNameError && <small id="business_name" className="form-text error">{businessNameError}</small>}
                                             </div>
                                         </div>
@@ -407,6 +427,25 @@ const BusinessFormComponent = ({ data, getBusinessDetail }) => {
                                                 <label htmlFor="phone">Mobile No.</label>
                                                 <input type="tel" className="form-control" id="phone" maxLength="10" minLength="10" placeholder="Enter mobile number" name="phone" onChange={handleChange} value={business.phone} autoComplete='off' inputMode='numeric' onBlur={phoneValidation} />
                                                 {phoneError && <small id="phone" className="form-text error">{phoneError}</small>}
+                                            </div>
+                                        </div>
+                                        {customFieldData.map((field, index) => {
+                                            return (
+                                                <div className="col-md-6 pr-md-2 pl-md-2" key={index}>
+                                                    <div className="form-group">
+                                                        <div className='d-flex justify-content-between align-items-center mb-2'>
+                                                            <label htmlFor={field.name + index}>{field.name}</label>
+                                                            <span onClick={() => handleDeleteCustomField(index)}><i className="fa-solid fa-xmark" style={{ cursor: "pointer", color: "#004b8f" }}></i></span>
+                                                        </div>
+                                                        <input type="tel" className="form-control" id={field.name + index} placeholder={field.name} name={index} value={field.value} onChange={(e) => handleChangeCustomField(e, index)} onBlur={() => customFieldValueValidation(index)} />
+                                                        {customValueError[index] && <small id="phone" className="form-text error">{customValueError[index]}</small>}
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                        <div className="col-md-12 pr-md-2 pl-md-2">
+                                            <div className="form-group">
+                                                <CustomField setCustomFieldData={setCustomFieldData} customFieldData={customFieldData} />
                                             </div>
                                         </div>
                                         {error.length !== 0 &&
