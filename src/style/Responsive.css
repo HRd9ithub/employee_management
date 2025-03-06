@@ -2947,9 +2947,24 @@
     }
 }
 
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        /* Single column on small screens */
+    }
+}
+
 @media (max-width :420px) {
     .business-name {
         flex-direction: column;
+    }
+
+    .invoice-bil-title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 118px;
+        display: inline-block;
     }
 }
 

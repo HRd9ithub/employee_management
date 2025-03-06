@@ -45,7 +45,6 @@ Here is the topic for the email:\n${prompt}`
         max_tokens: 500,
       });
 
-      console.log(chatCompletion.choices[0].message.content)
 
     } catch (error) {
     } finally {

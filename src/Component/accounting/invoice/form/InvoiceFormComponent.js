@@ -90,6 +90,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
 
     const staticHead = [
         { field: "Item Name", name: "itemName", toggle: true, error: [], },
+        { field: "HSN/SAC", toggle: false, name: "HSN/SAC", error: [], hide: true },
         { field: "GST", toggle: false, name: "GST", error: [], hide: true },
         { field: "Rate", name: "rate", toggle: true, error: [] },
         { field: "Quantity", name: "quantity", toggle: true, error: [], },
@@ -671,11 +672,25 @@ const InvoiceFormComponent = ({ setProgress }) => {
                     setbusinessData(result.invoiceProvider[0]);
                     if (result.productDetails.length !== 0 && !unique) {
                         if (result.productDetails[0].hasOwnProperty("tableHead")) {
-                            setnewcolumns(result.productDetails[0].tableHead);
+                            const tableHead = result.productDetails[0].tableHead;
+
+                            // Check if "HSN/SAC" already exists in tableHead
+                            const exists = tableHead.some(item => item.name === "HSN/SAC");
+                            if (!exists) {
+                                setnewcolumns([
+                                    ...tableHead.map((_, i) =>
+                                        i === 0
+                                            ? [{ ..._ }, { field: "HSN/SAC", toggle: result.taxType ? true : false, name: "HSN/SAC", error: [], hide: result.taxType ? false : true }]
+                                            : { ..._ }
+                                    ).flat()
+                                ]);
+                            } else {
+                                setnewcolumns([...tableHead]); // Keep the existing tableHead unchanged
+                            }
                             settableData((val) => val.map((elem) => {
                                 return {
-                                    ...elem, 
-                                    GST: 18, 
+                                    ...elem,
+                                    GST: 18,
                                     CGST: "0.09",
                                     SGST: "0.09",
                                     IGST: "0.18",
@@ -777,9 +792,9 @@ const InvoiceFormComponent = ({ setProgress }) => {
     const handleGst = (e) => {
         e.preventDefault();
         let storeColumn = [...newcolumns];
-        const removeName = ["GST", "IGST", "SGST", "CGST", "total"]
-        const CGSTHead = ["GST", "SGST", "CGST", "total"]
-        const IGSTHead = ["GST", "IGST", "total"]
+        const removeName = ["HSN/SAC", "GST", "IGST", "SGST", "CGST", "total"]
+        const CGSTHead = ["HSN/SAC", "GST", "SGST", "CGST", "total"]
+        const IGSTHead = ["HSN/SAC", "GST", "IGST", "total"]
         if (taxTypeToggle === "None") {
             storeColumn = storeColumn.map((val) => {
                 if (removeName.includes(val.name)) {
@@ -972,14 +987,14 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                 <div className="form-contents">
                                     <div className="row align-content-center">
                                         {/* ===== Billed by part ====== */}
-                                        <div className='col-md-6 '>
+                                        <div className='col-md-6 mb-md-0 mb-2 '>
                                             <div className='bill-box-section'>
                                                 <h4>Billed By</h4>
                                                 <Dropdown>
                                                     <Dropdown.Toggle className="btn button-bill text-left col-12 client-icon-drop" id="dropdown-basic">
                                                         {Object.keys(businessData).length !== 0 ? <>
                                                             {businessData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${businessData.profile_image}`} alt='p_image' /></span>}
-                                                            <span className='text-capitalize'>{businessData.business_name}</span>
+                                                            <span className='text-capitalize invoice-bil-title'>{businessData.business_name}</span>
                                                         </> : <span className='static-title'> Select Business</span>}
                                                     </Dropdown.Toggle>
 
@@ -1006,7 +1021,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 <span >Business Name</span>
                                                             </div>
                                                             <div className='business-info-value'>
-                                                                <span className='Business-title'>{businessData.business_name}</span>
+                                                                <span className='Business-title' style={{ whiteSpace: "pre-wrap" }} >{businessData.business_name}</span>
                                                             </div>
                                                         </div>
                                                         <div className='business-name'>
@@ -1053,6 +1068,16 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                     <span className='Business-title'>{businessData.phone}</span>
                                                                 </div>
                                                             </div>}
+                                                        {businessData.custom_field ? JSON.parse(businessData.custom_field)?.length > 0 && JSON.parse(businessData.custom_field).map((field, index) => (
+                                                            <div className='business-name' key={index}>
+                                                                <div className='business-info'>
+                                                                    <span >{field.name}</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{field.value}</span>
+                                                                </div>
+                                                            </div>
+                                                        )) : null}
                                                     </div> :
                                                     <div>
                                                         <div className={`static business-detail ${businessError ? "client-error" : ""}`}>
@@ -1076,7 +1101,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                     <Dropdown.Toggle className="btn button-bill text-left col-12 client-icon-drop" id="dropdown-basic">
                                                         {Object.keys(clientData).length !== 0 ? <>
                                                             {clientData.profile_image && <span className='bill-logo mx-2' ><img src={`${process.env.REACT_APP_IMAGE_API}/${clientData.profile_image}`} alt='p_image' /></span>}
-                                                            <span className='text-capitalize'>{clientData.business_name}</span>
+                                                            <span className='text-capitalize invoice-bil-title'>{clientData.business_name}</span>
                                                         </> : <span className='static-title'> Select Client</span>}
                                                     </Dropdown.Toggle>
 
@@ -1103,7 +1128,7 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                 <span >Business Name</span>
                                                             </div>
                                                             <div className='business-info-value'>
-                                                                <span className='Business-title'>{clientData.business_name}</span>
+                                                                <span className='Business-title' style={{ whiteSpace: "pre-wrap" }}>{clientData.business_name}</span>
                                                             </div>
                                                         </div>
                                                         <div className='business-name'>
@@ -1150,6 +1175,17 @@ const InvoiceFormComponent = ({ setProgress }) => {
                                                                     <span className='Business-title'>{clientData.phone}</span>
                                                                 </div>
                                                             </div>}
+                                                        {clientData.custom_field && JSON.parse(clientData.custom_field)?.length > 0 && JSON.parse(clientData.custom_field).map((field, index) => (
+                                                            <div className='business-name' key={index}>
+                                                                <div className='business-info'>
+                                                                    <span >{field.name}</span>
+                                                                </div>
+                                                                <div className='business-info-value'>
+                                                                    <span className='Business-title'>{field.value}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                        }
                                                     </div> :
                                                     <div>
                                                         <div className={`static business-detail ${clienError ? "client-error" : ""}`}>
@@ -1172,10 +1208,10 @@ const InvoiceFormComponent = ({ setProgress }) => {
                             <div className='my-4'>
                                 <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
                                     <h4 className="mb-0">Item Details</h4>
-                                    <div className='d-flex align-content-center'>
+                                    <div className='d-flex align-content-center flex-wrap'>
                                         {/* ======================  currency drop down ====================== */}
                                         <Select
-                                            className="basic-single currency-dropdown"
+                                            className="basic-single currency-dropdown mb-3 mb-md-0"
                                             classNamePrefix="select"
                                             isClearable={false}
                                             isSearchable={true}

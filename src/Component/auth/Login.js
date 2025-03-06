@@ -22,7 +22,7 @@ const Login = () => {
   const { onSubmit, loading, Error } = Globalcomponent();
 
   useEffect(() => {
-    console.log("Login Page loaded.")
+    console.log("Login Page loaded updated")
   }, [])
 
   //onchange function
