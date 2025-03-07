@@ -109,8 +109,6 @@ const AccountFormComponent = ({ bankDetail, handleToggleBankDetails, getAccountD
   const handlenameValidate = () => {
     if (!account.name || !account.name.trim()) {
       setname_error("Name is a required field.")
-    } else if (!account.name.match(alphSpaceFormat)) {
-      setname_error("Name must be an alphabet and space only.")
     } else {
       setname_error('')
     }

@@ -31,7 +31,7 @@ const ItemComponent = (props) => {
                                 {newcolumns.map((val, id) => {
                                     return val.toggle && <th style={{ width: val.width || "200px" }} key={id}>{val.field}{val.name === "amount" && `(${currency.value?.slice(6)})`}</th>
                                 })}
-                                <th></th>
+                                <th style={{ width:"50px" }} ></th>
                             </tr>
                         </thead>
                         <tbody className='body-div'>
@@ -127,8 +127,8 @@ const ItemComponent = (props) => {
                                                     </td>
                                                 )
                                             })}
-                                            {ind > 0 &&
-                                                <td className="text-center"><i className="fa-solid fa-xmark text-maroon cursor-pointer" onClick={() => removeRowTable(ind)}></i></td>}
+                                            {(ind > 0 || tableData.length > 1) &&
+                                                <td><i className="fa-solid fa-xmark text-maroon cursor-pointer" onClick={() => removeRowTable(ind)}></i></td>}
                                         </tr>
                                         <tr>
                                             <td className='py-0 pb-2' colSpan={colSpanToggle}>
