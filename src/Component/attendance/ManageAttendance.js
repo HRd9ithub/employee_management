@@ -80,7 +80,7 @@ const ManageAttendance = () => {
             if (data.data.success) {
                 toast.success(data.data.message);
                 setComment("");
-                navigate("/attendance");
+                navigate("/attendance/requests", { replace: true });
                 getLeaveNotification();
             }
         }).catch((error) => {
@@ -122,13 +122,14 @@ const ManageAttendance = () => {
                                 <ul id="breadcrumb" className="mb-0">
                                     <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
                                     <li><NavLink to="/attendance" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Attendance</NavLink></li>
+                                    <li><NavLink to="/attendance/requests" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Requests</NavLink></li>
                                     <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Manage</NavLink></li>
                                 </ul>
                             </div>
                         </div>
                         <div className="col-12 col-sm-5 d-flex justify-content-end pr-0" id="two">
                             <div>
-                                <button className='btn-gradient-primary' onClick={() => navigate('/attendance/')}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
+                                <button className='btn-gradient-primary' onClick={() => navigate('/attendance/requests')}><i className="fa-solid fa-arrow-left"></i>&nbsp; Back</button>
                             </div>
                         </div>
                     </div>

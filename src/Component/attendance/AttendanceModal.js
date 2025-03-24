@@ -5,14 +5,12 @@ import moment from 'moment';
 import toast from 'react-hot-toast';
 import { customAxios } from '../../service/CreateApi';
 import Spinner from '../common/Spinner';
-import { Dropdown, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 import ErrorComponent from '../common/ErrorComponent';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { SpellCheck } from '../ai/SpellCheck';
 import { reWritePrompt } from '../../helper/prompt';
 
-const AttendanceModal = ({ data = [], permission, attendance_regulations_data, timestamp }) => {
+const AttendanceModal = ({ data = [], timestamp }) => {
     const [show, setShow] = useState(false);
     const [initialState, setInitialState] = useState({
         clockIn: "",
@@ -31,8 +29,6 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
 
     const clockInRef = useRef(null);
     const clockOutRef = useRef(null);
-
-    const navigate = useNavigate();
 
     // modal show function
     const handleShow = () => {
@@ -164,18 +160,7 @@ const AttendanceModal = ({ data = [], permission, attendance_regulations_data, t
 
     return (
         <>
-            {((permission && permission.name.toLowerCase() !== "admin") || (permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data)) ?
-                <Dropdown>
-                    <Dropdown.Toggle id="password-action">
-                        <i className="fa-solid fa-ellipsis-vertical" style={{ cursor: "pointer" }}></i>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="password-action--dropdown">
-                        {permission && permission.name.toLowerCase() !== "admin" && <Dropdown.Item className="dropdown-item" onClick={handleShow}><label>Regularize</label></Dropdown.Item>}
-                        {permission && permission.name.toLowerCase() === "admin" && attendance_regulations_data && <Dropdown.Item className="dropdown-item" onClick={() => navigate(`/attendance/${attendance_regulations_data.attendanceId}`)}><label>Requests</label></Dropdown.Item>}
-                    </Dropdown.Menu>
-                </Dropdown>
-                : <HorizontalRuleIcon />}
-
+            <i class="fa-solid fa-code-pull-request" onClick={handleShow} title='request' ></i>
             <Modal show={show} animation={true} size="md" aria-labelledby="example-modal-sizes-title-sm" className='department-modal' centered>
                 <Modal.Header className='small-modal'>
                     <Modal.Title>Attendance Regulation - {timestamp && moment(timestamp).format("DD MMM YYYY")}</Modal.Title>
