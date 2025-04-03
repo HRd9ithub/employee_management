@@ -5485,3 +5485,7 @@ select.form-control.currency-dropdown {
   height: 135px;
   overflow: hidden;
 }
+
+table.common-table-section tbody tr td.custom-cell {
+  white-space: pre-wrap !important;
+}

@@ -165,7 +165,10 @@ const Sidebar = () => {
   // add active class 
   const HandleACtive = useCallback((menu) => {
     if (menu.route !== "#") {
-      return pathname === menu.route
+      if (pathname.startsWith("/attendance") && menu.route === "/attendance") {
+        return true;
+      }
+      return pathname === menu.route;
     } else {
       if (pathname === "/work-report/preview") {
         return menu.child.some((cur) => "/work-report/employee".includes(cur.route));

@@ -35,7 +35,7 @@ const AttendanceComponent = () => {
     const [breakTime, setbreakTime] = useState(0);
     const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
     const [endDate, setendtDate] = useState(moment(new Date(new Date().toDateString())));
-    const [open, setOpen] = useState("");
+    const [open, setOpen] = useState(0);
     const [user_id, setuser_id] = useState("");
 
     // pagination state
@@ -256,16 +256,18 @@ const AttendanceComponent = () => {
             >
                 <div className=" container-fluid py-4">
                     <div className="background-wrapper bg-white pb-4">
-                        <div>
-                            <div className='row align-items-center row-std m-0'>
-                                <div className="col-12 col-sm-5 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <ul id="breadcrumb" className="mb-0">
-                                            <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
-                                            <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Attendance</NavLink></li>
-                                        </ul>
-                                    </div>
+
+                        <div className='row justify-content-start align-items-center row-std m-0'>
+                            <div className="col-12 col-sm-5 col-xl-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <ul id="breadcrumb" className="mb-0">
+                                        <li><NavLink to="/" className="ihome">Dashboard</NavLink></li>
+                                        <li><NavLink to="" className="ibeaker"><i className="fa-solid fa-play"></i> &nbsp; Attendance</NavLink></li>
+                                    </ul>
                                 </div>
+                            </div>
+                            <div className="col-12 col-sm-7 col-xl-9 d-flex justify-content-end" id="two">
+                                {permission && permission.permissions.list === 1 && <NavLink to={"/attendance/requests"} className="btn btn-gradient-primary btn-rounded btn-fw text-center"  >View Request</NavLink>}
                             </div>
                         </div>
                         {permission && permission.name.toLowerCase() !== "admin" &&
@@ -387,16 +389,16 @@ const AttendanceComponent = () => {
                                                             <IconButton
                                                                 aria-label="expand row"
                                                                 size="small"
-                                                                onClick={() => handleCollapse(val._id)}
+                                                                onClick={() => handleCollapse(ind)}
                                                             >
-                                                                {open === val._id ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                                {open === ind ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                                             </IconButton>
                                                         </TableCell>
                                                         <TableCell>{val.user.name}</TableCell>
                                                     </TableRow>
                                                     <TableRow>
                                                         <TableCell colSpan={8} style={{ padding: 0, background: '#f2f2f287', borderBottom: "none" }}>
-                                                            <Collapse in={open === val._id} timeout="auto" unmountOnExit>
+                                                            <Collapse in={open === ind} timeout="auto" unmountOnExit>
                                                                 <Table size="small" aria-label="purchases">
                                                                     <TableHead className="common-header">
                                                                         <TableRow>
@@ -405,7 +407,7 @@ const AttendanceComponent = () => {
                                                                             <TableCell>Clock Out</TableCell>
                                                                             <TableCell>Total Hours</TableCell>
                                                                             <TableCell>Break Time</TableCell>
-                                                                            <TableCell>Action</TableCell>
+                                                                            {(permission && permission.name.toLowerCase() !== "admin") && <TableCell>Action</TableCell>}
                                                                         </TableRow>
                                                                     </TableHead>
                                                                     <TableBody>
@@ -430,15 +432,16 @@ const AttendanceComponent = () => {
                                                                                         </TableCell>
                                                                                         <TableCell scope="row">{sum(val.child[id].time)}</TableCell>
                                                                                         <TableCell scope="row">{calculatorBreakTime(val.child[id].time)}</TableCell>
-                                                                                        <TableCell>
-                                                                                            {hoursCheck(sum(val.child[id].time)) ?
-                                                                                                <div className='action'>
-                                                                                                    <AttendanceModal data={val.child[id].time} permission={permission} attendance_regulations_data={elem.attendance_regulations_data} timestamp={elem.timestamp} />
-                                                                                                </div> :
-                                                                                                <div className="action">
-                                                                                                    <HorizontalRuleIcon />
-                                                                                                </div>}
-                                                                                        </TableCell>
+                                                                                        {(permission && permission.name.toLowerCase() !== "admin") &&
+                                                                                            <TableCell>
+                                                                                                {hoursCheck(sum(val.child[id].time)) ?
+                                                                                                    <div className='action'>
+                                                                                                        <AttendanceModal data={val.child[id].time} timestamp={elem.timestamp} />
+                                                                                                    </div> :
+                                                                                                    <div className="action">
+                                                                                                        <HorizontalRuleIcon />
+                                                                                                    </div>}
+                                                                                            </TableCell>}
                                                                                     </TableRow>
                                                                                 </React.Fragment>
                                                                             )
