@@ -21,7 +21,7 @@ function InvoiceStatusModal({ data, fetchInvoice }) {
 
     // modal show function
     const handleShow = () => {
-        if (data.status === "Unpaid") {
+        if (data.status === "Unpaid" && !data.deleteAt) {
             setShow(true)
         }
     }
@@ -54,7 +54,7 @@ function InvoiceStatusModal({ data, fetchInvoice }) {
             payment_date,
             payment_method,
             status: "Paid",
-            payment_note : note
+            payment_note: note
         }).then(data => {
             if (data.data.success) {
                 toast.success(data.data.message)

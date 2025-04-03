@@ -6,7 +6,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
-import { Table, TableBody, TableCell, TableContainer, TableHead, Collapse, TablePagination, IconButton, TableRow, TableSortLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, Collapse, TablePagination, IconButton, TableRow, TableSortLabel, Tooltip } from "@mui/material";
 import ranges from '../../../helper/calcendarOption';
 import { customAxios } from '../../../service/CreateApi';
 import InvoiceStatusModal from "./form/InvoiceStatusModal";
@@ -25,14 +25,16 @@ import { HiOutlineMinus } from "react-icons/hi";
 import usePagination from '../../../hooks/usePagination';
 
 const InvoiceComponent = () => {
+  const defaultStartDate = moment().startOf("year");
+  const defaultEndDate = moment().endOf('year');
   const [clientData, setClientData] = useState([]);
   const [records, setRecords] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [permission, setpermission] = useState("");
   const [permissionToggle, setPermissionToggle] = useState(true);
   const [serverError, setServerError] = useState(false);
-  const [startDate, setStartDate] = useState(moment().clone().startOf('month'));
-  const [endDate, setendtDate] = useState(moment().clone().endOf('month'));
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setendtDate] = useState(defaultEndDate);
   const [open, setOpen] = useState("");
   const [client_id, setClient_id] = useState("");
   const [searchItem, setsearchItem] = useState("");
@@ -55,7 +57,18 @@ const InvoiceComponent = () => {
     setisLoading(true);
     setPermissionToggle(true);
 
-    customAxios().get(`/invoice/?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}`).then((res) => {
+    let url = '/invoice'
+
+    if (startDate && endDate && client_id) {
+      url = url + `?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&id=${client_id}`;
+    } else if (startDate && endDate) {
+      url = url + `?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}`;
+    } else if (client_id) {
+      url = url + `?id=${client_id}`;
+    }
+
+
+    customAxios().get(url).then((res) => {
       if (res.data.success) {
         const { data, permissions } = res.data;
         setpermission(permissions);
@@ -223,6 +236,10 @@ const InvoiceComponent = () => {
 
   // date range change function
   const handleCallback = (start, end, label) => {
+    // if (label === "All") {
+    //   handleReset();
+    //   return;
+    // }
     setStartDate(start._d)
     setendtDate(end._d);
   }
@@ -289,6 +306,14 @@ const InvoiceComponent = () => {
     setTab(newValue);
   };
 
+  const customRanges = useMemo(
+    () => ({
+      ...ranges,
+      "All": [moment().startOf("year"), moment()]
+    }),
+    [ranges]
+  );
+
   if (isLoading) {
     return <Spinner />;
   } else if (serverError) {
@@ -328,7 +353,7 @@ const InvoiceComponent = () => {
                     </div>
                     <div className="form-group mb-0 position-relative w-25 hide-at-small-screen">
                       <div className="form-group mb-0 position-relative">
-                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback}>
+                        <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: customRanges }} onCallback={handleCallback}>
                           <input className="form-control mb-0" />
                         </DateRangePicker>
                         <CalendarMonthIcon className="range_icon" />
@@ -370,7 +395,7 @@ const InvoiceComponent = () => {
                   </div>
                   <div className='col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 ml-auto'>
                     <div className="form-group mb-0 position-relative">
-                      <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: ranges, maxDate: new Date() }} onCallback={handleCallback}>
+                      <DateRangePicker initialSettings={{ startDate: startDate, endDate: endDate, ranges: customRanges }} onCallback={handleCallback}>
                         <input className="form-control mt-3" />
                       </DateRangePicker>
                       <CalendarMonthIcon className="range_icon" />
@@ -494,14 +519,26 @@ const InvoiceComponent = () => {
                               <div className='action'>
                                 {tab === "deletes" ?
                                   <>
-                                    <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
-                                    <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                    <Tooltip title="Restore" placement="top" arrow>
+                                      <i className="fa-solid fa-clock-rotate-left text-primary" onClick={() => restoreInvoice(val._id)}></i>
+                                    </Tooltip>
+                                    <Tooltip title="Permanently Delete" placement="top" arrow>
+                                      <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                    </Tooltip>
                                   </>
                                   : <>
-                                    <i className="fa-solid fa-arrow-up-right-from-square" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
-                                    {val.status !== "Paid" && <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>}
-                                    <i className="fa-regular fa-copy" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
-                                    <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                    <Tooltip title="Preview" placement="top" arrow>
+                                      <i className="fa-solid fa-arrow-up-right-from-square" onClick={() => navigate(`/invoice/preview/${val._id}`)}></i>
+                                    </Tooltip>
+                                    <Tooltip title="Edit" placement="top" arrow>
+                                      {val.status !== "Paid" && <i className="fa-solid fa-pen-to-square" onClick={() => navigate(`/invoice/edit/${val._id}`)}></i>}
+                                    </Tooltip>
+                                    <Tooltip title="Duplicate" placement="top" arrow>
+                                      <i className="fa-regular fa-copy" onClick={() => navigate(`/invoice/duplicate/${val._id}`)}></i>
+                                    </Tooltip>
+                                    <Tooltip title="Delete" placement="top" arrow>
+                                      <i className="fa-solid fa-trash-can" onClick={() => deleteInvoice(val._id)}></i>
+                                    </Tooltip>
                                   </>
                                 }
                               </div>

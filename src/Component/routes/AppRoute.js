@@ -37,6 +37,7 @@ import AddUpdateNoteForm from '../setting/notes/AddUpdateNoteForm';
 import RulesComponent from '../setting/rules';
 import AddUpdateForm from '../setting/rules/AddUpdateForm';
 import LeaveReport from '../reports/leave';
+import AttendanceRequest from '../attendance/AttendanceRequest';
 
 const AppRoute = ({ setProgress }) => {
     return (
@@ -89,6 +90,7 @@ const AppRoute = ({ setProgress }) => {
 
             {/* attendance route */}
             <Route exact path='/attendance' element={<ProtectedRoute authentication={true} ><AttendanceComponent /></ProtectedRoute>}></Route>
+            <Route exact path='/attendance/requests' element={<ProtectedRoute authentication={true} ><AttendanceRequest /></ProtectedRoute>}></Route>
             <Route exact path='/attendance/:id' element={<ProtectedRoute authentication={true} ><ManageAttendance /></ProtectedRoute>}></Route>
             {/* invoice route */}
             <Route path="/invoice">
