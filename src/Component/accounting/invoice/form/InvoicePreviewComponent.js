@@ -10,7 +10,7 @@ import moment from 'moment';
 import { useReactToPrint } from 'react-to-print';
 import Swal from 'sweetalert2';
 import Error403 from '../../../error_pages/Error403';
-import { Card, Dropdown, Modal } from 'react-bootstrap';
+import { Card, Modal } from 'react-bootstrap';
 import convertNumberFormat from '../../../../service/NumberFormat';
 import Accordion from 'react-bootstrap/Accordion';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -192,18 +192,25 @@ const InvoicePreviewComponent = () => {
         axios.get(`${process.env.REACT_APP_API_KEY}/invoice/invoice-download?id=${id}`, {
             responseType: 'blob',
         }).then((res) => {
-            const fileName = `invoice-${invoiceDetail.invoiceId}.pdf`
+            const fileName = `invoice-${invoiceDetail.invoiceId.replace(/\//g, '-')}.pdf`
             fileDownload(res.data, fileName);
             toast.success("Download successfully.")
             setisLoading(false)
         }).catch((error) => {
             setisLoading(false)
-            if (!error.response || !error) {
-                toast.error(error?.message || "something went wrong.");
-            } else if (error.response.data.message) {
-                toast.error(error.response.data.message);
+            if (error.response && error.response.data instanceof Blob) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    try {
+                        const errorMessage = JSON.parse(reader.result);
+                        toast.error(errorMessage.message || 'Download failed.');
+                    } catch {
+                        toast.error('Unknown error occurred while downloading.');
+                    }
+                };
+                reader.readAsText(error.response.data);
             } else {
-                toast.error(error.response.statusText);
+                toast.error(error?.response?.data?.message || error.message);
             }
         })
     }
@@ -214,7 +221,7 @@ const InvoicePreviewComponent = () => {
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: `invoice-${invoiceDetail.invoiceId}.pdf`
+        documentTitle: `invoice-${invoiceDetail.invoiceId.replace(/\//g, '-')}.pdf`
     })
 
     /** ==================== 
@@ -278,30 +285,8 @@ const InvoicePreviewComponent = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-5 d-flex justify-content-end" id="two">
-                                    <Dropdown>
-                                        <Dropdown.Toggle className="btn btn-gradient-primary btn-rounded btn-fw text-center dropdown-toggle mr-2" id="dropdown-basic">
-                                            Action&nbsp; <i className="fa-solid fa-angle-down"></i>
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice')}>Show All Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate('/invoice/create')}>Create New Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            {invoiceDetail.status !== "Paid" && <><Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/edit/${id}`)}>Edit Invoice</Dropdown.Item>
-                                                <Dropdown.Divider /></>}
-                                            <Dropdown.Item className="dropdown-item" onClick={() => Navigate(`/invoice/duplicate/${id}`)}>Duplicate Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            <Dropdown.Item className="dropdown-item" onClick={deleteInvoice}>Delete Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            <Dropdown.Item className="dropdown-item" onClick={handlePrint}>Print Invoice</Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            <Dropdown.Item className="dropdown-item" onClick={invoiceDownload}>Download Invoice</Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                    <button type="button" className="btn btn-gradient-primary btn-rounded btn-fw text-center" onClick={() => Navigate("/invoice")}>
-                                        <i className="fa-solid fa-arrow-left"></i>&nbsp;Back
-                                    </button>
+                                    <NavLink to={"/invoice/create"} className="btn btn-gradient-primary btn-rounded btn-fw text-center"><i className="fa-solid fa-plus"></i>&nbsp;Create New Invoice</NavLink>
+                                    <NavLink to={"/invoice"} className="btn btn-gradient-primary btn-rounded btn-fw text-center"><i className="fa-solid fa-arrow-left"></i>&nbsp;Back</NavLink>
                                 </div>
                             </div>
                         </div>
@@ -330,10 +315,11 @@ const InvoicePreviewComponent = () => {
                                                                 <td className="invoice-title-summary"><span >Invoice Date:</span></td>
                                                                 <td><span className='invoice-value-summary'>{moment(invoiceDetail.issue_date).format("DD MMM YYYY")}</span></td>
                                                             </tr>
-                                                            <tr className='d-block mt-3'>
-                                                                <td className="invoice-title-summary"><span >Due Date:</span></td>
-                                                                <td><span className='invoice-value-summary'>{invoiceDetail.due_date ? moment(invoiceDetail.due_date).format("DD MMM YYYY") : "Not Set"}</span></td>
-                                                            </tr>
+                                                            {invoiceDetail.due_date &&
+                                                                <tr className='d-block mt-3'>
+                                                                    <td className="invoice-title-summary"><span >Due Date:</span></td>
+                                                                    <td><span className='invoice-value-summary'>{invoiceDetail.due_date ? moment(invoiceDetail.due_date).format("DD MMM YYYY") : "Not Set"}</span></td>
+                                                                </tr>}
                                                             <tr className='d-block mt-3'>
                                                                 <td className="invoice-title-summary"><span >Total Amount:</span></td>
                                                                 <td><span className='invoice-value-summary'>{invoiceDetail.currency?.slice(6)} {convertNumberFormat(invoiceDetail.totalAmount)}</span></td>
@@ -392,10 +378,11 @@ const InvoicePreviewComponent = () => {
                                                         <td>Invoice Date</td>
                                                         <td className="text-black">{moment(invoiceDetail.issue_date).format("DD MMM YYYY")}</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>Due Date</td>
-                                                        <td className="text-black">{invoiceDetail.due_date ? moment(invoiceDetail.due_date).format("DD MMM YYYY") : "Not Set"}</td>
-                                                    </tr>
+                                                    {invoiceDetail.due_date &&
+                                                        <tr>
+                                                            <td>Due Date</td>
+                                                            <td className="text-black">{invoiceDetail.due_date ? moment(invoiceDetail.due_date).format("DD MMM YYYY") : "Not Set"}</td>
+                                                        </tr>}
                                                     {invoiceDetail.hasOwnProperty("extra_field") &&
                                                         JSON.parse(invoiceDetail.extra_field).map((val, ind) => {
                                                             return (
@@ -672,6 +659,12 @@ const InvoicePreviewComponent = () => {
                                     </Accordion.Collapse>
                                 </Card>
                             </Accordion>
+                            <div className="my-3 d-flex justify-content-end align-items-center flex-wrap" style={{ gap: "10px" }} >
+                                {invoiceDetail.status !== "Paid" && <button type="button" className="btn px-4 py-2  btn-outline-primary btn-fw text-center button-full-width" onClick={() => Navigate(`/invoice/edit/${id}`)}><i className="fa-solid fa-pen"></i> Edit</button>}
+                                <button type="button" className="btn px-4 py-2  btn-outline-primary btn-fw text-center button-full-width" onClick={deleteInvoice}><i className="fa-solid fa-trash"></i> Delete</button>
+                                <button type="button" className="btn px-4 py-2  btn-outline-primary btn-fw text-center button-full-width" onClick={handlePrint}><i className="fa-solid fa-print"></i> Print</button>
+                                <button type="button" className="btn px-4 py-2  btn-outline-primary btn-fw text-center button-full-width" onClick={invoiceDownload}><i className="fa-solid fa-download"></i> Download</button>
+                            </div>
                         </div>
                     </div>
                 </div>
